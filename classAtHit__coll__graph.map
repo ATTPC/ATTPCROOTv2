@@ -1,5 +1,5 @@
 <map id="AtHit" name="AtHit">
-<area shape="rect" id="node1" title=" " alt="" coords="35,199,87,225"/>
+<area shape="rect" id="node1" title="Point in space with charge." alt="" coords="35,199,87,225"/>
 <area shape="rect" id="node2" title=" " alt="" coords="5,102,73,129"/>
 <area shape="rect" id="node3" title=" " alt="" coords="98,95,221,136"/>
 <area shape="rect" id="node4" href="$structAtHit_1_1MCSimPoint.html" title=" " alt="" coords="94,5,225,32"/>

@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">ATTPCROOT
-   &#160;<span id="projectnumber">1.0.0</span>
+   &#160;<span id="projectnumber">0.3.0-alpha</span>
    </div>
    <div id="projectbrief">A ROOT-based framework for analyzing data from active target detectors</div>
   </td>
@@ -109,12 +109,20 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a465bfc30201b77e69a7e47dca89b20cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa3b3f7f1d610887045df353a6ca85121"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtLinkDAQTask.html#aa3b3f7f1d610887045df353a6ca85121">SetPersistance</a> (Bool_t val)</td></tr>
 <tr class="separator:aa3b3f7f1d610887045df353a6ca85121"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2425526cd0b407d4583f56bd9fa97457"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtLinkDAQTask.html#a2425526cd0b407d4583f56bd9fa97457">SetSearchMean</a> (Double_t mean)</td></tr>
+<tr class="memitem:a19ca875075d5856fb3786b37a777204b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtLinkDAQTask.html#a19ca875075d5856fb3786b37a777204b">SetInputBranch</a> (TString name)</td></tr>
+<tr class="separator:a19ca875075d5856fb3786b37a777204b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2425526cd0b407d4583f56bd9fa97457"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtLinkDAQTask.html#a2425526cd0b407d4583f56bd9fa97457">SetSearchMean</a> (Double_t <a class="el" href="triplclust_2src_2cluster_8cxx.html#a7f7f792b708919885e81b7c754de7364">mean</a>)</td></tr>
 <tr class="separator:a2425526cd0b407d4583f56bd9fa97457"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae660617ae0a70b1a9e1212aae2100453"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtLinkDAQTask.html#ae660617ae0a70b1a9e1212aae2100453">SetSearchRadius</a> (Double_t radius)</td></tr>
 <tr class="separator:ae660617ae0a70b1a9e1212aae2100453"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad33b8bb436410d7bcac8b83041078e1c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtLinkDAQTask.html#ad33b8bb436410d7bcac8b83041078e1c">SetCorruptedSearchRadius</a> (Double_t radius)</td></tr>
 <tr class="separator:ad33b8bb436410d7bcac8b83041078e1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad768267464ea9258d79eeb12e9c906a8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtLinkDAQTask.html#ad768267464ea9258d79eeb12e9c906a8">SetUseRatio</a> (Bool_t val)</td></tr>
+<tr class="separator:ad768267464ea9258d79eeb12e9c906a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5998b98cc7973d8d0c03dca446f792c9"><td class="memItemLeft" align="right" valign="top">const TChain *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtLinkDAQTask.html#a5998b98cc7973d8d0c03dca446f792c9">GetInChain</a> ()</td></tr>
+<tr class="separator:a5998b98cc7973d8d0c03dca446f792c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1057ba062de59db4ad0ed956979c7d4c"><td class="memItemLeft" align="right" valign="top">TFile *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtLinkDAQTask.html#a1057ba062de59db4ad0ed956979c7d4c">GetOutFile</a> ()</td></tr>
+<tr class="separator:a1057ba062de59db4ad0ed956979c7d4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2ac2d388954a07d65f2f9fcdff0a287e"><td class="memItemLeft" align="right" valign="top">virtual InitStatus&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtLinkDAQTask.html#a2ac2d388954a07d65f2f9fcdff0a287e">Init</a> () override</td></tr>
 <tr class="separator:a2ac2d388954a07d65f2f9fcdff0a287e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8d08b342003447611955ea463eb89051"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtLinkDAQTask.html#a8d08b342003447611955ea463eb89051">Exec</a> (Option_t *opt) override</td></tr>
@@ -195,7 +203,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtLinkDAQTask_8cxx_source.html#l00038">38</a> of file <a class="el" href="AtLinkDAQTask_8cxx_source.html">AtLinkDAQTask.cxx</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtLinkDAQTask_8cxx_source.html#l00040">40</a> of file <a class="el" href="AtLinkDAQTask_8cxx_source.html">AtLinkDAQTask.cxx</a>.</p>
 
 </div>
 </div>
@@ -223,7 +231,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtLinkDAQTask_8cxx_source.html#l00169">169</a> of file <a class="el" href="AtLinkDAQTask_8cxx_source.html">AtLinkDAQTask.cxx</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtLinkDAQTask_8cxx_source.html#l00178">178</a> of file <a class="el" href="AtLinkDAQTask_8cxx_source.html">AtLinkDAQTask.cxx</a>.</p>
 
 </div>
 </div>
@@ -250,7 +258,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtLinkDAQTask_8cxx_source.html#l00292">292</a> of file <a class="el" href="AtLinkDAQTask_8cxx_source.html">AtLinkDAQTask.cxx</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtLinkDAQTask_8cxx_source.html#l00310">310</a> of file <a class="el" href="AtLinkDAQTask_8cxx_source.html">AtLinkDAQTask.cxx</a>.</p>
 
 </div>
 </div>
@@ -277,7 +285,61 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtLinkDAQTask_8h_source.html#l00117">117</a> of file <a class="el" href="AtLinkDAQTask_8h_source.html">AtLinkDAQTask.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtLinkDAQTask_8h_source.html#l00124">124</a> of file <a class="el" href="AtLinkDAQTask_8h_source.html">AtLinkDAQTask.h</a>.</p>
+
+</div>
+</div>
+<a id="a5998b98cc7973d8d0c03dca446f792c9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5998b98cc7973d8d0c03dca446f792c9">&#9670;&nbsp;</a></span>GetInChain()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const TChain* AtLinkDAQTask::GetInChain </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtLinkDAQTask_8h_source.html#l00119">119</a> of file <a class="el" href="AtLinkDAQTask_8h_source.html">AtLinkDAQTask.h</a>.</p>
+
+</div>
+</div>
+<a id="a1057ba062de59db4ad0ed956979c7d4c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1057ba062de59db4ad0ed956979c7d4c">&#9670;&nbsp;</a></span>GetOutFile()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TFile* AtLinkDAQTask::GetOutFile </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtLinkDAQTask_8h_source.html#l00120">120</a> of file <a class="el" href="AtLinkDAQTask_8h_source.html">AtLinkDAQTask.h</a>.</p>
 
 </div>
 </div>
@@ -304,7 +366,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtLinkDAQTask_8cxx_source.html#l00049">49</a> of file <a class="el" href="AtLinkDAQTask_8cxx_source.html">AtLinkDAQTask.cxx</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtLinkDAQTask_8cxx_source.html#l00051">51</a> of file <a class="el" href="AtLinkDAQTask_8cxx_source.html">AtLinkDAQTask.cxx</a>.</p>
 
 </div>
 </div>
@@ -332,7 +394,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtLinkDAQTask_8h_source.html#l00112">112</a> of file <a class="el" href="AtLinkDAQTask_8h_source.html">AtLinkDAQTask.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtLinkDAQTask_8h_source.html#l00115">115</a> of file <a class="el" href="AtLinkDAQTask_8h_source.html">AtLinkDAQTask.h</a>.</p>
 
 </div>
 </div>
@@ -360,7 +422,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtLinkDAQTask_8h_source.html#l00107">107</a> of file <a class="el" href="AtLinkDAQTask_8h_source.html">AtLinkDAQTask.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtLinkDAQTask_8h_source.html#l00109">109</a> of file <a class="el" href="AtLinkDAQTask_8h_source.html">AtLinkDAQTask.h</a>.</p>
 
 </div>
 </div>
@@ -388,7 +450,35 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtLinkDAQTask_8h_source.html#l00105">105</a> of file <a class="el" href="AtLinkDAQTask_8h_source.html">AtLinkDAQTask.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtLinkDAQTask_8h_source.html#l00107">107</a> of file <a class="el" href="AtLinkDAQTask_8h_source.html">AtLinkDAQTask.h</a>.</p>
+
+</div>
+</div>
+<a id="a19ca875075d5856fb3786b37a777204b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a19ca875075d5856fb3786b37a777204b">&#9670;&nbsp;</a></span>SetInputBranch()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void AtLinkDAQTask::SetInputBranch </td>
+          <td>(</td>
+          <td class="paramtype">TString&#160;</td>
+          <td class="paramname"><em>name</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtLinkDAQTask_8h_source.html#l00111">111</a> of file <a class="el" href="AtLinkDAQTask_8h_source.html">AtLinkDAQTask.h</a>.</p>
 
 </div>
 </div>
@@ -418,7 +508,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtLinkDAQTask_8cxx_source.html#l00024">24</a> of file <a class="el" href="AtLinkDAQTask_8cxx_source.html">AtLinkDAQTask.cxx</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtLinkDAQTask_8cxx_source.html#l00026">26</a> of file <a class="el" href="AtLinkDAQTask_8cxx_source.html">AtLinkDAQTask.cxx</a>.</p>
 
 </div>
 </div>
@@ -446,7 +536,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtLinkDAQTask_8h_source.html#l00108">108</a> of file <a class="el" href="AtLinkDAQTask_8h_source.html">AtLinkDAQTask.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtLinkDAQTask_8h_source.html#l00110">110</a> of file <a class="el" href="AtLinkDAQTask_8h_source.html">AtLinkDAQTask.h</a>.</p>
 
 </div>
 </div>
@@ -474,7 +564,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtLinkDAQTask_8h_source.html#l00110">110</a> of file <a class="el" href="AtLinkDAQTask_8h_source.html">AtLinkDAQTask.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtLinkDAQTask_8h_source.html#l00113">113</a> of file <a class="el" href="AtLinkDAQTask_8h_source.html">AtLinkDAQTask.h</a>.</p>
 
 </div>
 </div>
@@ -502,7 +592,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtLinkDAQTask_8h_source.html#l00111">111</a> of file <a class="el" href="AtLinkDAQTask_8h_source.html">AtLinkDAQTask.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtLinkDAQTask_8h_source.html#l00114">114</a> of file <a class="el" href="AtLinkDAQTask_8h_source.html">AtLinkDAQTask.h</a>.</p>
 
 </div>
 </div>
@@ -530,7 +620,35 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtLinkDAQTask_8h_source.html#l00106">106</a> of file <a class="el" href="AtLinkDAQTask_8h_source.html">AtLinkDAQTask.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtLinkDAQTask_8h_source.html#l00108">108</a> of file <a class="el" href="AtLinkDAQTask_8h_source.html">AtLinkDAQTask.h</a>.</p>
+
+</div>
+</div>
+<a id="ad768267464ea9258d79eeb12e9c906a8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad768267464ea9258d79eeb12e9c906a8">&#9670;&nbsp;</a></span>SetUseRatio()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void AtLinkDAQTask::SetUseRatio </td>
+          <td>(</td>
+          <td class="paramtype">Bool_t&#160;</td>
+          <td class="paramname"><em>val</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtLinkDAQTask_8h_source.html#l00117">117</a> of file <a class="el" href="AtLinkDAQTask_8h_source.html">AtLinkDAQTask.h</a>.</p>
 
 </div>
 </div>
@@ -541,7 +659,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Apr 27 2022 00:47:49 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Oct 20 2023 16:23:02 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.18
 </small></address>

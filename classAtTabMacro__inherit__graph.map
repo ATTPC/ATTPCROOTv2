@@ -1,0 +1,6 @@
+<map id="AtTabMacro" name="AtTabMacro">
+<area shape="rect" id="node1" title="Tab for drawing arbitrary functions (probably needs refactor)" alt="" coords="89,155,183,181"/>
+<area shape="rect" id="node2" href="$classAtTabCanvas.html" title="Abstract class for a tab composed of a single TCanvas." alt="" coords="5,80,107,107"/>
+<area shape="rect" id="node3" href="$classAtTabBase.html" title=" " alt="" coords="13,5,99,32"/>
+<area shape="rect" id="node4" href="$classDataHandling_1_1AtObserver.html" title=" " alt="" coords="131,80,303,107"/>
+</map>

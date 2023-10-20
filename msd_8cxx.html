@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.18"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>ATTPCROOT: /github/workspace/AtReconstruction/AtPatternRecognition/msd.cxx File Reference</title>
+<title>ATTPCROOT: /github/workspace/AtReconstruction/AtPatternRecognition/trackfinder/msd.cxx File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">ATTPCROOT
-   &#160;<span id="projectnumber">1.0.0</span>
+   &#160;<span id="projectnumber">0.3.0-alpha</span>
    </div>
    <div id="projectbrief">A ROOT-based framework for analyzing data from active target detectors</div>
   </td>
@@ -63,7 +63,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_b4724c5ca6c4d299c31d2ca5fc322d19.html">AtReconstruction</a></li><li class="navelem"><a class="el" href="dir_9e9f569468dc2a59662c07838aeb1f6d.html">AtPatternRecognition</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_b4724c5ca6c4d299c31d2ca5fc322d19.html">AtReconstruction</a></li><li class="navelem"><a class="el" href="dir_9e9f569468dc2a59662c07838aeb1f6d.html">AtPatternRecognition</a></li><li class="navelem"><a class="el" href="dir_f9990ffdd0c71c72ec9feeaf8a355cdf.html">trackfinder</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -75,22 +75,29 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="msd_8h_source.html">msd.h</a>&quot;</code><br />
+<code>#include &lt;boost/smart_ptr/shared_ptr.hpp&gt;</code><br />
 <code>#include &lt;pcl/kdtree/kdtree_flann.h&gt;</code><br />
 <code>#include &lt;algorithm&gt;</code><br />
+<code>#include &lt;cstddef&gt;</code><br />
 <code>#include &lt;numeric&gt;</code><br />
+<code>#include &lt;string&gt;</code><br />
 <code>#include &lt;vector&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for msd.cxx:</div>
 <div class="dyncontent">
-<div class="center"><img src="msd_8cxx__incl.png" border="0" usemap="#_2github_2workspace_2AtReconstruction_2AtPatternRecognition_2msd_8cxx" alt=""/></div>
-<map name="_2github_2workspace_2AtReconstruction_2AtPatternRecognition_2msd_8cxx" id="_2github_2workspace_2AtReconstruction_2AtPatternRecognition_2msd_8cxx">
-<area shape="rect" title=" " alt="" coords="245,5,477,47"/>
-<area shape="rect" href="msd_8h.html" title=" " alt="" coords="55,95,113,121"/>
-<area shape="rect" title=" " alt="" coords="137,95,300,121"/>
-<area shape="rect" title=" " alt="" coords="324,95,399,121"/>
-<area shape="rect" title=" " alt="" coords="423,95,491,121"/>
-<area shape="rect" title=" " alt="" coords="516,95,575,121"/>
-<area shape="rect" title=" " alt="" coords="5,169,163,196"/>
+<div class="center"><img src="msd_8cxx__incl.png" border="0" usemap="#_2github_2workspace_2AtReconstruction_2AtPatternRecognition_2trackfinder_2msd_8cxx" alt=""/></div>
+<map name="_2github_2workspace_2AtReconstruction_2AtPatternRecognition_2trackfinder_2msd_8cxx" id="_2github_2workspace_2AtReconstruction_2AtPatternRecognition_2trackfinder_2msd_8cxx">
+<area shape="rect" title=" " alt="" coords="507,5,771,47"/>
+<area shape="rect" href="msd_8h.html" title=" " alt="" coords="107,102,164,129"/>
+<area shape="rect" title=" " alt="" coords="188,95,344,136"/>
+<area shape="rect" title=" " alt="" coords="369,102,531,129"/>
+<area shape="rect" title=" " alt="" coords="555,102,630,129"/>
+<area shape="rect" title=" " alt="" coords="655,102,720,129"/>
+<area shape="rect" title=" " alt="" coords="744,102,812,129"/>
+<area shape="rect" title=" " alt="" coords="836,102,891,129"/>
+<area shape="rect" title=" " alt="" coords="915,102,974,129"/>
+<area shape="rect" title=" " alt="" coords="5,184,124,211"/>
+<area shape="rect" title=" " alt="" coords="148,184,267,211"/>
 </map>
 </div>
 </div>
@@ -111,7 +118,7 @@ Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Apr 27 2022 00:47:49 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Oct 20 2023 16:23:01 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.18
 </small></address>

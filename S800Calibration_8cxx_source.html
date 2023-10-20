@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">ATTPCROOT
-   &#160;<span id="projectnumber">1.0.0</span>
+   &#160;<span id="projectnumber">0.3.0-alpha</span>
    </div>
    <div id="projectbrief">A ROOT-based framework for analyzing data from active target detectors</div>
   </td>
@@ -160,11 +160,11 @@ $(function() {
 <div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;      Info(__FUNCTION__, <span class="stringliteral">&quot;Reading CrdcCalFile %s&quot;</span>, filename);</div>
 <div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;   }</div>
 <div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160; </div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;   <span class="keywordflow">for</span> (<span class="keywordtype">int</span> c = 0; c &lt; 2; c++) {</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;   <span class="keywordflow">for</span> (<span class="keywordtype">int</span> <a class="code" href="AtRadialChargeModel_8cxx.html#a4fa597cdd9a67fc4cef7c8beebd1baa8">c</a> = 0; <a class="code" href="AtRadialChargeModel_8cxx.html#a4fa597cdd9a67fc4cef7c8beebd1baa8">c</a> &lt; 2; <a class="code" href="AtRadialChargeModel_8cxx.html#a4fa597cdd9a67fc4cef7c8beebd1baa8">c</a>++) {</div>
 <div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;      <span class="keywordflow">for</span> (<span class="keywordtype">int</span> p = 0; p &lt; <a class="code" href="S800defs_8h.html#a98319c6724f9dac35884c58ede3d0810">S800_FP_CRDC_CHANNELS</a>; p++) {</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;         fped[c][p] = crdcpedestals.GetValue(Form(<span class="stringliteral">&quot;Crdc.%d.Ped.%03d&quot;</span>, c, p), 0.0);</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;         fslope[c][p] = crdccal.GetValue(Form(<span class="stringliteral">&quot;Crdc.%d.Slope.%03d&quot;</span>, c, p), 1.0);</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;         foffset[c][p] = crdccal.GetValue(Form(<span class="stringliteral">&quot;Crdc.%d.Offset.%03d&quot;</span>, c, p), 0.0);</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;         fped[<a class="code" href="AtRadialChargeModel_8cxx.html#a4fa597cdd9a67fc4cef7c8beebd1baa8">c</a>][p] = crdcpedestals.GetValue(Form(<span class="stringliteral">&quot;Crdc.%d.Ped.%03d&quot;</span>, <a class="code" href="AtRadialChargeModel_8cxx.html#a4fa597cdd9a67fc4cef7c8beebd1baa8">c</a>, p), 0.0);</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;         fslope[<a class="code" href="AtRadialChargeModel_8cxx.html#a4fa597cdd9a67fc4cef7c8beebd1baa8">c</a>][p] = crdccal.GetValue(Form(<span class="stringliteral">&quot;Crdc.%d.Slope.%03d&quot;</span>, <a class="code" href="AtRadialChargeModel_8cxx.html#a4fa597cdd9a67fc4cef7c8beebd1baa8">c</a>, p), 1.0);</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;         foffset[<a class="code" href="AtRadialChargeModel_8cxx.html#a4fa597cdd9a67fc4cef7c8beebd1baa8">c</a>][p] = crdccal.GetValue(Form(<span class="stringliteral">&quot;Crdc.%d.Offset.%03d&quot;</span>, <a class="code" href="AtRadialChargeModel_8cxx.html#a4fa597cdd9a67fc4cef7c8beebd1baa8">c</a>, p), 0.0);</div>
 <div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;      }</div>
 <div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;   }</div>
 <div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160; </div>
@@ -968,6 +968,7 @@ $(function() {
 <div class="ttc" id="aclassS800Calibration_html_a55ce14aaec566871473aa451fbcc8f66"><div class="ttname"><a href="classS800Calibration.html#a55ce14aaec566871473aa451fbcc8f66">S800Calibration::MakeCalibratedCRDC</a></div><div class="ttdeci">void MakeCalibratedCRDC(CRDC *theCRDC, std::vector&lt; Short_t &gt; channels, std::vector&lt; Short_t &gt; data, Float_t tac, Float_t anode, Int_t id)</div><div class="ttdef"><b>Definition:</b> <a href="S800Calibration_8cxx_source.html#l00635">S800Calibration.cxx:635</a></div></div>
 <div class="ttc" id="aclassGTrigger_html_ac0bd4331aef75ccbf6bfeaf81de72b92"><div class="ttname"><a href="classGTrigger.html#ac0bd4331aef75ccbf6bfeaf81de72b92">GTrigger::GetS800</a></div><div class="ttdeci">Short_t GetS800()</div><div class="ttdef"><b>Definition:</b> <a href="S800_8h_source.html#l00104">S800.h:104</a></div></div>
 <div class="ttc" id="aS800Calibration_8h_html"><div class="ttname"><a href="S800Calibration_8h.html">S800Calibration.h</a></div></div>
+<div class="ttc" id="aAtRadialChargeModel_8cxx_html_a4fa597cdd9a67fc4cef7c8beebd1baa8"><div class="ttname"><a href="AtRadialChargeModel_8cxx.html#a4fa597cdd9a67fc4cef7c8beebd1baa8">c</a></div><div class="ttdeci">constexpr auto c</div><div class="ttdef"><b>Definition:</b> <a href="AtRadialChargeModel_8cxx_source.html#l00020">AtRadialChargeModel.cxx:20</a></div></div>
 <div class="ttc" id="astructlm__status__struct_html_a58712a83fea5d46dd8351d6045cc1bb5"><div class="ttname"><a href="structlm__status__struct.html#a58712a83fea5d46dd8351d6045cc1bb5">lm_status_struct::fnorm</a></div><div class="ttdeci">double fnorm</div><div class="ttdef"><b>Definition:</b> <a href="lmmin_8h_source.html#l00036">lmmin.h:36</a></div></div>
 <div class="ttc" id="aclassGScintillator_html_aa610bc457e3187067513122846e7be5c"><div class="ttname"><a href="classGScintillator.html#aa610bc457e3187067513122846e7be5c">GScintillator::GetDE_down</a></div><div class="ttdeci">Float_t GetDE_down()</div><div class="ttdef"><b>Definition:</b> <a href="S800_8h_source.html#l00156">S800.h:156</a></div></div>
 <div class="ttc" id="aclassMultiHitTOF_html_a9608ea08b2ab32fa815ed511a82272c0"><div class="ttname"><a href="classMultiHitTOF.html#a9608ea08b2ab32fa815ed511a82272c0">MultiHitTOF::fE1Up</a></div><div class="ttdeci">vector&lt; Float_t &gt; fE1Up</div><div class="ttdef"><b>Definition:</b> <a href="S800Calc_8h_source.html#l00270">S800Calc.h:270</a></div></div>
@@ -978,7 +979,7 @@ $(function() {
 <div class="ttc" id="aclassGCrdc_html_a1719e7232d76b823711178bd644ea863"><div class="ttname"><a href="classGCrdc.html#a1719e7232d76b823711178bd644ea863">GCrdc::GetTAC</a></div><div class="ttdeci">Float_t GetTAC()</div><div class="ttdef"><b>Definition:</b> <a href="S800_8h_source.html#l00255">S800.h:255</a></div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Apr 27 2022 00:47:48 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Oct 20 2023 16:23:00 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.18
 </small></address>

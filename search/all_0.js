@@ -1,11 +1,20 @@
 var searchData=
 [
-  ['_5f_5fstdc_5flimit_5fmacros_0',['__STDC_LIMIT_MACROS',['../fastcluster__dm_8cxx.html#aeb7e7a856ab7a794b05b6b63ef36ea3e',1,'fastcluster_dm.cxx']]],
+  ['_5f_5fstdc_5flimit_5fmacros_0',['__STDC_LIMIT_MACROS',['../trackfinder_2fastcluster__dm_8cxx.html#aeb7e7a856ab7a794b05b6b63ef36ea3e',1,'__STDC_LIMIT_MACROS():&#160;fastcluster_dm.cxx'],['../triplclust_2src_2hclust_2fastcluster__dm_8cxx.html#aeb7e7a856ab7a794b05b6b63ef36ea3e',1,'__STDC_LIMIT_MACROS():&#160;fastcluster_dm.cxx']]],
   ['_5fatomicnumber_1',['_atomicNumber',['../structAtTools_1_1IonFitInfo.html#a87a7fb4bcb0bb40495619e0448c7e80f',1,'AtTools::IonFitInfo']]],
-  ['_5felossfile_2',['_eLossFile',['../structAtTools_1_1IonFitInfo.html#ada812f38124ec9e78add0817bb39991e',1,'AtTools::IonFitInfo']]],
-  ['_5fionname_3',['_ionName',['../structAtTools_1_1IonFitInfo.html#a2a6955ea9e3f2ed5e46d6e9ccbdc42a8',1,'AtTools::IonFitInfo']]],
-  ['_5fmass_4',['_mass',['../structAtTools_1_1IonFitInfo.html#a310e39542c9e90180dbc4189a55572e3',1,'AtTools::IonFitInfo']]],
-  ['_5fmassnumber_5',['_MassNumber',['../structAtTools_1_1IonFitInfo.html#acf2c4bf9c5156d1b476b0da5058a3bae',1,'AtTools::IonFitInfo']]],
-  ['_5fpadding_6',['_padding',['../structhc__params.html#ac31dd070f87dc729f8daa6339ee1bfee',1,'hc_params']]],
-  ['_5fpdg_7',['_PDG',['../structAtTools_1_1IonFitInfo.html#a82be7cada125823da7f3c70ed11afb02',1,'AtTools::IonFitInfo']]]
+  ['_5fdataset_2',['_dataset',['../classAtHDFUnpacker.html#a39957a0e59afff1a051864fe28591f6f',1,'AtHDFUnpacker']]],
+  ['_5felossfile_3',['_eLossFile',['../structAtTools_1_1IonFitInfo.html#ada812f38124ec9e78add0817bb39991e',1,'AtTools::IonFitInfo']]],
+  ['_5feventsbyname_4',['_eventsbyname',['../classAtHDFUnpacker.html#a6b69799fe351c01aade5011635f294f4',1,'AtHDFUnpacker']]],
+  ['_5ffile_5',['_file',['../classAtHDFUnpacker.html#a91a8d5226da85eb88c92ff3739c1de0e',1,'AtHDFUnpacker']]],
+  ['_5fgroup_6',['_group',['../classAtHDFUnpacker.html#a51c9477de7737a3190c5c2d9713c2915',1,'AtHDFUnpacker']]],
+  ['_5fionname_7',['_ionName',['../structAtTools_1_1IonFitInfo.html#a2a6955ea9e3f2ed5e46d6e9ccbdc42a8',1,'AtTools::IonFitInfo']]],
+  ['_5fmass_8',['_mass',['../structAtTools_1_1IonFitInfo.html#a310e39542c9e90180dbc4189a55572e3',1,'AtTools::IonFitInfo']]],
+  ['_5fmassnumber_9',['_MassNumber',['../structAtTools_1_1IonFitInfo.html#acf2c4bf9c5156d1b476b0da5058a3bae',1,'AtTools::IonFitInfo']]],
+  ['_5fpadding_10',['_padding',['../structAtPATTERN_1_1hc__params.html#ac31dd070f87dc729f8daa6339ee1bfee',1,'AtPATTERN::hc_params::_padding()'],['../structhc__params.html#ac31dd070f87dc729f8daa6339ee1bfee',1,'hc_params::_padding()']]],
+  ['_5fpdg_11',['_PDG',['../structAtTools_1_1IonFitInfo.html#a82be7cada125823da7f3c70ed11afb02',1,'AtTools::IonFitInfo']]],
+  ['_5frad_12',['_rad',['../structEFieldMapRef.html#a8157050e92e8882a6ff41b10cf752576',1,'EFieldMapRef']]],
+  ['_5fradcorr_13',['_radcorr',['../structEFieldCorr.html#ae17514da2fe0342830469698c76d659f',1,'EFieldCorr']]],
+  ['_5ftracorr_14',['_tracorr',['../structEFieldCorr.html#a8f29417c969fdc7bdf57ecfc0f606c14',1,'EFieldCorr']]],
+  ['_5fzcorr_15',['_zcorr',['../structEFieldCorr.html#aef44c918bb7b3d6e5ac4c7c5b266b6e3',1,'EFieldCorr']]],
+  ['_5fzpos_16',['_zpos',['../structEFieldMapRef.html#a8b483b96d884ca121bd623a38f0f3e80',1,'EFieldMapRef']]]
 ];

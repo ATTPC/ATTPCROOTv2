@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">ATTPCROOT
-   &#160;<span id="projectnumber">1.0.0</span>
+   &#160;<span id="projectnumber">0.3.0-alpha</span>
    </div>
    <div id="projectbrief">A ROOT-based framework for analyzing data from active target detectors</div>
   </td>
@@ -68,13 +68,16 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a> &#124;
-<a href="#typedef-members">Typedefs</a>  </div>
+<a href="#nested-classes">Classes</a>  </div>
   <div class="headertitle">
 <div class="title">AtTrack.h File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;Math/Point3D.h&gt;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="AtContainerManip_8h_source.html">AtContainerManip.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="AtHit_8h_source.html">AtHit.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="AtHitCluster_8h_source.html">AtHitCluster.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="AtPattern_8h_source.html">AtPattern.h</a>&quot;</code><br />
+<code>#include &lt;Math/Point3D.h&gt;</code><br />
 <code>#include &lt;Math/Point3Dfwd.h&gt;</code><br />
 <code>#include &lt;Rtypes.h&gt;</code><br />
 <code>#include &lt;TMath.h&gt;</code><br />
@@ -84,30 +87,36 @@ $(function() {
 <code>#include &lt;memory&gt;</code><br />
 <code>#include &lt;utility&gt;</code><br />
 <code>#include &lt;vector&gt;</code><br />
-<code>#include &quot;<a class="el" href="AtHit_8h_source.html">AtHit.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="AtHitCluster_8h_source.html">AtHitCluster.h</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for AtTrack.h:</div>
 <div class="dyncontent">
 <div class="center"><img src="AtTrack_8h__incl.png" border="0" usemap="#_2github_2workspace_2AtData_2AtTrack_8h" alt=""/></div>
 <map name="_2github_2workspace_2AtData_2AtTrack_8h" id="_2github_2workspace_2AtData_2AtTrack_8h">
-<area shape="rect" title=" " alt="" coords="599,5,771,47"/>
-<area shape="rect" title=" " alt="" coords="102,244,213,271"/>
-<area shape="rect" title=" " alt="" coords="543,244,675,271"/>
-<area shape="rect" title=" " alt="" coords="5,244,77,271"/>
-<area shape="rect" title=" " alt="" coords="799,95,868,121"/>
-<area shape="rect" title=" " alt="" coords="699,244,778,271"/>
-<area shape="rect" title=" " alt="" coords="803,244,877,271"/>
-<area shape="rect" title=" " alt="" coords="892,95,964,121"/>
-<area shape="rect" title=" " alt="" coords="989,95,1057,121"/>
-<area shape="rect" title=" " alt="" coords="1081,95,1133,121"/>
-<area shape="rect" title=" " alt="" coords="901,244,960,271"/>
-<area shape="rect" href="AtHit_8h.html" title=" " alt="" coords="509,169,571,196"/>
-<area shape="rect" href="AtHitCluster_8h.html" title=" " alt="" coords="330,95,433,121"/>
-<area shape="rect" title=" " alt="" coords="401,244,519,271"/>
-<area shape="rect" title=" " alt="" coords="237,244,377,271"/>
-<area shape="rect" title=" " alt="" coords="217,169,322,196"/>
-<area shape="rect" title=" " alt="" coords="345,169,428,196"/>
+<area shape="rect" title=" " alt="" coords="1037,5,1209,47"/>
+<area shape="rect" href="AtContainerManip_8h.html" title=" " alt="" coords="340,169,475,196"/>
+<area shape="rect" title=" " alt="" coords="479,244,554,271"/>
+<area shape="rect" title=" " alt="" coords="661,244,729,271"/>
+<area shape="rect" title=" " alt="" coords="578,244,637,271"/>
+<area shape="rect" href="AtHit_8h.html" title=" " alt="" coords="887,169,949,196"/>
+<area shape="rect" title=" " alt="" coords="1060,244,1171,271"/>
+<area shape="rect" title=" " alt="" coords="1195,244,1327,271"/>
+<area shape="rect" title=" " alt="" coords="1537,244,1609,271"/>
+<area shape="rect" title=" " alt="" coords="1351,244,1429,271"/>
+<area shape="rect" href="AtHitCluster_8h.html" title=" " alt="" coords="1201,95,1304,121"/>
+<area shape="rect" title=" " alt="" coords="1633,244,1685,271"/>
+<area shape="rect" href="AtPattern_8h.html" title=" " alt="" coords="1025,169,1112,196"/>
+<area shape="rect" title=" " alt="" coords="1729,95,1798,121"/>
+<area shape="rect" title=" " alt="" coords="1822,95,1894,121"/>
+<area shape="rect" title=" " alt="" coords="360,244,455,271"/>
+<area shape="rect" title=" " alt="" coords="5,244,63,271"/>
+<area shape="rect" title=" " alt="" coords="87,244,149,271"/>
+<area shape="rect" title=" " alt="" coords="173,244,228,271"/>
+<area shape="rect" title=" " alt="" coords="253,244,335,271"/>
+<area shape="rect" title=" " alt="" coords="753,244,872,271"/>
+<area shape="rect" title=" " alt="" coords="896,244,1036,271"/>
+<area shape="rect" title=" " alt="" coords="1187,169,1318,196"/>
+<area shape="rect" title=" " alt="" coords="1342,169,1451,196"/>
+<area shape="rect" title=" " alt="" coords="1454,244,1513,271"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -115,33 +124,46 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
 <div class="center"><img src="AtTrack_8h__dep__incl.png" border="0" usemap="#_2github_2workspace_2AtData_2AtTrack_8hdep" alt=""/></div>
 <map name="_2github_2workspace_2AtData_2AtTrack_8hdep" id="_2github_2workspace_2AtData_2AtTrack_8hdep">
-<area shape="rect" title=" " alt="" coords="1671,5,1843,47"/>
-<area shape="rect" href="AtPatternEvent_8h.html" title=" " alt="" coords="713,95,885,136"/>
-<area shape="rect" href="AtEventDrawTask_8cxx.html" title=" " alt="" coords="1996,184,2191,225"/>
-<area shape="rect" href="AtEventDrawTaskProto_8cxx.html" title=" " alt="" coords="5,184,232,225"/>
-<area shape="rect" href="AtEventDrawTaskS800_8cxx.html" title=" " alt="" coords="2215,184,2441,225"/>
-<area shape="rect" href="AtFitterTask_8cxx.html" title=" " alt="" coords="256,184,488,225"/>
-<area shape="rect" href="AtTrack_8cxx.html" title=" " alt="" coords="1249,95,1421,136"/>
-<area shape="rect" href="AtTrackingEventAna_8h.html" title=" " alt="" coords="1445,95,1617,136"/>
-<area shape="rect" href="AtFitter_8cxx.html" title=" " alt="" coords="1641,95,1873,136"/>
-<area shape="rect" href="AtGenfit_8cxx.html" title=" " alt="" coords="1897,95,2129,136"/>
-<area shape="rect" href="AtLmedsMod_8h.html" title=" " alt="" coords="2154,95,2395,136"/>
-<area shape="rect" href="AtMlesacMod_8h.html" title=" " alt="" coords="2471,95,2713,136"/>
-<area shape="rect" href="AtPRA_8cxx.html" title=" " alt="" coords="3539,184,3771,225"/>
-<area shape="rect" href="AtRansacMod_8h.html" title=" " alt="" coords="2737,95,2983,136"/>
-<area shape="rect" href="AtTrackFinderHC_8h.html" title=" " alt="" coords="909,95,1173,136"/>
-<area shape="rect" href="AtRansac_8h.html" title=" " alt="" coords="3007,95,3239,136"/>
-<area shape="rect" href="AtPatternEvent_8cxx.html" title=" " alt="" coords="513,184,685,225"/>
-<area shape="rect" href="AtTrackFinderHC_8cxx.html" title=" " alt="" coords="709,184,985,225"/>
-<area shape="rect" href="AtPRAtask_8cxx.html" title=" " alt="" coords="1009,184,1241,225"/>
-<area shape="rect" href="AtTrackingEventAna_8cxx.html" title=" " alt="" coords="1522,184,1694,225"/>
-<area shape="rect" href="AtLmedsMod_8cxx.html" title=" " alt="" coords="1719,184,1972,225"/>
-<area shape="rect" href="AtRansacTask_8cxx.html" title=" " alt="" coords="2744,184,2976,225"/>
-<area shape="rect" href="AtMlesacMod_8cxx.html" title=" " alt="" coords="2465,184,2719,225"/>
-<area shape="rect" href="AtRansacMod_8cxx.html" title=" " alt="" coords="3001,184,3258,225"/>
-<area shape="rect" href="AtTrackFinderHCTask_8h.html" title=" " alt="" coords="1265,184,1497,225"/>
-<area shape="rect" href="AtTrackFinderHCTask_8cxx.html" title=" " alt="" coords="1265,273,1497,315"/>
-<area shape="rect" href="AtRansac_8cxx.html" title=" " alt="" coords="3283,184,3515,225"/>
+<area shape="rect" title=" " alt="" coords="2436,5,2608,47"/>
+<area shape="rect" href="AtPatternEvent_8h.html" title=" " alt="" coords="2436,95,2608,136"/>
+<area shape="rect" href="AtFissionEvent_8cxx.html" title=" " alt="" coords="288,288,460,329"/>
+<area shape="rect" href="AtTabFission_8cxx.html" title=" " alt="" coords="1109,288,1322,329"/>
+<area shape="rect" href="AtTabMain_8cxx.html" title=" " alt="" coords="928,191,1127,233"/>
+<area shape="rect" href="AtEventDrawTask_8cxx.html" title=" " alt="" coords="53,184,268,240"/>
+<area shape="rect" href="AtEventDrawTaskProto_8cxx.html" title=" " alt="" coords="1151,184,1365,240"/>
+<area shape="rect" href="AtEventDrawTaskS800_8cxx.html" title=" " alt="" coords="689,184,904,240"/>
+<area shape="rect" href="AtPRA_8cxx.html" title=" " alt="" coords="4369,191,4601,233"/>
+<area shape="rect" href="AtTrackFinderHC_8cxx.html" title=" " alt="" coords="2836,288,3112,329"/>
+<area shape="rect" href="AtTrackFinderTC_8cxx.html" title=" " alt="" coords="3565,288,3839,329"/>
+<area shape="rect" href="AtTrack_8cxx.html" title=" " alt="" coords="4413,95,4585,136"/>
+<area shape="rect" href="AtTrackingEventAna_8h.html" title=" " alt="" coords="711,95,883,136"/>
+<area shape="rect" href="AtFitter_8cxx.html" title=" " alt="" coords="4610,95,4842,136"/>
+<area shape="rect" href="AtGenfit_8cxx.html" title=" " alt="" coords="4866,95,5098,136"/>
+<area shape="rect" href="AtPRA_8h.html" title=" " alt="" coords="3247,95,3479,136"/>
+<area shape="rect" href="AtSampleConsensus_8h.html" title=" " alt="" coords="4053,95,4338,136"/>
+<area shape="rect" href="AtFindVertex_8h.html" title=" " alt="" coords="292,95,469,136"/>
+<area shape="rect" href="AtFindVertex_8cxx.html" title=" " alt="" coords="292,191,469,233"/>
+<area shape="rect" href="AtTrackTransformer_8cxx.html" title=" " alt="" coords="5123,95,5300,136"/>
+<area shape="rect" href="AtFissionTask_8cxx.html" title=" " alt="" coords="1658,288,1853,329"/>
+<area shape="rect" href="AtFissionEvent_8h.html" title=" " alt="" coords="2209,191,2381,233"/>
+<area shape="rect" href="AtMCFission_8cxx.html" title=" " alt="" coords="2433,288,2665,329"/>
+<area shape="rect" href="AtPatternEvent_8cxx.html" title=" " alt="" coords="2764,191,2936,233"/>
+<area shape="rect" href="AtMCFission_8h.html" title=" " alt="" coords="2406,191,2638,233"/>
+<area shape="rect" href="AtMCFitter_8cxx.html" title=" " alt="" coords="1390,191,1622,233"/>
+<area shape="rect" href="AtMCFitterTask_8cxx.html" title=" " alt="" coords="1697,191,1929,233"/>
+<area shape="rect" href="AtFitterTask_8cxx.html" title=" " alt="" coords="1953,191,2185,233"/>
+<area shape="rect" href="AtSampleConsensus_8cxx.html" title=" " alt="" coords="4047,191,4344,233"/>
+<area shape="rect" href="AtPRAtask_8cxx.html" title=" " alt="" coords="3247,288,3479,329"/>
+<area shape="rect" href="AtRansacTask_8cxx.html" title=" " alt="" coords="3790,191,4022,233"/>
+<area shape="rect" href="AtSampleConsensusTask_8cxx.html" title=" " alt="" coords="4522,288,4754,329"/>
+<area shape="rect" href="AtTabEnergyLoss_8h.html" title=" " alt="" coords="2182,288,2409,329"/>
+<area shape="rect" href="AtTabFF_8h.html" title=" " alt="" coords="1974,288,2153,329"/>
+<area shape="rect" href="AtTabEnergyLoss_8cxx.html" title=" " alt="" coords="2179,377,2417,419"/>
+<area shape="rect" href="AtTabFF_8cxx.html" title=" " alt="" coords="1967,377,2154,419"/>
+<area shape="rect" href="AtTrackingEventAna_8cxx.html" title=" " alt="" coords="493,191,665,233"/>
+<area shape="rect" href="AtTrackFinderHC_8h.html" title=" " alt="" coords="3011,191,3275,233"/>
+<area shape="rect" href="AtTrackFinderTC_8h.html" title=" " alt="" coords="3401,191,3664,233"/>
+<area shape="rect" href="AtSampleConsensusTask_8h.html" title=" " alt="" coords="4726,191,4958,233"/>
 </map>
 </div>
 </div>
@@ -151,33 +173,11 @@ This graph shows which files directly or indirectly include this file:</div>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtTrack.html">AtTrack</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
-Typedefs</h2></td></tr>
-<tr class="memitem:acdbe604dea12970b4e97a316f9046ae7"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AtTrack_8h.html#acdbe604dea12970b4e97a316f9046ae7">XYZPoint</a> = ROOT::Math::XYZPoint</td></tr>
-<tr class="separator:acdbe604dea12970b4e97a316f9046ae7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Typedef Documentation</h2>
-<a id="acdbe604dea12970b4e97a316f9046ae7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acdbe604dea12970b4e97a316f9046ae7">&#9670;&nbsp;</a></span>XYZPoint</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">using <a class="el" href="AtHit_8h.html#acdbe604dea12970b4e97a316f9046ae7">XYZPoint</a> =  ROOT::Math::XYZPoint</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="AtTrack_8h_source.html#l00024">24</a> of file <a class="el" href="AtTrack_8h_source.html">AtTrack.h</a>.</p>
-
-</div>
-</div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Apr 27 2022 00:47:48 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Oct 20 2023 16:23:01 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.18
 </small></address>

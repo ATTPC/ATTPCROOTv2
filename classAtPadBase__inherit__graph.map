@@ -1,0 +1,12 @@
+<map id="AtPadBase" name="AtPadBase">
+<area shape="rect" id="node1" title="Base class for AtPad composition pattern." alt="" coords="401,80,489,107"/>
+<area shape="rect" id="node3" href="$classAtElectronicReference.html" title=" " alt="" coords="5,155,156,181"/>
+<area shape="rect" id="node4" href="$classAtGenericTrace.html" title="Trace recorded by other data acquisition systems." alt="" coords="180,155,293,181"/>
+<area shape="rect" id="node5" href="$classAtPad.html" title="Container class for AtPadBase objects." alt="" coords="318,155,377,181"/>
+<area shape="rect" id="node7" href="$classAtPadArray.html" title="Holds an addition array of doubles for an AtPad." alt="" coords="401,155,489,181"/>
+<area shape="rect" id="node8" href="$classAtPadFFT.html" title=" " alt="" coords="513,155,595,181"/>
+<area shape="rect" id="node9" href="$classAtPadValue.html" title="Holds a double for an AtPad." alt="" coords="619,155,710,181"/>
+<area shape="rect" id="node10" href="$classAtPulserInfo.html" title=" " alt="" coords="735,155,829,181"/>
+<area shape="rect" id="node2" title=" " alt="" coords="411,5,479,32"/>
+<area shape="rect" id="node6" href="$classAtAuxPad.html" title=" " alt="" coords="307,229,387,256"/>
+</map>

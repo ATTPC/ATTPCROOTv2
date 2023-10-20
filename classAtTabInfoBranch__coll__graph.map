@@ -1,0 +1,10 @@
+<map id="AtTabInfoBranch&lt; T &gt;" name="AtTabInfoBranch&lt; T &gt;">
+<area shape="rect" id="node1" title="Describes a branch stored a TTree." alt="" coords="11,364,162,391"/>
+<area shape="rect" id="node2" href="$classAtTabInfoBase.html" title="Interface for AtTabInfo classes." alt="" coords="5,81,115,108"/>
+<area shape="rect" id="node4" href="$classAtTabInfoTree.html" title="Tab Info object for handling a non&#45;FairRoot TTree." alt="" coords="173,171,278,197"/>
+<area shape="rect" id="node3" title=" " alt="" coords="113,260,287,301"/>
+<area shape="rect" id="node5" href="$classDataHandling_1_1AtObserver.html" title=" " alt="" coords="139,81,311,108"/>
+<area shape="rect" id="node6" title=" " alt="" coords="336,81,493,108"/>
+<area shape="rect" id="node7" href="$classDataHandling_1_1AtTreeEntry.html" title="Subject for the entry number in the FairRoot tree." alt="" coords="518,81,693,108"/>
+<area shape="rect" id="node8" href="$classDataHandling_1_1AtSubject.html" title=" " alt="" coords="524,5,687,32"/>
+</map>

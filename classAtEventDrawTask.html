@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">ATTPCROOT
-   &#160;<span id="projectnumber">1.0.0</span>
+   &#160;<span id="projectnumber">0.3.0-alpha</span>
    </div>
    <div id="projectbrief">A ROOT-based framework for analyzing data from active target detectors</div>
   </td>
@@ -66,6 +66,8 @@ $(function() {
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
+<a href="#pro-attribs">Protected Attributes</a> &#124;
+<a href="#pro-static-attribs">Static Protected Attributes</a> &#124;
 <a href="classAtEventDrawTask-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">AtEventDrawTask Class Reference</div>  </div>
@@ -87,8 +89,53 @@ Collaboration diagram for AtEventDrawTask:</div>
 <div class="dyncontent">
 <div class="center"><img src="classAtEventDrawTask__coll__graph.png" border="0" usemap="#AtEventDrawTask_coll__map" alt="Collaboration graph"/></div>
 <map name="AtEventDrawTask_coll__map" id="AtEventDrawTask_coll__map">
-<area shape="rect" title=" " alt="" coords="5,80,132,107"/>
-<area shape="rect" title=" " alt="" coords="32,5,105,32"/>
+<area shape="rect" title=" " alt="" coords="2903,560,3029,587"/>
+<area shape="rect" title=" " alt="" coords="2637,316,2710,343"/>
+<area shape="rect" title=" " alt="" coords="2581,367,2765,393"/>
+<area shape="rect" title=" " alt="" coords="2596,418,2751,459"/>
+<area shape="rect" title=" " alt="" coords="2289,425,2472,452"/>
+<area shape="rect" title=" " alt="" coords="2577,484,2769,511"/>
+<area shape="rect" href="classS800Calc.html" title=" " alt="" coords="917,369,995,396"/>
+<area shape="rect" title=" " alt="" coords="596,560,668,587"/>
+<area shape="rect" href="classAtBaseEvent.html" title="Base class for all event types in ATTPCROOT." alt="" coords="2331,849,2430,876"/>
+<area shape="rect" href="classAtMap.html" title=" " alt="" coords="1515,585,1575,612"/>
+<area shape="rect" href="classTOF.html" title=" " alt="" coords="608,404,656,431"/>
+<area shape="rect" title=" " alt="" coords="279,515,347,541"/>
+<area shape="rect" href="classMultiHitTOF.html" title=" " alt="" coords="585,353,679,380"/>
+<area shape="rect" href="classSCINT.html" title=" " alt="" coords="601,455,663,481"/>
+<area shape="rect" href="classTrigger.html" title=" " alt="" coords="601,507,663,533"/>
+<area shape="rect" href="classIC.html" title=" " alt="" coords="613,120,651,147"/>
+<area shape="rect" href="classCRDC.html" title=" " alt="" coords="603,236,661,263"/>
+<area shape="rect" href="classHODOSCOPE.html" title=" " alt="" coords="579,301,685,328"/>
+<area shape="rect" href="classAtPadBase.html" title="Base class for AtPad composition pattern." alt="" coords="588,1133,676,1160"/>
+<area shape="rect" href="classS800Ana.html" title=" " alt="" coords="595,1397,669,1424"/>
+<area shape="rect" href="classAtHit.html" title="Point in space with charge." alt="" coords="606,1208,658,1235"/>
+<area shape="rect" title=" " alt="" coords="241,220,385,247"/>
+<area shape="rect" title=" " alt="" coords="248,23,379,49"/>
+<area shape="rect" href="classAtRawEvent.html" title=" " alt="" coords="2626,688,2721,715"/>
+<area shape="rect" title="STL class." alt="" coords="917,900,995,927"/>
+<area shape="rect" title=" " alt="" coords="2009,951,2151,993"/>
+<area shape="rect" href="classAtAuxPad.html" title=" " alt="" coords="1700,963,1780,989"/>
+<area shape="rect" title=" " alt="" coords="1159,1185,1367,1226"/>
+<area shape="rect" title=" " alt="" coords="1187,719,1340,775"/>
+<area shape="rect" title="STL class." alt="" coords="570,893,694,934"/>
+<area shape="rect" title=" " alt="" coords="1996,900,2164,927"/>
+<area shape="rect" href="classAtPad.html" title="Container class for AtPadBase objects." alt="" coords="1515,1075,1574,1101"/>
+<area shape="rect" title=" " alt="" coords="859,1185,1053,1212"/>
+<area shape="rect" title=" " alt="" coords="1206,1002,1321,1043"/>
+<area shape="rect" title=" " alt="" coords="1201,1067,1326,1109"/>
+<area shape="rect" title=" " alt="" coords="1805,585,1972,612"/>
+<area shape="rect" title=" " alt="" coords="1183,471,1343,513"/>
+<area shape="rect" href="structAtPadReference.html" title=" " alt="" coords="897,621,1015,648"/>
+<area shape="rect" title=" " alt="" coords="1159,588,1368,615"/>
+<area shape="rect" title=" " alt="" coords="1177,639,1350,695"/>
+<area shape="rect" title=" " alt="" coords="1199,537,1327,564"/>
+<area shape="rect" href="classAtEventManager.html" title=" " alt="" coords="897,1331,1015,1357"/>
+<area shape="rect" title=" " alt="" coords="565,1284,699,1311"/>
+<area shape="rect" title=" " alt="" coords="555,1347,709,1373"/>
+<area shape="rect" title=" " alt="" coords="252,1201,375,1242"/>
+<area shape="rect" href="structAtHit_1_1MCSimPoint.html" title=" " alt="" coords="5,1208,136,1235"/>
+<area shape="rect" title=" " alt="" coords="2579,1363,2768,1389"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
@@ -106,6 +153,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a26552201415cd4fb30f2229ca72e93d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a71ab36d1c3f0e2d730553498395ad7ee"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#a71ab36d1c3f0e2d730553498395ad7ee">Reset</a> ()</td></tr>
 <tr class="separator:a71ab36d1c3f0e2d730553498395ad7ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9b9fa5ea292b01ff44d906c329b67c5f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#a9b9fa5ea292b01ff44d906c329b67c5f">SetMap</a> (std::shared_ptr&lt; <a class="el" href="classAtMap.html">AtMap</a> &gt; map)</td></tr>
+<tr class="separator:a9b9fa5ea292b01ff44d906c329b67c5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac48f432d1c5f7dd267208db264fa005d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#ac48f432d1c5f7dd267208db264fa005d">SetThreshold</a> (Int_t val)</td></tr>
 <tr class="separator:ac48f432d1c5f7dd267208db264fa005d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad2b549d933bd1449e5c36e6e4563ca2b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#ad2b549d933bd1449e5c36e6e4563ca2b">UnpackHoughSpace</a> ()</td></tr>
@@ -118,33 +167,235 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a341b5cf61dae89a3f0e368b37295848d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1ee35faa47e96fa855fbaa481c42fc00"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#a1ee35faa47e96fa855fbaa481c42fc00">SetSaveTextData</a> ()</td></tr>
 <tr class="separator:a1ee35faa47e96fa855fbaa481c42fc00"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8440cecbd4702d1928cd8339ca13cc72"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#a8440cecbd4702d1928cd8339ca13cc72">SetLine</a> (double t, std::vector&lt; Double_t &gt; p, double &amp;x, double &amp;<a class="el" href="lmcurve_8cxx.html#ac41520b3fdae6af3fa0d9dbbf3211471">y</a>, double &amp;z)</td></tr>
-<tr class="separator:a8440cecbd4702d1928cd8339ca13cc72"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abef1d281b8fbacc0b621749a511199a9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#abef1d281b8fbacc0b621749a511199a9">SetLine6</a> (double t, std::vector&lt; Double_t &gt; p, double &amp;x, double &amp;<a class="el" href="lmcurve_8cxx.html#ac41520b3fdae6af3fa0d9dbbf3211471">y</a>, double &amp;z)</td></tr>
-<tr class="separator:abef1d281b8fbacc0b621749a511199a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0344a65e26cef795d22966ddb000f546"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#a0344a65e26cef795d22966ddb000f546">SetRawEventBranch</a> (TString branchName)</td></tr>
 <tr class="separator:a0344a65e26cef795d22966ddb000f546"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a55d24ac2000a49f9312c0bdf2f43e4b6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#a55d24ac2000a49f9312c0bdf2f43e4b6">SetEventBranch</a> (TString branchName)</td></tr>
 <tr class="separator:a55d24ac2000a49f9312c0bdf2f43e4b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a447decb4e172446ca2640d9f13aff075"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#a447decb4e172446ca2640d9f13aff075">SetCorrectedEventBranch</a> (TString branchName)</td></tr>
 <tr class="separator:a447decb4e172446ca2640d9f13aff075"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1d71d9ff7c28ac2f508f9c4c486d5b1f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#a1d71d9ff7c28ac2f508f9c4c486d5b1f">SetPatternEventBranch</a> (TString branchName)</td></tr>
+<tr class="separator:a1d71d9ff7c28ac2f508f9c4c486d5b1f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a113ad1472f08f6fb0e62543d6d3a6d5c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#a113ad1472f08f6fb0e62543d6d3a6d5c">SetMinTracksPerVertex</a> (Int_t val)</td></tr>
+<tr class="separator:a113ad1472f08f6fb0e62543d6d3a6d5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ace3b7dffb9922b8ed70bb51dc64eb22a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#ace3b7dffb9922b8ed70bb51dc64eb22a">DrawWave</a> (Int_t PadNum)</td></tr>
 <tr class="separator:ace3b7dffb9922b8ed70bb51dc64eb22a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6eb2d4fc22ced144b0ff7214d4b0e7d7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#a6eb2d4fc22ced144b0ff7214d4b0e7d7">SetMultiHit</a> (Int_t hitMax)</td></tr>
 <tr class="separator:a6eb2d4fc22ced144b0ff7214d4b0e7d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a03b546abd95f52032c0470228af402f7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#a03b546abd95f52032c0470228af402f7">SetAlgorithm</a> (Int_t val)</td></tr>
-<tr class="separator:a03b546abd95f52032c0470228af402f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a79b6b8985884c2a45e318906f02a0d7f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#a79b6b8985884c2a45e318906f02a0d7f">SelectDetectorId</a> (<a class="el" href="AtEventDrawTask_8h.html#a1806da1a0fbae8ab81f7330906f65680">DetectorId</a> val)</td></tr>
-<tr class="separator:a79b6b8985884c2a45e318906f02a0d7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9ee9793a360726bee0d00f0cac3a063c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#a9ee9793a360726bee0d00f0cac3a063c">SetDrawVertexFromLines</a> (bool val=true)</td></tr>
+<tr class="separator:a9ee9793a360726bee0d00f0cac3a063c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a14d330af522d40bbad886f3fba08e5c5"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#a14d330af522d40bbad886f3fba08e5c5">SelectPad</a> (const char *rawevt)</td></tr>
 <tr class="separator:a14d330af522d40bbad886f3fba08e5c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
+Protected Attributes</h2></td></tr>
+<tr class="memitem:a2f155b5dabbd6d2e7ecec37ebdb1aadc"><td class="memItemLeft" align="right" valign="top">Bool_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#a2f155b5dabbd6d2e7ecec37ebdb1aadc">fIs2DPlotRange</a></td></tr>
+<tr class="separator:a2f155b5dabbd6d2e7ecec37ebdb1aadc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acf946320e01b6acf56e54ec2e6b432a4"><td class="memItemLeft" align="right" valign="top">Bool_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#acf946320e01b6acf56e54ec2e6b432a4">fUnpackHough</a></td></tr>
+<tr class="separator:acf946320e01b6acf56e54ec2e6b432a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a61f26fed0c0007eaadbab914794cf5c6"><td class="memItemLeft" align="right" valign="top">TString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#a61f26fed0c0007eaadbab914794cf5c6">fRawEventBranchName</a></td></tr>
+<tr class="separator:a61f26fed0c0007eaadbab914794cf5c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaf93aae25ca191c9dc28f039ad8061ac"><td class="memItemLeft" align="right" valign="top">TString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#aaf93aae25ca191c9dc28f039ad8061ac">fEventBranchName</a></td></tr>
+<tr class="separator:aaf93aae25ca191c9dc28f039ad8061ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaa51b4c4ef6bc8f555fbec2f672eae33"><td class="memItemLeft" align="right" valign="top">TString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#aaa51b4c4ef6bc8f555fbec2f672eae33">fCorrectedEventBranchName</a></td></tr>
+<tr class="separator:aaa51b4c4ef6bc8f555fbec2f672eae33"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaa968d716d61f107f9d08c44fd5f332d"><td class="memItemLeft" align="right" valign="top">TString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#aaa968d716d61f107f9d08c44fd5f332d">fPatternEventBranchName</a></td></tr>
+<tr class="separator:aaa968d716d61f107f9d08c44fd5f332d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adb545399a89310ef96cf152cf30f33af"><td class="memItemLeft" align="right" valign="top">TClonesArray *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#adb545399a89310ef96cf152cf30f33af">fEventArray</a></td></tr>
+<tr class="separator:adb545399a89310ef96cf152cf30f33af"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae4fad6a12de583a9232a00f87464ee8c"><td class="memItemLeft" align="right" valign="top">TClonesArray *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#ae4fad6a12de583a9232a00f87464ee8c">fCorrectedEventArray</a> {}</td></tr>
+<tr class="separator:ae4fad6a12de583a9232a00f87464ee8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af10eddcfa2047329a95645c6c0f2fb49"><td class="memItemLeft" align="right" valign="top">TClonesArray *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#af10eddcfa2047329a95645c6c0f2fb49">fRawEventArray</a> {}</td></tr>
+<tr class="separator:af10eddcfa2047329a95645c6c0f2fb49"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7edb497ddd6ada31a0b2be0751e47383"><td class="memItemLeft" align="right" valign="top">TClonesArray *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#a7edb497ddd6ada31a0b2be0751e47383">fPatternEventArray</a> {}</td></tr>
+<tr class="separator:a7edb497ddd6ada31a0b2be0751e47383"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a338c748cfb5bec984f2564f7bda81abb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAtEventManager.html">AtEventManager</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#a338c748cfb5bec984f2564f7bda81abb">fEventManager</a></td></tr>
+<tr class="separator:a338c748cfb5bec984f2564f7bda81abb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a135e0a08e722aaeaab5f5a47ef9c8170"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAtRawEvent.html">AtRawEvent</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#a135e0a08e722aaeaab5f5a47ef9c8170">fRawevent</a></td></tr>
+<tr class="separator:a135e0a08e722aaeaab5f5a47ef9c8170"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a60c73d951dfe515daf7533ebab1505f0"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classAtMap.html">AtMap</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#a60c73d951dfe515daf7533ebab1505f0">fDetmap</a></td></tr>
+<tr class="separator:a60c73d951dfe515daf7533ebab1505f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8bc0d90f087ffe4c1c6c2de15fe9339e"><td class="memItemLeft" align="right" valign="top">Int_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#a8bc0d90f087ffe4c1c6c2de15fe9339e">fThreshold</a></td></tr>
+<tr class="separator:a8bc0d90f087ffe4c1c6c2de15fe9339e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa7ebc482e6a5f111d382fd3bcb808bf5"><td class="memItemLeft" align="right" valign="top">TString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#aa7ebc482e6a5f111d382fd3bcb808bf5">fMap</a></td></tr>
+<tr class="separator:aa7ebc482e6a5f111d382fd3bcb808bf5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae15dee686090723e786730fa3135c2bd"><td class="memItemLeft" align="right" valign="top">TEvePointSet *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#ae15dee686090723e786730fa3135c2bd">fHitSet</a></td></tr>
+<tr class="separator:ae15dee686090723e786730fa3135c2bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aea882cdb94541803d43eee5745a19c33"><td class="memItemLeft" align="right" valign="top">TEvePointSet *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#aea882cdb94541803d43eee5745a19c33">fCorrectedHitSet</a></td></tr>
+<tr class="separator:aea882cdb94541803d43eee5745a19c33"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afb8e099f6098502daf0f94dec54ffdfd"><td class="memItemLeft" align="right" valign="top">TEveBoxSet *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#afb8e099f6098502daf0f94dec54ffdfd">fhitBoxSet</a></td></tr>
+<tr class="separator:afb8e099f6098502daf0f94dec54ffdfd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1f39601138fbab4ab2ff7cfeb883ce08"><td class="memItemLeft" align="right" valign="top">TPaletteAxis *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#a1f39601138fbab4ab2ff7cfeb883ce08">fPadPlanePal</a></td></tr>
+<tr class="separator:a1f39601138fbab4ab2ff7cfeb883ce08"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa1f137e62e4fc37aa5f37f488034f81a"><td class="memItemLeft" align="right" valign="top">Color_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#aa1f137e62e4fc37aa5f37f488034f81a">fHitColor</a></td></tr>
+<tr class="separator:aa1f137e62e4fc37aa5f37f488034f81a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1559495aecba3c0140a1a7645d69dd06"><td class="memItemLeft" align="right" valign="top">Size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#a1559495aecba3c0140a1a7645d69dd06">fHitSize</a></td></tr>
+<tr class="separator:a1559495aecba3c0140a1a7645d69dd06"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a93ae06d46988897c6407ea782f56d76d"><td class="memItemLeft" align="right" valign="top">Style_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#a93ae06d46988897c6407ea782f56d76d">fHitStyle</a></td></tr>
+<tr class="separator:a93ae06d46988897c6407ea782f56d76d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af3c139719afcb4eb6cc90e552196d6fd"><td class="memItemLeft" align="right" valign="top">Size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#af3c139719afcb4eb6cc90e552196d6fd">fVertexSize</a></td></tr>
+<tr class="separator:af3c139719afcb4eb6cc90e552196d6fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac54603713b3a0b811a39109f889a5b91"><td class="memItemLeft" align="right" valign="top">Size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#ac54603713b3a0b811a39109f889a5b91">fVertexStyle</a></td></tr>
+<tr class="separator:ac54603713b3a0b811a39109f889a5b91"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a01e6d1e917082ce75f22ae884178fb16"><td class="memItemLeft" align="right" valign="top">TCanvas *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#a01e6d1e917082ce75f22ae884178fb16">fCvsPadPlane</a></td></tr>
+<tr class="separator:a01e6d1e917082ce75f22ae884178fb16"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a493d1e839b981fca4c87ad4d5faefd4e"><td class="memItemLeft" align="right" valign="top">TH2Poly *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#a493d1e839b981fca4c87ad4d5faefd4e">fPadPlane</a></td></tr>
+<tr class="separator:a493d1e839b981fca4c87ad4d5faefd4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9b4407f63d830169461df5d5523b928d"><td class="memItemLeft" align="right" valign="top">TCanvas *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#a9b4407f63d830169461df5d5523b928d">fCvsPadWave</a></td></tr>
+<tr class="separator:a9b4407f63d830169461df5d5523b928d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a10383c8ef662122b41a40eb45a849ed6"><td class="memItemLeft" align="right" valign="top">TH1I *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#a10383c8ef662122b41a40eb45a849ed6">fPadWave</a></td></tr>
+<tr class="separator:a10383c8ef662122b41a40eb45a849ed6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa84ff2a42cae72e968488fb3a8fcded7"><td class="memItemLeft" align="right" valign="top">TCanvas *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#aa84ff2a42cae72e968488fb3a8fcded7">fCvsPadAll</a></td></tr>
+<tr class="separator:aa84ff2a42cae72e968488fb3a8fcded7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a51b7f7b45750fc78128012e63ee4b47f"><td class="memItemLeft" align="right" valign="top">TH1I *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#a51b7f7b45750fc78128012e63ee4b47f">fPadAll</a> [<a class="el" href="classAtEventDrawTask.html#a539df1439b3fdd87a38b91c5de81e1c3">fNumPads</a>] {}</td></tr>
+<tr class="separator:a51b7f7b45750fc78128012e63ee4b47f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9524836f176e4843c055ef3565d6fb6e"><td class="memItemLeft" align="right" valign="top">TCanvas *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#a9524836f176e4843c055ef3565d6fb6e">fCvsQEvent</a></td></tr>
+<tr class="separator:a9524836f176e4843c055ef3565d6fb6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae1087e1b10b17097cc54682faa14a986"><td class="memItemLeft" align="right" valign="top">TH1D *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#ae1087e1b10b17097cc54682faa14a986">fQEventHist</a></td></tr>
+<tr class="separator:ae1087e1b10b17097cc54682faa14a986"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acad02d3f3e303c0ea3dfe7ccccdccaa0"><td class="memItemLeft" align="right" valign="top">TH1D *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#acad02d3f3e303c0ea3dfe7ccccdccaa0">fQEventHist_H</a></td></tr>
+<tr class="separator:acad02d3f3e303c0ea3dfe7ccccdccaa0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad467c3d1f1c9584604545f8446bc541e"><td class="memItemLeft" align="right" valign="top">TCanvas *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#ad467c3d1f1c9584604545f8446bc541e">fCvsHoughSpace</a></td></tr>
+<tr class="separator:ad467c3d1f1c9584604545f8446bc541e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a70eca6edbff41763913388cb70b70d8f"><td class="memItemLeft" align="right" valign="top">TH2F *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#a70eca6edbff41763913388cb70b70d8f">fHoughSpace</a></td></tr>
+<tr class="separator:a70eca6edbff41763913388cb70b70d8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4808bc5f7f63d7a7379b606a9e09f47c"><td class="memItemLeft" align="right" valign="top">TCanvas *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#a4808bc5f7f63d7a7379b606a9e09f47c">fCvsRhoVariance</a></td></tr>
+<tr class="separator:a4808bc5f7f63d7a7379b606a9e09f47c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9b6f7f6231c3784a4d0c1ef2ec031e62"><td class="memItemLeft" align="right" valign="top">TH1D *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#a9b6f7f6231c3784a4d0c1ef2ec031e62">fRhoVariance</a></td></tr>
+<tr class="separator:a9b6f7f6231c3784a4d0c1ef2ec031e62"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6a2753fbb007986d11fb40cdb594cca7"><td class="memItemLeft" align="right" valign="top">TCanvas *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#a6a2753fbb007986d11fb40cdb594cca7">fCvsPhi</a></td></tr>
+<tr class="separator:a6a2753fbb007986d11fb40cdb594cca7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac88fec785bb0608a8959ff2f7421531b"><td class="memItemLeft" align="right" valign="top">TH1D *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#ac88fec785bb0608a8959ff2f7421531b">fPhiDistr</a> [5] {}</td></tr>
+<tr class="separator:ac88fec785bb0608a8959ff2f7421531b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9c7c0cb86b160fa1ea9938619ee99b44"><td class="memItemLeft" align="right" valign="top">TCanvas *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#a9c7c0cb86b160fa1ea9938619ee99b44">fCvsMesh</a></td></tr>
+<tr class="separator:a9c7c0cb86b160fa1ea9938619ee99b44"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afd2394c90612eaaeff6618ee1fc6ce50"><td class="memItemLeft" align="right" valign="top">TH1F *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#afd2394c90612eaaeff6618ee1fc6ce50">fMesh</a></td></tr>
+<tr class="separator:afd2394c90612eaaeff6618ee1fc6ce50"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2d89a647832eb27f28509697abf840a0"><td class="memItemLeft" align="right" valign="top">TCanvas *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#a2d89a647832eb27f28509697abf840a0">fCvs3DHist</a></td></tr>
+<tr class="separator:a2d89a647832eb27f28509697abf840a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a489f83c281927acc7c95da77c1d2e4ec"><td class="memItemLeft" align="right" valign="top">TH3F *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#a489f83c281927acc7c95da77c1d2e4ec">f3DHist</a></td></tr>
+<tr class="separator:a489f83c281927acc7c95da77c1d2e4ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a936bd4ab2b735126daf7ce6ac8c9ed15"><td class="memItemLeft" align="right" valign="top">TCanvas *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#a936bd4ab2b735126daf7ce6ac8c9ed15">fCvsRad</a></td></tr>
+<tr class="separator:a936bd4ab2b735126daf7ce6ac8c9ed15"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a88e6ebffe3a8b5f96ca6ab3646cf799e"><td class="memItemLeft" align="right" valign="top">TH2F *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#a88e6ebffe3a8b5f96ca6ab3646cf799e">fRadVSTb</a></td></tr>
+<tr class="separator:a88e6ebffe3a8b5f96ca6ab3646cf799e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac7a4843614f9451be6364cdcff036cc9"><td class="memItemLeft" align="right" valign="top">TCanvas *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#ac7a4843614f9451be6364cdcff036cc9">fCvsTheta</a></td></tr>
+<tr class="separator:ac7a4843614f9451be6364cdcff036cc9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a58da2a883745efe4793e700b59a73bcf"><td class="memItemLeft" align="right" valign="top">TH2F *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#a58da2a883745efe4793e700b59a73bcf">fTheta</a></td></tr>
+<tr class="separator:a58da2a883745efe4793e700b59a73bcf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab4c34cb86a7e10ae2b3484a992a84333"><td class="memItemLeft" align="right" valign="top">TCanvas *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#ab4c34cb86a7e10ae2b3484a992a84333">fCvsThetaxPhi</a> {}</td></tr>
+<tr class="separator:ab4c34cb86a7e10ae2b3484a992a84333"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4f634f2c3792effe6d7b8a665fd9032b"><td class="memItemLeft" align="right" valign="top">TH2F *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#a4f634f2c3792effe6d7b8a665fd9032b">fThetaxPhi</a> {}</td></tr>
+<tr class="separator:a4f634f2c3792effe6d7b8a665fd9032b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7e48350f5d1ea869fd80fb255d957bac"><td class="memItemLeft" align="right" valign="top">TCanvas *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#a7e48350f5d1ea869fd80fb255d957bac">fCvsQuadrant1</a> {}</td></tr>
+<tr class="separator:a7e48350f5d1ea869fd80fb255d957bac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5a94ab08d205384ba8a2d993e3f35b6e"><td class="memItemLeft" align="right" valign="top">TH2F *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#a5a94ab08d205384ba8a2d993e3f35b6e">fQuadrant1</a> {}</td></tr>
+<tr class="separator:a5a94ab08d205384ba8a2d993e3f35b6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afaf51b79375c9d03f43cc53894d917eb"><td class="memItemLeft" align="right" valign="top">TCanvas *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#afaf51b79375c9d03f43cc53894d917eb">fCvsQuadrant2</a> {}</td></tr>
+<tr class="separator:afaf51b79375c9d03f43cc53894d917eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9895e5576c3a1de8441ad46a344b636d"><td class="memItemLeft" align="right" valign="top">TH2F *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#a9895e5576c3a1de8441ad46a344b636d">fQuadrant2</a> {}</td></tr>
+<tr class="separator:a9895e5576c3a1de8441ad46a344b636d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a46025da370895b089d965f4acf4faa74"><td class="memItemLeft" align="right" valign="top">TCanvas *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#a46025da370895b089d965f4acf4faa74">fCvsQuadrant3</a> {}</td></tr>
+<tr class="separator:a46025da370895b089d965f4acf4faa74"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad98d78e982c57207e698acaf1d13291c"><td class="memItemLeft" align="right" valign="top">TH2F *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#ad98d78e982c57207e698acaf1d13291c">fQuadrant3</a> {}</td></tr>
+<tr class="separator:ad98d78e982c57207e698acaf1d13291c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9339f4867491e96c503ff9e011cc33cc"><td class="memItemLeft" align="right" valign="top">TCanvas *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#a9339f4867491e96c503ff9e011cc33cc">fCvsQuadrant4</a> {}</td></tr>
+<tr class="separator:a9339f4867491e96c503ff9e011cc33cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa2645bf98b033dc92137cc7f63e6cfc6"><td class="memItemLeft" align="right" valign="top">TH2F *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#aa2645bf98b033dc92137cc7f63e6cfc6">fQuadrant4</a> {}</td></tr>
+<tr class="separator:aa2645bf98b033dc92137cc7f63e6cfc6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acb807d49b4cefcee206b5ab1126632d4"><td class="memItemLeft" align="right" valign="top">TH1F *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#acb807d49b4cefcee206b5ab1126632d4">fAuxChannels</a> [9] {}</td></tr>
+<tr class="separator:acb807d49b4cefcee206b5ab1126632d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac88cb6c1c2add2ab6a152322f8fa9d38"><td class="memItemLeft" align="right" valign="top">TCanvas *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#ac88cb6c1c2add2ab6a152322f8fa9d38">fCvsAux</a> {}</td></tr>
+<tr class="separator:ac88cb6c1c2add2ab6a152322f8fa9d38"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aff8d5998e7427639933e14da75ff72a6"><td class="memItemLeft" align="right" valign="top">TH2F *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#aff8d5998e7427639933e14da75ff72a6">fThetaxPhi_Ini</a> {}</td></tr>
+<tr class="separator:aff8d5998e7427639933e14da75ff72a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a61d4ac5380674105a4c81d6ff01b5837"><td class="memItemLeft" align="right" valign="top">TH2F *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#a61d4ac5380674105a4c81d6ff01b5837">fThetaxPhi_Ini_RANSAC</a> {}</td></tr>
+<tr class="separator:a61d4ac5380674105a4c81d6ff01b5837"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5f66ca85d06af41d1b9d4cbb433cd891"><td class="memItemLeft" align="right" valign="top">TCanvas *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#a5f66ca85d06af41d1b9d4cbb433cd891">fCvsMC_XY</a> {}</td></tr>
+<tr class="separator:a5f66ca85d06af41d1b9d4cbb433cd891"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a02794820f59dd2e960f0f27f1a5d7126"><td class="memItemLeft" align="right" valign="top">TGraph *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#a02794820f59dd2e960f0f27f1a5d7126">fMC_XY</a> {}</td></tr>
+<tr class="separator:a02794820f59dd2e960f0f27f1a5d7126"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a570722ca71ca38ffb0c53237657cd995"><td class="memItemLeft" align="right" valign="top">TGraph *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#a570722ca71ca38ffb0c53237657cd995">fMC_XY_exp</a> {}</td></tr>
+<tr class="separator:a570722ca71ca38ffb0c53237657cd995"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a293ef389acc9c2bcf5992d9dcc542baa"><td class="memItemLeft" align="right" valign="top">TGraph *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#a293ef389acc9c2bcf5992d9dcc542baa">fMC_XY_int</a> {}</td></tr>
+<tr class="separator:a293ef389acc9c2bcf5992d9dcc542baa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acd624d244f4a239e398ec1d3415aa0f9"><td class="memItemLeft" align="right" valign="top">TGraph *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#acd624d244f4a239e398ec1d3415aa0f9">fMC_XY_back</a> {}</td></tr>
+<tr class="separator:acd624d244f4a239e398ec1d3415aa0f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7ead0d3010ebe1e92dbc908e8fa3e0b3"><td class="memItemLeft" align="right" valign="top">TCanvas *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#a7ead0d3010ebe1e92dbc908e8fa3e0b3">fCvsMC_Z</a> {}</td></tr>
+<tr class="separator:a7ead0d3010ebe1e92dbc908e8fa3e0b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afd337ef9ab823fd5fa643708ba6afeae"><td class="memItemLeft" align="right" valign="top">TGraph *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#afd337ef9ab823fd5fa643708ba6afeae">fMC_ZX</a> {}</td></tr>
+<tr class="separator:afd337ef9ab823fd5fa643708ba6afeae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a24daddb15823b1751bbab4a8e55d1b30"><td class="memItemLeft" align="right" valign="top">TGraph *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#a24daddb15823b1751bbab4a8e55d1b30">fMC_ZX_int</a> {}</td></tr>
+<tr class="separator:a24daddb15823b1751bbab4a8e55d1b30"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ada4eb7c547718145b964d47e067906b6"><td class="memItemLeft" align="right" valign="top">TGraph *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#ada4eb7c547718145b964d47e067906b6">fMC_ZX_back</a> {}</td></tr>
+<tr class="separator:ada4eb7c547718145b964d47e067906b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a363c2e870f15e182dd2ef965ad17044b"><td class="memItemLeft" align="right" valign="top">TGraph *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#a363c2e870f15e182dd2ef965ad17044b">fMC_ZY</a> {}</td></tr>
+<tr class="separator:a363c2e870f15e182dd2ef965ad17044b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa25111c8dc7ed959afc5e31a768316a6"><td class="memItemLeft" align="right" valign="top">TGraph *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#aa25111c8dc7ed959afc5e31a768316a6">fMC_ZY_int</a> {}</td></tr>
+<tr class="separator:aa25111c8dc7ed959afc5e31a768316a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a864ea87091203e1826ed5f2c698fe1df"><td class="memItemLeft" align="right" valign="top">TGraph *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#a864ea87091203e1826ed5f2c698fe1df">fMC_ZY_back</a> {}</td></tr>
+<tr class="separator:a864ea87091203e1826ed5f2c698fe1df"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a835c2ca916ef4c6da51b9fe7f9bf0a4f"><td class="memItemLeft" align="right" valign="top">Int_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#a835c2ca916ef4c6da51b9fe7f9bf0a4f">fMinZ</a></td></tr>
+<tr class="separator:a835c2ca916ef4c6da51b9fe7f9bf0a4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a43043e4cc27c3751d7ef1bc6710e6695"><td class="memItemLeft" align="right" valign="top">Int_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#a43043e4cc27c3751d7ef1bc6710e6695">fMaxZ</a></td></tr>
+<tr class="separator:a43043e4cc27c3751d7ef1bc6710e6695"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae6fb91435ff4c3a13ef788d49682c339"><td class="memItemLeft" align="right" valign="top">Int_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#ae6fb91435ff4c3a13ef788d49682c339">fMinX</a></td></tr>
+<tr class="separator:ae6fb91435ff4c3a13ef788d49682c339"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad888e226e3da96d4df4c8c8facc1c74b"><td class="memItemLeft" align="right" valign="top">Int_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#ad888e226e3da96d4df4c8c8facc1c74b">fMaxX</a></td></tr>
+<tr class="separator:ad888e226e3da96d4df4c8c8facc1c74b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a899bee1b9e34bdd20ec01984421445c6"><td class="memItemLeft" align="right" valign="top">Int_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#a899bee1b9e34bdd20ec01984421445c6">f3DHitStyle</a></td></tr>
+<tr class="separator:a899bee1b9e34bdd20ec01984421445c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad6d797a3fdc504395c2e1d37fad1597e"><td class="memItemLeft" align="right" valign="top">Int_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#ad6d797a3fdc504395c2e1d37fad1597e">fMultiHit</a> {10}</td></tr>
+<tr class="separator:ad6d797a3fdc504395c2e1d37fad1597e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae2ddf6c9ab632a1130143b4f286aff07"><td class="memItemLeft" align="right" valign="top">Bool_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#ae2ddf6c9ab632a1130143b4f286aff07">fSaveTextData</a></td></tr>
+<tr class="separator:ae2ddf6c9ab632a1130143b4f286aff07"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a467f20e2f2c7a01c68ac8b2a8574d0c3"><td class="memItemLeft" align="right" valign="top">Float_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#a467f20e2f2c7a01c68ac8b2a8574d0c3">f3DThreshold</a></td></tr>
+<tr class="separator:a467f20e2f2c7a01c68ac8b2a8574d0c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a544f45aad6f75a8e5e81db3349bb814e"><td class="memItemLeft" align="right" valign="top">Bool_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#a544f45aad6f75a8e5e81db3349bb814e">fIsRawData</a></td></tr>
+<tr class="separator:a544f45aad6f75a8e5e81db3349bb814e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1f2771323da3ba1798bf27676fc4dde1"><td class="memItemLeft" align="right" valign="top">Bool_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#a1f2771323da3ba1798bf27676fc4dde1">fDrawVertexFromLines</a> {false}</td></tr>
+<tr class="separator:a1f2771323da3ba1798bf27676fc4dde1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4e61cc480451665262df30e533df8a29"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAtHit.html">AtHit</a> const  *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#a4e61cc480451665262df30e533df8a29">fIniHit</a></td></tr>
+<tr class="separator:a4e61cc480451665262df30e533df8a29"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a922240ce885b52725dc403d7bbf2938c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAtHit.html">AtHit</a> const  *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#a922240ce885b52725dc403d7bbf2938c">fIniHitRansac</a></td></tr>
+<tr class="separator:a922240ce885b52725dc403d7bbf2938c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa1bb1781443d88b4fc6e29f336863d0b"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::unique_ptr&lt; TEveLine &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#aa1bb1781443d88b4fc6e29f336863d0b">fPatternLines</a></td></tr>
+<tr class="separator:aa1bb1781443d88b4fc6e29f336863d0b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3101e72521c307a1cfc304633abed044"><td class="memItemLeft" align="right" valign="top">Int_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#a3101e72521c307a1cfc304633abed044">fTrackNum</a></td></tr>
+<tr class="separator:a3101e72521c307a1cfc304633abed044"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a49df5a16df08b156b9398afc81bb44de"><td class="memItemLeft" align="right" valign="top">Int_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#a49df5a16df08b156b9398afc81bb44de">fMinTracksPerVertex</a></td></tr>
+<tr class="separator:a49df5a16df08b156b9398afc81bb44de"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9b7d63b544378b5c716358c3fe98cde9"><td class="memItemLeft" align="right" valign="top">std::vector&lt; TEvePointSet * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#a9b7d63b544378b5c716358c3fe98cde9">fHitSetTFHC</a></td></tr>
+<tr class="separator:a9b7d63b544378b5c716358c3fe98cde9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a81940fe798ba2e4b8aa2bc10ba733d6f"><td class="memItemLeft" align="right" valign="top">std::vector&lt; TEveBoxSet * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#a81940fe798ba2e4b8aa2bc10ba733d6f">fHitClusterSet</a></td></tr>
+<tr class="separator:a81940fe798ba2e4b8aa2bc10ba733d6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a61faf6f9c03849150de5e9e05396a5ce"><td class="memItemLeft" align="right" valign="top">std::vector&lt; TEveElement * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#a61faf6f9c03849150de5e9e05396a5ce">fHitLine</a></td></tr>
+<tr class="separator:a61faf6f9c03849150de5e9e05396a5ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa09afca402f235effa5eef080acea529"><td class="memItemLeft" align="right" valign="top">std::vector&lt; TEvePointSet * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#aa09afca402f235effa5eef080acea529">fVertex</a></td></tr>
+<tr class="separator:aa09afca402f235effa5eef080acea529"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a012ad5221f3a842dbfbb4028e58e213c"><td class="memItemLeft" align="right" valign="top">TEveRGBAPalette *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#a012ad5221f3a842dbfbb4028e58e213c">fRGBAPalette</a></td></tr>
+<tr class="separator:a012ad5221f3a842dbfbb4028e58e213c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab9b3b8095c452bccbd79b8244d0965a0"><td class="memItemLeft" align="right" valign="top">TCanvas *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#ab9b3b8095c452bccbd79b8244d0965a0">fCvsPID</a></td></tr>
+<tr class="separator:ab9b3b8095c452bccbd79b8244d0965a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3134a6aeb9783ec1e3e2ed5fdf6b721e"><td class="memItemLeft" align="right" valign="top">TH2F *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#a3134a6aeb9783ec1e3e2ed5fdf6b721e">fPID</a></td></tr>
+<tr class="separator:a3134a6aeb9783ec1e3e2ed5fdf6b721e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a00fea19fcf9ec878ea62cd3965ca0087"><td class="memItemLeft" align="right" valign="top">TCanvas *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#a00fea19fcf9ec878ea62cd3965ca0087">fCvsPID2</a></td></tr>
+<tr class="separator:a00fea19fcf9ec878ea62cd3965ca0087"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aef732775c2e14c43e79337fedb837aa4"><td class="memItemLeft" align="right" valign="top">TH2F *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#aef732775c2e14c43e79337fedb837aa4">fPID2</a></td></tr>
+<tr class="separator:aef732775c2e14c43e79337fedb837aa4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab57f0c4beec32af3ff5b626df0febafa"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classS800Calc.html">S800Calc</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#ab57f0c4beec32af3ff5b626df0febafa">fS800Calc</a></td></tr>
+<tr class="separator:ab57f0c4beec32af3ff5b626df0febafa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-static-attribs"></a>
+Static Protected Attributes</h2></td></tr>
+<tr class="memitem:a539df1439b3fdd87a38b91c5de81e1c3"><td class="memItemLeft" align="right" valign="top">static const Int_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventDrawTask.html#a539df1439b3fdd87a38b91c5de81e1c3">fNumPads</a> = 1000</td></tr>
+<tr class="separator:a539df1439b3fdd87a38b91c5de81e1c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00051">51</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00041">41</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="ad5b5ca8ac4de72db27cb869688753c20"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad5b5ca8ac4de72db27cb869688753c20">&#9670;&nbsp;</a></span>AtEventDrawTask() <span class="overload">[1/2]</span></h2>
@@ -161,7 +412,7 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8cxx_source.html#l00083">83</a> of file <a class="el" href="AtEventDrawTask_8cxx_source.html">AtEventDrawTask.cxx</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8cxx_source.html#l00080">80</a> of file <a class="el" href="AtEventDrawTask_8cxx_source.html">AtEventDrawTask.cxx</a>.</p>
 
 </div>
 </div>
@@ -188,6 +439,9 @@ Static Public Member Functions</h2></td></tr>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">AtEventDrawTask::~AtEventDrawTask </td>
@@ -196,9 +450,12 @@ Static Public Member Functions</h2></td></tr>
           <td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">default</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8cxx_source.html#l00154">154</a> of file <a class="el" href="AtEventDrawTask_8cxx_source.html">AtEventDrawTask.cxx</a>.</p>
 
 </div>
 </div>
@@ -219,7 +476,7 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8cxx_source.html#l01563">1563</a> of file <a class="el" href="AtEventDrawTask_8cxx_source.html">AtEventDrawTask.cxx</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8cxx_source.html#l01233">1233</a> of file <a class="el" href="AtEventDrawTask_8cxx_source.html">AtEventDrawTask.cxx</a>.</p>
 
 </div>
 </div>
@@ -239,7 +496,7 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8cxx_source.html#l00290">290</a> of file <a class="el" href="AtEventDrawTask_8cxx_source.html">AtEventDrawTask.cxx</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8cxx_source.html#l00233">233</a> of file <a class="el" href="AtEventDrawTask_8cxx_source.html">AtEventDrawTask.cxx</a>.</p>
 
 </div>
 </div>
@@ -258,7 +515,7 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8cxx_source.html#l00165">165</a> of file <a class="el" href="AtEventDrawTask_8cxx_source.html">AtEventDrawTask.cxx</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8cxx_source.html#l00133">133</a> of file <a class="el" href="AtEventDrawTask_8cxx_source.html">AtEventDrawTask.cxx</a>.</p>
 
 </div>
 </div>
@@ -277,35 +534,7 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8cxx_source.html#l00883">883</a> of file <a class="el" href="AtEventDrawTask_8cxx_source.html">AtEventDrawTask.cxx</a>.</p>
-
-</div>
-</div>
-<a id="a79b6b8985884c2a45e318906f02a0d7f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a79b6b8985884c2a45e318906f02a0d7f">&#9670;&nbsp;</a></span>SelectDetectorId()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void AtEventDrawTask::SelectDetectorId </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="AtEventDrawTask_8h.html#a1806da1a0fbae8ab81f7330906f65680">DetectorId</a>&#160;</td>
-          <td class="paramname"><em>val</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00079">79</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8cxx_source.html#l00640">640</a> of file <a class="el" href="AtEventDrawTask_8cxx_source.html">AtEventDrawTask.cxx</a>.</p>
 
 </div>
 </div>
@@ -333,7 +562,7 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8cxx_source.html#l01460">1460</a> of file <a class="el" href="AtEventDrawTask_8cxx_source.html">AtEventDrawTask.cxx</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8cxx_source.html#l01137">1137</a> of file <a class="el" href="AtEventDrawTask_8cxx_source.html">AtEventDrawTask.cxx</a>.</p>
 
 </div>
 </div>
@@ -352,7 +581,7 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8cxx_source.html#l01587">1587</a> of file <a class="el" href="AtEventDrawTask_8cxx_source.html">AtEventDrawTask.cxx</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8cxx_source.html#l01257">1257</a> of file <a class="el" href="AtEventDrawTask_8cxx_source.html">AtEventDrawTask.cxx</a>.</p>
 
 </div>
 </div>
@@ -371,35 +600,7 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8cxx_source.html#l01592">1592</a> of file <a class="el" href="AtEventDrawTask_8cxx_source.html">AtEventDrawTask.cxx</a>.</p>
-
-</div>
-</div>
-<a id="a03b546abd95f52032c0470228af402f7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a03b546abd95f52032c0470228af402f7">&#9670;&nbsp;</a></span>SetAlgorithm()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void AtEventDrawTask::SetAlgorithm </td>
-          <td>(</td>
-          <td class="paramtype">Int_t&#160;</td>
-          <td class="paramname"><em>val</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00078">78</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8cxx_source.html#l01262">1262</a> of file <a class="el" href="AtEventDrawTask_8cxx_source.html">AtEventDrawTask.cxx</a>.</p>
 
 </div>
 </div>
@@ -427,7 +628,35 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00073">73</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00190">190</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="a9ee9793a360726bee0d00f0cac3a063c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9ee9793a360726bee0d00f0cac3a063c">&#9670;&nbsp;</a></span>SetDrawVertexFromLines()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void AtEventDrawTask::SetDrawVertexFromLines </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>val</em> = <code>true</code></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00199">199</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
 
 </div>
 </div>
@@ -447,7 +676,7 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8cxx_source.html#l01641">1641</a> of file <a class="el" href="AtEventDrawTask_8cxx_source.html">AtEventDrawTask.cxx</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8cxx_source.html#l01291">1291</a> of file <a class="el" href="AtEventDrawTask_8cxx_source.html">AtEventDrawTask.cxx</a>.</p>
 
 </div>
 </div>
@@ -483,103 +712,63 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8cxx_source.html#l01437">1437</a> of file <a class="el" href="AtEventDrawTask_8cxx_source.html">AtEventDrawTask.cxx</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8cxx_source.html#l01114">1114</a> of file <a class="el" href="AtEventDrawTask_8cxx_source.html">AtEventDrawTask.cxx</a>.</p>
 
 </div>
 </div>
-<a id="a8440cecbd4702d1928cd8339ca13cc72"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8440cecbd4702d1928cd8339ca13cc72">&#9670;&nbsp;</a></span>SetLine()</h2>
+<a id="a9b9fa5ea292b01ff44d906c329b67c5f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9b9fa5ea292b01ff44d906c329b67c5f">&#9670;&nbsp;</a></span>SetMap()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void AtEventDrawTask::SetLine </td>
+          <td class="memname">void AtEventDrawTask::SetMap </td>
           <td>(</td>
-          <td class="paramtype">double&#160;</td>
-          <td class="paramname"><em>t</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="classAtMap.html">AtMap</a> &gt;&#160;</td>
+          <td class="paramname"><em>map</em></td><td>)</td>
           <td></td>
-          <td class="paramtype">std::vector&lt; Double_t &gt;&#160;</td>
-          <td class="paramname"><em>p</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">double &amp;&#160;</td>
-          <td class="paramname"><em>x</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">double &amp;&#160;</td>
-          <td class="paramname"><em>y</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">double &amp;&#160;</td>
-          <td class="paramname"><em>z</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8cxx_source.html#l01607">1607</a> of file <a class="el" href="AtEventDrawTask_8cxx_source.html">AtEventDrawTask.cxx</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00181">181</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
 
 </div>
 </div>
-<a id="abef1d281b8fbacc0b621749a511199a9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abef1d281b8fbacc0b621749a511199a9">&#9670;&nbsp;</a></span>SetLine6()</h2>
+<a id="a113ad1472f08f6fb0e62543d6d3a6d5c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a113ad1472f08f6fb0e62543d6d3a6d5c">&#9670;&nbsp;</a></span>SetMinTracksPerVertex()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void AtEventDrawTask::SetLine6 </td>
+          <td class="memname">void AtEventDrawTask::SetMinTracksPerVertex </td>
           <td>(</td>
-          <td class="paramtype">double&#160;</td>
-          <td class="paramname"><em>t</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramtype">Int_t&#160;</td>
+          <td class="paramname"><em>val</em></td><td>)</td>
           <td></td>
-          <td class="paramtype">std::vector&lt; Double_t &gt;&#160;</td>
-          <td class="paramname"><em>p</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">double &amp;&#160;</td>
-          <td class="paramname"><em>x</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">double &amp;&#160;</td>
-          <td class="paramname"><em>y</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">double &amp;&#160;</td>
-          <td class="paramname"><em>z</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8cxx_source.html#l01617">1617</a> of file <a class="el" href="AtEventDrawTask_8cxx_source.html">AtEventDrawTask.cxx</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00192">192</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
 
 </div>
 </div>
@@ -599,7 +788,35 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8cxx_source.html#l01597">1597</a> of file <a class="el" href="AtEventDrawTask_8cxx_source.html">AtEventDrawTask.cxx</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8cxx_source.html#l01267">1267</a> of file <a class="el" href="AtEventDrawTask_8cxx_source.html">AtEventDrawTask.cxx</a>.</p>
+
+</div>
+</div>
+<a id="a1d71d9ff7c28ac2f508f9c4c486d5b1f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1d71d9ff7c28ac2f508f9c4c486d5b1f">&#9670;&nbsp;</a></span>SetPatternEventBranch()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void AtEventDrawTask::SetPatternEventBranch </td>
+          <td>(</td>
+          <td class="paramtype">TString&#160;</td>
+          <td class="paramname"><em>branchName</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00191">191</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
 
 </div>
 </div>
@@ -619,7 +836,7 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8cxx_source.html#l01636">1636</a> of file <a class="el" href="AtEventDrawTask_8cxx_source.html">AtEventDrawTask.cxx</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8cxx_source.html#l01286">1286</a> of file <a class="el" href="AtEventDrawTask_8cxx_source.html">AtEventDrawTask.cxx</a>.</p>
 
 </div>
 </div>
@@ -638,7 +855,7 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8cxx_source.html#l01602">1602</a> of file <a class="el" href="AtEventDrawTask_8cxx_source.html">AtEventDrawTask.cxx</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8cxx_source.html#l01272">1272</a> of file <a class="el" href="AtEventDrawTask_8cxx_source.html">AtEventDrawTask.cxx</a>.</p>
 
 </div>
 </div>
@@ -666,7 +883,7 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00063">63</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00182">182</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
 
 </div>
 </div>
@@ -693,18 +910,2395 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00064">64</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00183">183</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="a489f83c281927acc7c95da77c1d2e4ec"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a489f83c281927acc7c95da77c1d2e4ec">&#9670;&nbsp;</a></span>f3DHist</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TH3F* AtEventDrawTask::f3DHist</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00096">96</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="a899bee1b9e34bdd20ec01984421445c6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a899bee1b9e34bdd20ec01984421445c6">&#9670;&nbsp;</a></span>f3DHitStyle</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Int_t AtEventDrawTask::f3DHitStyle</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00135">135</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="a467f20e2f2c7a01c68ac8b2a8574d0c3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a467f20e2f2c7a01c68ac8b2a8574d0c3">&#9670;&nbsp;</a></span>f3DThreshold</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Float_t AtEventDrawTask::f3DThreshold</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00138">138</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="acb807d49b4cefcee206b5ab1126632d4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acb807d49b4cefcee206b5ab1126632d4">&#9670;&nbsp;</a></span>fAuxChannels</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TH1F* AtEventDrawTask::fAuxChannels[9] {}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00111">111</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="ae4fad6a12de583a9232a00f87464ee8c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae4fad6a12de583a9232a00f87464ee8c">&#9670;&nbsp;</a></span>fCorrectedEventArray</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TClonesArray* AtEventDrawTask::fCorrectedEventArray {}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00053">53</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="aaa51b4c4ef6bc8f555fbec2f672eae33"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaa51b4c4ef6bc8f555fbec2f672eae33">&#9670;&nbsp;</a></span>fCorrectedEventBranchName</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TString AtEventDrawTask::fCorrectedEventBranchName</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00049">49</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="aea882cdb94541803d43eee5745a19c33"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aea882cdb94541803d43eee5745a19c33">&#9670;&nbsp;</a></span>fCorrectedHitSet</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TEvePointSet* AtEventDrawTask::fCorrectedHitSet</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00066">66</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="a2d89a647832eb27f28509697abf840a0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2d89a647832eb27f28509697abf840a0">&#9670;&nbsp;</a></span>fCvs3DHist</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TCanvas* AtEventDrawTask::fCvs3DHist</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00095">95</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="ac88cb6c1c2add2ab6a152322f8fa9d38"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac88cb6c1c2add2ab6a152322f8fa9d38">&#9670;&nbsp;</a></span>fCvsAux</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TCanvas* AtEventDrawTask::fCvsAux {}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00112">112</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="ad467c3d1f1c9584604545f8446bc541e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad467c3d1f1c9584604545f8446bc541e">&#9670;&nbsp;</a></span>fCvsHoughSpace</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TCanvas* AtEventDrawTask::fCvsHoughSpace</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00087">87</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="a5f66ca85d06af41d1b9d4cbb433cd891"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5f66ca85d06af41d1b9d4cbb433cd891">&#9670;&nbsp;</a></span>fCvsMC_XY</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TCanvas* AtEventDrawTask::fCvsMC_XY {}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00117">117</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="a7ead0d3010ebe1e92dbc908e8fa3e0b3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7ead0d3010ebe1e92dbc908e8fa3e0b3">&#9670;&nbsp;</a></span>fCvsMC_Z</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TCanvas* AtEventDrawTask::fCvsMC_Z {}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00122">122</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="a9c7c0cb86b160fa1ea9938619ee99b44"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9c7c0cb86b160fa1ea9938619ee99b44">&#9670;&nbsp;</a></span>fCvsMesh</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TCanvas* AtEventDrawTask::fCvsMesh</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00093">93</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="aa84ff2a42cae72e968488fb3a8fcded7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa84ff2a42cae72e968488fb3a8fcded7">&#9670;&nbsp;</a></span>fCvsPadAll</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TCanvas* AtEventDrawTask::fCvsPadAll</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00082">82</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="a01e6d1e917082ce75f22ae884178fb16"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a01e6d1e917082ce75f22ae884178fb16">&#9670;&nbsp;</a></span>fCvsPadPlane</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TCanvas* AtEventDrawTask::fCvsPadPlane</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00078">78</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="a9b4407f63d830169461df5d5523b928d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9b4407f63d830169461df5d5523b928d">&#9670;&nbsp;</a></span>fCvsPadWave</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TCanvas* AtEventDrawTask::fCvsPadWave</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00080">80</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="a6a2753fbb007986d11fb40cdb594cca7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6a2753fbb007986d11fb40cdb594cca7">&#9670;&nbsp;</a></span>fCvsPhi</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TCanvas* AtEventDrawTask::fCvsPhi</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00091">91</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="ab9b3b8095c452bccbd79b8244d0965a0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab9b3b8095c452bccbd79b8244d0965a0">&#9670;&nbsp;</a></span>fCvsPID</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TCanvas* AtEventDrawTask::fCvsPID</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00164">164</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="a00fea19fcf9ec878ea62cd3965ca0087"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a00fea19fcf9ec878ea62cd3965ca0087">&#9670;&nbsp;</a></span>fCvsPID2</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TCanvas* AtEventDrawTask::fCvsPID2</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00166">166</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="a9524836f176e4843c055ef3565d6fb6e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9524836f176e4843c055ef3565d6fb6e">&#9670;&nbsp;</a></span>fCvsQEvent</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TCanvas* AtEventDrawTask::fCvsQEvent</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00084">84</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="a7e48350f5d1ea869fd80fb255d957bac"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7e48350f5d1ea869fd80fb255d957bac">&#9670;&nbsp;</a></span>fCvsQuadrant1</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TCanvas* AtEventDrawTask::fCvsQuadrant1 {}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00103">103</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="afaf51b79375c9d03f43cc53894d917eb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afaf51b79375c9d03f43cc53894d917eb">&#9670;&nbsp;</a></span>fCvsQuadrant2</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TCanvas* AtEventDrawTask::fCvsQuadrant2 {}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00105">105</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="a46025da370895b089d965f4acf4faa74"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a46025da370895b089d965f4acf4faa74">&#9670;&nbsp;</a></span>fCvsQuadrant3</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TCanvas* AtEventDrawTask::fCvsQuadrant3 {}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00107">107</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="a9339f4867491e96c503ff9e011cc33cc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9339f4867491e96c503ff9e011cc33cc">&#9670;&nbsp;</a></span>fCvsQuadrant4</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TCanvas* AtEventDrawTask::fCvsQuadrant4 {}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00109">109</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="a936bd4ab2b735126daf7ce6ac8c9ed15"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a936bd4ab2b735126daf7ce6ac8c9ed15">&#9670;&nbsp;</a></span>fCvsRad</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TCanvas* AtEventDrawTask::fCvsRad</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00097">97</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="a4808bc5f7f63d7a7379b606a9e09f47c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4808bc5f7f63d7a7379b606a9e09f47c">&#9670;&nbsp;</a></span>fCvsRhoVariance</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TCanvas* AtEventDrawTask::fCvsRhoVariance</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00089">89</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="ac7a4843614f9451be6364cdcff036cc9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac7a4843614f9451be6364cdcff036cc9">&#9670;&nbsp;</a></span>fCvsTheta</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TCanvas* AtEventDrawTask::fCvsTheta</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00099">99</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="ab4c34cb86a7e10ae2b3484a992a84333"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab4c34cb86a7e10ae2b3484a992a84333">&#9670;&nbsp;</a></span>fCvsThetaxPhi</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TCanvas* AtEventDrawTask::fCvsThetaxPhi {}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00101">101</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="a60c73d951dfe515daf7533ebab1505f0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a60c73d951dfe515daf7533ebab1505f0">&#9670;&nbsp;</a></span>fDetmap</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::shared_ptr&lt;<a class="el" href="classAtMap.html">AtMap</a>&gt; AtEventDrawTask::fDetmap</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00060">60</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="a1f2771323da3ba1798bf27676fc4dde1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1f2771323da3ba1798bf27676fc4dde1">&#9670;&nbsp;</a></span>fDrawVertexFromLines</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Bool_t AtEventDrawTask::fDrawVertexFromLines {false}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00141">141</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="adb545399a89310ef96cf152cf30f33af"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adb545399a89310ef96cf152cf30f33af">&#9670;&nbsp;</a></span>fEventArray</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TClonesArray* AtEventDrawTask::fEventArray</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00052">52</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="aaf93aae25ca191c9dc28f039ad8061ac"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaf93aae25ca191c9dc28f039ad8061ac">&#9670;&nbsp;</a></span>fEventBranchName</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TString AtEventDrawTask::fEventBranchName</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00048">48</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="a338c748cfb5bec984f2564f7bda81abb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a338c748cfb5bec984f2564f7bda81abb">&#9670;&nbsp;</a></span>fEventManager</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classAtEventManager.html">AtEventManager</a>* AtEventDrawTask::fEventManager</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00057">57</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="afb8e099f6098502daf0f94dec54ffdfd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afb8e099f6098502daf0f94dec54ffdfd">&#9670;&nbsp;</a></span>fhitBoxSet</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TEveBoxSet* AtEventDrawTask::fhitBoxSet</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00068">68</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="a81940fe798ba2e4b8aa2bc10ba733d6f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a81940fe798ba2e4b8aa2bc10ba733d6f">&#9670;&nbsp;</a></span>fHitClusterSet</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;TEveBoxSet *&gt; AtEventDrawTask::fHitClusterSet</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00158">158</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="aa1f137e62e4fc37aa5f37f488034f81a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa1f137e62e4fc37aa5f37f488034f81a">&#9670;&nbsp;</a></span>fHitColor</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Color_t AtEventDrawTask::fHitColor</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00072">72</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="a61faf6f9c03849150de5e9e05396a5ce"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a61faf6f9c03849150de5e9e05396a5ce">&#9670;&nbsp;</a></span>fHitLine</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;TEveElement *&gt; AtEventDrawTask::fHitLine</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00159">159</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="ae15dee686090723e786730fa3135c2bd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae15dee686090723e786730fa3135c2bd">&#9670;&nbsp;</a></span>fHitSet</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TEvePointSet* AtEventDrawTask::fHitSet</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00065">65</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="a9b7d63b544378b5c716358c3fe98cde9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9b7d63b544378b5c716358c3fe98cde9">&#9670;&nbsp;</a></span>fHitSetTFHC</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;TEvePointSet *&gt; AtEventDrawTask::fHitSetTFHC</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00157">157</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="a1559495aecba3c0140a1a7645d69dd06"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1559495aecba3c0140a1a7645d69dd06">&#9670;&nbsp;</a></span>fHitSize</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Size_t AtEventDrawTask::fHitSize</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00073">73</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="a93ae06d46988897c6407ea782f56d76d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a93ae06d46988897c6407ea782f56d76d">&#9670;&nbsp;</a></span>fHitStyle</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Style_t AtEventDrawTask::fHitStyle</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00074">74</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="a70eca6edbff41763913388cb70b70d8f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a70eca6edbff41763913388cb70b70d8f">&#9670;&nbsp;</a></span>fHoughSpace</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TH2F* AtEventDrawTask::fHoughSpace</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00088">88</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="a4e61cc480451665262df30e533df8a29"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4e61cc480451665262df30e533df8a29">&#9670;&nbsp;</a></span>fIniHit</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classAtHit.html">AtHit</a> const* AtEventDrawTask::fIniHit</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00143">143</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="a922240ce885b52725dc403d7bbf2938c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a922240ce885b52725dc403d7bbf2938c">&#9670;&nbsp;</a></span>fIniHitRansac</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classAtHit.html">AtHit</a> const* AtEventDrawTask::fIniHitRansac</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00144">144</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="a2f155b5dabbd6d2e7ecec37ebdb1aadc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2f155b5dabbd6d2e7ecec37ebdb1aadc">&#9670;&nbsp;</a></span>fIs2DPlotRange</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Bool_t AtEventDrawTask::fIs2DPlotRange</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00043">43</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="a544f45aad6f75a8e5e81db3349bb814e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a544f45aad6f75a8e5e81db3349bb814e">&#9670;&nbsp;</a></span>fIsRawData</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Bool_t AtEventDrawTask::fIsRawData</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00140">140</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="aa7ebc482e6a5f111d382fd3bcb808bf5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa7ebc482e6a5f111d382fd3bcb808bf5">&#9670;&nbsp;</a></span>fMap</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TString AtEventDrawTask::fMap</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00063">63</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="ad888e226e3da96d4df4c8c8facc1c74b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad888e226e3da96d4df4c8c8facc1c74b">&#9670;&nbsp;</a></span>fMaxX</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Int_t AtEventDrawTask::fMaxX</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00133">133</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="a43043e4cc27c3751d7ef1bc6710e6695"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a43043e4cc27c3751d7ef1bc6710e6695">&#9670;&nbsp;</a></span>fMaxZ</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Int_t AtEventDrawTask::fMaxZ</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00131">131</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="a02794820f59dd2e960f0f27f1a5d7126"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a02794820f59dd2e960f0f27f1a5d7126">&#9670;&nbsp;</a></span>fMC_XY</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TGraph* AtEventDrawTask::fMC_XY {}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00118">118</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="acd624d244f4a239e398ec1d3415aa0f9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acd624d244f4a239e398ec1d3415aa0f9">&#9670;&nbsp;</a></span>fMC_XY_back</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TGraph* AtEventDrawTask::fMC_XY_back {}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00121">121</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="a570722ca71ca38ffb0c53237657cd995"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a570722ca71ca38ffb0c53237657cd995">&#9670;&nbsp;</a></span>fMC_XY_exp</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TGraph* AtEventDrawTask::fMC_XY_exp {}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00119">119</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="a293ef389acc9c2bcf5992d9dcc542baa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a293ef389acc9c2bcf5992d9dcc542baa">&#9670;&nbsp;</a></span>fMC_XY_int</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TGraph* AtEventDrawTask::fMC_XY_int {}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00120">120</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="afd337ef9ab823fd5fa643708ba6afeae"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afd337ef9ab823fd5fa643708ba6afeae">&#9670;&nbsp;</a></span>fMC_ZX</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TGraph* AtEventDrawTask::fMC_ZX {}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00123">123</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="ada4eb7c547718145b964d47e067906b6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ada4eb7c547718145b964d47e067906b6">&#9670;&nbsp;</a></span>fMC_ZX_back</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TGraph* AtEventDrawTask::fMC_ZX_back {}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00125">125</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="a24daddb15823b1751bbab4a8e55d1b30"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a24daddb15823b1751bbab4a8e55d1b30">&#9670;&nbsp;</a></span>fMC_ZX_int</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TGraph* AtEventDrawTask::fMC_ZX_int {}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00124">124</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="a363c2e870f15e182dd2ef965ad17044b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a363c2e870f15e182dd2ef965ad17044b">&#9670;&nbsp;</a></span>fMC_ZY</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TGraph* AtEventDrawTask::fMC_ZY {}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00126">126</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="a864ea87091203e1826ed5f2c698fe1df"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a864ea87091203e1826ed5f2c698fe1df">&#9670;&nbsp;</a></span>fMC_ZY_back</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TGraph* AtEventDrawTask::fMC_ZY_back {}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00128">128</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="aa25111c8dc7ed959afc5e31a768316a6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa25111c8dc7ed959afc5e31a768316a6">&#9670;&nbsp;</a></span>fMC_ZY_int</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TGraph* AtEventDrawTask::fMC_ZY_int {}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00127">127</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="afd2394c90612eaaeff6618ee1fc6ce50"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afd2394c90612eaaeff6618ee1fc6ce50">&#9670;&nbsp;</a></span>fMesh</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TH1F* AtEventDrawTask::fMesh</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00094">94</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="a49df5a16df08b156b9398afc81bb44de"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a49df5a16df08b156b9398afc81bb44de">&#9670;&nbsp;</a></span>fMinTracksPerVertex</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Int_t AtEventDrawTask::fMinTracksPerVertex</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00151">151</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="ae6fb91435ff4c3a13ef788d49682c339"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae6fb91435ff4c3a13ef788d49682c339">&#9670;&nbsp;</a></span>fMinX</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Int_t AtEventDrawTask::fMinX</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00132">132</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="a835c2ca916ef4c6da51b9fe7f9bf0a4f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a835c2ca916ef4c6da51b9fe7f9bf0a4f">&#9670;&nbsp;</a></span>fMinZ</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Int_t AtEventDrawTask::fMinZ</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00130">130</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="ad6d797a3fdc504395c2e1d37fad1597e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad6d797a3fdc504395c2e1d37fad1597e">&#9670;&nbsp;</a></span>fMultiHit</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Int_t AtEventDrawTask::fMultiHit {10}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00136">136</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="a539df1439b3fdd87a38b91c5de81e1c3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a539df1439b3fdd87a38b91c5de81e1c3">&#9670;&nbsp;</a></span>fNumPads</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const Int_t AtEventDrawTask::fNumPads = 1000</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00045">45</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="a51b7f7b45750fc78128012e63ee4b47f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a51b7f7b45750fc78128012e63ee4b47f">&#9670;&nbsp;</a></span>fPadAll</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TH1I* AtEventDrawTask::fPadAll[<a class="el" href="classAtEventDrawTask.html#a539df1439b3fdd87a38b91c5de81e1c3">fNumPads</a>] {}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00083">83</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="a493d1e839b981fca4c87ad4d5faefd4e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a493d1e839b981fca4c87ad4d5faefd4e">&#9670;&nbsp;</a></span>fPadPlane</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TH2Poly* AtEventDrawTask::fPadPlane</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00079">79</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="a1f39601138fbab4ab2ff7cfeb883ce08"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1f39601138fbab4ab2ff7cfeb883ce08">&#9670;&nbsp;</a></span>fPadPlanePal</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TPaletteAxis* AtEventDrawTask::fPadPlanePal</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00070">70</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="a10383c8ef662122b41a40eb45a849ed6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a10383c8ef662122b41a40eb45a849ed6">&#9670;&nbsp;</a></span>fPadWave</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TH1I* AtEventDrawTask::fPadWave</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00081">81</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="a7edb497ddd6ada31a0b2be0751e47383"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7edb497ddd6ada31a0b2be0751e47383">&#9670;&nbsp;</a></span>fPatternEventArray</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TClonesArray* AtEventDrawTask::fPatternEventArray {}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00055">55</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="aaa968d716d61f107f9d08c44fd5f332d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaa968d716d61f107f9d08c44fd5f332d">&#9670;&nbsp;</a></span>fPatternEventBranchName</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TString AtEventDrawTask::fPatternEventBranchName</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00050">50</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="aa1bb1781443d88b4fc6e29f336863d0b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa1bb1781443d88b4fc6e29f336863d0b">&#9670;&nbsp;</a></span>fPatternLines</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;std::unique_ptr&lt;TEveLine&gt; &gt; AtEventDrawTask::fPatternLines</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00147">147</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="ac88fec785bb0608a8959ff2f7421531b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac88fec785bb0608a8959ff2f7421531b">&#9670;&nbsp;</a></span>fPhiDistr</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TH1D* AtEventDrawTask::fPhiDistr[5] {}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00092">92</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="a3134a6aeb9783ec1e3e2ed5fdf6b721e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3134a6aeb9783ec1e3e2ed5fdf6b721e">&#9670;&nbsp;</a></span>fPID</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TH2F* AtEventDrawTask::fPID</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00165">165</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="aef732775c2e14c43e79337fedb837aa4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aef732775c2e14c43e79337fedb837aa4">&#9670;&nbsp;</a></span>fPID2</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TH2F* AtEventDrawTask::fPID2</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00167">167</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="ae1087e1b10b17097cc54682faa14a986"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae1087e1b10b17097cc54682faa14a986">&#9670;&nbsp;</a></span>fQEventHist</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TH1D* AtEventDrawTask::fQEventHist</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00085">85</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="acad02d3f3e303c0ea3dfe7ccccdccaa0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acad02d3f3e303c0ea3dfe7ccccdccaa0">&#9670;&nbsp;</a></span>fQEventHist_H</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TH1D* AtEventDrawTask::fQEventHist_H</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00086">86</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="a5a94ab08d205384ba8a2d993e3f35b6e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5a94ab08d205384ba8a2d993e3f35b6e">&#9670;&nbsp;</a></span>fQuadrant1</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TH2F* AtEventDrawTask::fQuadrant1 {}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00104">104</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="a9895e5576c3a1de8441ad46a344b636d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9895e5576c3a1de8441ad46a344b636d">&#9670;&nbsp;</a></span>fQuadrant2</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TH2F* AtEventDrawTask::fQuadrant2 {}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00106">106</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="ad98d78e982c57207e698acaf1d13291c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad98d78e982c57207e698acaf1d13291c">&#9670;&nbsp;</a></span>fQuadrant3</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TH2F* AtEventDrawTask::fQuadrant3 {}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00108">108</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="aa2645bf98b033dc92137cc7f63e6cfc6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa2645bf98b033dc92137cc7f63e6cfc6">&#9670;&nbsp;</a></span>fQuadrant4</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TH2F* AtEventDrawTask::fQuadrant4 {}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00110">110</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="a88e6ebffe3a8b5f96ca6ab3646cf799e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a88e6ebffe3a8b5f96ca6ab3646cf799e">&#9670;&nbsp;</a></span>fRadVSTb</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TH2F* AtEventDrawTask::fRadVSTb</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00098">98</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="a135e0a08e722aaeaab5f5a47ef9c8170"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a135e0a08e722aaeaab5f5a47ef9c8170">&#9670;&nbsp;</a></span>fRawevent</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classAtRawEvent.html">AtRawEvent</a>* AtEventDrawTask::fRawevent</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00058">58</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="af10eddcfa2047329a95645c6c0f2fb49"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af10eddcfa2047329a95645c6c0f2fb49">&#9670;&nbsp;</a></span>fRawEventArray</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TClonesArray* AtEventDrawTask::fRawEventArray {}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00054">54</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="a61f26fed0c0007eaadbab914794cf5c6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a61f26fed0c0007eaadbab914794cf5c6">&#9670;&nbsp;</a></span>fRawEventBranchName</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TString AtEventDrawTask::fRawEventBranchName</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00047">47</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="a012ad5221f3a842dbfbb4028e58e213c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a012ad5221f3a842dbfbb4028e58e213c">&#9670;&nbsp;</a></span>fRGBAPalette</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TEveRGBAPalette* AtEventDrawTask::fRGBAPalette</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00162">162</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="a9b6f7f6231c3784a4d0c1ef2ec031e62"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9b6f7f6231c3784a4d0c1ef2ec031e62">&#9670;&nbsp;</a></span>fRhoVariance</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TH1D* AtEventDrawTask::fRhoVariance</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00090">90</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="ab57f0c4beec32af3ff5b626df0febafa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab57f0c4beec32af3ff5b626df0febafa">&#9670;&nbsp;</a></span>fS800Calc</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classS800Calc.html">S800Calc</a>* AtEventDrawTask::fS800Calc</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00168">168</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="ae2ddf6c9ab632a1130143b4f286aff07"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae2ddf6c9ab632a1130143b4f286aff07">&#9670;&nbsp;</a></span>fSaveTextData</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Bool_t AtEventDrawTask::fSaveTextData</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00137">137</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="a58da2a883745efe4793e700b59a73bcf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a58da2a883745efe4793e700b59a73bcf">&#9670;&nbsp;</a></span>fTheta</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TH2F* AtEventDrawTask::fTheta</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00100">100</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="a4f634f2c3792effe6d7b8a665fd9032b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4f634f2c3792effe6d7b8a665fd9032b">&#9670;&nbsp;</a></span>fThetaxPhi</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TH2F* AtEventDrawTask::fThetaxPhi {}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00102">102</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="aff8d5998e7427639933e14da75ff72a6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aff8d5998e7427639933e14da75ff72a6">&#9670;&nbsp;</a></span>fThetaxPhi_Ini</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TH2F* AtEventDrawTask::fThetaxPhi_Ini {}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00114">114</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="a61d4ac5380674105a4c81d6ff01b5837"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a61d4ac5380674105a4c81d6ff01b5837">&#9670;&nbsp;</a></span>fThetaxPhi_Ini_RANSAC</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TH2F* AtEventDrawTask::fThetaxPhi_Ini_RANSAC {}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00115">115</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="a8bc0d90f087ffe4c1c6c2de15fe9339e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8bc0d90f087ffe4c1c6c2de15fe9339e">&#9670;&nbsp;</a></span>fThreshold</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Int_t AtEventDrawTask::fThreshold</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00062">62</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="a3101e72521c307a1cfc304633abed044"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3101e72521c307a1cfc304633abed044">&#9670;&nbsp;</a></span>fTrackNum</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Int_t AtEventDrawTask::fTrackNum</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00149">149</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="acf946320e01b6acf56e54ec2e6b432a4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acf946320e01b6acf56e54ec2e6b432a4">&#9670;&nbsp;</a></span>fUnpackHough</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Bool_t AtEventDrawTask::fUnpackHough</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00044">44</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="aa09afca402f235effa5eef080acea529"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa09afca402f235effa5eef080acea529">&#9670;&nbsp;</a></span>fVertex</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;TEvePointSet *&gt; AtEventDrawTask::fVertex</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00160">160</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="af3c139719afcb4eb6cc90e552196d6fd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af3c139719afcb4eb6cc90e552196d6fd">&#9670;&nbsp;</a></span>fVertexSize</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Size_t AtEventDrawTask::fVertexSize</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00075">75</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
+
+</div>
+</div>
+<a id="ac54603713b3a0b811a39109f889a5b91"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac54603713b3a0b811a39109f889a5b91">&#9670;&nbsp;</a></span>fVertexStyle</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Size_t AtEventDrawTask::fVertexStyle</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventDrawTask_8h_source.html#l00076">76</a> of file <a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a>.</p>
 
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>/github/workspace/AtEventDisplay/<a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a></li>
-<li>/github/workspace/AtEventDisplay/<a class="el" href="AtEventDrawTask_8cxx_source.html">AtEventDrawTask.cxx</a></li>
+<li>/github/workspace/AtEventDisplay/Deprecated/<a class="el" href="AtEventDrawTask_8h_source.html">AtEventDrawTask.h</a></li>
+<li>/github/workspace/AtEventDisplay/Deprecated/<a class="el" href="AtEventDrawTask_8cxx_source.html">AtEventDrawTask.cxx</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Apr 27 2022 00:47:49 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Oct 20 2023 16:23:01 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.18
 </small></address>

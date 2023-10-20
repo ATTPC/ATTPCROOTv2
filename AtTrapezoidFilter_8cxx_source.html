@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">ATTPCROOT
-   &#160;<span id="projectnumber">1.0.0</span>
+   &#160;<span id="projectnumber">0.3.0-alpha</span>
    </div>
    <div id="projectbrief">A ROOT-based framework for analyzing data from active target detectors</div>
   </td>
@@ -75,9 +75,9 @@ $(function() {
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160; </div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="AtPad_8h.html">AtPad.h</a>&quot;</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160; </div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;algorithm&gt;</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="keyword">struct </span><a class="code" href="structAtPadReference.html">AtPadReference</a>;</div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160; </div>
-<div class="line"><a name="l00007"></a><span class="lineno"><a class="line" href="classAtTrapezoidFilter.html#a9431b583c663d39163f9e770f85b9563">    7</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classAtTrapezoidFilter.html#a9431b583c663d39163f9e770f85b9563">AtTrapezoidFilter::Filter</a>(<a class="code" href="classAtPad.html">AtPad</a> *pad)</div>
+<div class="line"><a name="l00007"></a><span class="lineno"><a class="line" href="classAtTrapezoidFilter.html#a997114f1a18ad41417b8e6b6ab0b23a4">    7</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classAtTrapezoidFilter.html#a997114f1a18ad41417b8e6b6ab0b23a4">AtTrapezoidFilter::Filter</a>(<a class="code" href="classAtPad.html">AtPad</a> *pad, <a class="code" href="structAtPadReference.html">AtPadReference</a> *padReference)</div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;{</div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;   setSignalStart(pad);</div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;   zeroSignalBeforeStart(pad);</div>
@@ -132,15 +132,16 @@ $(function() {
 <div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
 <div class="ttc" id="aAtPad_8h_html"><div class="ttname"><a href="AtPad_8h.html">AtPad.h</a></div></div>
-<div class="ttc" id="aclassAtTrapezoidFilter_html_a9431b583c663d39163f9e770f85b9563"><div class="ttname"><a href="classAtTrapezoidFilter.html#a9431b583c663d39163f9e770f85b9563">AtTrapezoidFilter::Filter</a></div><div class="ttdeci">virtual void Filter(AtPad *pad) override</div><div class="ttdef"><b>Definition:</b> <a href="AtTrapezoidFilter_8cxx_source.html#l00007">AtTrapezoidFilter.cxx:7</a></div></div>
+<div class="ttc" id="aclassAtTrapezoidFilter_html_a997114f1a18ad41417b8e6b6ab0b23a4"><div class="ttname"><a href="classAtTrapezoidFilter.html#a997114f1a18ad41417b8e6b6ab0b23a4">AtTrapezoidFilter::Filter</a></div><div class="ttdeci">virtual void Filter(AtPad *pad, AtPadReference *padReference) override</div><div class="ttdoc">Called to filter each pad.</div><div class="ttdef"><b>Definition:</b> <a href="AtTrapezoidFilter_8cxx_source.html#l00007">AtTrapezoidFilter.cxx:7</a></div></div>
 <div class="ttc" id="aAtTrapezoidFilter_8h_html"><div class="ttname"><a href="AtTrapezoidFilter_8h.html">AtTrapezoidFilter.h</a></div></div>
-<div class="ttc" id="aclassAtPad_html_ab2788c724a02de7149438a4205273b75"><div class="ttname"><a href="classAtPad.html#ab2788c724a02de7149438a4205273b75">AtPad::SetRawADC</a></div><div class="ttdeci">void SetRawADC(const rawTrace &amp;val)</div><div class="ttdef"><b>Definition:</b> <a href="AtPad_8h_source.html#l00054">AtPad.h:54</a></div></div>
-<div class="ttc" id="aclassAtPad_html_abb35f4fb9eef12c24317bed59398d816"><div class="ttname"><a href="classAtPad.html#abb35f4fb9eef12c24317bed59398d816">AtPad::SetADC</a></div><div class="ttdeci">void SetADC(const trace &amp;val)</div><div class="ttdef"><b>Definition:</b> <a href="AtPad_8h_source.html#l00056">AtPad.h:56</a></div></div>
-<div class="ttc" id="aclassAtPad_html_a91c89e0b6f1f521b663ee7246965f1eb"><div class="ttname"><a href="classAtPad.html#a91c89e0b6f1f521b663ee7246965f1eb">AtPad::GetADC</a></div><div class="ttdeci">const trace &amp; GetADC() const</div><div class="ttdef"><b>Definition:</b> <a href="AtPad_8cxx_source.html#l00027">AtPad.cxx:27</a></div></div>
-<div class="ttc" id="aclassAtPad_html"><div class="ttname"><a href="classAtPad.html">AtPad</a></div><div class="ttdef"><b>Definition:</b> <a href="AtPad_8h_source.html#l00025">AtPad.h:25</a></div></div>
+<div class="ttc" id="aclassAtPad_html_ab2788c724a02de7149438a4205273b75"><div class="ttname"><a href="classAtPad.html#ab2788c724a02de7149438a4205273b75">AtPad::SetRawADC</a></div><div class="ttdeci">void SetRawADC(const rawTrace &amp;val)</div><div class="ttdef"><b>Definition:</b> <a href="AtPad_8h_source.html#l00089">AtPad.h:89</a></div></div>
+<div class="ttc" id="aclassAtPad_html_abb35f4fb9eef12c24317bed59398d816"><div class="ttname"><a href="classAtPad.html#abb35f4fb9eef12c24317bed59398d816">AtPad::SetADC</a></div><div class="ttdeci">void SetADC(const trace &amp;val)</div><div class="ttdef"><b>Definition:</b> <a href="AtPad_8h_source.html#l00091">AtPad.h:91</a></div></div>
+<div class="ttc" id="aclassAtPad_html_a91c89e0b6f1f521b663ee7246965f1eb"><div class="ttname"><a href="classAtPad.html#a91c89e0b6f1f521b663ee7246965f1eb">AtPad::GetADC</a></div><div class="ttdeci">const trace &amp; GetADC() const</div><div class="ttdef"><b>Definition:</b> <a href="AtPad_8cxx_source.html#l00097">AtPad.cxx:97</a></div></div>
+<div class="ttc" id="aclassAtPad_html"><div class="ttname"><a href="classAtPad.html">AtPad</a></div><div class="ttdoc">Container class for AtPadBase objects.</div><div class="ttdef"><b>Definition:</b> <a href="AtPad_8h_source.html#l00038">AtPad.h:38</a></div></div>
+<div class="ttc" id="astructAtPadReference_html"><div class="ttname"><a href="structAtPadReference.html">AtPadReference</a></div><div class="ttdef"><b>Definition:</b> <a href="AtPadReference_8h_source.html#l00020">AtPadReference.h:20</a></div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Apr 27 2022 00:47:47 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Oct 20 2023 16:22:59 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.18
 </small></address>

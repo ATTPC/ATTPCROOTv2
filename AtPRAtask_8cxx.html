@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">ATTPCROOT
-   &#160;<span id="projectnumber">1.0.0</span>
+   &#160;<span id="projectnumber">0.3.0-alpha</span>
    </div>
    <div id="projectbrief">A ROOT-based framework for analyzing data from active target detectors</div>
   </td>
@@ -74,72 +74,74 @@ $(function() {
 <div class="textblock"><code>#include &quot;<a class="el" href="AtPRAtask_8h_source.html">AtPRAtask.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="AtDigiPar_8h_source.html">AtDigiPar.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="AtEvent_8h_source.html">AtEvent.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="AtHit_8h_source.html">AtHit.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="AtPRA_8h_source.html">AtPRA.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="AtPatternEvent_8h_source.html">AtPatternEvent.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="AtTrackFinderHC_8h_source.html">AtTrackFinderHC.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="AtTrackFinderTC_8h_source.html">AtTrackFinderTC.h</a>&quot;</code><br />
 <code>#include &lt;FairLogger.h&gt;</code><br />
 <code>#include &lt;FairRootManager.h&gt;</code><br />
 <code>#include &lt;FairRun.h&gt;</code><br />
 <code>#include &lt;FairRuntimeDb.h&gt;</code><br />
 <code>#include &lt;TObject.h&gt;</code><br />
-<code>#include &lt;algorithm&gt;</code><br />
 <code>#include &lt;iostream&gt;</code><br />
+<code>#include &lt;memory&gt;</code><br />
 <code>#include &lt;stdexcept&gt;</code><br />
+<code>#include &lt;utility&gt;</code><br />
 <code>#include &lt;vector&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for AtPRAtask.cxx:</div>
 <div class="dyncontent">
 <div class="center"><img src="AtPRAtask_8cxx__incl.png" border="0" usemap="#_2github_2workspace_2AtReconstruction_2AtPRAtask_8cxx" alt=""/></div>
 <map name="_2github_2workspace_2AtReconstruction_2AtPRAtask_8cxx" id="_2github_2workspace_2AtReconstruction_2AtPRAtask_8cxx">
-<area shape="rect" title=" " alt="" coords="1984,5,2216,47"/>
-<area shape="rect" href="AtPRAtask_8h.html" title=" " alt="" coords="306,95,403,121"/>
-<area shape="rect" href="AtDigiPar_8h.html" title=" " alt="" coords="174,244,261,271"/>
-<area shape="rect" href="AtEvent_8h.html" title=" " alt="" coords="802,169,881,196"/>
-<area shape="rect" title=" " alt="" coords="1963,393,2042,420"/>
-<area shape="rect" href="AtHit_8h.html" title=" " alt="" coords="1443,319,1506,345"/>
-<area shape="rect" title=" " alt="" coords="1267,393,1341,420"/>
-<area shape="rect" title=" " alt="" coords="2155,393,2213,420"/>
-<area shape="rect" title=" " alt="" coords="955,244,1050,271"/>
-<area shape="rect" href="AtPRA_8h.html" title=" " alt="" coords="2112,319,2184,345"/>
-<area shape="rect" href="AtPatternEvent_8h.html" title=" " alt="" coords="1312,95,1432,121"/>
-<area shape="rect" title=" " alt="" coords="2213,244,2285,271"/>
-<area shape="rect" href="AtTrackFinderHC_8h.html" title=" " alt="" coords="2228,95,2361,121"/>
-<area shape="rect" title=" " alt="" coords="2881,95,3012,121"/>
-<area shape="rect" title=" " alt="" coords="3036,95,3113,121"/>
-<area shape="rect" title=" " alt="" coords="3137,95,3255,121"/>
-<area shape="rect" title=" " alt="" coords="3279,95,3358,121"/>
-<area shape="rect" title=" " alt="" coords="79,169,161,196"/>
-<area shape="rect" title=" " alt="" coords="967,393,1039,420"/>
-<area shape="rect" title=" " alt="" coords="186,169,297,196"/>
-<area shape="rect" title=" " alt="" coords="321,169,389,196"/>
-<area shape="rect" title=" " alt="" coords="5,319,144,345"/>
-<area shape="rect" href="AtGas_8h.html" title=" " alt="" coords="219,319,288,345"/>
-<area shape="rect" title=" " alt="" coords="180,393,255,420"/>
-<area shape="rect" title=" " alt="" coords="366,393,434,420"/>
-<area shape="rect" href="AtAuxPad_8h.html" title=" " alt="" coords="688,244,779,271"/>
-<area shape="rect" title=" " alt="" coords="459,393,509,420"/>
-<area shape="rect" title=" " alt="" coords="942,319,994,345"/>
-<area shape="rect" title=" " alt="" coords="1075,244,1157,271"/>
-<area shape="rect" title=" " alt="" coords="515,244,562,271"/>
-<area shape="rect" href="AtPad_8h.html" title=" " alt="" coords="566,319,634,345"/>
-<area shape="rect" title=" " alt="" coords="811,319,866,345"/>
-<area shape="rect" title=" " alt="" coords="690,393,801,420"/>
-<area shape="rect" title=" " alt="" coords="534,393,666,420"/>
-<area shape="rect" title=" " alt="" coords="1673,393,1783,420"/>
-<area shape="rect" title=" " alt="" coords="1807,393,1939,420"/>
-<area shape="rect" title=" " alt="" coords="1530,393,1649,420"/>
-<area shape="rect" title=" " alt="" coords="1366,393,1506,420"/>
-<area shape="rect" href="AtTrack_8h.html" title=" " alt="" coords="1669,169,1747,196"/>
-<area shape="rect" title=" " alt="" coords="1816,244,1885,271"/>
-<area shape="rect" href="AtHitCluster_8h.html" title=" " alt="" coords="1587,244,1690,271"/>
-<area shape="rect" title=" " alt="" coords="1530,319,1635,345"/>
-<area shape="rect" title=" " alt="" coords="1659,319,1741,345"/>
-<area shape="rect" title=" " alt="" coords="2349,169,2467,196"/>
-<area shape="rect" title=" " alt="" coords="2586,169,2705,196"/>
-<area shape="rect" href="cluster_8h.html" title=" " alt="" coords="2491,169,2562,196"/>
-<area shape="rect" title=" " alt="" coords="2265,169,2325,196"/>
-<area shape="rect" title=" " alt="" coords="2412,244,2489,271"/>
+<area shape="rect" title=" " alt="" coords="2090,5,2322,47"/>
+<area shape="rect" href="AtPRAtask_8h.html" title=" " alt="" coords="315,319,412,345"/>
+<area shape="rect" title=" " alt="" coords="1645,393,1697,420"/>
+<area shape="rect" href="AtDigiPar_8h.html" title=" " alt="" coords="620,95,707,121"/>
+<area shape="rect" href="AtEvent_8h.html" title=" " alt="" coords="1136,169,1215,196"/>
+<area shape="rect" title=" " alt="" coords="1853,468,1921,495"/>
+<area shape="rect" title=" " alt="" coords="3363,468,3422,495"/>
+<area shape="rect" title=" " alt="" coords="3581,468,3660,495"/>
+<area shape="rect" title=" " alt="" coords="440,468,535,495"/>
+<area shape="rect" href="AtPRA_8h.html" title=" " alt="" coords="1919,169,1991,196"/>
+<area shape="rect" title=" " alt="" coords="2119,319,2191,345"/>
+<area shape="rect" href="AtPatternEvent_8h.html" title=" " alt="" coords="2249,169,2369,196"/>
+<area shape="rect" href="AtTrackFinderTC_8h.html" title=" " alt="" coords="2039,95,2170,121"/>
+<area shape="rect" title=" " alt="" coords="3810,95,3941,121"/>
+<area shape="rect" title=" " alt="" coords="3965,95,4042,121"/>
+<area shape="rect" title=" " alt="" coords="4065,95,4184,121"/>
+<area shape="rect" title=" " alt="" coords="4208,95,4287,121"/>
+<area shape="rect" title=" " alt="" coords="330,393,413,420"/>
+<area shape="rect" title=" " alt="" coords="1155,468,1227,495"/>
+<area shape="rect" title=" " alt="" coords="5,393,116,420"/>
+<area shape="rect" title=" " alt="" coords="141,393,215,420"/>
+<area shape="rect" title=" " alt="" coords="240,393,305,420"/>
+<area shape="rect" title=" " alt="" coords="487,169,626,196"/>
+<area shape="rect" href="AtBaseEvent_8h.html" title=" " alt="" coords="1565,244,1673,271"/>
+<area shape="rect" title=" " alt="" coords="559,468,610,495"/>
+<area shape="rect" title=" " alt="" coords="635,468,681,495"/>
+<area shape="rect" title=" " alt="" coords="881,468,963,495"/>
+<area shape="rect" href="AtHit_8h.html" title=" " alt="" coords="2912,393,2975,420"/>
+<area shape="rect" href="AtAuxPad_8h.html" title=" " alt="" coords="1391,319,1482,345"/>
+<area shape="rect" title=" " alt="" coords="1403,468,1457,495"/>
+<area shape="rect" title=" " alt="" coords="1557,319,1639,345"/>
+<area shape="rect" title=" " alt="" coords="2602,468,2677,495"/>
+<area shape="rect" href="AtPad_8h.html" title=" " alt="" coords="1096,393,1164,420"/>
+<area shape="rect" title=" " alt="" coords="3177,468,3288,495"/>
+<area shape="rect" title=" " alt="" coords="3021,468,3153,495"/>
+<area shape="rect" title=" " alt="" coords="2715,468,2833,495"/>
+<area shape="rect" title=" " alt="" coords="2857,468,2997,495"/>
+<area shape="rect" href="AtTrack_8h.html" title=" " alt="" coords="2600,244,2679,271"/>
+<area shape="rect" href="AtTrackTransformer_8h.html" title=" " alt="" coords="1341,244,1489,271"/>
+<area shape="rect" href="AtContainerManip_8h.html" title=" " alt="" coords="2027,393,2161,420"/>
+<area shape="rect" href="AtHitCluster_8h.html" title=" " alt="" coords="2368,319,2471,345"/>
+<area shape="rect" href="AtPattern_8h.html" title=" " alt="" coords="2745,319,2832,345"/>
+<area shape="rect" title=" " alt="" coords="3007,319,3077,345"/>
+<area shape="rect" title=" " alt="" coords="2024,468,2081,495"/>
+<area shape="rect" title=" " alt="" coords="2105,468,2168,495"/>
+<area shape="rect" title=" " alt="" coords="2287,393,2418,420"/>
+<area shape="rect" title=" " alt="" coords="2442,393,2551,420"/>
+<area shape="rect" title=" " alt="" coords="2778,393,2837,420"/>
+<area shape="rect" title=" " alt="" coords="2069,169,2140,196"/>
+<area shape="rect" title=" " alt="" coords="2164,169,2224,196"/>
 </map>
 </div>
 </div>
@@ -147,7 +149,7 @@ Include dependency graph for AtPRAtask.cxx:</div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Apr 27 2022 00:47:49 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Oct 20 2023 16:23:01 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.18
 </small></address>

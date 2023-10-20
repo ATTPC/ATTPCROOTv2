@@ -1,3 +1,12 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$structAtHit_1_1MCSimPoint.html" title=" " alt="" coords="5,5,136,32"/>
+<area shape="rect" id="node1" href="$classAtFilter.html" title=" " alt="" coords="5,183,69,209"/>
+<area shape="rect" id="node2" href="$classAtFilterCalibrate.html" title=" " alt="" coords="125,5,240,32"/>
+<area shape="rect" id="node3" href="$classAtFilterDivide.html" title=" " alt="" coords="133,56,233,83"/>
+<area shape="rect" id="node4" href="$classAtFilterFFT.html" title=" " alt="" coords="139,107,227,133"/>
+<area shape="rect" id="node5" href="$classAtFilterSubtraction.html" title=" " alt="" coords="117,157,248,184"/>
+<area shape="rect" id="node7" href="$classAtFilterZero.html" title=" " alt="" coords="137,208,228,235"/>
+<area shape="rect" id="node8" href="$classAtRemovePulser.html" title=" " alt="" coords="123,259,243,285"/>
+<area shape="rect" id="node9" href="$classAtSCACorrect.html" title=" " alt="" coords="131,309,235,336"/>
+<area shape="rect" id="node10" href="$classAtTrapezoidFilter.html" title=" " alt="" coords="123,360,243,387"/>
+<area shape="rect" id="node6" href="$classAtFilterFPN.html" title=" " alt="" coords="296,157,387,184"/>
 </map>

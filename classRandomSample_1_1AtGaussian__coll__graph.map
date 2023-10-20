@@ -1,0 +1,11 @@
+<map id="RandomSample::AtGaussian" name="RandomSample::AtGaussian">
+<area shape="rect" id="node1" title="Sample AtHits in gaussian from reference." alt="" coords="15,559,203,585"/>
+<area shape="rect" id="node2" href="$classRandomSample_1_1AtSampleFromReference.html" title="Sample when PDF depends on reference." alt="" coords="5,468,212,509"/>
+<area shape="rect" id="node3" href="$classRandomSample_1_1AtSample.html" title="Interface for randomly sampling AtHits." alt="" coords="131,392,308,419"/>
+<area shape="rect" id="node4" title=" " alt="" coords="130,288,255,329"/>
+<area shape="rect" id="node5" href="$classAtHit.html" title="Point in space with charge." alt="" coords="88,199,140,225"/>
+<area shape="rect" id="node6" title=" " alt="" coords="59,102,127,129"/>
+<area shape="rect" id="node7" title=" " alt="" coords="151,95,274,136"/>
+<area shape="rect" id="node8" href="$structAtHit_1_1MCSimPoint.html" title=" " alt="" coords="147,5,278,32"/>
+<area shape="rect" id="node9" title=" " alt="" coords="280,295,423,322"/>
+</map>

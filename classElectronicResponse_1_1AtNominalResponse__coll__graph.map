@@ -1,0 +1,4 @@
+<map id="ElectronicResponse::AtNominalResponse" name="ElectronicResponse::AtNominalResponse">
+<area shape="rect" id="node1" title="Nominal response of GET electronics." alt="" coords="10,95,157,136"/>
+<area shape="rect" id="node2" href="$classElectronicResponse_1_1AtElectronicResponse.html" title="Base class for describing the response of electronics to charge." alt="" coords="5,5,161,47"/>
+</map>

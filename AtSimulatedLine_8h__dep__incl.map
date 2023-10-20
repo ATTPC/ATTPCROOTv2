@@ -1,6 +1,7 @@
 <map id="/github/workspace/AtDigitization/AtSimulatedLine.h" name="/github/workspace/AtDigitization/AtSimulatedLine.h">
-<area shape="rect" id="node1" title=" " alt="" coords="237,5,445,47"/>
-<area shape="rect" id="node2" href="$AtClusterizeLineTask_8cxx.html" title=" " alt="" coords="5,95,213,136"/>
-<area shape="rect" id="node3" href="$AtPulseLineTask_8cxx.html" title=" " alt="" coords="237,95,445,136"/>
-<area shape="rect" id="node4" href="$AtSimulatedLine_8cxx.html" title=" " alt="" coords="469,95,677,136"/>
+<area shape="rect" id="node1" title=" " alt="" coords="353,5,561,47"/>
+<area shape="rect" id="node2" href="$AtClusterizeLine_8cxx.html" title=" " alt="" coords="5,95,213,136"/>
+<area shape="rect" id="node3" href="$AtPulseLine_8cxx.html" title=" " alt="" coords="237,95,445,136"/>
+<area shape="rect" id="node4" href="$AtPulseLineTask_8cxx.html" title=" " alt="" coords="469,95,677,136"/>
+<area shape="rect" id="node5" href="$AtSimulatedLine_8cxx.html" title=" " alt="" coords="701,95,909,136"/>
 </map>

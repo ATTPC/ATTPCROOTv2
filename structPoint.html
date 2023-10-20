@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.18"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>ATTPCROOT: Point Struct Reference</title>
+<title>ATTPCROOT: Point Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">ATTPCROOT
-   &#160;<span id="projectnumber">1.0.0</span>
+   &#160;<span id="projectnumber">0.3.0-alpha</span>
    </div>
    <div id="projectbrief">A ROOT-based framework for analyzing data from active target detectors</div>
   </td>
@@ -66,34 +66,63 @@ $(function() {
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="#friends">Friends</a> &#124;
 <a href="structPoint-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">Point Struct Reference</div>  </div>
+<div class="title">Point Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
-<p><code>#include &lt;<a class="el" href="AtTrackFinderHC_8h_source.html">AtTrackFinderHC.h</a>&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="pointcloud_8h_source.html">pointcloud.h</a>&gt;</code></p>
 <div class="dynheader">
 Collaboration diagram for Point:</div>
 <div class="dyncontent">
 <div class="center"><img src="structPoint__coll__graph.png" border="0" usemap="#Point_coll__map" alt="Collaboration graph"/></div>
 <map name="Point_coll__map" id="Point_coll__map">
-<area shape="rect" title=" " alt="" coords="39,95,91,121"/>
-<area shape="rect" title=" " alt="" coords="5,5,124,32"/>
+<area shape="rect" title=" " alt="" coords="111,95,163,121"/>
+<area shape="rect" title=" " alt="" coords="5,5,125,32"/>
+<area shape="rect" title=" " alt="" coords="150,5,269,32"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a333457060da6c8ad8224576a29447c08"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:a333457060da6c8ad8224576a29447c08"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structPoint.html#a333457060da6c8ad8224576a29447c08">Point</a> (T point)</td></tr>
-<tr class="separator:a333457060da6c8ad8224576a29447c08"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3618cc973762afde2e8df59bff4a86ca"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structPoint.html#a3618cc973762afde2e8df59bff4a86ca">operator==</a> (const <a class="el" href="structPoint.html">Point</a> &amp;p) const</td></tr>
-<tr class="separator:a3618cc973762afde2e8df59bff4a86ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acde33a8f4bf6ebf4fbd611ed2f5cd335"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structPoint.html#acde33a8f4bf6ebf4fbd611ed2f5cd335">Point</a> (pcl::PointXYZ point)</td></tr>
 <tr class="separator:acde33a8f4bf6ebf4fbd611ed2f5cd335"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3618cc973762afde2e8df59bff4a86ca"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structPoint.html#a3618cc973762afde2e8df59bff4a86ca">operator==</a> (const <a class="el" href="structPoint.html">Point</a> &amp;p) const</td></tr>
 <tr class="separator:a3618cc973762afde2e8df59bff4a86ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad92f2337b839a94ce97dcdb439b4325a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structPoint.html#ad92f2337b839a94ce97dcdb439b4325a">Point</a> ()</td></tr>
+<tr class="separator:ad92f2337b839a94ce97dcdb439b4325a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a784692adb64b573a5a11411a63381568"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structPoint.html#a784692adb64b573a5a11411a63381568">Point</a> (const std::vector&lt; double &gt; &amp;point)</td></tr>
+<tr class="separator:a784692adb64b573a5a11411a63381568"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abb317c17b55e022485e6cf89b48d7410"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structPoint.html#abb317c17b55e022485e6cf89b48d7410">Point</a> (const std::vector&lt; double &gt; &amp;point, const std::set&lt; size_t &gt; &amp;<a class="el" href="structPoint.html#a30221557d50b5dfdb5b2f51d072ff456">cluster_ids</a>)</td></tr>
+<tr class="separator:abb317c17b55e022485e6cf89b48d7410"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4d43f5247afe8c85c6da1aa39dbcc738"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structPoint.html#a4d43f5247afe8c85c6da1aa39dbcc738">Point</a> (double <a class="el" href="structPoint.html#a05dfe2dfbde813ad234b514f30e662f1">x</a>, double <a class="el" href="structPoint.html#a6101960c8d2d4e8ea1d32c9234bbeb8d">y</a>, double <a class="el" href="structPoint.html#a9a666531e0e99adff132be93d2407d0c">z</a>)</td></tr>
+<tr class="separator:a4d43f5247afe8c85c6da1aa39dbcc738"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9945ad5371c92ec9e7b55ca60e3e0ded"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structPoint.html#a9945ad5371c92ec9e7b55ca60e3e0ded">Point</a> (double <a class="el" href="structPoint.html#a05dfe2dfbde813ad234b514f30e662f1">x</a>, double <a class="el" href="structPoint.html#a6101960c8d2d4e8ea1d32c9234bbeb8d">y</a>, double <a class="el" href="structPoint.html#a9a666531e0e99adff132be93d2407d0c">z</a>, const std::set&lt; size_t &gt; &amp;<a class="el" href="structPoint.html#a30221557d50b5dfdb5b2f51d072ff456">cluster_ids</a>)</td></tr>
+<tr class="separator:a9945ad5371c92ec9e7b55ca60e3e0ded"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acc72e95b2bed40437a3e364552e530fe"><td class="memItemLeft" align="right" valign="top">std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structPoint.html#acc72e95b2bed40437a3e364552e530fe">as_vector</a> () const</td></tr>
+<tr class="separator:acc72e95b2bed40437a3e364552e530fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1de1fcf72ec8d46bf347fd2cde72cc0d"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structPoint.html#a1de1fcf72ec8d46bf347fd2cde72cc0d">norm</a> () const</td></tr>
+<tr class="separator:a1de1fcf72ec8d46bf347fd2cde72cc0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae9df007a2e7a05558a5e543a2fca4647"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structPoint.html#ae9df007a2e7a05558a5e543a2fca4647">squared_norm</a> () const</td></tr>
+<tr class="separator:ae9df007a2e7a05558a5e543a2fca4647"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a014c7784cdebc79d2d13e582cad0b075"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structPoint.html#a014c7784cdebc79d2d13e582cad0b075">SetID</a> (int pid)</td></tr>
+<tr class="separator:a014c7784cdebc79d2d13e582cad0b075"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a28456dbb9d87dee7a82b29f0ffbc16b0"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structPoint.html#a28456dbb9d87dee7a82b29f0ffbc16b0">GetID</a> () const</td></tr>
+<tr class="separator:a28456dbb9d87dee7a82b29f0ffbc16b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3618cc973762afde2e8df59bff4a86ca"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structPoint.html#a3618cc973762afde2e8df59bff4a86ca">operator==</a> (const <a class="el" href="structPoint.html">Point</a> &amp;p) const</td></tr>
+<tr class="separator:a3618cc973762afde2e8df59bff4a86ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afbace8c40e1be384358cc8fc625df4da"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structPoint.html">Point</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structPoint.html#afbace8c40e1be384358cc8fc625df4da">operator=</a> (const <a class="el" href="structPoint.html">Point</a> &amp;other)</td></tr>
+<tr class="separator:afbace8c40e1be384358cc8fc625df4da"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4218ebbe1cc5d02a823c49e3fc9c0703"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structPoint.html">Point</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structPoint.html#a4218ebbe1cc5d02a823c49e3fc9c0703">operator+</a> (const <a class="el" href="structPoint.html">Point</a> &amp;p) const</td></tr>
+<tr class="separator:a4218ebbe1cc5d02a823c49e3fc9c0703"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae4ec92b14e766b962f09000aff318f48"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structPoint.html">Point</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structPoint.html#ae4ec92b14e766b962f09000aff318f48">operator-</a> (const <a class="el" href="structPoint.html">Point</a> &amp;p) const</td></tr>
+<tr class="separator:ae4ec92b14e766b962f09000aff318f48"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a98b35db5c5470f89e8e59e412aeb752b"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structPoint.html#a98b35db5c5470f89e8e59e412aeb752b">operator*</a> (const <a class="el" href="structPoint.html">Point</a> &amp;p) const</td></tr>
+<tr class="separator:a98b35db5c5470f89e8e59e412aeb752b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7eea2381ee75f1e3a1385617dae457c3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structPoint.html">Point</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structPoint.html#a7eea2381ee75f1e3a1385617dae457c3">operator/</a> (double <a class="el" href="AtRadialChargeModel_8cxx.html#a4fa597cdd9a67fc4cef7c8beebd1baa8">c</a>) const</td></tr>
+<tr class="separator:a7eea2381ee75f1e3a1385617dae457c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -103,45 +132,30 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a6101960c8d2d4e8ea1d32c9234bbeb8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9a666531e0e99adff132be93d2407d0c"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structPoint.html#a9a666531e0e99adff132be93d2407d0c">z</a></td></tr>
 <tr class="separator:a9a666531e0e99adff132be93d2407d0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae483ab0fdb4a814989e49c6e1fcbf739"><td class="memItemLeft" align="right" valign="top">std::vector&lt; int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structPoint.html#ae483ab0fdb4a814989e49c6e1fcbf739">clIds</a></td></tr>
-<tr class="separator:ae483ab0fdb4a814989e49c6e1fcbf739"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0c00304be98230337f54298721cc355d"><td class="memItemLeft" align="right" valign="top">std::vector&lt; int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structPoint.html#a0c00304be98230337f54298721cc355d">clIds</a></td></tr>
+<tr class="separator:a0c00304be98230337f54298721cc355d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab99c56589bc8ad5fa5071387110a5bc7"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structPoint.html#ab99c56589bc8ad5fa5071387110a5bc7">x</a></td></tr>
+<tr class="separator:ab99c56589bc8ad5fa5071387110a5bc7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afa38be143ae800e6ad69ce8ed4df62d8"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structPoint.html#afa38be143ae800e6ad69ce8ed4df62d8">y</a></td></tr>
+<tr class="separator:afa38be143ae800e6ad69ce8ed4df62d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a05ba3b1dfcb19430582ae953cbbfbded"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structPoint.html#a05ba3b1dfcb19430582ae953cbbfbded">z</a></td></tr>
+<tr class="separator:a05ba3b1dfcb19430582ae953cbbfbded"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3ccd2080027d6845744bd044280da9e7"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structPoint.html#a3ccd2080027d6845744bd044280da9e7">id</a></td></tr>
+<tr class="separator:a3ccd2080027d6845744bd044280da9e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a30221557d50b5dfdb5b2f51d072ff456"><td class="memItemLeft" align="right" valign="top">std::set&lt; size_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structPoint.html#a30221557d50b5dfdb5b2f51d072ff456">cluster_ids</a></td></tr>
+<tr class="separator:a30221557d50b5dfdb5b2f51d072ff456"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="friends"></a>
+Friends</h2></td></tr>
+<tr class="memitem:aab55cf13db83c55c46a961b2b2441960"><td class="memItemLeft" align="right" valign="top">std::ostream &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structPoint.html#aab55cf13db83c55c46a961b2b2441960">operator&lt;&lt;</a> (std::ostream &amp;os, const <a class="el" href="structPoint.html">Point</a> &amp;p)</td></tr>
+<tr class="separator:aab55cf13db83c55c46a961b2b2441960"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="AtTrackFinderHC_8h_source.html#l00047">47</a> of file <a class="el" href="AtTrackFinderHC_8h_source.html">AtTrackFinderHC.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="main_8cpp_source.html#l00071">71</a> of file <a class="el" href="main_8cpp_source.html">main.cpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a333457060da6c8ad8224576a29447c08"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a333457060da6c8ad8224576a29447c08">&#9670;&nbsp;</a></span>Point() <span class="overload">[1/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">Point::Point </td>
-          <td>(</td>
-          <td class="paramtype">T&#160;</td>
-          <td class="paramname"><em>point</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="AtTrackFinderHC_8h_source.html#l00054">54</a> of file <a class="el" href="AtTrackFinderHC_8h_source.html">AtTrackFinderHC.h</a>.</p>
-
-</div>
-</div>
 <a id="acde33a8f4bf6ebf4fbd611ed2f5cd335"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acde33a8f4bf6ebf4fbd611ed2f5cd335">&#9670;&nbsp;</a></span>Point() <span class="overload">[2/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#acde33a8f4bf6ebf4fbd611ed2f5cd335">&#9670;&nbsp;</a></span>Point() <span class="overload">[1/6]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -168,9 +182,8 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
-<h2 class="groupheader">Member Function Documentation</h2>
-<a id="a3618cc973762afde2e8df59bff4a86ca"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3618cc973762afde2e8df59bff4a86ca">&#9670;&nbsp;</a></span>operator==() <span class="overload">[1/2]</span></h2>
+<a id="ad92f2337b839a94ce97dcdb439b4325a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad92f2337b839a94ce97dcdb439b4325a">&#9670;&nbsp;</a></span>Point() <span class="overload">[2/6]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -179,10 +192,184 @@ template&lt;typename T &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">bool Point::operator== </td>
+          <td class="memname">Point::Point </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="structPoint.html">Point</a> &amp;&#160;</td>
-          <td class="paramname"><em>p</em></td><td>)</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="pointcloud_8h_source.html#l00026">26</a> of file <a class="el" href="pointcloud_8h_source.html">pointcloud.h</a>.</p>
+
+</div>
+</div>
+<a id="a784692adb64b573a5a11411a63381568"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a784692adb64b573a5a11411a63381568">&#9670;&nbsp;</a></span>Point() <span class="overload">[3/6]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Point::Point </td>
+          <td>(</td>
+          <td class="paramtype">const std::vector&lt; double &gt; &amp;&#160;</td>
+          <td class="paramname"><em>point</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="pointcloud_8cxx_source.html#l00026">26</a> of file <a class="el" href="pointcloud_8cxx_source.html">pointcloud.cxx</a>.</p>
+
+</div>
+</div>
+<a id="abb317c17b55e022485e6cf89b48d7410"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abb317c17b55e022485e6cf89b48d7410">&#9670;&nbsp;</a></span>Point() <span class="overload">[4/6]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Point::Point </td>
+          <td>(</td>
+          <td class="paramtype">const std::vector&lt; double &gt; &amp;&#160;</td>
+          <td class="paramname"><em>point</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::set&lt; size_t &gt; &amp;&#160;</td>
+          <td class="paramname"><em>cluster_ids</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="pointcloud_8cxx_source.html#l00036">36</a> of file <a class="el" href="pointcloud_8cxx_source.html">pointcloud.cxx</a>.</p>
+
+</div>
+</div>
+<a id="a4d43f5247afe8c85c6da1aa39dbcc738"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4d43f5247afe8c85c6da1aa39dbcc738">&#9670;&nbsp;</a></span>Point() <span class="overload">[5/6]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Point::Point </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>y</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>z</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="pointcloud_8cxx_source.html#l00047">47</a> of file <a class="el" href="pointcloud_8cxx_source.html">pointcloud.cxx</a>.</p>
+
+</div>
+</div>
+<a id="a9945ad5371c92ec9e7b55ca60e3e0ded"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9945ad5371c92ec9e7b55ca60e3e0ded">&#9670;&nbsp;</a></span>Point() <span class="overload">[6/6]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Point::Point </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>y</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>z</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::set&lt; size_t &gt; &amp;&#160;</td>
+          <td class="paramname"><em>cluster_ids</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="pointcloud_8cxx_source.html#l00054">54</a> of file <a class="el" href="pointcloud_8cxx_source.html">pointcloud.cxx</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="acc72e95b2bed40437a3e364552e530fe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acc72e95b2bed40437a3e364552e530fe">&#9670;&nbsp;</a></span>as_vector()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; double &gt; Point::as_vector </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="pointcloud_8cxx_source.html#l00063">63</a> of file <a class="el" href="pointcloud_8cxx_source.html">pointcloud.cxx</a>.</p>
+
+</div>
+</div>
+<a id="a28456dbb9d87dee7a82b29f0ffbc16b0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a28456dbb9d87dee7a82b29f0ffbc16b0">&#9670;&nbsp;</a></span>GetID()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int Point::GetID </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -193,7 +380,144 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtTrackFinderHC_8h_source.html#l00061">61</a> of file <a class="el" href="AtTrackFinderHC_8h_source.html">AtTrackFinderHC.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pointcloud_8h_source.html#l00040">40</a> of file <a class="el" href="pointcloud_8h_source.html">pointcloud.h</a>.</p>
+
+</div>
+</div>
+<a id="a1de1fcf72ec8d46bf347fd2cde72cc0d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1de1fcf72ec8d46bf347fd2cde72cc0d">&#9670;&nbsp;</a></span>norm()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double Point::norm </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="pointcloud_8cxx_source.html#l00073">73</a> of file <a class="el" href="pointcloud_8cxx_source.html">pointcloud.cxx</a>.</p>
+
+</div>
+</div>
+<a id="a98b35db5c5470f89e8e59e412aeb752b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a98b35db5c5470f89e8e59e412aeb752b">&#9670;&nbsp;</a></span>operator*()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double Point::operator* </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structPoint.html">Point</a> &amp;&#160;</td>
+          <td class="paramname"><em>p</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="pointcloud_8cxx_source.html#l00125">125</a> of file <a class="el" href="pointcloud_8cxx_source.html">pointcloud.cxx</a>.</p>
+
+</div>
+</div>
+<a id="a4218ebbe1cc5d02a823c49e3fc9c0703"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4218ebbe1cc5d02a823c49e3fc9c0703">&#9670;&nbsp;</a></span>operator+()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structPoint.html">Point</a> Point::operator+ </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structPoint.html">Point</a> &amp;&#160;</td>
+          <td class="paramname"><em>p</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="pointcloud_8cxx_source.html#l00105">105</a> of file <a class="el" href="pointcloud_8cxx_source.html">pointcloud.cxx</a>.</p>
+
+</div>
+</div>
+<a id="ae4ec92b14e766b962f09000aff318f48"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae4ec92b14e766b962f09000aff318f48">&#9670;&nbsp;</a></span>operator-()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structPoint.html">Point</a> Point::operator- </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structPoint.html">Point</a> &amp;&#160;</td>
+          <td class="paramname"><em>p</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="pointcloud_8cxx_source.html#l00115">115</a> of file <a class="el" href="pointcloud_8cxx_source.html">pointcloud.cxx</a>.</p>
+
+</div>
+</div>
+<a id="a7eea2381ee75f1e3a1385617dae457c3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7eea2381ee75f1e3a1385617dae457c3">&#9670;&nbsp;</a></span>operator/()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structPoint.html">Point</a> Point::operator/ </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>c</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="pointcloud_8cxx_source.html#l00131">131</a> of file <a class="el" href="pointcloud_8cxx_source.html">pointcloud.cxx</a>.</p>
+
+</div>
+</div>
+<a id="afbace8c40e1be384358cc8fc625df4da"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afbace8c40e1be384358cc8fc625df4da">&#9670;&nbsp;</a></span>operator=()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structPoint.html">Point</a> &amp; Point::operator= </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structPoint.html">Point</a> &amp;&#160;</td>
+          <td class="paramname"><em>other</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="pointcloud_8cxx_source.html#l00084">84</a> of file <a class="el" href="pointcloud_8cxx_source.html">pointcloud.cxx</a>.</p>
+
+</div>
+</div>
+<a id="a3618cc973762afde2e8df59bff4a86ca"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3618cc973762afde2e8df59bff4a86ca">&#9670;&nbsp;</a></span>operator==() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Point::operator== </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structPoint.html">Point</a> &amp;&#160;</td>
+          <td class="paramname"><em>p</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -225,25 +549,159 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
-<h2 class="groupheader">Member Data Documentation</h2>
-<a id="ae483ab0fdb4a814989e49c6e1fcbf739"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae483ab0fdb4a814989e49c6e1fcbf739">&#9670;&nbsp;</a></span>clIds</h2>
+<a id="a014c7784cdebc79d2d13e582cad0b075"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a014c7784cdebc79d2d13e582cad0b075">&#9670;&nbsp;</a></span>SetID()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Point::SetID </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>pid</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="pointcloud_8h_source.html#l00039">39</a> of file <a class="el" href="pointcloud_8h_source.html">pointcloud.h</a>.</p>
+
+</div>
+</div>
+<a id="ae9df007a2e7a05558a5e543a2fca4647"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae9df007a2e7a05558a5e543a2fca4647">&#9670;&nbsp;</a></span>squared_norm()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::vector&lt; int &gt; Point::clIds</td>
+          <td class="memname">double Point::squared_norm </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtTrackFinderHC_8h_source.html#l00051">51</a> of file <a class="el" href="AtTrackFinderHC_8h_source.html">AtTrackFinderHC.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pointcloud_8cxx_source.html#l00079">79</a> of file <a class="el" href="pointcloud_8cxx_source.html">pointcloud.cxx</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Friends And Related Function Documentation</h2>
+<a id="aab55cf13db83c55c46a961b2b2441960"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aab55cf13db83c55c46a961b2b2441960">&#9670;&nbsp;</a></span>operator&lt;&lt;</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::ostream&amp; operator&lt;&lt; </td>
+          <td>(</td>
+          <td class="paramtype">std::ostream &amp;&#160;</td>
+          <td class="paramname"><em>os</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structPoint.html">Point</a> &amp;&#160;</td>
+          <td class="paramname"><em>p</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">friend</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="pointcloud_8cxx_source.html#l00099">99</a> of file <a class="el" href="pointcloud_8cxx_source.html">pointcloud.cxx</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="a0c00304be98230337f54298721cc355d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0c00304be98230337f54298721cc355d">&#9670;&nbsp;</a></span>clIds</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;int&gt; Point::clIds</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="main_8cpp_source.html#l00075">75</a> of file <a class="el" href="main_8cpp_source.html">main.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a30221557d50b5dfdb5b2f51d072ff456"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a30221557d50b5dfdb5b2f51d072ff456">&#9670;&nbsp;</a></span>cluster_ids</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::set&lt;size_t&gt; Point::cluster_ids</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="pointcloud_8h_source.html#l00024">24</a> of file <a class="el" href="pointcloud_8h_source.html">pointcloud.h</a>.</p>
+
+</div>
+</div>
+<a id="a3ccd2080027d6845744bd044280da9e7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3ccd2080027d6845744bd044280da9e7">&#9670;&nbsp;</a></span>id</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int Point::id</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="pointcloud_8h_source.html#l00023">23</a> of file <a class="el" href="pointcloud_8h_source.html">pointcloud.h</a>.</p>
+
+</div>
+</div>
+<a id="ab99c56589bc8ad5fa5071387110a5bc7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab99c56589bc8ad5fa5071387110a5bc7">&#9670;&nbsp;</a></span>x <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double Point::x</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="pointcloud_8h_source.html#l00020">20</a> of file <a class="el" href="pointcloud_8h_source.html">pointcloud.h</a>.</p>
 
 </div>
 </div>
 <a id="a05dfe2dfbde813ad234b514f30e662f1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a05dfe2dfbde813ad234b514f30e662f1">&#9670;&nbsp;</a></span>x</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a05dfe2dfbde813ad234b514f30e662f1">&#9670;&nbsp;</a></span>x <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -254,12 +712,28 @@ template&lt;typename T &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtTrackFinderHC_8h_source.html#l00048">48</a> of file <a class="el" href="AtTrackFinderHC_8h_source.html">AtTrackFinderHC.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="main_8cpp_source.html#l00072">72</a> of file <a class="el" href="main_8cpp_source.html">main.cpp</a>.</p>
+
+</div>
+</div>
+<a id="afa38be143ae800e6ad69ce8ed4df62d8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afa38be143ae800e6ad69ce8ed4df62d8">&#9670;&nbsp;</a></span>y <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double Point::y</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="pointcloud_8h_source.html#l00021">21</a> of file <a class="el" href="pointcloud_8h_source.html">pointcloud.h</a>.</p>
 
 </div>
 </div>
 <a id="a6101960c8d2d4e8ea1d32c9234bbeb8d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6101960c8d2d4e8ea1d32c9234bbeb8d">&#9670;&nbsp;</a></span>y</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a6101960c8d2d4e8ea1d32c9234bbeb8d">&#9670;&nbsp;</a></span>y <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -270,12 +744,28 @@ template&lt;typename T &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtTrackFinderHC_8h_source.html#l00049">49</a> of file <a class="el" href="AtTrackFinderHC_8h_source.html">AtTrackFinderHC.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="main_8cpp_source.html#l00073">73</a> of file <a class="el" href="main_8cpp_source.html">main.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a05ba3b1dfcb19430582ae953cbbfbded"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a05ba3b1dfcb19430582ae953cbbfbded">&#9670;&nbsp;</a></span>z <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double Point::z</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="pointcloud_8h_source.html#l00022">22</a> of file <a class="el" href="pointcloud_8h_source.html">pointcloud.h</a>.</p>
 
 </div>
 </div>
 <a id="a9a666531e0e99adff132be93d2407d0c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9a666531e0e99adff132be93d2407d0c">&#9670;&nbsp;</a></span>z</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a9a666531e0e99adff132be93d2407d0c">&#9670;&nbsp;</a></span>z <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -286,18 +776,19 @@ template&lt;typename T &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtTrackFinderHC_8h_source.html#l00050">50</a> of file <a class="el" href="AtTrackFinderHC_8h_source.html">AtTrackFinderHC.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="main_8cpp_source.html#l00074">74</a> of file <a class="el" href="main_8cpp_source.html">main.cpp</a>.</p>
 
 </div>
 </div>
-<hr/>The documentation for this struct was generated from the following files:<ul>
-<li>/github/workspace/AtReconstruction/AtPatternRecognition/<a class="el" href="AtTrackFinderHC_8h_source.html">AtTrackFinderHC.h</a></li>
-<li>/github/workspace/AtReconstruction/AtPatternRecognition/src/<a class="el" href="main_8cpp_source.html">main.cpp</a></li>
+<hr/>The documentation for this class was generated from the following files:<ul>
+<li>/github/workspace/AtReconstruction/AtPatternRecognition/trackfinder/src/<a class="el" href="main_8cpp_source.html">main.cpp</a></li>
+<li>/github/workspace/AtReconstruction/AtPatternRecognition/triplclust/src/<a class="el" href="pointcloud_8h_source.html">pointcloud.h</a></li>
+<li>/github/workspace/AtReconstruction/AtPatternRecognition/triplclust/src/<a class="el" href="pointcloud_8cxx_source.html">pointcloud.cxx</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Apr 27 2022 00:47:50 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Oct 20 2023 16:23:02 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.18
 </small></address>

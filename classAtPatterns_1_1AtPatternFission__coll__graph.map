@@ -1,0 +1,10 @@
+<map id="AtPatterns::AtPatternFission" name="AtPatterns::AtPatternFission">
+<area shape="rect" id="node1" title="Describes a fission event." alt="" coords="1432,57,1619,84"/>
+<area shape="rect" id="node2" href="$classAtPatterns_1_1AtPatternY.html" title="Describes a Y track." alt="" coords="1228,57,1383,84"/>
+<area shape="rect" id="node3" href="$classAtPatterns_1_1AtPattern.html" title="Describes a shape in 3D space." alt="" coords="277,31,423,57"/>
+<area shape="rect" id="node8" href="$classAtPatterns_1_1AtPatternLine.html" title="Describes a linear track." alt="" coords="472,56,643,83"/>
+<area shape="rect" id="node4" title=" " alt="" coords="49,5,117,32"/>
+<area shape="rect" id="node5" title=" " alt="" coords="5,56,160,83"/>
+<area shape="rect" id="node6" title=" " alt="" coords="964,119,1111,161"/>
+<area shape="rect" id="node7" href="$classAtPatterns_1_1AtPatternRay.html" title="Describes a linear track with an end point." alt="" coords="692,57,859,84"/>
+</map>

@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">ATTPCROOT
-   &#160;<span id="projectnumber">1.0.0</span>
+   &#160;<span id="projectnumber">0.3.0-alpha</span>
    </div>
    <div id="projectbrief">A ROOT-based framework for analyzing data from active target detectors</div>
   </td>
@@ -75,20 +75,24 @@ $(function() {
   <tr class="even"><td class="entry"><a class="el" href="classAtLinkDAQTask.html#a8d08b342003447611955ea463eb89051">Exec</a>(Option_t *opt) override</td><td class="entry"><a class="el" href="classAtLinkDAQTask.html">AtLinkDAQTask</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
   <tr><td class="entry"><a class="el" href="classAtLinkDAQTask.html#af0000979d37cff55143de84b024b2fdd">Finish</a>() override</td><td class="entry"><a class="el" href="classAtLinkDAQTask.html">AtLinkDAQTask</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classAtLinkDAQTask.html#a256417c0310e85d95e2650947f491466">FinishEvent</a>() override</td><td class="entry"><a class="el" href="classAtLinkDAQTask.html">AtLinkDAQTask</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
+  <tr><td class="entry"><a class="el" href="classAtLinkDAQTask.html#a5998b98cc7973d8d0c03dca446f792c9">GetInChain</a>()</td><td class="entry"><a class="el" href="classAtLinkDAQTask.html">AtLinkDAQTask</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classAtLinkDAQTask.html#a1057ba062de59db4ad0ed956979c7d4c">GetOutFile</a>()</td><td class="entry"><a class="el" href="classAtLinkDAQTask.html">AtLinkDAQTask</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
   <tr><td class="entry"><a class="el" href="classAtLinkDAQTask.html#a2ac2d388954a07d65f2f9fcdff0a287e">Init</a>() override</td><td class="entry"><a class="el" href="classAtLinkDAQTask.html">AtLinkDAQTask</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classAtLinkDAQTask.html#ad33b8bb436410d7bcac8b83041078e1c">SetCorruptedSearchRadius</a>(Double_t radius)</td><td class="entry"><a class="el" href="classAtLinkDAQTask.html">AtLinkDAQTask</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
   <tr><td class="entry"><a class="el" href="classAtLinkDAQTask.html#a465bfc30201b77e69a7e47dca89b20cf">SetEvtOutputFile</a>(TString fileName)</td><td class="entry"><a class="el" href="classAtLinkDAQTask.html">AtLinkDAQTask</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classAtLinkDAQTask.html#aac335f840dc77e8d0150f3e3ee402d1d">SetEvtTimestamp</a>(TString name)</td><td class="entry"><a class="el" href="classAtLinkDAQTask.html">AtLinkDAQTask</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr><td class="entry"><a class="el" href="classAtLinkDAQTask.html#ab555ef3e08261f1b9c250f16a48e962d">SetInputTree</a>(TString fileName, TString treeName)</td><td class="entry"><a class="el" href="classAtLinkDAQTask.html">AtLinkDAQTask</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classAtLinkDAQTask.html#aa3b3f7f1d610887045df353a6ca85121">SetPersistance</a>(Bool_t val)</td><td class="entry"><a class="el" href="classAtLinkDAQTask.html">AtLinkDAQTask</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr><td class="entry"><a class="el" href="classAtLinkDAQTask.html#a2425526cd0b407d4583f56bd9fa97457">SetSearchMean</a>(Double_t mean)</td><td class="entry"><a class="el" href="classAtLinkDAQTask.html">AtLinkDAQTask</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classAtLinkDAQTask.html#ae660617ae0a70b1a9e1212aae2100453">SetSearchRadius</a>(Double_t radius)</td><td class="entry"><a class="el" href="classAtLinkDAQTask.html">AtLinkDAQTask</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr><td class="entry"><a class="el" href="classAtLinkDAQTask.html#a168056de6bc69ac1e82bf01cdeca2ce9">SetTpcTimestampIndex</a>(Int_t index)</td><td class="entry"><a class="el" href="classAtLinkDAQTask.html">AtLinkDAQTask</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr><td class="entry"><a class="el" href="classAtLinkDAQTask.html#a19ca875075d5856fb3786b37a777204b">SetInputBranch</a>(TString name)</td><td class="entry"><a class="el" href="classAtLinkDAQTask.html">AtLinkDAQTask</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classAtLinkDAQTask.html#ab555ef3e08261f1b9c250f16a48e962d">SetInputTree</a>(TString fileName, TString treeName)</td><td class="entry"><a class="el" href="classAtLinkDAQTask.html">AtLinkDAQTask</a></td><td class="entry"></td></tr>
+  <tr><td class="entry"><a class="el" href="classAtLinkDAQTask.html#aa3b3f7f1d610887045df353a6ca85121">SetPersistance</a>(Bool_t val)</td><td class="entry"><a class="el" href="classAtLinkDAQTask.html">AtLinkDAQTask</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classAtLinkDAQTask.html#a2425526cd0b407d4583f56bd9fa97457">SetSearchMean</a>(Double_t mean)</td><td class="entry"><a class="el" href="classAtLinkDAQTask.html">AtLinkDAQTask</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr><td class="entry"><a class="el" href="classAtLinkDAQTask.html#ae660617ae0a70b1a9e1212aae2100453">SetSearchRadius</a>(Double_t radius)</td><td class="entry"><a class="el" href="classAtLinkDAQTask.html">AtLinkDAQTask</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classAtLinkDAQTask.html#a168056de6bc69ac1e82bf01cdeca2ce9">SetTpcTimestampIndex</a>(Int_t index)</td><td class="entry"><a class="el" href="classAtLinkDAQTask.html">AtLinkDAQTask</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr><td class="entry"><a class="el" href="classAtLinkDAQTask.html#ad768267464ea9258d79eeb12e9c906a8">SetUseRatio</a>(Bool_t val)</td><td class="entry"><a class="el" href="classAtLinkDAQTask.html">AtLinkDAQTask</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classAtLinkDAQTask.html#a4f8150b5516db32869fc6d2c8060d316">~AtLinkDAQTask</a>()=default</td><td class="entry"><a class="el" href="classAtLinkDAQTask.html">AtLinkDAQTask</a></td><td class="entry"></td></tr>
 </table></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Apr 27 2022 00:47:49 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Oct 20 2023 16:23:02 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.18
 </small></address>

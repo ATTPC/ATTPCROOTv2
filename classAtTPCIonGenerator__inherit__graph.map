@@ -1,4 +1,6 @@
 <map id="AtTPCIonGenerator" name="AtTPCIonGenerator">
-<area shape="rect" id="node1" title=" " alt="" coords="5,80,141,107"/>
-<area shape="rect" id="node2" title=" " alt="" coords="23,5,124,32"/>
+<area shape="rect" id="node1" title=" " alt="" coords="134,80,270,107"/>
+<area shape="rect" id="node3" href="$classAtTPCIonGeneratorGaussian.html" title=" " alt="" coords="5,155,196,181"/>
+<area shape="rect" id="node4" href="$classAtTPCIonGeneratorS800.html" title=" " alt="" coords="220,155,387,181"/>
+<area shape="rect" id="node2" title=" " alt="" coords="151,5,253,32"/>
 </map>

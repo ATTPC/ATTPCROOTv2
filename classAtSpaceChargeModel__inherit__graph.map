@@ -1,5 +1,6 @@
 <map id="AtSpaceChargeModel" name="AtSpaceChargeModel">
-<area shape="rect" id="node1" title=" " alt="" coords="5,80,153,107"/>
-<area shape="rect" id="node3" href="$classAtLineChargeModel.html" title=" " alt="" coords="11,155,147,181"/>
-<area shape="rect" id="node2" title=" " alt="" coords="45,5,113,32"/>
+<area shape="rect" id="node1" title=" " alt="" coords="157,5,305,32"/>
+<area shape="rect" id="node2" href="$classAtEDistortionModel.html" title="To parse individual LUT." alt="" coords="5,80,139,107"/>
+<area shape="rect" id="node3" href="$classAtLineChargeModel.html" title=" " alt="" coords="163,80,299,107"/>
+<area shape="rect" id="node4" href="$classAtRadialChargeModel.html" title="Space charge model from arbitrary radial E&#45;field,." alt="" coords="323,80,469,107"/>
 </map>

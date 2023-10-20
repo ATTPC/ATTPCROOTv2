@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">ATTPCROOT
-   &#160;<span id="projectnumber">1.0.0</span>
+   &#160;<span id="projectnumber">0.3.0-alpha</span>
    </div>
    <div id="projectbrief">A ROOT-based framework for analyzing data from active target detectors</div>
   </td>
@@ -113,12 +113,12 @@ $(function() {
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;   containers-&gt;Add(p);</div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;}</div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160; </div>
-<div class="line"><a name="l00048"></a><span class="lineno"><a class="line" href="classAtTpcContFact.html#a8512a6de2feb3db47f1d9998360bd313">   48</a></span>&#160;FairParSet *<a class="code" href="classAtTpcContFact.html#a8512a6de2feb3db47f1d9998360bd313">AtTpcContFact::createContainer</a>(FairContainer *c)</div>
+<div class="line"><a name="l00048"></a><span class="lineno"><a class="line" href="classAtTpcContFact.html#a8512a6de2feb3db47f1d9998360bd313">   48</a></span>&#160;FairParSet *<a class="code" href="classAtTpcContFact.html#a8512a6de2feb3db47f1d9998360bd313">AtTpcContFact::createContainer</a>(FairContainer *<a class="code" href="AtRadialChargeModel_8cxx.html#a4fa597cdd9a67fc4cef7c8beebd1baa8">c</a>)</div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;{</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;   <span class="keyword">const</span> <span class="keywordtype">char</span> *name = c-&gt;GetName();</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;   <span class="keyword">const</span> <span class="keywordtype">char</span> *name = <a class="code" href="AtRadialChargeModel_8cxx.html#a4fa597cdd9a67fc4cef7c8beebd1baa8">c</a>-&gt;GetName();</div>
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;   FairParSet *p = <span class="keyword">nullptr</span>;</div>
 <div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;   <span class="keywordflow">if</span> (strcmp(name, <span class="stringliteral">&quot;AtTpcGeoPar&quot;</span>) == 0) {</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;      p = <span class="keyword">new</span> <a class="code" href="classAtTpcGeoPar.html">AtTpcGeoPar</a>(c-&gt;getConcatName().Data(), c-&gt;GetTitle(), c-&gt;getContext());</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;      p = <span class="keyword">new</span> <a class="code" href="classAtTpcGeoPar.html">AtTpcGeoPar</a>(<a class="code" href="AtRadialChargeModel_8cxx.html#a4fa597cdd9a67fc4cef7c8beebd1baa8">c</a>-&gt;getConcatName().Data(), <a class="code" href="AtRadialChargeModel_8cxx.html#a4fa597cdd9a67fc4cef7c8beebd1baa8">c</a>-&gt;GetTitle(), <a class="code" href="AtRadialChargeModel_8cxx.html#a4fa597cdd9a67fc4cef7c8beebd1baa8">c</a>-&gt;getContext());</div>
 <div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;   }</div>
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;   <span class="keywordflow">return</span> p;</div>
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;}</div>
@@ -130,9 +130,10 @@ $(function() {
 <div class="ttc" id="aAtTpcGeoPar_8h_html"><div class="ttname"><a href="AtTpcGeoPar_8h.html">AtTpcGeoPar.h</a></div></div>
 <div class="ttc" id="aclassAtTpcContFact_html"><div class="ttname"><a href="classAtTpcContFact.html">AtTpcContFact</a></div><div class="ttdef"><b>Definition:</b> <a href="AtTpcContFact_8h_source.html#l00020">AtTpcContFact.h:20</a></div></div>
 <div class="ttc" id="aclassAtTpcContFact_html_a8512a6de2feb3db47f1d9998360bd313"><div class="ttname"><a href="classAtTpcContFact.html#a8512a6de2feb3db47f1d9998360bd313">AtTpcContFact::createContainer</a></div><div class="ttdeci">FairParSet * createContainer(FairContainer *)</div><div class="ttdef"><b>Definition:</b> <a href="AtTpcContFact_8cxx_source.html#l00048">AtTpcContFact.cxx:48</a></div></div>
+<div class="ttc" id="aAtRadialChargeModel_8cxx_html_a4fa597cdd9a67fc4cef7c8beebd1baa8"><div class="ttname"><a href="AtRadialChargeModel_8cxx.html#a4fa597cdd9a67fc4cef7c8beebd1baa8">c</a></div><div class="ttdeci">constexpr auto c</div><div class="ttdef"><b>Definition:</b> <a href="AtRadialChargeModel_8cxx_source.html#l00020">AtRadialChargeModel.cxx:20</a></div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Apr 27 2022 00:47:48 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Oct 20 2023 16:23:00 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.18
 </small></address>

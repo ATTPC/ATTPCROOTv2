@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">ATTPCROOT
-   &#160;<span id="projectnumber">1.0.0</span>
+   &#160;<span id="projectnumber">0.3.0-alpha</span>
    </div>
    <div id="projectbrief">A ROOT-based framework for analyzing data from active target detectors</div>
   </td>
@@ -73,33 +73,50 @@ $(function() {
 <div class="contents">
 <a href="AtPatternEvent_8cxx.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="AtPatternEvent_8h.html">AtPatternEvent.h</a>&quot;</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160; </div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &lt;Rtypes.h&gt;</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="AtHit_8h.html">AtHit.h</a>&quot;</span> <span class="comment">// for AtHit</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160; </div>
-<div class="line"><a name="l00005"></a><span class="lineno"><a class="line" href="AtPatternEvent_8cxx.html#abc40a7e5adea518816b34c059a7df2fb">    5</a></span>&#160;<a class="code" href="AtPatternEvent_8cxx.html#abc40a7e5adea518816b34c059a7df2fb">ClassImp</a>(<a class="code" href="classAtPatternEvent.html">AtPatternEvent</a>);</div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;Rtypes.h&gt;</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160; </div>
-<div class="line"><a name="l00007"></a><span class="lineno"><a class="line" href="classAtPatternEvent.html#a180df91a47f37f439c9635c748331387">    7</a></span>&#160;<a class="code" href="classAtPatternEvent.html#a180df91a47f37f439c9635c748331387">AtPatternEvent::AtPatternEvent</a>() : TNamed(<span class="stringliteral">&quot;AtPatternEvent&quot;</span>, <span class="stringliteral">&quot;Pattern Recognition Event&quot;</span>) {}</div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &lt;string&gt;</span> <span class="comment">// for string</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160; </div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<a class="code" href="classAtPatternEvent.html#a01fa214b77c325d88109fc5c8e4d8b93">AtPatternEvent::~AtPatternEvent</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a name="l00009"></a><span class="lineno"><a class="line" href="AtPatternEvent_8cxx.html#abc40a7e5adea518816b34c059a7df2fb">    9</a></span>&#160;<a class="code" href="AtPatternEvent_8cxx.html#abc40a7e5adea518816b34c059a7df2fb">ClassImp</a>(<a class="code" href="classAtPatternEvent.html">AtPatternEvent</a>);</div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160; </div>
-<div class="line"><a name="l00011"></a><span class="lineno"><a class="line" href="classAtPatternEvent.html#adeaf0fadf0a46da7d99268d8410a6ffc">   11</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classAtPatternEvent.html#adeaf0fadf0a46da7d99268d8410a6ffc">AtPatternEvent::SetTrackCand</a>(std::vector&lt;AtTrack&gt; tracks)</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;{</div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;   fTrackCand = tracks;</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;}</div>
-<div class="line"><a name="l00015"></a><span class="lineno"><a class="line" href="classAtPatternEvent.html#a5b6dd506d0c1b95b832c0f26ce5e6183">   15</a></span>&#160;std::vector&lt;AtTrack&gt; &amp;<a class="code" href="classAtPatternEvent.html#a5b6dd506d0c1b95b832c0f26ce5e6183">AtPatternEvent::GetTrackCand</a>()</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;{</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;   <span class="keywordflow">return</span> fTrackCand;</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;}</div>
+<div class="line"><a name="l00011"></a><span class="lineno"><a class="line" href="classAtPatternEvent.html#abdf3041ac7547988b2f55a96c31e99e8">   11</a></span>&#160;<a class="code" href="classAtPatternEvent.html#abdf3041ac7547988b2f55a96c31e99e8">AtPatternEvent::AtPatternEvent</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *name) : <a class="code" href="classAtBaseEvent.html">AtBaseEvent</a>(name) {}</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160; </div>
+<div class="line"><a name="l00013"></a><span class="lineno"><a class="line" href="classAtPatternEvent.html#abe6a295c9dfb6265a2729957c0b01753">   13</a></span>&#160;<a class="code" href="classAtPatternEvent.html#abdf3041ac7547988b2f55a96c31e99e8">AtPatternEvent::AtPatternEvent</a>(<span class="keyword">const</span> <a class="code" href="classAtPatternEvent.html">AtPatternEvent</a> &amp;copy) : <a class="code" href="classAtBaseEvent.html">AtBaseEvent</a>(copy), fTrackCand(copy.fTrackCand)</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;{</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;   <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;hit : copy.<a class="code" href="classAtPatternEvent.html#a7d7c1625479f8d1579fae25d31f60675">fNoise</a>)</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;      <a class="code" href="classAtPatternEvent.html#a7d7c1625479f8d1579fae25d31f60675">fNoise</a>.push_back(hit-&gt;Clone());</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;}</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160; </div>
+<div class="line"><a name="l00019"></a><span class="lineno"><a class="line" href="classAtPatternEvent.html#af2da8f6eafe43d15f1ce1f403b149813">   19</a></span>&#160;<a class="code" href="classAtPatternEvent.html">AtPatternEvent</a> &amp;<a class="code" href="classAtPatternEvent.html#af2da8f6eafe43d15f1ce1f403b149813">AtPatternEvent::operator=</a>(<a class="code" href="classAtPatternEvent.html">AtPatternEvent</a> <span class="keywordtype">object</span>)</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;{</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;   <a class="code" href="classAtPatternEvent.html#a6f39c65879e3abeddb0375755111acd6">swap</a>(*<span class="keyword">this</span>, <span class="keywordtype">object</span>);</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;   <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;}</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
+<div class="line"><a name="l00025"></a><span class="lineno"><a class="line" href="classAtPatternEvent.html#a02d10551ab172956b912b0cb1a030ed1">   25</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classAtPatternEvent.html#a02d10551ab172956b912b0cb1a030ed1">AtPatternEvent::Clear</a>(Option_t *opt)</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;{</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;   <a class="code" href="classAtBaseEvent.html#a3ec88c6c23c1816dd94c51e7c40febbc">AtBaseEvent::Clear</a>(opt);</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;   <a class="code" href="classAtPatternEvent.html#af1f9027f8fadd8b3f4fb4b460375e412">fTrackCand</a>.clear();</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;   <a class="code" href="classAtPatternEvent.html#a7d7c1625479f8d1579fae25d31f60675">fNoise</a>.clear();</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
-<div class="ttc" id="aclassAtPatternEvent_html"><div class="ttname"><a href="classAtPatternEvent.html">AtPatternEvent</a></div><div class="ttdef"><b>Definition:</b> <a href="AtPatternEvent_8h_source.html#l00015">AtPatternEvent.h:15</a></div></div>
+<div class="ttc" id="aclassAtPatternEvent_html"><div class="ttname"><a href="classAtPatternEvent.html">AtPatternEvent</a></div><div class="ttdef"><b>Definition:</b> <a href="AtPatternEvent_8h_source.html#l00019">AtPatternEvent.h:19</a></div></div>
+<div class="ttc" id="aclassAtPatternEvent_html_a6f39c65879e3abeddb0375755111acd6"><div class="ttname"><a href="classAtPatternEvent.html#a6f39c65879e3abeddb0375755111acd6">AtPatternEvent::swap</a></div><div class="ttdeci">friend void swap(AtPatternEvent &amp;first, AtPatternEvent &amp;second)</div><div class="ttdef"><b>Definition:</b> <a href="AtPatternEvent_8h_source.html#l00037">AtPatternEvent.h:37</a></div></div>
 <div class="ttc" id="aAtPatternEvent_8cxx_html_abc40a7e5adea518816b34c059a7df2fb"><div class="ttname"><a href="AtPatternEvent_8cxx.html#abc40a7e5adea518816b34c059a7df2fb">ClassImp</a></div><div class="ttdeci">ClassImp(AtPatternEvent)</div></div>
-<div class="ttc" id="aclassAtPatternEvent_html_adeaf0fadf0a46da7d99268d8410a6ffc"><div class="ttname"><a href="classAtPatternEvent.html#adeaf0fadf0a46da7d99268d8410a6ffc">AtPatternEvent::SetTrackCand</a></div><div class="ttdeci">void SetTrackCand(std::vector&lt; AtTrack &gt; tracks)</div><div class="ttdef"><b>Definition:</b> <a href="AtPatternEvent_8cxx_source.html#l00011">AtPatternEvent.cxx:11</a></div></div>
-<div class="ttc" id="aclassAtPatternEvent_html_a01fa214b77c325d88109fc5c8e4d8b93"><div class="ttname"><a href="classAtPatternEvent.html#a01fa214b77c325d88109fc5c8e4d8b93">AtPatternEvent::~AtPatternEvent</a></div><div class="ttdeci">~AtPatternEvent()</div></div>
+<div class="ttc" id="aclassAtPatternEvent_html_af2da8f6eafe43d15f1ce1f403b149813"><div class="ttname"><a href="classAtPatternEvent.html#af2da8f6eafe43d15f1ce1f403b149813">AtPatternEvent::operator=</a></div><div class="ttdeci">AtPatternEvent &amp; operator=(const AtPatternEvent object)</div><div class="ttdef"><b>Definition:</b> <a href="AtPatternEvent_8cxx_source.html#l00019">AtPatternEvent.cxx:19</a></div></div>
+<div class="ttc" id="aclassAtPatternEvent_html_abdf3041ac7547988b2f55a96c31e99e8"><div class="ttname"><a href="classAtPatternEvent.html#abdf3041ac7547988b2f55a96c31e99e8">AtPatternEvent::AtPatternEvent</a></div><div class="ttdeci">AtPatternEvent(const char *name=&quot;AtPatternEvent&quot;)</div><div class="ttdef"><b>Definition:</b> <a href="AtPatternEvent_8cxx_source.html#l00011">AtPatternEvent.cxx:11</a></div></div>
+<div class="ttc" id="aAtHit_8h_html"><div class="ttname"><a href="AtHit_8h.html">AtHit.h</a></div></div>
+<div class="ttc" id="aclassAtBaseEvent_html"><div class="ttname"><a href="classAtBaseEvent.html">AtBaseEvent</a></div><div class="ttdoc">Base class for all event types in ATTPCROOT.</div><div class="ttdef"><b>Definition:</b> <a href="AtBaseEvent_8h_source.html#l00020">AtBaseEvent.h:20</a></div></div>
 <div class="ttc" id="aAtPatternEvent_8h_html"><div class="ttname"><a href="AtPatternEvent_8h.html">AtPatternEvent.h</a></div></div>
-<div class="ttc" id="aclassAtPatternEvent_html_a180df91a47f37f439c9635c748331387"><div class="ttname"><a href="classAtPatternEvent.html#a180df91a47f37f439c9635c748331387">AtPatternEvent::AtPatternEvent</a></div><div class="ttdeci">AtPatternEvent()</div><div class="ttdef"><b>Definition:</b> <a href="AtPatternEvent_8cxx_source.html#l00007">AtPatternEvent.cxx:7</a></div></div>
-<div class="ttc" id="aclassAtPatternEvent_html_a5b6dd506d0c1b95b832c0f26ce5e6183"><div class="ttname"><a href="classAtPatternEvent.html#a5b6dd506d0c1b95b832c0f26ce5e6183">AtPatternEvent::GetTrackCand</a></div><div class="ttdeci">std::vector&lt; AtTrack &gt; &amp; GetTrackCand()</div><div class="ttdef"><b>Definition:</b> <a href="AtPatternEvent_8cxx_source.html#l00015">AtPatternEvent.cxx:15</a></div></div>
+<div class="ttc" id="aclassAtBaseEvent_html_a3ec88c6c23c1816dd94c51e7c40febbc"><div class="ttname"><a href="classAtBaseEvent.html#a3ec88c6c23c1816dd94c51e7c40febbc">AtBaseEvent::Clear</a></div><div class="ttdeci">void Clear(Option_t *opt) override</div><div class="ttdef"><b>Definition:</b> <a href="AtBaseEvent_8cxx_source.html#l00013">AtBaseEvent.cxx:13</a></div></div>
+<div class="ttc" id="aclassAtPatternEvent_html_a7d7c1625479f8d1579fae25d31f60675"><div class="ttname"><a href="classAtPatternEvent.html#a7d7c1625479f8d1579fae25d31f60675">AtPatternEvent::fNoise</a></div><div class="ttdeci">HitVector fNoise</div><div class="ttdef"><b>Definition:</b> <a href="AtPatternEvent_8h_source.html#l00025">AtPatternEvent.h:25</a></div></div>
+<div class="ttc" id="aclassAtPatternEvent_html_a02d10551ab172956b912b0cb1a030ed1"><div class="ttname"><a href="classAtPatternEvent.html#a02d10551ab172956b912b0cb1a030ed1">AtPatternEvent::Clear</a></div><div class="ttdeci">void Clear(Option_t *opt=nullptr) override</div><div class="ttdef"><b>Definition:</b> <a href="AtPatternEvent_8cxx_source.html#l00025">AtPatternEvent.cxx:25</a></div></div>
+<div class="ttc" id="aclassAtPatternEvent_html_af1f9027f8fadd8b3f4fb4b460375e412"><div class="ttname"><a href="classAtPatternEvent.html#af1f9027f8fadd8b3f4fb4b460375e412">AtPatternEvent::fTrackCand</a></div><div class="ttdeci">std::vector&lt; AtTrack &gt; fTrackCand</div><div class="ttdef"><b>Definition:</b> <a href="AtPatternEvent_8h_source.html#l00024">AtPatternEvent.h:24</a></div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Apr 27 2022 00:47:46 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Oct 20 2023 16:22:58 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.18
 </small></address>

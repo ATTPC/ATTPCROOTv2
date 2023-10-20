@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">ATTPCROOT
-   &#160;<span id="projectnumber">1.0.0</span>
+   &#160;<span id="projectnumber">0.3.0-alpha</span>
    </div>
    <div id="projectbrief">A ROOT-based framework for analyzing data from active target detectors</div>
   </td>
@@ -159,7 +159,7 @@ $(function() {
 <div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;            PDG = std::atoi(<a class="code" href="structnode.html">node</a>-&gt;GetText());</div>
 <div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;         }</div>
 <div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;         <span class="keywordflow">if</span> (strcmp(<a class="code" href="structnode.html">node</a>-&gt;GetNodeName(), <span class="stringliteral">&quot;Mass&quot;</span>) == 0) {</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;            mass = std::stod(<a class="code" href="structnode.html">node</a>-&gt;GetText());</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;            mass = <a class="code" href="util_8cxx.html#a918ab06bc79e438ad8deaa43d8c05ae5">std::stod</a>(<a class="code" href="structnode.html">node</a>-&gt;GetText());</div>
 <div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;         }</div>
 <div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;         <span class="keywordflow">if</span> (strcmp(<a class="code" href="structnode.html">node</a>-&gt;GetNodeName(), <span class="stringliteral">&quot;AtomicNumber&quot;</span>) == 0) {</div>
 <div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;            atomicNumber = std::atoi(<a class="code" href="structnode.html">node</a>-&gt;GetText());</div>
@@ -178,7 +178,8 @@ $(function() {
 <div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;   <span class="keywordflow">return</span> ionInfo;</div>
 <div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
-<div class="ttc" id="astructnode_html"><div class="ttname"><a href="structnode.html">node</a></div><div class="ttdef"><b>Definition:</b> <a href="fastcluster__dm_8cxx_source.html#l00213">fastcluster_dm.cxx:213</a></div></div>
+<div class="ttc" id="autil_8cxx_html_a918ab06bc79e438ad8deaa43d8c05ae5"><div class="ttname"><a href="util_8cxx.html#a918ab06bc79e438ad8deaa43d8c05ae5">stod</a></div><div class="ttdeci">double stod(const char *s)</div><div class="ttdef"><b>Definition:</b> <a href="util_8cxx_source.html#l00020">util.cxx:20</a></div></div>
+<div class="ttc" id="astructnode_html"><div class="ttname"><a href="structnode.html">node</a></div><div class="ttdef"><b>Definition:</b> <a href="trackfinder_2fastcluster__dm_8cxx_source.html#l00213">fastcluster_dm.cxx:213</a></div></div>
 <div class="ttc" id="aAtParsers_8cxx_html_a601bfec4e5675c62fd7bf7fab5563ee4"><div class="ttname"><a href="AtParsers_8cxx.html#a601bfec4e5675c62fd7bf7fab5563ee4">ClassImp</a></div><div class="ttdeci">ClassImp(AtTools::AtParsers)</div></div>
 <div class="ttc" id="aclassAtTools_1_1AtParsers_html"><div class="ttname"><a href="classAtTools_1_1AtParsers.html">AtTools::AtParsers</a></div><div class="ttdef"><b>Definition:</b> <a href="AtParsers_8h_source.html#l00049">AtParsers.h:49</a></div></div>
 <div class="ttc" id="aclassAtTools_1_1AtParsers_html_ae44aa8a00fc32b385c5f9ac8df496db3"><div class="ttname"><a href="classAtTools_1_1AtParsers.html#ae44aa8a00fc32b385c5f9ac8df496db3">AtTools::AtParsers::AtParsers</a></div><div class="ttdeci">AtParsers()</div></div>
@@ -188,7 +189,7 @@ $(function() {
 <div class="ttc" id="aAtParsers_8h_html"><div class="ttname"><a href="AtParsers_8h.html">AtParsers.h</a></div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Apr 27 2022 00:47:48 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Oct 20 2023 16:23:00 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.18
 </small></address>

@@ -1,12 +1,21 @@
 var searchData=
 [
-  ['n_1821',['n',['../structhc__params.html#a9cf65b24ea98dfdb65907e8909e55a68',1,'hc_params']]],
-  ['name_1822',['name',['../classAtGeoCave.html#a892a708aaaa6d172eca731fb360bf422',1,'AtGeoCave']]],
-  ['nan_5ferror_1823',['nan_error',['../classnan__error.html',1,'']]],
-  ['nextdata_1824',['NextData',['../classGETDecoder2.html#a61ac415ccb66cbc47b062bffaba54531',1,'GETDecoder2']]],
-  ['nextevent_1825',['NextEvent',['../classAtEventManager.html#a0a6017886db1fbf4987492e89a2cb2d6',1,'AtEventManager::NextEvent()'],['../classAtEventManagerProto.html#af9203a3ae10c281e3ca9818a613cf94f',1,'AtEventManagerProto::NextEvent()'],['../classAtEventManagerS800.html#a905409adc5f2183bd8e638f11a02d9a1',1,'AtEventManagerS800::NextEvent()']]],
-  ['nfev_1826',['nfev',['../structlm__status__struct.html#a7995d1034c6521c5e5826fe8f86e7110',1,'lm_status_struct']]],
-  ['node_1827',['node',['../structnode.html',1,'node'],['../structpos__node.html#a72951d705098949861c6311a329d12a5',1,'pos_node::node()']]],
-  ['node1_1828',['node1',['../structnode.html#af9d72b92779d796152cd83d7edb6b8da',1,'node']]],
-  ['node2_1829',['node2',['../structnode.html#a690a482a8010e564d800bb206ce70408',1,'node']]]
+  ['n_2662',['n',['../structAtPATTERN_1_1hc__params.html#a9cf65b24ea98dfdb65907e8909e55a68',1,'AtPATTERN::hc_params']]],
+  ['n_5fpads_2663',['n_pads',['../classAtFRIBHDFUnpacker.html#a91421b50f538288154aaf9a4c47df4c3',1,'AtFRIBHDFUnpacker::n_pads()'],['../classAtHDFUnpacker.html#a7ec76c5329d34aaefd722b3daf9d5254',1,'AtHDFUnpacker::n_pads()']]],
+  ['name_2664',['name',['../classAtGeoCave.html#a892a708aaaa6d172eca731fb360bf422',1,'AtGeoCave']]],
+  ['nan_5ferror_2665',['nan_error',['../classnan__error.html',1,'']]],
+  ['needs_5fdnn_2666',['needs_dnn',['../classOpt.html#a891b6f3c9a20d00d73da4b685b5d9dcc',1,'Opt']]],
+  ['newevent_2667',['NewEvent',['../classAtSimpleSimulation.html#ac69fb48639cecfa508db71beb1751e97',1,'AtSimpleSimulation']]],
+  ['nextdata_2668',['NextData',['../classGETDecoder2.html#a61ac415ccb66cbc47b062bffaba54531',1,'GETDecoder2']]],
+  ['nextevent_2669',['NextEvent',['../classAtViewerManager.html#ad3b4c5eb848e5ef9ace93db597418d4c',1,'AtViewerManager::NextEvent()'],['../classAtEventManager.html#a0a6017886db1fbf4987492e89a2cb2d6',1,'AtEventManager::NextEvent()'],['../classAtEventManagerProto.html#af9203a3ae10c281e3ca9818a613cf94f',1,'AtEventManagerProto::NextEvent()'],['../classAtEventManagerS800.html#a905409adc5f2183bd8e638f11a02d9a1',1,'AtEventManagerS800::NextEvent()']]],
+  ['nfev_2670',['nfev',['../structlm__status__struct.html#a7995d1034c6521c5e5826fe8f86e7110',1,'lm_status_struct']]],
+  ['nn4heap_2671',['nn4heap',['../classKdtree_1_1nn4heap.html',1,'Kdtree::nn4heap'],['../classKdtree_1_1nn4heap.html#ac0efbbf8b4b644e8bceda0e8891ab20a',1,'Kdtree::nn4heap::nn4heap()']]],
+  ['node_2672',['node',['../structnode.html',1,'node'],['../structpos__node.html#a72951d705098949861c6311a329d12a5',1,'pos_node::node()']]],
+  ['node1_2673',['node1',['../structnode.html#af9d72b92779d796152cd83d7edb6b8da',1,'node']]],
+  ['node2_2674',['node2',['../structnode.html#a690a482a8010e564d800bb206ce70408',1,'node']]],
+  ['norm_2675',['norm',['../structPoint.html#a1de1fcf72ec8d46bf347fd2cde72cc0d',1,'Point']]],
+  ['not_5fa_5fknot_2676',['not_a_knot',['../classtk_1_1spline.html#a592e5cbe6ad482196774443b1e84f7dca98e45908c7137e0d15a10346c2859332',1,'tk::spline']]],
+  ['notify_2677',['Notify',['../classDataHandling_1_1AtSubject.html#a2eb6e81953cc4fd8668d60c4504fa5bd',1,'DataHandling::AtSubject']]],
+  ['num_5flower_2678',['num_lower',['../classtk_1_1internal_1_1band__matrix.html#a419b2b8f3203457bcdd08a88ec9bea12',1,'tk::internal::band_matrix']]],
+  ['num_5fupper_2679',['num_upper',['../classtk_1_1internal_1_1band__matrix.html#a27a73e26676f3b24a7c7d2be3b5495a0',1,'tk::internal::band_matrix']]]
 ];

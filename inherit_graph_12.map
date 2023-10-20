@@ -1,8 +1,8 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classAtFilter.html" title=" " alt="" coords="5,107,69,133"/>
-<area shape="rect" id="node2" href="$classAtFilterCalibrate.html" title=" " alt="" coords="125,5,240,32"/>
-<area shape="rect" id="node3" href="$classAtFilterDivide.html" title=" " alt="" coords="133,56,233,83"/>
-<area shape="rect" id="node4" href="$classAtFilterFFT.html" title=" " alt="" coords="139,107,227,133"/>
-<area shape="rect" id="node5" href="$classAtFilterSubtraction.html" title=" " alt="" coords="117,157,248,184"/>
-<area shape="rect" id="node6" href="$classAtTrapezoidFilter.html" title=" " alt="" coords="123,208,243,235"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,107,135,133"/>
+<area shape="rect" id="node2" href="$classAtDigiPar.html" title=" " alt="" coords="205,5,282,32"/>
+<area shape="rect" id="node3" href="$classAtFieldPar.html" title=" " alt="" coords="202,56,285,83"/>
+<area shape="rect" id="node4" href="$classAtSiArrayGeoPar.html" title=" " alt="" coords="183,107,304,133"/>
+<area shape="rect" id="node5" href="$classAtTpcGeoPar.html" title=" " alt="" coords="193,157,294,184"/>
+<area shape="rect" id="node6" href="$classAtTriggerPar.html" title=" " alt="" coords="196,208,291,235"/>
 </map>

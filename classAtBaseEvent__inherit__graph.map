@@ -1,0 +1,8 @@
+<map id="AtBaseEvent" name="AtBaseEvent">
+<area shape="rect" id="node1" title="Base class for all event types in ATTPCROOT." alt="" coords="103,80,202,107"/>
+<area shape="rect" id="node3" href="$classAtEvent.html" title=" " alt="" coords="5,155,73,181"/>
+<area shape="rect" id="node4" href="$classAtPatternEvent.html" title=" " alt="" coords="97,155,208,181"/>
+<area shape="rect" id="node6" href="$classAtRawEvent.html" title=" " alt="" coords="232,155,327,181"/>
+<area shape="rect" id="node2" title=" " alt="" coords="117,5,189,32"/>
+<area shape="rect" id="node5" href="$classAtFissionEvent.html" title=" " alt="" coords="97,229,208,256"/>
+</map>

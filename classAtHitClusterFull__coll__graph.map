@@ -1,0 +1,9 @@
+<map id="AtHitClusterFull" name="AtHitClusterFull">
+<area shape="rect" id="node1" title=": Class representing a cluster of hits that arise from the same deposition of charge in space...." alt="" coords="63,377,177,404"/>
+<area shape="rect" id="node2" href="$classAtHitCluster.html" title=": Class representing a cluster of hits that arise from the same deposition of charge in space...." alt="" coords="5,288,99,315"/>
+<area shape="rect" id="node3" href="$classAtHit.html" title="Point in space with charge." alt="" coords="94,199,146,225"/>
+<area shape="rect" id="node7" title=" " alt="" coords="123,288,258,315"/>
+<area shape="rect" id="node4" title=" " alt="" coords="65,102,133,129"/>
+<area shape="rect" id="node5" title=" " alt="" coords="157,95,280,136"/>
+<area shape="rect" id="node6" href="$structAtHit_1_1MCSimPoint.html" title=" " alt="" coords="153,5,284,32"/>
+</map>

@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.18"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>ATTPCROOT: /github/workspace/AtReconstruction/AtPatternRecognition/smoothenCloud.h Source File</title>
+<title>ATTPCROOT: /github/workspace/AtReconstruction/AtPatternRecognition/trackfinder/smoothenCloud.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">ATTPCROOT
-   &#160;<span id="projectnumber">1.0.0</span>
+   &#160;<span id="projectnumber">0.3.0-alpha</span>
    </div>
    <div id="projectbrief">A ROOT-based framework for analyzing data from active target detectors</div>
   </td>
@@ -63,7 +63,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_b4724c5ca6c4d299c31d2ca5fc322d19.html">AtReconstruction</a></li><li class="navelem"><a class="el" href="dir_9e9f569468dc2a59662c07838aeb1f6d.html">AtPatternRecognition</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_b4724c5ca6c4d299c31d2ca5fc322d19.html">AtReconstruction</a></li><li class="navelem"><a class="el" href="dir_9e9f569468dc2a59662c07838aeb1f6d.html">AtPatternRecognition</a></li><li class="navelem"><a class="el" href="dir_f9990ffdd0c71c72ec9feeaf8a355cdf.html">trackfinder</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -74,17 +74,18 @@ $(function() {
 <a href="smoothenCloud_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#ifndef SMOOTHENCLOUD_H</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#define SMOOTHENCLOUD_H</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160; </div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &lt;pcl/io/io.h&gt;</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160; </div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;pcl::PointCloud&lt;pcl::PointXYZI&gt;::Ptr</div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<a class="code" href="smoothenCloud_8h.html#a0335e453bafc5496fef9e4819175695a">smoothenCloud</a>(pcl::PointCloud&lt;pcl::PointXYZI&gt;::Ptr cloud, <span class="keywordtype">double</span> radius, <span class="keywordtype">bool</span> useMedian = <span class="keyword">false</span>);</div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160; </div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &lt;pcl/point_cloud.h&gt;</span> <span class="comment">// for PointCloud, PointCloud&lt;&gt;::Ptr</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;pcl/point_types.h&gt;</span> <span class="comment">// for PointXYZI</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160; </div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;pcl::PointCloud&lt;pcl::PointXYZI&gt;::Ptr</div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<a class="code" href="smoothenCloud_8h.html#a0335e453bafc5496fef9e4819175695a">smoothenCloud</a>(pcl::PointCloud&lt;pcl::PointXYZI&gt;::Ptr cloud, <span class="keywordtype">double</span> radius, <span class="keywordtype">bool</span> useMedian = <span class="keyword">false</span>);</div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160; </div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#endif</span></div>
 </div><!-- fragment --></div><!-- contents -->
-<div class="ttc" id="asmoothenCloud_8h_html_a0335e453bafc5496fef9e4819175695a"><div class="ttname"><a href="smoothenCloud_8h.html#a0335e453bafc5496fef9e4819175695a">smoothenCloud</a></div><div class="ttdeci">pcl::PointCloud&lt; pcl::PointXYZI &gt;::Ptr smoothenCloud(pcl::PointCloud&lt; pcl::PointXYZI &gt;::Ptr cloud, double radius, bool useMedian=false)</div><div class="ttdef"><b>Definition:</b> <a href="smoothenCloud_8cxx_source.html#l00006">smoothenCloud.cxx:6</a></div></div>
+<div class="ttc" id="asmoothenCloud_8h_html_a0335e453bafc5496fef9e4819175695a"><div class="ttname"><a href="smoothenCloud_8h.html#a0335e453bafc5496fef9e4819175695a">smoothenCloud</a></div><div class="ttdeci">pcl::PointCloud&lt; pcl::PointXYZI &gt;::Ptr smoothenCloud(pcl::PointCloud&lt; pcl::PointXYZI &gt;::Ptr cloud, double radius, bool useMedian=false)</div><div class="ttdef"><b>Definition:</b> <a href="smoothenCloud_8cxx_source.html#l00015">smoothenCloud.cxx:15</a></div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Apr 27 2022 00:47:48 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Oct 20 2023 16:23:00 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.18
 </small></address>

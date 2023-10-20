@@ -1,9 +1,9 @@
 <map id="/github/workspace/AtReconstruction/AtPatternRecognition/AtPRA.h" name="/github/workspace/AtReconstruction/AtPatternRecognition/AtPRA.h">
-<area shape="rect" id="node1" title=" " alt="" coords="327,5,559,47"/>
-<area shape="rect" id="node2" href="$AtPRA_8cxx.html" title=" " alt="" coords="55,95,287,136"/>
-<area shape="rect" id="node3" href="$AtTrackFinderHC_8h.html" title=" " alt="" coords="311,95,575,136"/>
-<area shape="rect" id="node5" href="$AtPRAtask_8cxx.html" title=" " alt="" coords="562,184,794,225"/>
-<area shape="rect" id="node4" href="$AtTrackFinderHC_8cxx.html" title=" " alt="" coords="5,184,281,225"/>
-<area shape="rect" id="node6" href="$AtTrackFinderHCTask_8h.html" title=" " alt="" coords="306,184,538,225"/>
-<area shape="rect" id="node7" href="$AtTrackFinderHCTask_8cxx.html" title=" " alt="" coords="306,273,538,315"/>
+<area shape="rect" id="node1" title=" " alt="" coords="421,5,653,47"/>
+<area shape="rect" id="node2" href="$AtPRA_8cxx.html" title=" " alt="" coords="5,95,237,136"/>
+<area shape="rect" id="node3" href="$AtTrackFinderHC_8h.html" title=" " alt="" coords="261,95,525,136"/>
+<area shape="rect" id="node5" href="$AtTrackFinderTC_8h.html" title=" " alt="" coords="550,95,813,136"/>
+<area shape="rect" id="node7" href="$AtPRAtask_8cxx.html" title=" " alt="" coords="815,184,1047,225"/>
+<area shape="rect" id="node4" href="$AtTrackFinderHC_8cxx.html" title=" " alt="" coords="215,184,491,225"/>
+<area shape="rect" id="node6" href="$AtTrackFinderTC_8cxx.html" title=" " alt="" coords="516,184,791,225"/>
 </map>

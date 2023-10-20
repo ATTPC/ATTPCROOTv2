@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">ATTPCROOT
-   &#160;<span id="projectnumber">1.0.0</span>
+   &#160;<span id="projectnumber">0.3.0-alpha</span>
    </div>
    <div id="projectbrief">A ROOT-based framework for analyzing data from active target detectors</div>
   </td>
@@ -105,7 +105,7 @@ $(function() {
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;   std::map&lt;Int_t, Float_t&gt; fXYintegrationMap; </div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;   <span class="keywordtype">void</span> generateIntegrationMap(<a class="code" href="classAtSimulatedLine.html">AtSimulatedLine</a> &amp;line);</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;   Int_t throwRandomAndGetBinAfterDiffusion(<span class="keyword">const</span> <a class="code" href="AtHit_8h.html#a26aee3b2de2720f24802d48feab0c40a">ROOT::Math::XYZVector</a> &amp;loc, Double_t diffusionSigma);</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;   Int_t throwRandomAndGetBinAfterDiffusion(<span class="keyword">const</span> <a class="code" href="AtClusterizeTask_8cxx.html#a26aee3b2de2720f24802d48feab0c40a">ROOT::Math::XYZVector</a> &amp;loc, Double_t diffusionSigma);</div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;   <span class="comment">// Returns the bin ID (binMin) that the zIntegral starts from</span></div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;   <span class="comment">// fills zIntegral with the integral for bins starting with binMin, inclusive</span></div>
@@ -129,19 +129,19 @@ $(function() {
 <div class="ttc" id="aclassAtPulseLineTask_html_a40c19badd5eda4f59ed1da01083e1e90"><div class="ttname"><a href="classAtPulseLineTask.html#a40c19badd5eda4f59ed1da01083e1e90">AtPulseLineTask::GetNumIntegrationPoints</a></div><div class="ttdeci">UInt_t GetNumIntegrationPoints()</div><div class="ttdef"><b>Definition:</b> <a href="AtPulseLineTask_8h_source.html#l00048">AtPulseLineTask.h:48</a></div></div>
 <div class="ttc" id="aclassAtPulseLineTask_html_a0ebba860515ab857994a36fcf9875673"><div class="ttname"><a href="classAtPulseLineTask.html#a0ebba860515ab857994a36fcf9875673">AtPulseLineTask::ClassDefOverride</a></div><div class="ttdeci">ClassDefOverride(AtPulseLineTask, 2)</div></div>
 <div class="ttc" id="aclassAtPulseLineTask_html"><div class="ttname"><a href="classAtPulseLineTask.html">AtPulseLineTask</a></div><div class="ttdef"><b>Definition:</b> <a href="AtPulseLineTask_8h_source.html#l00026">AtPulseLineTask.h:26</a></div></div>
-<div class="ttc" id="aclassAtSimulatedLine_html"><div class="ttname"><a href="classAtSimulatedLine.html">AtSimulatedLine</a></div><div class="ttdef"><b>Definition:</b> <a href="AtSimulatedLine_8h_source.html#l00016">AtSimulatedLine.h:16</a></div></div>
+<div class="ttc" id="aclassAtSimulatedLine_html"><div class="ttname"><a href="classAtSimulatedLine.html">AtSimulatedLine</a></div><div class="ttdef"><b>Definition:</b> <a href="AtSimulatedLine_8h_source.html#l00017">AtSimulatedLine.h:17</a></div></div>
 <div class="ttc" id="aclassAtPulseLineTask_html_aaf1a699e255f7afad6fd5c5962bceb46"><div class="ttname"><a href="classAtPulseLineTask.html#aaf1a699e255f7afad6fd5c5962bceb46">AtPulseLineTask::SetNumSigmaToIntegrateZ</a></div><div class="ttdeci">void SetNumSigmaToIntegrateZ(UShort_t zScore)</div><div class="ttdef"><b>Definition:</b> <a href="AtPulseLineTask_8h_source.html#l00047">AtPulseLineTask.h:47</a></div></div>
 <div class="ttc" id="aclassAtSimulatedPoint_html"><div class="ttname"><a href="classAtSimulatedPoint.html">AtSimulatedPoint</a></div><div class="ttdef"><b>Definition:</b> <a href="AtSimulatedPoint_8h_source.html#l00016">AtSimulatedPoint.h:16</a></div></div>
-<div class="ttc" id="aAtHit_8h_html_a26aee3b2de2720f24802d48feab0c40a"><div class="ttname"><a href="AtHit_8h.html#a26aee3b2de2720f24802d48feab0c40a">XYZVector</a></div><div class="ttdeci">ROOT::Math::XYZVector XYZVector</div><div class="ttdef"><b>Definition:</b> <a href="AtHit_8h_source.html#l00019">AtHit.h:19</a></div></div>
+<div class="ttc" id="aAtClusterizeTask_8cxx_html_a26aee3b2de2720f24802d48feab0c40a"><div class="ttname"><a href="AtClusterizeTask_8cxx.html#a26aee3b2de2720f24802d48feab0c40a">XYZVector</a></div><div class="ttdeci">ROOT::Math::XYZVector XYZVector</div><div class="ttdef"><b>Definition:</b> <a href="AtClusterizeTask_8cxx_source.html#l00025">AtClusterizeTask.cxx:25</a></div></div>
 <div class="ttc" id="aclassAtPulseLineTask_html_a94d69b954b15e82cf6a98ca484772249"><div class="ttname"><a href="classAtPulseLineTask.html#a94d69b954b15e82cf6a98ca484772249">AtPulseLineTask::SetNumSigmaToIntegrateZ</a></div><div class="ttdeci">UShort_t SetNumSigmaToIntegrateZ()</div><div class="ttdef"><b>Definition:</b> <a href="AtPulseLineTask_8h_source.html#l00049">AtPulseLineTask.h:49</a></div></div>
 <div class="ttc" id="aAtPulseTask_8h_html"><div class="ttname"><a href="AtPulseTask_8h.html">AtPulseTask.h</a></div></div>
-<div class="ttc" id="aclassAtPulseTask_html"><div class="ttname"><a href="classAtPulseTask.html">AtPulseTask</a></div><div class="ttdef"><b>Definition:</b> <a href="AtPulseTask_8h_source.html#l00035">AtPulseTask.h:35</a></div></div>
+<div class="ttc" id="aclassAtPulseTask_html"><div class="ttname"><a href="classAtPulseTask.html">AtPulseTask</a></div><div class="ttdef"><b>Definition:</b> <a href="AtPulseTask_8h_source.html#l00030">AtPulseTask.h:30</a></div></div>
 <div class="ttc" id="aclassAtPulseLineTask_html_a248b03cc92dd85ea060328dd9c479903"><div class="ttname"><a href="classAtPulseLineTask.html#a248b03cc92dd85ea060328dd9c479903">AtPulseLineTask::SetNumIntegrationPoints</a></div><div class="ttdeci">void SetNumIntegrationPoints(UInt_t numPoints)</div><div class="ttdef"><b>Definition:</b> <a href="AtPulseLineTask_8h_source.html#l00046">AtPulseLineTask.h:46</a></div></div>
 <div class="ttc" id="aclassAtPulseLineTask_html_aa99e7ea26df3a6c568a949c9d0188129"><div class="ttname"><a href="classAtPulseLineTask.html#aa99e7ea26df3a6c568a949c9d0188129">AtPulseLineTask::AtPulseLineTask</a></div><div class="ttdeci">AtPulseLineTask()</div><div class="ttdef"><b>Definition:</b> <a href="AtPulseLineTask_8cxx_source.html#l00030">AtPulseLineTask.cxx:30</a></div></div>
 <div class="ttc" id="aclassAtPulseLineTask_html_abbbe3219e4caadc4fb7639b4fe6a0c9a"><div class="ttname"><a href="classAtPulseLineTask.html#abbbe3219e4caadc4fb7639b4fe6a0c9a">AtPulseLineTask::~AtPulseLineTask</a></div><div class="ttdeci">~AtPulseLineTask()</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Apr 27 2022 00:47:46 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Oct 20 2023 16:22:58 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.18
 </small></address>

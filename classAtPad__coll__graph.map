@@ -1,6 +1,11 @@
 <map id="AtPad" name="AtPad">
-<area shape="rect" id="node1" title=" " alt="" coords="126,109,185,136"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,13,73,39"/>
-<area shape="rect" id="node3" title=" " alt="" coords="98,5,213,47"/>
-<area shape="rect" id="node4" title=" " alt="" coords="237,5,362,47"/>
+<area shape="rect" id="node1" title="Container class for AtPadBase objects." alt="" coords="959,143,1017,170"/>
+<area shape="rect" id="node2" href="$classAtPadBase.html" title="Base class for AtPad composition pattern." alt="" coords="141,93,229,119"/>
+<area shape="rect" id="node5" title=" " alt="" coords="313,63,508,90"/>
+<area shape="rect" id="node3" title=" " alt="" coords="5,93,73,119"/>
+<area shape="rect" id="node4" title=" " alt="" coords="613,48,821,89"/>
+<area shape="rect" id="node6" title="STL class." alt="" coords="371,13,450,39"/>
+<area shape="rect" id="node7" title="STL class." alt="" coords="123,5,247,47"/>
+<area shape="rect" id="node8" title=" " alt="" coords="660,165,775,207"/>
+<area shape="rect" id="node9" title=" " alt="" coords="655,231,780,272"/>
 </map>

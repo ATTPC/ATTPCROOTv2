@@ -1,0 +1,13 @@
+<map id="RandomSample::AtWeightedGaussian" name="RandomSample::AtWeightedGaussian">
+<area shape="rect" id="node1" title="Sample with a charge&#45;weighted gaussian." alt="" coords="75,648,262,689"/>
+<area shape="rect" id="node2" href="$classRandomSample_1_1AtSampleFromReference.html" title="Sample when PDF depends on reference." alt="" coords="5,468,212,509"/>
+<area shape="rect" id="node3" href="$classRandomSample_1_1AtSample.html" title="Interface for randomly sampling AtHits." alt="" coords="192,392,369,419"/>
+<area shape="rect" id="node11" href="$classRandomSample_1_1AtIndependentSample.html" title="Interface for independent samples." alt="" coords="236,468,440,509"/>
+<area shape="rect" id="node4" title=" " alt="" coords="146,288,271,329"/>
+<area shape="rect" id="node5" href="$classAtHit.html" title="Point in space with charge." alt="" coords="104,199,156,225"/>
+<area shape="rect" id="node6" title=" " alt="" coords="75,102,143,129"/>
+<area shape="rect" id="node7" title=" " alt="" coords="167,95,290,136"/>
+<area shape="rect" id="node8" href="$structAtHit_1_1MCSimPoint.html" title=" " alt="" coords="163,5,294,32"/>
+<area shape="rect" id="node9" title=" " alt="" coords="296,295,439,322"/>
+<area shape="rect" id="node10" href="$classRandomSample_1_1AtChargeWeighted.html" title="Sample AtHits according to charge." alt="" coords="204,559,432,585"/>
+</map>

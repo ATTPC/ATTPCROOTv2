@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">ATTPCROOT
-   &#160;<span id="projectnumber">1.0.0</span>
+   &#160;<span id="projectnumber">0.3.0-alpha</span>
    </div>
    <div id="projectbrief">A ROOT-based framework for analyzing data from active target detectors</div>
   </td>
@@ -89,59 +89,63 @@ $(function() {
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;   openFileAndReadContents();</div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;}</div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160; </div>
-<div class="line"><a name="l00019"></a><span class="lineno"><a class="line" href="classAtFilterCalibrate.html#a25b273c45750a2f72dd18bee0168b2d0">   19</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classAtFilterCalibrate.html#a25b273c45750a2f72dd18bee0168b2d0">AtFilterCalibrate::Filter</a>(<a class="code" href="classAtPad.html">AtPad</a> *pad)</div>
+<div class="line"><a name="l00019"></a><span class="lineno"><a class="line" href="classAtFilterCalibrate.html#aab43f4b8762513970f3527997b0b9403">   19</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classAtFilterCalibrate.html#aab43f4b8762513970f3527997b0b9403">AtFilterCalibrate::Filter</a>(<a class="code" href="classAtPad.html">AtPad</a> *pad, <a class="code" href="structAtPadReference.html">AtPadReference</a> *padReference)</div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;{</div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;   <span class="keyword">auto</span> padNum = pad-&gt;<a class="code" href="classAtPad.html#a9d0444a41880359d9571e65e88bf2282">GetPadNum</a>();</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;   <span class="keyword">auto</span> adc = pad-&gt;<a class="code" href="classAtPad.html#a91c89e0b6f1f521b663ee7246965f1eb">GetADC</a>();</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;   <span class="keyword">auto</span> &amp;adc = pad-&gt;<a class="code" href="classAtPad.html#a91c89e0b6f1f521b663ee7246965f1eb">GetADC</a>();</div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;   <span class="keyword">auto</span> intercept = fIntercept.find(padNum);</div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;   <span class="keywordflow">if</span> (intercept == fIntercept.end())</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;      LOG(ERROR) &lt;&lt; <span class="stringliteral">&quot;Missing calibration for pad: &quot;</span> &lt;&lt; padNum;</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;   <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;      <span class="keywordflow">for</span> (<span class="keywordtype">int</span> tb = 0; tb &lt; 512; tb++)</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;         adc[tb] = fIntercept[padNum] + adc[tb] * fSlope[padNum];</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;}</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keywordtype">void</span> AtFilterCalibrate::openFileAndReadContents()</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;{</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;   <span class="keyword">auto</span> file = openFile();</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;   readContents(*file);</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;   LOG(info) &lt;&lt; <span class="stringliteral">&quot;Loaded calibration parameters for: &quot;</span> &lt;&lt; fIntercept.size() &lt;&lt; <span class="stringliteral">&quot; pads.&quot;</span>;</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;}</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<a class="code" href="AtFilterCalibrate_8h.html#ac51559a070730d0fb780f1d215a9bd0f">filePtr</a> AtFilterCalibrate::openFile()</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;{</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;   <a class="code" href="AtFilterCalibrate_8h.html#ac51559a070730d0fb780f1d215a9bd0f">filePtr</a> file = std::make_unique&lt;std::ifstream&gt;(fCalibrationFile.Data());</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;   <span class="keywordflow">if</span> (!file-&gt;is_open())</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;      LOG(fatal) &lt;&lt; <span class="stringliteral">&quot;Failed to open calibration file: &quot;</span> &lt;&lt; fCalibrationFile;</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160; </div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;   LOG(info) &lt;&lt; <span class="stringliteral">&quot;Opened calibration file: &quot;</span> &lt;&lt; fCalibrationFile;</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;   <span class="keywordflow">return</span> file;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;}</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="keywordtype">void</span> AtFilterCalibrate::readContents(std::ifstream &amp;file)</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;{</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;   <span class="keywordtype">int</span> padNumber;</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;   <span class="keywordtype">float</span> intercept, slope;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;   <span class="keywordflow">while</span> (!file.eof()) {</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;      file &gt;&gt; padNumber &gt;&gt; intercept &gt;&gt; slope;</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;      fIntercept.emplace(padNumber, intercept);</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;      fSlope.emplace(padNumber, slope);</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;   }</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;}</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;   <span class="keywordflow">if</span> (intercept == fIntercept.end()) {</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;      pad-&gt;<a class="code" href="classAtPad.html#a6861b4e9b8b96d23f8b6df0fd2056cdf">SetValidPad</a>(<span class="keyword">false</span>);</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;      LOG(debug) &lt;&lt; <span class="stringliteral">&quot;Missing calibration for pad: &quot;</span> &lt;&lt; padNum;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;   } <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;      <span class="keywordflow">for</span> (<span class="keywordtype">int</span> tb = 0; tb &lt; 512; tb++)</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;         pad-&gt;<a class="code" href="classAtPad.html#abb35f4fb9eef12c24317bed59398d816">SetADC</a>(tb, fIntercept[padNum] + adc[tb] * fSlope[padNum]);</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;}</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="keywordtype">void</span> AtFilterCalibrate::openFileAndReadContents()</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;{</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;   <span class="keyword">auto</span> file = openFile();</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;   readContents(*file);</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;   LOG(info) &lt;&lt; <span class="stringliteral">&quot;Loaded calibration parameters for: &quot;</span> &lt;&lt; fIntercept.size() &lt;&lt; <span class="stringliteral">&quot; pads.&quot;</span>;</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;}</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<a class="code" href="AtFilterCalibrate_8h.html#ac51559a070730d0fb780f1d215a9bd0f">filePtr</a> AtFilterCalibrate::openFile()</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;{</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;   <a class="code" href="AtFilterCalibrate_8h.html#ac51559a070730d0fb780f1d215a9bd0f">filePtr</a> file = std::make_unique&lt;std::ifstream&gt;(fCalibrationFile.Data());</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;   <span class="keywordflow">if</span> (!file-&gt;is_open())</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;      LOG(fatal) &lt;&lt; <span class="stringliteral">&quot;Failed to open calibration file: &quot;</span> &lt;&lt; fCalibrationFile;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;   LOG(info) &lt;&lt; <span class="stringliteral">&quot;Opened calibration file: &quot;</span> &lt;&lt; fCalibrationFile;</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;   <span class="keywordflow">return</span> file;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;}</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160; </div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="keywordtype">void</span> AtFilterCalibrate::readContents(std::ifstream &amp;file)</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;{</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;   <span class="keywordtype">int</span> padNumber;</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;   <span class="keywordtype">float</span> intercept, slope;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;   <span class="keywordflow">while</span> (!file.eof()) {</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;      file &gt;&gt; padNumber &gt;&gt; intercept &gt;&gt; slope;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;      fIntercept.emplace(padNumber, intercept);</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;      fSlope.emplace(padNumber, slope);</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;   }</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
 <div class="ttc" id="aAtPad_8h_html"><div class="ttname"><a href="AtPad_8h.html">AtPad.h</a></div></div>
-<div class="ttc" id="aAtFilterCalibrate_8h_html_ac51559a070730d0fb780f1d215a9bd0f"><div class="ttname"><a href="AtFilterCalibrate_8h.html#ac51559a070730d0fb780f1d215a9bd0f">filePtr</a></div><div class="ttdeci">std::unique_ptr&lt; std::ifstream &gt; filePtr</div><div class="ttdef"><b>Definition:</b> <a href="AtFilterCalibrate_8h_source.html#l00016">AtFilterCalibrate.h:16</a></div></div>
+<div class="ttc" id="aAtFilterCalibrate_8h_html_ac51559a070730d0fb780f1d215a9bd0f"><div class="ttname"><a href="AtFilterCalibrate_8h.html#ac51559a070730d0fb780f1d215a9bd0f">filePtr</a></div><div class="ttdeci">std::unique_ptr&lt; std::ifstream &gt; filePtr</div><div class="ttdef"><b>Definition:</b> <a href="AtFilterCalibrate_8h_source.html#l00017">AtFilterCalibrate.h:17</a></div></div>
+<div class="ttc" id="aclassAtPad_html_a6861b4e9b8b96d23f8b6df0fd2056cdf"><div class="ttname"><a href="classAtPad.html#a6861b4e9b8b96d23f8b6df0fd2056cdf">AtPad::SetValidPad</a></div><div class="ttdeci">void SetValidPad(Bool_t val=kTRUE)</div><div class="ttdef"><b>Definition:</b> <a href="AtPad_8h_source.html#l00082">AtPad.h:82</a></div></div>
+<div class="ttc" id="aclassAtFilterCalibrate_html_aab43f4b8762513970f3527997b0b9403"><div class="ttname"><a href="classAtFilterCalibrate.html#aab43f4b8762513970f3527997b0b9403">AtFilterCalibrate::Filter</a></div><div class="ttdeci">virtual void Filter(AtPad *pad, AtPadReference *padReference) override</div><div class="ttdoc">Called to filter each pad.</div><div class="ttdef"><b>Definition:</b> <a href="AtFilterCalibrate_8cxx_source.html#l00019">AtFilterCalibrate.cxx:19</a></div></div>
+<div class="ttc" id="aclassAtPad_html_abb35f4fb9eef12c24317bed59398d816"><div class="ttname"><a href="classAtPad.html#abb35f4fb9eef12c24317bed59398d816">AtPad::SetADC</a></div><div class="ttdeci">void SetADC(const trace &amp;val)</div><div class="ttdef"><b>Definition:</b> <a href="AtPad_8h_source.html#l00091">AtPad.h:91</a></div></div>
 <div class="ttc" id="aAtFilterCalibrate_8h_html"><div class="ttname"><a href="AtFilterCalibrate_8h.html">AtFilterCalibrate.h</a></div></div>
-<div class="ttc" id="aclassAtFilterCalibrate_html_a25b273c45750a2f72dd18bee0168b2d0"><div class="ttname"><a href="classAtFilterCalibrate.html#a25b273c45750a2f72dd18bee0168b2d0">AtFilterCalibrate::Filter</a></div><div class="ttdeci">virtual void Filter(AtPad *pad) override</div><div class="ttdef"><b>Definition:</b> <a href="AtFilterCalibrate_8cxx_source.html#l00019">AtFilterCalibrate.cxx:19</a></div></div>
-<div class="ttc" id="aclassAtPad_html_a9d0444a41880359d9571e65e88bf2282"><div class="ttname"><a href="classAtPad.html#a9d0444a41880359d9571e65e88bf2282">AtPad::GetPadNum</a></div><div class="ttdeci">Int_t GetPadNum() const</div><div class="ttdef"><b>Definition:</b> <a href="AtPad_8h_source.html#l00061">AtPad.h:61</a></div></div>
-<div class="ttc" id="aclassAtPad_html_a91c89e0b6f1f521b663ee7246965f1eb"><div class="ttname"><a href="classAtPad.html#a91c89e0b6f1f521b663ee7246965f1eb">AtPad::GetADC</a></div><div class="ttdeci">const trace &amp; GetADC() const</div><div class="ttdef"><b>Definition:</b> <a href="AtPad_8cxx_source.html#l00027">AtPad.cxx:27</a></div></div>
-<div class="ttc" id="aclassAtPad_html"><div class="ttname"><a href="classAtPad.html">AtPad</a></div><div class="ttdef"><b>Definition:</b> <a href="AtPad_8h_source.html#l00025">AtPad.h:25</a></div></div>
-<div class="ttc" id="aclassAtFilterCalibrate_html_ad24deda2fcfb98ffa51799946cf67a66"><div class="ttname"><a href="classAtFilterCalibrate.html#ad24deda2fcfb98ffa51799946cf67a66">AtFilterCalibrate::Init</a></div><div class="ttdeci">virtual void Init() override</div><div class="ttdef"><b>Definition:</b> <a href="AtFilterCalibrate_8cxx_source.html#l00014">AtFilterCalibrate.cxx:14</a></div></div>
+<div class="ttc" id="aclassAtPad_html_a9d0444a41880359d9571e65e88bf2282"><div class="ttname"><a href="classAtPad.html#a9d0444a41880359d9571e65e88bf2282">AtPad::GetPadNum</a></div><div class="ttdeci">Int_t GetPadNum() const</div><div class="ttdef"><b>Definition:</b> <a href="AtPad_8h_source.html#l00096">AtPad.h:96</a></div></div>
+<div class="ttc" id="aclassAtPad_html_a91c89e0b6f1f521b663ee7246965f1eb"><div class="ttname"><a href="classAtPad.html#a91c89e0b6f1f521b663ee7246965f1eb">AtPad::GetADC</a></div><div class="ttdeci">const trace &amp; GetADC() const</div><div class="ttdef"><b>Definition:</b> <a href="AtPad_8cxx_source.html#l00097">AtPad.cxx:97</a></div></div>
+<div class="ttc" id="aclassAtPad_html"><div class="ttname"><a href="classAtPad.html">AtPad</a></div><div class="ttdoc">Container class for AtPadBase objects.</div><div class="ttdef"><b>Definition:</b> <a href="AtPad_8h_source.html#l00038">AtPad.h:38</a></div></div>
+<div class="ttc" id="aclassAtFilterCalibrate_html_ad24deda2fcfb98ffa51799946cf67a66"><div class="ttname"><a href="classAtFilterCalibrate.html#ad24deda2fcfb98ffa51799946cf67a66">AtFilterCalibrate::Init</a></div><div class="ttdeci">virtual void Init() override</div><div class="ttdoc">Called at the init stage of the AtFilterTask.</div><div class="ttdef"><b>Definition:</b> <a href="AtFilterCalibrate_8cxx_source.html#l00014">AtFilterCalibrate.cxx:14</a></div></div>
 <div class="ttc" id="aclassAtFilterCalibrate_html_a4ad9b8e0e01d9172e29ee4c100d58752"><div class="ttname"><a href="classAtFilterCalibrate.html#a4ad9b8e0e01d9172e29ee4c100d58752">AtFilterCalibrate::AtFilterCalibrate</a></div><div class="ttdeci">AtFilterCalibrate()</div></div>
+<div class="ttc" id="astructAtPadReference_html"><div class="ttname"><a href="structAtPadReference.html">AtPadReference</a></div><div class="ttdef"><b>Definition:</b> <a href="AtPadReference_8h_source.html#l00020">AtPadReference.h:20</a></div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Apr 27 2022 00:47:47 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Oct 20 2023 16:22:59 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.18
 </small></address>

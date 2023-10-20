@@ -1,0 +1,4 @@
+<map id="RandomSample::AtWeightedGaussianTrunc" name="RandomSample::AtWeightedGaussianTrunc">
+<area shape="rect" id="node1" title="Uniformly sample a collection of AtHits." alt="" coords="5,80,192,121"/>
+<area shape="rect" id="node2" href="$classRandomSample_1_1AtSample.html" title="Interface for randomly sampling AtHits." alt="" coords="10,5,187,32"/>
+</map>

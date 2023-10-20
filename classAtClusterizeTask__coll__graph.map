@@ -1,9 +1,9 @@
 <map id="AtClusterizeTask" name="AtClusterizeTask">
-<area shape="rect" id="node1" title=" " alt="" coords="203,185,324,212"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,89,79,115"/>
-<area shape="rect" id="node3" title=" " alt="" coords="103,81,269,123"/>
-<area shape="rect" id="node4" href="$classAtDigiPar.html" title=" " alt="" coords="298,89,375,115"/>
-<area shape="rect" id="node5" title=" " alt="" coords="264,5,393,32"/>
-<area shape="rect" id="node6" href="$classAtMCPoint.html" title=" " alt="" coords="407,89,493,115"/>
-<area shape="rect" id="node7" title=" " alt="" coords="417,5,512,32"/>
+<area shape="rect" id="node1" title=" " alt="" coords="291,199,412,225"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,102,79,129"/>
+<area shape="rect" id="node3" title=" " alt="" coords="103,102,301,129"/>
+<area shape="rect" id="node4" href="$classAtClusterize.html" title=" " alt="" coords="156,5,248,32"/>
+<area shape="rect" id="node5" title=" " alt="" coords="325,95,490,136"/>
+<area shape="rect" id="node6" href="$classAtDigiPar.html" title=" " alt="" coords="519,102,597,129"/>
+<area shape="rect" id="node7" title=" " alt="" coords="493,5,623,32"/>
 </map>

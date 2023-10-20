@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">ATTPCROOT
-   &#160;<span id="projectnumber">1.0.0</span>
+   &#160;<span id="projectnumber">0.3.0-alpha</span>
    </div>
    <div id="projectbrief">A ROOT-based framework for analyzing data from active target detectors</div>
   </td>
@@ -80,6 +80,8 @@ $(function() {
 <code>#include &quot;<a class="el" href="AtSpaceChargeModel_8h_source.html">AtSpaceChargeModel.h</a>&quot;</code><br />
 <code>#include &lt;FairLogger.h&gt;</code><br />
 <code>#include &lt;FairRootManager.h&gt;</code><br />
+<code>#include &lt;FairRun.h&gt;</code><br />
+<code>#include &lt;FairRuntimeDb.h&gt;</code><br />
 <code>#include &lt;FairTask.h&gt;</code><br />
 <code>#include &lt;Math/Point3D.h&gt;</code><br />
 <code>#include &lt;Math/Point3Dfwd.h&gt;</code><br />
@@ -92,33 +94,38 @@ Include dependency graph for AtSpaceChargeCorrectionTask.cxx:</div>
 <div class="dyncontent">
 <div class="center"><img src="AtSpaceChargeCorrectionTask_8cxx__incl.png" border="0" usemap="#_2github_2workspace_2AtReconstruction_2AtSpaceChargeCorrectionTask_8cxx" alt=""/></div>
 <map name="_2github_2workspace_2AtReconstruction_2AtSpaceChargeCorrectionTask_8cxx" id="_2github_2workspace_2AtReconstruction_2AtSpaceChargeCorrectionTask_8cxx">
-<area shape="rect" title=" " alt="" coords="560,5,792,47"/>
-<area shape="rect" href="AtSpaceChargeCorrectionTask_8h.html" title=" " alt="" coords="428,95,638,121"/>
-<area shape="rect" href="AtSpaceChargeModel_8h.html" title=" " alt="" coords="130,169,288,196"/>
-<area shape="rect" title=" " alt="" coords="23,244,134,271"/>
-<area shape="rect" title=" " alt="" coords="260,244,392,271"/>
-<area shape="rect" title=" " alt="" coords="352,319,431,345"/>
-<area shape="rect" title=" " alt="" coords="364,169,446,196"/>
-<area shape="rect" title=" " alt="" coords="532,169,643,196"/>
-<area shape="rect" href="AtEvent_8h.html" title=" " alt="" coords="1191,95,1270,121"/>
-<area shape="rect" title=" " alt="" coords="1484,244,1536,271"/>
-<area shape="rect" href="AtHit_8h.html" title=" " alt="" coords="686,169,748,196"/>
-<area shape="rect" title=" " alt="" coords="877,244,936,271"/>
-<area shape="rect" title=" " alt="" coords="1622,169,1716,196"/>
-<area shape="rect" title=" " alt="" coords="1792,95,1922,121"/>
-<area shape="rect" title=" " alt="" coords="585,319,657,345"/>
-<area shape="rect" title=" " alt="" coords="1222,319,1290,345"/>
-<area shape="rect" title=" " alt="" coords="1160,244,1215,271"/>
-<area shape="rect" href="AtAuxPad_8h.html" title=" " alt="" coords="1298,169,1389,196"/>
-<area shape="rect" title=" " alt="" coords="1605,319,1656,345"/>
-<area shape="rect" title=" " alt="" coords="1010,244,1085,271"/>
-<area shape="rect" title=" " alt="" coords="1464,169,1546,196"/>
-<area shape="rect" title=" " alt="" coords="1176,169,1223,196"/>
-<area shape="rect" href="AtPad_8h.html" title=" " alt="" coords="1392,244,1460,271"/>
-<area shape="rect" title=" " alt="" coords="1314,319,1424,345"/>
-<area shape="rect" title=" " alt="" coords="1448,319,1580,345"/>
-<area shape="rect" title=" " alt="" coords="570,244,688,271"/>
-<area shape="rect" title=" " alt="" coords="712,244,852,271"/>
+<area shape="rect" title=" " alt="" coords="1322,5,1554,47"/>
+<area shape="rect" href="AtSpaceChargeCorrectionTask_8h.html" title=" " alt="" coords="762,95,973,121"/>
+<area shape="rect" href="AtSpaceChargeModel_8h.html" title=" " alt="" coords="149,169,308,196"/>
+<area shape="rect" title=" " alt="" coords="5,244,116,271"/>
+<area shape="rect" title=" " alt="" coords="140,244,272,271"/>
+<area shape="rect" title=" " alt="" coords="905,169,987,196"/>
+<area shape="rect" title=" " alt="" coords="1012,169,1123,196"/>
+<area shape="rect" href="AtEvent_8h.html" title=" " alt="" coords="1399,95,1477,121"/>
+<area shape="rect" title=" " alt="" coords="1655,468,1733,495"/>
+<area shape="rect" title=" " alt="" coords="1615,319,1667,345"/>
+<area shape="rect" title=" " alt="" coords="1585,244,1643,271"/>
+<area shape="rect" href="AtHit_8h.html" title=" " alt="" coords="688,169,751,196"/>
+<area shape="rect" title=" " alt="" coords="1677,169,1772,196"/>
+<area shape="rect" title=" " alt="" coords="1961,95,2091,121"/>
+<area shape="rect" title=" " alt="" coords="2115,95,2193,121"/>
+<area shape="rect" title=" " alt="" coords="2216,95,2335,121"/>
+<area shape="rect" title=" " alt="" coords="1558,468,1630,495"/>
+<area shape="rect" title=" " alt="" coords="859,468,927,495"/>
+<area shape="rect" title=" " alt="" coords="941,393,996,420"/>
+<area shape="rect" href="AtBaseEvent_8h.html" title=" " alt="" coords="1336,169,1444,196"/>
+<area shape="rect" title=" " alt="" coords="1071,393,1122,420"/>
+<area shape="rect" title=" " alt="" coords="1820,393,1867,420"/>
+<area shape="rect" title=" " alt="" coords="1146,393,1229,420"/>
+<area shape="rect" href="AtAuxPad_8h.html" title=" " alt="" coords="1262,244,1353,271"/>
+<area shape="rect" title=" " alt="" coords="1478,244,1561,271"/>
+<area shape="rect" title=" " alt="" coords="909,244,983,271"/>
+<area shape="rect" href="AtPad_8h.html" title=" " alt="" coords="1301,319,1369,345"/>
+<area shape="rect" href="AtPadBase_8h.html" title=" " alt="" coords="1595,393,1694,420"/>
+<area shape="rect" title=" " alt="" coords="1460,393,1571,420"/>
+<area shape="rect" title=" " alt="" coords="1304,393,1436,420"/>
+<area shape="rect" title=" " alt="" coords="399,244,517,271"/>
+<area shape="rect" title=" " alt="" coords="541,244,681,271"/>
 </map>
 </div>
 </div>
@@ -142,12 +149,12 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="AtHit_8h.html#acdbe604dea12970b4e97a316f9046ae7">XYZPoint</a> =  ROOT::Math::XYZPoint</td>
+          <td class="memname">using <a class="el" href="AtPatternCircle2D_8h.html#acdbe604dea12970b4e97a316f9046ae7">XYZPoint</a> =  ROOT::Math::XYZPoint</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtSpaceChargeCorrectionTask_8cxx_source.html#l00019">19</a> of file <a class="el" href="AtSpaceChargeCorrectionTask_8cxx_source.html">AtSpaceChargeCorrectionTask.cxx</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtSpaceChargeCorrectionTask_8cxx_source.html#l00022">22</a> of file <a class="el" href="AtSpaceChargeCorrectionTask_8cxx_source.html">AtSpaceChargeCorrectionTask.cxx</a>.</p>
 
 </div>
 </div>
@@ -173,7 +180,7 @@ Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Apr 27 2022 00:47:49 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Oct 20 2023 16:23:01 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.18
 </small></address>

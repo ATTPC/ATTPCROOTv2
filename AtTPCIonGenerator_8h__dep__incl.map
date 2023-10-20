@@ -1,4 +1,8 @@
 <map id="/github/workspace/AtGenerators/AtTPCIonGenerator.h" name="/github/workspace/AtGenerators/AtTPCIonGenerator.h">
-<area shape="rect" id="node1" title=" " alt="" coords="5,5,215,47"/>
+<area shape="rect" id="node1" title=" " alt="" coords="239,5,448,47"/>
 <area shape="rect" id="node2" href="$AtTPCIonGenerator_8cxx.html" title=" " alt="" coords="5,95,215,136"/>
+<area shape="rect" id="node3" href="$AtTPCIonGeneratorGaussian_8h.html" title=" " alt="" coords="239,95,448,136"/>
+<area shape="rect" id="node5" href="$AtTPCIonGeneratorS800_8h.html" title=" " alt="" coords="473,95,683,136"/>
+<area shape="rect" id="node4" href="$AtTPCIonGeneratorGaussian_8cxx.html" title=" " alt="" coords="233,184,451,225"/>
+<area shape="rect" id="node6" href="$AtTPCIonGeneratorS800_8cxx.html" title=" " alt="" coords="475,184,684,225"/>
 </map>

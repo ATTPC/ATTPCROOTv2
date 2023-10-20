@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">ATTPCROOT
-   &#160;<span id="projectnumber">1.0.0</span>
+   &#160;<span id="projectnumber">0.3.0-alpha</span>
    </div>
    <div id="projectbrief">A ROOT-based framework for analyzing data from active target detectors</div>
   </td>
@@ -87,22 +87,24 @@ $(function() {
   <tr class="even"><td class="entry"><a class="el" href="classAtROOTUnpacker.html#a47f438a11bc44e3f58612d2bc872fe72">fNumEvents</a></td><td class="entry"><a class="el" href="classAtROOTUnpacker.html">AtROOTUnpacker</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
   <tr><td class="entry"><a class="el" href="classAtROOTUnpacker.html#ad5a8b8984b409e6008072838e26b5a03">fPedestal</a></td><td class="entry"><a class="el" href="classAtROOTUnpacker.html">AtROOTUnpacker</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classAtUnpacker.html#af0bedd76cc4731ad599624a9b384a22f">fRawEvent</a></td><td class="entry"><a class="el" href="classAtUnpacker.html">AtUnpacker</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr><td class="entry"><a class="el" href="classAtUnpacker.html#ac4af8d9de731b81011b3cf048aa905e5">GetNextEventID</a>()</td><td class="entry"><a class="el" href="classAtUnpacker.html">AtUnpacker</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classAtROOTUnpacker.html#a65006273f33ec4d836bc3c8fc6c4c32c">GetNumEvents</a>() override</td><td class="entry"><a class="el" href="classAtROOTUnpacker.html">AtROOTUnpacker</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
-  <tr><td class="entry"><a class="el" href="classAtROOTUnpacker.html#aba824ac4ce844e0f7cc63cdfc257fb50">Init</a>() override</td><td class="entry"><a class="el" href="classAtROOTUnpacker.html">AtROOTUnpacker</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classAtROOTUnpacker.html#aa3557f7ad7782e746290839d60c0a013">IsLastEvent</a>() override</td><td class="entry"><a class="el" href="classAtROOTUnpacker.html">AtROOTUnpacker</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
-  <tr><td class="entry"><a class="el" href="classAtROOTUnpacker.html#ac62b6b849413988fbef69b7e1a49d919">SetFPNPedestalRMS</a>(double sigma)</td><td class="entry"><a class="el" href="classAtROOTUnpacker.html">AtROOTUnpacker</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classAtUnpacker.html#acf2e9a59430edf3ffa562450096dab30">SetInitialEventID</a>(Long64_t evtID)</td><td class="entry"><a class="el" href="classAtUnpacker.html">AtUnpacker</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr><td class="entry"><a class="el" href="classAtUnpacker.html#a4150cdf1afb98e5247904c129b5abd51">SetInputFileName</a>(std::string fileName)</td><td class="entry"><a class="el" href="classAtUnpacker.html">AtUnpacker</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classAtROOTUnpacker.html#aca62de42dbecad9724de6dba330cd5c5">SetIsNegativePolarity</a>(vecBool vec)</td><td class="entry"><a class="el" href="classAtROOTUnpacker.html">AtROOTUnpacker</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="classAtROOTUnpacker.html#ac693ee81d0f7bf4b48f2bff18fc7f45e">SetIsPadPlaneCobo</a>(vecBool vec)</td><td class="entry"><a class="el" href="classAtROOTUnpacker.html">AtROOTUnpacker</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classAtUnpacker.html#a7b13b4738f651f8d01a6c7aaa0d40eeb">SetMap</a>(mapPtr map)</td><td class="entry"><a class="el" href="classAtUnpacker.html">AtUnpacker</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr><td class="entry"><a class="el" href="classAtUnpacker.html#a1ec1fb46e369ef45dd3c57e4eba4d3f8">fSaveFPN</a></td><td class="entry"><a class="el" href="classAtUnpacker.html">AtUnpacker</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classAtUnpacker.html#ac4af8d9de731b81011b3cf048aa905e5">GetNextEventID</a>()</td><td class="entry"><a class="el" href="classAtUnpacker.html">AtUnpacker</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr><td class="entry"><a class="el" href="classAtROOTUnpacker.html#a65006273f33ec4d836bc3c8fc6c4c32c">GetNumEvents</a>() override</td><td class="entry"><a class="el" href="classAtROOTUnpacker.html">AtROOTUnpacker</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classAtROOTUnpacker.html#aba824ac4ce844e0f7cc63cdfc257fb50">Init</a>() override</td><td class="entry"><a class="el" href="classAtROOTUnpacker.html">AtROOTUnpacker</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+  <tr><td class="entry"><a class="el" href="classAtROOTUnpacker.html#aa3557f7ad7782e746290839d60c0a013">IsLastEvent</a>() override</td><td class="entry"><a class="el" href="classAtROOTUnpacker.html">AtROOTUnpacker</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classAtROOTUnpacker.html#ac62b6b849413988fbef69b7e1a49d919">SetFPNPedestalRMS</a>(double sigma)</td><td class="entry"><a class="el" href="classAtROOTUnpacker.html">AtROOTUnpacker</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr><td class="entry"><a class="el" href="classAtUnpacker.html#acf2e9a59430edf3ffa562450096dab30">SetInitialEventID</a>(Long64_t evtID)</td><td class="entry"><a class="el" href="classAtUnpacker.html">AtUnpacker</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classAtUnpacker.html#a4150cdf1afb98e5247904c129b5abd51">SetInputFileName</a>(std::string fileName)</td><td class="entry"><a class="el" href="classAtUnpacker.html">AtUnpacker</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
+  <tr><td class="entry"><a class="el" href="classAtROOTUnpacker.html#aca62de42dbecad9724de6dba330cd5c5">SetIsNegativePolarity</a>(vecBool vec)</td><td class="entry"><a class="el" href="classAtROOTUnpacker.html">AtROOTUnpacker</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classAtROOTUnpacker.html#ac693ee81d0f7bf4b48f2bff18fc7f45e">SetIsPadPlaneCobo</a>(vecBool vec)</td><td class="entry"><a class="el" href="classAtROOTUnpacker.html">AtROOTUnpacker</a></td><td class="entry"></td></tr>
+  <tr><td class="entry"><a class="el" href="classAtUnpacker.html#a7b13b4738f651f8d01a6c7aaa0d40eeb">SetMap</a>(mapPtr map)</td><td class="entry"><a class="el" href="classAtUnpacker.html">AtUnpacker</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classAtROOTUnpacker.html#a75b5d46782e034bec3df461993112a7b">SetSaveFPN</a>(bool val=true) override</td><td class="entry"><a class="el" href="classAtROOTUnpacker.html">AtROOTUnpacker</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
   <tr><td class="entry"><a class="el" href="classAtROOTUnpacker.html#a26ed71233a76e5c8dc34fcda1f18ff75">~AtROOTUnpacker</a>()=default</td><td class="entry"><a class="el" href="classAtROOTUnpacker.html">AtROOTUnpacker</a></td><td class="entry"></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classAtUnpacker.html#ab665e5f44c1f3477b16a386e071a0b11">~AtUnpacker</a>()=default</td><td class="entry"><a class="el" href="classAtUnpacker.html">AtUnpacker</a></td><td class="entry"></td></tr>
 </table></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Apr 27 2022 00:47:49 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Oct 20 2023 16:23:02 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.18
 </small></address>

@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">ATTPCROOT
-   &#160;<span id="projectnumber">1.0.0</span>
+   &#160;<span id="projectnumber">0.3.0-alpha</span>
    </div>
    <div id="projectbrief">A ROOT-based framework for analyzing data from active target detectors</div>
   </td>
@@ -106,12 +106,12 @@ $(function() {
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;   containers-&gt;Add(p);</div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;}</div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160; </div>
-<div class="line"><a name="l00041"></a><span class="lineno"><a class="line" href="classAtSiArrayContFact.html#a63c54ff65a8fc71151c6c7a1cf6392bd">   41</a></span>&#160;FairParSet *<a class="code" href="classAtSiArrayContFact.html#a63c54ff65a8fc71151c6c7a1cf6392bd">AtSiArrayContFact::createContainer</a>(FairContainer *c)</div>
+<div class="line"><a name="l00041"></a><span class="lineno"><a class="line" href="classAtSiArrayContFact.html#a63c54ff65a8fc71151c6c7a1cf6392bd">   41</a></span>&#160;FairParSet *<a class="code" href="classAtSiArrayContFact.html#a63c54ff65a8fc71151c6c7a1cf6392bd">AtSiArrayContFact::createContainer</a>(FairContainer *<a class="code" href="AtRadialChargeModel_8cxx.html#a4fa597cdd9a67fc4cef7c8beebd1baa8">c</a>)</div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;{</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;   <span class="keyword">const</span> <span class="keywordtype">char</span> *name = c-&gt;GetName();</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;   <span class="keyword">const</span> <span class="keywordtype">char</span> *name = <a class="code" href="AtRadialChargeModel_8cxx.html#a4fa597cdd9a67fc4cef7c8beebd1baa8">c</a>-&gt;GetName();</div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;   FairParSet *p = <span class="keyword">nullptr</span>;</div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;   <span class="keywordflow">if</span> (strcmp(name, <span class="stringliteral">&quot;AtSiArrayGeoPar&quot;</span>) == 0) {</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;      p = <span class="keyword">new</span> <a class="code" href="classAtSiArrayGeoPar.html">AtSiArrayGeoPar</a>(c-&gt;getConcatName().Data(), c-&gt;GetTitle(), c-&gt;getContext());</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;      p = <span class="keyword">new</span> <a class="code" href="classAtSiArrayGeoPar.html">AtSiArrayGeoPar</a>(<a class="code" href="AtRadialChargeModel_8cxx.html#a4fa597cdd9a67fc4cef7c8beebd1baa8">c</a>-&gt;getConcatName().Data(), <a class="code" href="AtRadialChargeModel_8cxx.html#a4fa597cdd9a67fc4cef7c8beebd1baa8">c</a>-&gt;GetTitle(), <a class="code" href="AtRadialChargeModel_8cxx.html#a4fa597cdd9a67fc4cef7c8beebd1baa8">c</a>-&gt;getContext());</div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;   }</div>
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;   <span class="keywordflow">return</span> p;</div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;}</div>
@@ -122,10 +122,11 @@ $(function() {
 <div class="ttc" id="aclassAtSiArrayGeoPar_html"><div class="ttname"><a href="classAtSiArrayGeoPar.html">AtSiArrayGeoPar</a></div><div class="ttdef"><b>Definition:</b> <a href="AtSiArrayGeoPar_8h_source.html#l00014">AtSiArrayGeoPar.h:14</a></div></div>
 <div class="ttc" id="aAtSiArrayContFact_8h_html"><div class="ttname"><a href="AtSiArrayContFact_8h.html">AtSiArrayContFact.h</a></div></div>
 <div class="ttc" id="aAtSiArrayContFact_8cxx_html_ab923edf828f942603b9e1ffbd4821376"><div class="ttname"><a href="AtSiArrayContFact_8cxx.html#ab923edf828f942603b9e1ffbd4821376">ClassImp</a></div><div class="ttdeci">ClassImp(AtSiArrayContFact) static AtSiArrayContFact gAtSiArrayContFact</div></div>
+<div class="ttc" id="aAtRadialChargeModel_8cxx_html_a4fa597cdd9a67fc4cef7c8beebd1baa8"><div class="ttname"><a href="AtRadialChargeModel_8cxx.html#a4fa597cdd9a67fc4cef7c8beebd1baa8">c</a></div><div class="ttdeci">constexpr auto c</div><div class="ttdef"><b>Definition:</b> <a href="AtRadialChargeModel_8cxx_source.html#l00020">AtRadialChargeModel.cxx:20</a></div></div>
 <div class="ttc" id="aclassAtSiArrayContFact_html_a63c54ff65a8fc71151c6c7a1cf6392bd"><div class="ttname"><a href="classAtSiArrayContFact.html#a63c54ff65a8fc71151c6c7a1cf6392bd">AtSiArrayContFact::createContainer</a></div><div class="ttdeci">FairParSet * createContainer(FairContainer *)</div><div class="ttdef"><b>Definition:</b> <a href="AtSiArrayContFact_8cxx_source.html#l00041">AtSiArrayContFact.cxx:41</a></div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Apr 27 2022 00:47:48 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Oct 20 2023 16:23:00 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.18
 </small></address>

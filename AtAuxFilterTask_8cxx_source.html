@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">ATTPCROOT
-   &#160;<span id="projectnumber">1.0.0</span>
+   &#160;<span id="projectnumber">0.3.0-alpha</span>
    </div>
    <div id="projectbrief">A ROOT-based framework for analyzing data from active target detectors</div>
   </td>
@@ -73,113 +73,108 @@ $(function() {
 <div class="contents">
 <a href="AtAuxFilterTask_8cxx.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="AtAuxFilterTask_8h.html">AtAuxFilterTask.h</a>&quot;</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160; </div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &lt;FairLogger.h&gt;</span></div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &lt;FairRootManager.h&gt;</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;FairTask.h&gt;</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="AtAuxPad_8h.html">AtAuxPad.h</a>&quot;</span></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="AtFilter_8h.html">AtFilter.h</a>&quot;</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="AtRawEvent_8h.html">AtRawEvent.h</a>&quot;</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160; </div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &lt;TString.h&gt;</span></div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160; </div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &lt;algorithm&gt;</span></div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &lt;ostream&gt;</span></div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &lt;utility&gt;</span></div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160; </div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="comment">// Root Classes</span></div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="AtFilter_8h.html">AtFilter.h</a>&quot;</span></div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="AtRawEvent_8h.html">AtRawEvent.h</a>&quot;</span></div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="comment">// AtTPCRoot Classes</span></div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="AtAuxPad_8h.html">AtAuxPad.h</a>&quot;</span></div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="AtPad_8h.html">AtPad.h</a>&quot;</span></div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160; </div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">#include &lt;TClonesArray.h&gt;</span></div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#include &lt;TObject.h&gt;</span> <span class="comment">// for TObject</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &lt;FairLogger.h&gt;</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &lt;FairRootManager.h&gt;</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &lt;FairTask.h&gt;</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160; </div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &lt;TClonesArray.h&gt;</span></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#include &lt;TObject.h&gt;</span> <span class="comment">// for TObject</span></div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor">#include &lt;TString.h&gt;</span></div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160; </div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#include &lt;algorithm&gt;</span></div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">#include &lt;ostream&gt;</span></div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="preprocessor">#include &lt;utility&gt;</span></div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160; </div>
+<div class="line"><a name="l00019"></a><span class="lineno"><a class="line" href="classAtAuxFilterTask.html#a76d4a5f12068f651ba3095d309a0c596">   19</a></span>&#160;<a class="code" href="classAtAuxFilterTask.html#a76d4a5f12068f651ba3095d309a0c596">AtAuxFilterTask::AtAuxFilterTask</a>(<a class="code" href="classAtFilter.html">AtFilter</a> *filter) : fFilter(filter), fInputEventBranchName(<span class="stringliteral">&quot;AtRawEvent&quot;</span>) {}</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<a class="code" href="classAtAuxFilterTask.html#a424b26f9489b2fd621ebb5ecc3ee262a">AtAuxFilterTask::~AtAuxFilterTask</a>() = <span class="keywordflow">default</span>;</div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160; </div>
-<div class="line"><a name="l00023"></a><span class="lineno"><a class="line" href="classAtAuxFilterTask.html#a76d4a5f12068f651ba3095d309a0c596">   23</a></span>&#160;<a class="code" href="classAtAuxFilterTask.html#a76d4a5f12068f651ba3095d309a0c596">AtAuxFilterTask::AtAuxFilterTask</a>(<a class="code" href="classAtFilter.html">AtFilter</a> *filter) : fFilter(filter), fInputEventBranchName(<span class="stringliteral">&quot;AtRawEvent&quot;</span>) {}</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<a class="code" href="classAtAuxFilterTask.html#a424b26f9489b2fd621ebb5ecc3ee262a">AtAuxFilterTask::~AtAuxFilterTask</a>() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
-<div class="line"><a name="l00027"></a><span class="lineno"><a class="line" href="classAtAuxFilterTask.html#a87141c56b599a365a31727b58f7ec8dd">   27</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classAtAuxFilterTask.html#a87141c56b599a365a31727b58f7ec8dd">AtAuxFilterTask::AddAuxPad</a>(std::string pad)</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;{</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;   auxPads.emplace_back(pad);</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;}</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
-<div class="line"><a name="l00032"></a><span class="lineno"><a class="line" href="classAtAuxFilterTask.html#ab07aecfd60a70fabc4ca49f2341058f4">   32</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classAtAuxFilterTask.html#ab07aecfd60a70fabc4ca49f2341058f4">AtAuxFilterTask::SetInputBranchName</a>(TString branchName)</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;{</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;   fInputEventBranchName = branchName;</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;}</div>
+<div class="line"><a name="l00023"></a><span class="lineno"><a class="line" href="classAtAuxFilterTask.html#a87141c56b599a365a31727b58f7ec8dd">   23</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classAtAuxFilterTask.html#a87141c56b599a365a31727b58f7ec8dd">AtAuxFilterTask::AddAuxPad</a>(std::string pad)</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;{</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;   auxPads.emplace_back(pad);</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;}</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
+<div class="line"><a name="l00028"></a><span class="lineno"><a class="line" href="classAtAuxFilterTask.html#ab07aecfd60a70fabc4ca49f2341058f4">   28</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classAtAuxFilterTask.html#ab07aecfd60a70fabc4ca49f2341058f4">AtAuxFilterTask::SetInputBranchName</a>(TString branchName)</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;{</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;   fInputEventBranchName = branchName;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;}</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
+<div class="line"><a name="l00033"></a><span class="lineno"><a class="line" href="classAtAuxFilterTask.html#aee320a5f9ac46efc540a605d830960d6">   33</a></span>&#160;InitStatus <a class="code" href="classAtAuxFilterTask.html#aee320a5f9ac46efc540a605d830960d6">AtAuxFilterTask::Init</a>()</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;{</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;   FairRootManager *ioManager = FairRootManager::Instance();</div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
-<div class="line"><a name="l00037"></a><span class="lineno"><a class="line" href="classAtAuxFilterTask.html#aee320a5f9ac46efc540a605d830960d6">   37</a></span>&#160;InitStatus <a class="code" href="classAtAuxFilterTask.html#aee320a5f9ac46efc540a605d830960d6">AtAuxFilterTask::Init</a>()</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;{</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;   FairRootManager *ioManager = FairRootManager::Instance();</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160; </div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;   <span class="keywordflow">if</span> (ioManager == <span class="keyword">nullptr</span>) {</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;      LOG(ERROR) &lt;&lt; <span class="stringliteral">&quot;Cannot find RootManager!&quot;</span> &lt;&lt; std::endl;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;      <span class="keywordflow">return</span> kERROR;</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;   }</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;   <span class="comment">// Get the old data from the io manager</span></div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;   fInputEventArray = <span class="keyword">dynamic_cast&lt;</span>TClonesArray *<span class="keyword">&gt;</span>(ioManager-&gt;GetObject(fInputEventBranchName));</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;   <span class="keywordflow">if</span> (fInputEventArray == <span class="keyword">nullptr</span>) {</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;      LOG(ERROR) &lt;&lt; <span class="stringliteral">&quot;AtAuxFilterTask: Cannot find AtRawEvent array &quot;</span> &lt;&lt; fInputEventBranchName;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;      <span class="keywordflow">return</span> kERROR;</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;   }</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;   fFilter-&gt;<a class="code" href="classAtFilter.html#a10b9c7088be2ccd5e6a9df5c6002955a">Init</a>();</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160; </div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;   <span class="keywordflow">return</span> kSUCCESS;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;}</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
-<div class="line"><a name="l00058"></a><span class="lineno"><a class="line" href="classAtAuxFilterTask.html#a0452cb6185d88344b94a1728bfdbbb78">   58</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classAtAuxFilterTask.html#a0452cb6185d88344b94a1728bfdbbb78">AtAuxFilterTask::Exec</a>(Option_t *opt)</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;{</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;   <span class="keywordflow">if</span> (fInputEventArray-&gt;GetEntriesFast() == 0)</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;   <span class="keywordflow">if</span> (ioManager == <span class="keyword">nullptr</span>) {</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;      LOG(ERROR) &lt;&lt; <span class="stringliteral">&quot;Cannot find RootManager!&quot;</span> &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;      <span class="keywordflow">return</span> kERROR;</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;   }</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;   <span class="comment">// Get the old data from the io manager</span></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;   fInputEventArray = <span class="keyword">dynamic_cast&lt;</span>TClonesArray *<span class="keyword">&gt;</span>(ioManager-&gt;GetObject(fInputEventBranchName));</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;   <span class="keywordflow">if</span> (fInputEventArray == <span class="keyword">nullptr</span>) {</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;      LOG(ERROR) &lt;&lt; <span class="stringliteral">&quot;AtAuxFilterTask: Cannot find AtRawEvent array &quot;</span> &lt;&lt; fInputEventBranchName;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;      <span class="keywordflow">return</span> kERROR;</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;   }</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;   fFilter-&gt;<a class="code" href="classAtFilter.html#a10b9c7088be2ccd5e6a9df5c6002955a">Init</a>();</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;   <span class="keywordflow">return</span> kSUCCESS;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;}</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160; </div>
+<div class="line"><a name="l00054"></a><span class="lineno"><a class="line" href="classAtAuxFilterTask.html#a0452cb6185d88344b94a1728bfdbbb78">   54</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classAtAuxFilterTask.html#a0452cb6185d88344b94a1728bfdbbb78">AtAuxFilterTask::Exec</a>(Option_t *opt)</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;{</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;   <span class="keywordflow">if</span> (fInputEventArray-&gt;GetEntriesFast() == 0)</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;      <span class="keywordflow">return</span>;</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; </div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;   <span class="keyword">auto</span> *rawEvent = <span class="keyword">dynamic_cast&lt;</span><a class="code" href="classAtRawEvent.html">AtRawEvent</a> *<span class="keyword">&gt;</span>(fInputEventArray-&gt;At(0));</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;   <span class="keywordflow">if</span> (!rawEvent-&gt;IsGood())</div>
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;      <span class="keywordflow">return</span>;</div>
 <div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;   <span class="keyword">auto</span> *rawEvent = <span class="keyword">dynamic_cast&lt;</span><a class="code" href="classAtRawEvent.html">AtRawEvent</a> *<span class="keyword">&gt;</span>(fInputEventArray-&gt;At(0));</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;   <span class="keywordflow">if</span> (!rawEvent-&gt;IsGood())</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;      <span class="keywordflow">return</span>;</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160; </div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;   fFilter-&gt;<a class="code" href="classAtFilter.html#aa0bcfc2d3d54a0a22cec29d754ebef67">InitEvent</a>(rawEvent);</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160; </div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;   <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;auxName : auxPads) {</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;      <span class="keyword">auto</span> unfilteredPad = rawEvent-&gt;GetAuxPad(auxName);</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;      <span class="keywordflow">if</span> (unfilteredPad == <span class="keyword">nullptr</span>) {</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;         LOG(error) &lt;&lt; <span class="stringliteral">&quot;AtRawEvent does not contain aux pad: &quot;</span> &lt;&lt; auxName;</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;         <span class="keywordflow">continue</span>;</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;      }</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160; </div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;      <span class="keyword">auto</span> itPair = rawEvent-&gt;AddAuxPad(auxName + <span class="stringliteral">&quot;Filtered&quot;</span>);</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160; </div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;      <span class="keyword">auto</span> pad = itPair.first;</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;      pad-&gt;SetRawADC(unfilteredPad-&gt;GetRawADC());</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;      <span class="keywordflow">if</span> (unfilteredPad-&gt;IsPedestalSubtracted()) {</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;         pad-&gt;SetADC(unfilteredPad-&gt;GetADC());</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;         pad-&gt;SetPedestalSubtracted();</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;      }</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;      fFilter-&gt;<a class="code" href="classAtFilter.html#ad0499f1b4860cd8d504d69514e4d8005">Filter</a>(pad);</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;   }</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160; </div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;   rawEvent-&gt;SetIsGood(fFilter-&gt;<a class="code" href="classAtFilter.html#a3e829564ee802ca80cf84eaab6ef253c">IsGoodEvent</a>());</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;}</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;   fFilter-&gt;<a class="code" href="classAtFilter.html#aa0bcfc2d3d54a0a22cec29d754ebef67">InitEvent</a>(rawEvent);</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;   <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;auxName : auxPads) {</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;      <span class="keyword">auto</span> unfilteredPad = rawEvent-&gt;GetAuxPad(auxName);</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;      <span class="keywordflow">if</span> (unfilteredPad == <span class="keyword">nullptr</span>) {</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;         LOG(error) &lt;&lt; <span class="stringliteral">&quot;AtRawEvent does not contain aux pad: &quot;</span> &lt;&lt; auxName;</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;         <span class="keywordflow">continue</span>;</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;      }</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160; </div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;      <span class="keyword">auto</span> itPair = rawEvent-&gt;AddAuxPad(auxName + <span class="stringliteral">&quot;Filtered&quot;</span>);</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160; </div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;      <span class="keyword">auto</span> pad = itPair.first;</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;      pad-&gt;SetRawADC(unfilteredPad-&gt;GetRawADC());</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;      <span class="keywordflow">if</span> (unfilteredPad-&gt;IsPedestalSubtracted()) {</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;         pad-&gt;SetADC(unfilteredPad-&gt;GetADC());</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;         pad-&gt;SetPedestalSubtracted();</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;      }</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;      fFilter-&gt;<a class="code" href="classAtFilter.html#a24a3245f1e11e52a34ef24e6d09bd108">Filter</a>(pad);</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;   }</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160; </div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;   rawEvent-&gt;SetIsGood(fFilter-&gt;<a class="code" href="classAtFilter.html#a3e829564ee802ca80cf84eaab6ef253c">IsGoodEvent</a>());</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
-<div class="ttc" id="aAtPad_8h_html"><div class="ttname"><a href="AtPad_8h.html">AtPad.h</a></div></div>
 <div class="ttc" id="aAtRawEvent_8h_html"><div class="ttname"><a href="AtRawEvent_8h.html">AtRawEvent.h</a></div></div>
-<div class="ttc" id="aclassAtAuxFilterTask_html_a87141c56b599a365a31727b58f7ec8dd"><div class="ttname"><a href="classAtAuxFilterTask.html#a87141c56b599a365a31727b58f7ec8dd">AtAuxFilterTask::AddAuxPad</a></div><div class="ttdeci">void AddAuxPad(std::string pad)</div><div class="ttdef"><b>Definition:</b> <a href="AtAuxFilterTask_8cxx_source.html#l00027">AtAuxFilterTask.cxx:27</a></div></div>
-<div class="ttc" id="aclassAtAuxFilterTask_html_ab07aecfd60a70fabc4ca49f2341058f4"><div class="ttname"><a href="classAtAuxFilterTask.html#ab07aecfd60a70fabc4ca49f2341058f4">AtAuxFilterTask::SetInputBranchName</a></div><div class="ttdeci">void SetInputBranchName(TString branchName)</div><div class="ttdef"><b>Definition:</b> <a href="AtAuxFilterTask_8cxx_source.html#l00032">AtAuxFilterTask.cxx:32</a></div></div>
+<div class="ttc" id="aclassAtAuxFilterTask_html_a87141c56b599a365a31727b58f7ec8dd"><div class="ttname"><a href="classAtAuxFilterTask.html#a87141c56b599a365a31727b58f7ec8dd">AtAuxFilterTask::AddAuxPad</a></div><div class="ttdeci">void AddAuxPad(std::string pad)</div><div class="ttdef"><b>Definition:</b> <a href="AtAuxFilterTask_8cxx_source.html#l00023">AtAuxFilterTask.cxx:23</a></div></div>
+<div class="ttc" id="aclassAtAuxFilterTask_html_ab07aecfd60a70fabc4ca49f2341058f4"><div class="ttname"><a href="classAtAuxFilterTask.html#ab07aecfd60a70fabc4ca49f2341058f4">AtAuxFilterTask::SetInputBranchName</a></div><div class="ttdeci">void SetInputBranchName(TString branchName)</div><div class="ttdef"><b>Definition:</b> <a href="AtAuxFilterTask_8cxx_source.html#l00028">AtAuxFilterTask.cxx:28</a></div></div>
 <div class="ttc" id="aAtAuxPad_8h_html"><div class="ttname"><a href="AtAuxPad_8h.html">AtAuxPad.h</a></div></div>
 <div class="ttc" id="aAtAuxFilterTask_8h_html"><div class="ttname"><a href="AtAuxFilterTask_8h.html">AtAuxFilterTask.h</a></div></div>
-<div class="ttc" id="aclassAtRawEvent_html"><div class="ttname"><a href="classAtRawEvent.html">AtRawEvent</a></div><div class="ttdef"><b>Definition:</b> <a href="AtRawEvent_8h_source.html#l00035">AtRawEvent.h:35</a></div></div>
-<div class="ttc" id="aclassAtAuxFilterTask_html_a0452cb6185d88344b94a1728bfdbbb78"><div class="ttname"><a href="classAtAuxFilterTask.html#a0452cb6185d88344b94a1728bfdbbb78">AtAuxFilterTask::Exec</a></div><div class="ttdeci">virtual void Exec(Option_t *opt) override</div><div class="ttdef"><b>Definition:</b> <a href="AtAuxFilterTask_8cxx_source.html#l00058">AtAuxFilterTask.cxx:58</a></div></div>
-<div class="ttc" id="aclassAtAuxFilterTask_html_a76d4a5f12068f651ba3095d309a0c596"><div class="ttname"><a href="classAtAuxFilterTask.html#a76d4a5f12068f651ba3095d309a0c596">AtAuxFilterTask::AtAuxFilterTask</a></div><div class="ttdeci">AtAuxFilterTask(AtFilter *filter)</div><div class="ttdef"><b>Definition:</b> <a href="AtAuxFilterTask_8cxx_source.html#l00023">AtAuxFilterTask.cxx:23</a></div></div>
-<div class="ttc" id="aclassAtFilter_html"><div class="ttname"><a href="classAtFilter.html">AtFilter</a></div><div class="ttdef"><b>Definition:</b> <a href="AtFilter_8h_source.html#l00009">AtFilter.h:9</a></div></div>
-<div class="ttc" id="aclassAtFilter_html_aa0bcfc2d3d54a0a22cec29d754ebef67"><div class="ttname"><a href="classAtFilter.html#aa0bcfc2d3d54a0a22cec29d754ebef67">AtFilter::InitEvent</a></div><div class="ttdeci">virtual void InitEvent(AtRawEvent *inputEvent)=0</div></div>
+<div class="ttc" id="aclassAtRawEvent_html"><div class="ttname"><a href="classAtRawEvent.html">AtRawEvent</a></div><div class="ttdef"><b>Definition:</b> <a href="AtRawEvent_8h_source.html#l00034">AtRawEvent.h:34</a></div></div>
+<div class="ttc" id="aclassAtAuxFilterTask_html_a0452cb6185d88344b94a1728bfdbbb78"><div class="ttname"><a href="classAtAuxFilterTask.html#a0452cb6185d88344b94a1728bfdbbb78">AtAuxFilterTask::Exec</a></div><div class="ttdeci">virtual void Exec(Option_t *opt) override</div><div class="ttdef"><b>Definition:</b> <a href="AtAuxFilterTask_8cxx_source.html#l00054">AtAuxFilterTask.cxx:54</a></div></div>
+<div class="ttc" id="aclassAtAuxFilterTask_html_a76d4a5f12068f651ba3095d309a0c596"><div class="ttname"><a href="classAtAuxFilterTask.html#a76d4a5f12068f651ba3095d309a0c596">AtAuxFilterTask::AtAuxFilterTask</a></div><div class="ttdeci">AtAuxFilterTask(AtFilter *filter)</div><div class="ttdef"><b>Definition:</b> <a href="AtAuxFilterTask_8cxx_source.html#l00019">AtAuxFilterTask.cxx:19</a></div></div>
+<div class="ttc" id="aclassAtFilter_html"><div class="ttname"><a href="classAtFilter.html">AtFilter</a></div><div class="ttdef"><b>Definition:</b> <a href="AtFilter_8h_source.html#l00013">AtFilter.h:13</a></div></div>
+<div class="ttc" id="aclassAtFilter_html_aa0bcfc2d3d54a0a22cec29d754ebef67"><div class="ttname"><a href="classAtFilter.html#aa0bcfc2d3d54a0a22cec29d754ebef67">AtFilter::InitEvent</a></div><div class="ttdeci">virtual void InitEvent(AtRawEvent *inputEvent)=0</div><div class="ttdoc">Called once for each event at the start of the Exec phase.</div></div>
 <div class="ttc" id="aAtFilter_8h_html"><div class="ttname"><a href="AtFilter_8h.html">AtFilter.h</a></div></div>
 <div class="ttc" id="aclassAtAuxFilterTask_html_a424b26f9489b2fd621ebb5ecc3ee262a"><div class="ttname"><a href="classAtAuxFilterTask.html#a424b26f9489b2fd621ebb5ecc3ee262a">AtAuxFilterTask::~AtAuxFilterTask</a></div><div class="ttdeci">~AtAuxFilterTask()</div></div>
-<div class="ttc" id="aclassAtAuxFilterTask_html_aee320a5f9ac46efc540a605d830960d6"><div class="ttname"><a href="classAtAuxFilterTask.html#aee320a5f9ac46efc540a605d830960d6">AtAuxFilterTask::Init</a></div><div class="ttdeci">virtual InitStatus Init() override</div><div class="ttdef"><b>Definition:</b> <a href="AtAuxFilterTask_8cxx_source.html#l00037">AtAuxFilterTask.cxx:37</a></div></div>
-<div class="ttc" id="aclassAtFilter_html_a3e829564ee802ca80cf84eaab6ef253c"><div class="ttname"><a href="classAtFilter.html#a3e829564ee802ca80cf84eaab6ef253c">AtFilter::IsGoodEvent</a></div><div class="ttdeci">virtual bool IsGoodEvent()=0</div></div>
-<div class="ttc" id="aclassAtFilter_html_a10b9c7088be2ccd5e6a9df5c6002955a"><div class="ttname"><a href="classAtFilter.html#a10b9c7088be2ccd5e6a9df5c6002955a">AtFilter::Init</a></div><div class="ttdeci">virtual void Init()=0</div></div>
-<div class="ttc" id="aclassAtFilter_html_ad0499f1b4860cd8d504d69514e4d8005"><div class="ttname"><a href="classAtFilter.html#ad0499f1b4860cd8d504d69514e4d8005">AtFilter::Filter</a></div><div class="ttdeci">virtual void Filter(AtPad *pad)=0</div></div>
+<div class="ttc" id="aclassAtAuxFilterTask_html_aee320a5f9ac46efc540a605d830960d6"><div class="ttname"><a href="classAtAuxFilterTask.html#aee320a5f9ac46efc540a605d830960d6">AtAuxFilterTask::Init</a></div><div class="ttdeci">virtual InitStatus Init() override</div><div class="ttdef"><b>Definition:</b> <a href="AtAuxFilterTask_8cxx_source.html#l00033">AtAuxFilterTask.cxx:33</a></div></div>
+<div class="ttc" id="aclassAtFilter_html_a3e829564ee802ca80cf84eaab6ef253c"><div class="ttname"><a href="classAtFilter.html#a3e829564ee802ca80cf84eaab6ef253c">AtFilter::IsGoodEvent</a></div><div class="ttdeci">virtual bool IsGoodEvent()=0</div><div class="ttdoc">Called at the end of an event. Returns if filtering was successful.</div></div>
+<div class="ttc" id="aclassAtFilter_html_a10b9c7088be2ccd5e6a9df5c6002955a"><div class="ttname"><a href="classAtFilter.html#a10b9c7088be2ccd5e6a9df5c6002955a">AtFilter::Init</a></div><div class="ttdeci">virtual void Init()=0</div><div class="ttdoc">Called at the init stage of the AtFilterTask.</div></div>
+<div class="ttc" id="aclassAtFilter_html_a24a3245f1e11e52a34ef24e6d09bd108"><div class="ttname"><a href="classAtFilter.html#a24a3245f1e11e52a34ef24e6d09bd108">AtFilter::Filter</a></div><div class="ttdeci">virtual void Filter(AtPad *pad, AtPadReference *padReference=nullptr)=0</div><div class="ttdoc">Called to filter each pad.</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Apr 27 2022 00:47:47 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Oct 20 2023 16:22:59 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.18
 </small></address>

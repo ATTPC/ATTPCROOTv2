@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">ATTPCROOT
-   &#160;<span id="projectnumber">1.0.0</span>
+   &#160;<span id="projectnumber">0.3.0-alpha</span>
    </div>
    <div id="projectbrief">A ROOT-based framework for analyzing data from active target detectors</div>
   </td>
@@ -77,35 +77,39 @@ $(function() {
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="AtPSA_8h.html">AtPSA.h</a>&quot;</span></div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160; </div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &lt;Rtypes.h&gt;</span> <span class="comment">// for THashConsistencyHolder, ClassDefOverride</span></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="keyword">class </span><a class="code" href="classAtEvent.html">AtEvent</a>;</div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="keyword">class </span><a class="code" href="classAtRawEvent.html">AtRawEvent</a>;</div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="keyword">class </span>TBuffer;</div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="keyword">class </span>TClass;</div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="keyword">class </span>TMemberInspector;</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160; </div>
-<div class="line"><a name="l00013"></a><span class="lineno"><a class="line" href="classAtPSAFull.html">   13</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAtPSAFull.html">AtPSAFull</a> : <span class="keyword">public</span> <a class="code" href="classAtPSA.html">AtPSA</a> {</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00015"></a><span class="lineno"><a class="line" href="classAtPSAFull.html#a1e9d59fd2de78364315ddde70549746e">   15</a></span>&#160;   <a class="code" href="classAtPSAFull.html#a1e9d59fd2de78364315ddde70549746e">AtPSAFull</a>() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a name="l00016"></a><span class="lineno"><a class="line" href="classAtPSAFull.html#ae18ab41dbbdd87dd5003d110c669aa13">   16</a></span>&#160;   <a class="code" href="classAtPSAFull.html#ae18ab41dbbdd87dd5003d110c669aa13">~AtPSAFull</a>() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;   <span class="keywordtype">void</span> <a class="code" href="classAtPSAFull.html#ae501148c3d529e6fa3fbf5181c79804b">Analyze</a>(<a class="code" href="classAtRawEvent.html">AtRawEvent</a> *rawEvent, <a class="code" href="classAtEvent.html">AtEvent</a> *event) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160; </div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &lt;memory&gt;</span> <span class="comment">// for make_unique, unique_ptr</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160; </div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="keyword">class </span><a class="code" href="classAtPad.html">AtPad</a>;</div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="keyword">class </span>TBuffer;</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="keyword">class </span>TClass;</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="keyword">class </span>TMemberInspector;</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160; </div>
+<div class="line"><a name="l00015"></a><span class="lineno"><a class="line" href="classAtPSAFull.html">   15</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAtPSAFull.html">AtPSAFull</a> : <span class="keyword">public</span> <a class="code" href="classAtPSA.html">AtPSA</a> {</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00017"></a><span class="lineno"><a class="line" href="classAtPSAFull.html#a1e9d59fd2de78364315ddde70549746e">   17</a></span>&#160;   <a class="code" href="classAtPSAFull.html#a1e9d59fd2de78364315ddde70549746e">AtPSAFull</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a name="l00018"></a><span class="lineno"><a class="line" href="classAtPSAFull.html#ae18ab41dbbdd87dd5003d110c669aa13">   18</a></span>&#160;   <a class="code" href="classAtPSAFull.html#ae18ab41dbbdd87dd5003d110c669aa13">~AtPSAFull</a>() = <span class="keywordflow">default</span>;</div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160; </div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;   ClassDefOverride(<a class="code" href="classAtPSAFull.html">AtPSAFull</a>, 1)</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;};</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;   <a class="code" href="classAtPSA.html#a1f906a1dc6ceaab0d1497777bb5f4c69">HitVector</a> <a class="code" href="classAtPSAFull.html#a9c0a18fbea63fbc5d89d0e78874aa010">AnalyzePad</a>(<a class="code" href="classAtPad.html">AtPad</a> *pad) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00021"></a><span class="lineno"><a class="line" href="classAtPSAFull.html#aea2ed8c6a4a31c96b220ff78796d988b">   21</a></span>&#160;   std::unique_ptr&lt;AtPSA&gt; <a class="code" href="classAtPSAFull.html#aea2ed8c6a4a31c96b220ff78796d988b">Clone</a>()<span class="keyword"> override </span>{ <span class="keywordflow">return</span> std::make_unique&lt;AtPSAFull&gt;(*<span class="keyword">this</span>); }</div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160; </div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;   ClassDefOverride(<a class="code" href="classAtPSAFull.html">AtPSAFull</a>, 1)</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;};</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#endif</span></div>
 </div><!-- fragment --></div><!-- contents -->
-<div class="ttc" id="aclassAtPSAFull_html"><div class="ttname"><a href="classAtPSAFull.html">AtPSAFull</a></div><div class="ttdef"><b>Definition:</b> <a href="AtPSAFull_8h_source.html#l00013">AtPSAFull.h:13</a></div></div>
-<div class="ttc" id="aclassAtEvent_html"><div class="ttname"><a href="classAtEvent.html">AtEvent</a></div><div class="ttdef"><b>Definition:</b> <a href="AtEvent_8h_source.html#l00030">AtEvent.h:30</a></div></div>
-<div class="ttc" id="aclassAtRawEvent_html"><div class="ttname"><a href="classAtRawEvent.html">AtRawEvent</a></div><div class="ttdef"><b>Definition:</b> <a href="AtRawEvent_8h_source.html#l00035">AtRawEvent.h:35</a></div></div>
-<div class="ttc" id="aclassAtPSAFull_html_ae501148c3d529e6fa3fbf5181c79804b"><div class="ttname"><a href="classAtPSAFull.html#ae501148c3d529e6fa3fbf5181c79804b">AtPSAFull::Analyze</a></div><div class="ttdeci">void Analyze(AtRawEvent *rawEvent, AtEvent *event) override</div><div class="ttdef"><b>Definition:</b> <a href="AtPSAFull_8cxx_source.html#l00032">AtPSAFull.cxx:32</a></div></div>
+<div class="ttc" id="aclassAtPSAFull_html"><div class="ttname"><a href="classAtPSAFull.html">AtPSAFull</a></div><div class="ttdef"><b>Definition:</b> <a href="AtPSAFull_8h_source.html#l00015">AtPSAFull.h:15</a></div></div>
+<div class="ttc" id="aclassAtPSA_html_a1f906a1dc6ceaab0d1497777bb5f4c69"><div class="ttname"><a href="classAtPSA.html#a1f906a1dc6ceaab0d1497777bb5f4c69">AtPSA::HitVector</a></div><div class="ttdeci">std::vector&lt; std::unique_ptr&lt; AtHit &gt; &gt; HitVector</div><div class="ttdef"><b>Definition:</b> <a href="AtPSA_8h_source.html#l00050">AtPSA.h:50</a></div></div>
+<div class="ttc" id="aclassAtPSAFull_html_a9c0a18fbea63fbc5d89d0e78874aa010"><div class="ttname"><a href="classAtPSAFull.html#a9c0a18fbea63fbc5d89d0e78874aa010">AtPSAFull::AnalyzePad</a></div><div class="ttdeci">HitVector AnalyzePad(AtPad *pad) override</div><div class="ttdef"><b>Definition:</b> <a href="AtPSAFull_8cxx_source.html#l00026">AtPSAFull.cxx:26</a></div></div>
 <div class="ttc" id="aclassAtPSAFull_html_a1e9d59fd2de78364315ddde70549746e"><div class="ttname"><a href="classAtPSAFull.html#a1e9d59fd2de78364315ddde70549746e">AtPSAFull::AtPSAFull</a></div><div class="ttdeci">AtPSAFull()=default</div></div>
 <div class="ttc" id="aclassAtPSAFull_html_ae18ab41dbbdd87dd5003d110c669aa13"><div class="ttname"><a href="classAtPSAFull.html#ae18ab41dbbdd87dd5003d110c669aa13">AtPSAFull::~AtPSAFull</a></div><div class="ttdeci">~AtPSAFull()=default</div></div>
 <div class="ttc" id="aAtPSA_8h_html"><div class="ttname"><a href="AtPSA_8h.html">AtPSA.h</a></div></div>
-<div class="ttc" id="aclassAtPSA_html"><div class="ttname"><a href="classAtPSA.html">AtPSA</a></div><div class="ttdef"><b>Definition:</b> <a href="AtPSA_8h_source.html#l00025">AtPSA.h:25</a></div></div>
+<div class="ttc" id="aclassAtPSAFull_html_aea2ed8c6a4a31c96b220ff78796d988b"><div class="ttname"><a href="classAtPSAFull.html#aea2ed8c6a4a31c96b220ff78796d988b">AtPSAFull::Clone</a></div><div class="ttdeci">std::unique_ptr&lt; AtPSA &gt; Clone() override</div><div class="ttdef"><b>Definition:</b> <a href="AtPSAFull_8h_source.html#l00021">AtPSAFull.h:21</a></div></div>
+<div class="ttc" id="aclassAtPad_html"><div class="ttname"><a href="classAtPad.html">AtPad</a></div><div class="ttdoc">Container class for AtPadBase objects.</div><div class="ttdef"><b>Definition:</b> <a href="AtPad_8h_source.html#l00038">AtPad.h:38</a></div></div>
+<div class="ttc" id="aclassAtPSA_html"><div class="ttname"><a href="classAtPSA.html">AtPSA</a></div><div class="ttdef"><b>Definition:</b> <a href="AtPSA_8h_source.html#l00027">AtPSA.h:27</a></div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Apr 27 2022 00:47:48 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Oct 20 2023 16:23:00 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.18
 </small></address>

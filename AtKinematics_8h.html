@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">ATTPCROOT
-   &#160;<span id="projectnumber">1.0.0</span>
+   &#160;<span id="projectnumber">0.3.0-alpha</span>
    </div>
    <div id="projectbrief">A ROOT-based framework for analyzing data from active target detectors</div>
   </td>
@@ -69,23 +69,38 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#namespaces">Namespaces</a>  </div>
+<a href="#namespaces">Namespaces</a> &#124;
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">AtKinematics.h File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;Rtypes.h&gt;</code><br />
-<code>#include &quot;TObject.h&quot;</code><br />
+<div class="textblock"><code>#include &lt;Math/Vector4D.h&gt;</code><br />
+<code>#include &lt;Math/Vector4Dfwd.h&gt;</code><br />
+<code>#include &lt;Rtypes.h&gt;</code><br />
+<code>#include &lt;TMatrixDfwd.h&gt;</code><br />
+<code>#include &lt;TMatrixT.h&gt;</code><br />
+<code>#include &lt;TObject.h&gt;</code><br />
+<code>#include &lt;cmath&gt;</code><br />
+<code>#include &lt;memory&gt;</code><br />
 <code>#include &lt;tuple&gt;</code><br />
+<code>#include &lt;vector&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for AtKinematics.h:</div>
 <div class="dyncontent">
 <div class="center"><img src="AtKinematics_8h__incl.png" border="0" usemap="#_2github_2workspace_2AtTools_2AtKinematics_8h" alt=""/></div>
 <map name="_2github_2workspace_2AtTools_2AtKinematics_8h" id="_2github_2workspace_2AtTools_2AtKinematics_8h">
-<area shape="rect" title=" " alt="" coords="53,5,230,47"/>
-<area shape="rect" title=" " alt="" coords="5,95,77,121"/>
-<area shape="rect" title=" " alt="" coords="102,95,181,121"/>
-<area shape="rect" title=" " alt="" coords="205,95,256,121"/>
+<area shape="rect" title=" " alt="" coords="543,5,720,47"/>
+<area shape="rect" title=" " alt="" coords="5,95,124,121"/>
+<area shape="rect" title=" " alt="" coords="148,95,288,121"/>
+<area shape="rect" title=" " alt="" coords="313,95,385,121"/>
+<area shape="rect" title=" " alt="" coords="409,95,515,121"/>
+<area shape="rect" title=" " alt="" coords="538,95,621,121"/>
+<area shape="rect" title=" " alt="" coords="645,95,724,121"/>
+<area shape="rect" title=" " alt="" coords="749,95,807,121"/>
+<area shape="rect" title=" " alt="" coords="832,95,900,121"/>
+<area shape="rect" title=" " alt="" coords="925,95,975,121"/>
+<area shape="rect" title=" " alt="" coords="999,95,1058,121"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -93,8 +108,9 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
 <div class="center"><img src="AtKinematics_8h__dep__incl.png" border="0" usemap="#_2github_2workspace_2AtTools_2AtKinematics_8hdep" alt=""/></div>
 <map name="_2github_2workspace_2AtTools_2AtKinematics_8hdep" id="_2github_2workspace_2AtTools_2AtKinematics_8hdep">
-<area shape="rect" title=" " alt="" coords="5,5,183,47"/>
-<area shape="rect" href="AtKinematics_8cxx.html" title=" " alt="" coords="5,95,183,136"/>
+<area shape="rect" title=" " alt="" coords="147,5,325,47"/>
+<area shape="rect" href="AtMCFission_8cxx.html" title=" " alt="" coords="5,95,237,136"/>
+<area shape="rect" href="AtKinematics_8cxx.html" title=" " alt="" coords="262,95,439,136"/>
 </map>
 </div>
 </div>
@@ -109,11 +125,37 @@ Classes</h2></td></tr>
 Namespaces</h2></td></tr>
 <tr class="memitem:namespaceAtTools"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceAtTools.html">AtTools</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:namespaceAtTools_1_1Kinematics"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceAtTools_1_1Kinematics.html">AtTools::Kinematics</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:a02f299820b6c71895b62c5efaf64facf"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceAtTools_1_1Kinematics.html#a02f299820b6c71895b62c5efaf64facf">AtTools::Kinematics::GetGamma</a> (double KE, double m1, double m2)</td></tr>
+<tr class="separator:a02f299820b6c71895b62c5efaf64facf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac8e6340bfa78c2d08d0e65cc8c4f6462"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceAtTools_1_1Kinematics.html#ac8e6340bfa78c2d08d0e65cc8c4f6462">AtTools::Kinematics::GetGamma</a> (double beta)</td></tr>
+<tr class="separator:ac8e6340bfa78c2d08d0e65cc8c4f6462"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a40c60f99b87fc856389f5196ade636e0"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceAtTools_1_1Kinematics.html#a40c60f99b87fc856389f5196ade636e0">AtTools::Kinematics::GetVelocity</a> (double gamma)</td></tr>
+<tr class="separator:a40c60f99b87fc856389f5196ade636e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acd7eb54f61c1f9fb6cc3dac4d7e5951d"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceAtTools_1_1Kinematics.html#acd7eb54f61c1f9fb6cc3dac4d7e5951d">AtTools::Kinematics::GetBeta</a> (double gamma)</td></tr>
+<tr class="separator:acd7eb54f61c1f9fb6cc3dac4d7e5951d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a30d8fb2a6477ff06f847d481ac4c1dc8"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceAtTools_1_1Kinematics.html#a30d8fb2a6477ff06f847d481ac4c1dc8">AtTools::Kinematics::GetBeta</a> (double p, int A)</td></tr>
+<tr class="separator:a30d8fb2a6477ff06f847d481ac4c1dc8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0877b79ecd4eb6e167910b93778fe9a2"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceAtTools_1_1Kinematics.html#a0877b79ecd4eb6e167910b93778fe9a2">AtTools::Kinematics::GetBeta</a> (double p, double m)</td></tr>
+<tr class="separator:a0877b79ecd4eb6e167910b93778fe9a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad1ff1e6d1864e9cd1fab830fe867ada7"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceAtTools_1_1Kinematics.html#ad1ff1e6d1864e9cd1fab830fe867ada7">AtTools::Kinematics::GetRelMom</a> (double gamma, double mass)</td></tr>
+<tr class="separator:ad1ff1e6d1864e9cd1fab830fe867ada7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a94e4d6285998d9973c4010bbaa8969aa"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceAtTools_1_1Kinematics.html#a94e4d6285998d9973c4010bbaa8969aa">AtTools::Kinematics::AtoE</a> (double Amu)</td></tr>
+<tr class="separator:a94e4d6285998d9973c4010bbaa8969aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a03f22039b6ab822fbc22afcff05fb883"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceAtTools_1_1Kinematics.html#a03f22039b6ab822fbc22afcff05fb883">AtTools::Kinematics::EtoA</a> (double mass)</td></tr>
+<tr class="separator:a03f22039b6ab822fbc22afcff05fb883"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ada31e4cb425ed301c080a5f4582fc410"><td class="memTemplParams" colspan="2">template&lt;class Vector &gt; </td></tr>
+<tr class="memitem:ada31e4cb425ed301c080a5f4582fc410"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="AtMCFission_8cxx.html#a1b97cf0faba85fd6ff7e20e9e5839ec3">ROOT::Math::PxPyPzEVector</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceAtTools_1_1Kinematics.html#ada31e4cb425ed301c080a5f4582fc410">AtTools::Kinematics::Get4Vector</a> (Vector mom, double m)</td></tr>
+<tr class="separator:ada31e4cb425ed301c080a5f4582fc410"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Apr 27 2022 00:47:49 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Oct 20 2023 16:23:01 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.18
 </small></address>

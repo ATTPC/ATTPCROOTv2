@@ -1,28 +1,36 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" title=" " alt="" coords="5,563,79,589"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,765,79,792"/>
 <area shape="rect" id="node2" href="$classAtApolloDigitizer.html" title=" " alt="" coords="169,5,286,32"/>
 <area shape="rect" id="node3" href="$classAtAuxFilterTask.html" title=" " alt="" coords="170,56,285,83"/>
 <area shape="rect" id="node4" href="$classAtClusterizeTask.html" title=" " alt="" coords="167,107,288,133"/>
-<area shape="rect" id="node6" href="$classAtDataReductionTask.html" title=" " alt="" coords="153,157,302,184"/>
-<area shape="rect" id="node7" href="$classAtDecoder2Task.html" title=" " alt="" coords="168,208,287,235"/>
-<area shape="rect" id="node8" href="$classAtDecoderSpecMATTask.html" title=" " alt="" coords="142,259,313,285"/>
-<area shape="rect" id="node9" href="$classAtEventDrawTask.html" title=" " alt="" coords="164,309,291,336"/>
-<area shape="rect" id="node10" href="$classAtEventDrawTaskProto.html" title=" " alt="" coords="148,360,307,387"/>
-<area shape="rect" id="node11" href="$classAtEventDrawTaskS800.html" title=" " alt="" coords="149,411,306,437"/>
-<area shape="rect" id="node12" href="$classAtFilterTask.html" title=" " alt="" coords="181,461,274,488"/>
-<area shape="rect" id="node13" href="$classAtFitterTask.html" title=" " alt="" coords="180,512,275,539"/>
-<area shape="rect" id="node14" href="$classAtLinkDAQTask.html" title=" " alt="" coords="169,563,286,589"/>
-<area shape="rect" id="node15" href="$classAtMergeTask.html" title=" " alt="" coords="177,613,277,640"/>
-<area shape="rect" id="node16" href="$classAtPRAtask.html" title=" " alt="" coords="184,664,271,691"/>
-<area shape="rect" id="node17" href="$classAtPSAtask.html" title=" " alt="" coords="184,715,271,741"/>
-<area shape="rect" id="node18" href="$classAtPulseTask.html" title=" " alt="" coords="179,765,276,792"/>
-<area shape="rect" id="node20" href="$classAtRansacTask.html" title=" " alt="" coords="173,816,281,843"/>
-<area shape="rect" id="node21" href="$classAtS800Task.html" title=" " alt="" coords="180,867,275,893"/>
-<area shape="rect" id="node22" href="$classAtSpaceChargeCorrectionTask.html" title=" " alt="" coords="127,917,328,944"/>
-<area shape="rect" id="node23" href="$classAtSpaceChargeTask.html" title=" " alt="" coords="156,968,299,995"/>
-<area shape="rect" id="node24" href="$classAtTrackFinderHCTask.html" title=" " alt="" coords="151,1019,303,1045"/>
-<area shape="rect" id="node25" href="$classAtTriggerTask.html" title=" " alt="" coords="175,1069,279,1096"/>
-<area shape="rect" id="node26" href="$classAtUnpackTask.html" title=" " alt="" coords="173,1120,282,1147"/>
+<area shape="rect" id="node6" href="$classAtCopyTreeTask.html" title="Copy input FairRoot tree to the output." alt="" coords="168,157,287,184"/>
+<area shape="rect" id="node7" href="$classAtDataReductionTask.html" title=" " alt="" coords="153,208,302,235"/>
+<area shape="rect" id="node8" href="$classAtDecoder2Task.html" title=" " alt="" coords="168,259,287,285"/>
+<area shape="rect" id="node9" href="$classAtDecoderSpecMATTask.html" title=" " alt="" coords="142,309,313,336"/>
+<area shape="rect" id="node10" href="$classAtEventDrawTask.html" title=" " alt="" coords="164,360,291,387"/>
+<area shape="rect" id="node11" href="$classAtEventDrawTaskProto.html" title=" " alt="" coords="148,411,307,437"/>
+<area shape="rect" id="node12" href="$classAtEventDrawTaskS800.html" title=" " alt="" coords="149,461,306,488"/>
+<area shape="rect" id="node13" href="$classAtFilterTask.html" title=" " alt="" coords="181,512,274,539"/>
+<area shape="rect" id="node14" href="$classAtFissionTask.html" title=" " alt="" coords="174,563,281,589"/>
+<area shape="rect" id="node15" href="$classAtFitterTask.html" title=" " alt="" coords="180,613,275,640"/>
+<area shape="rect" id="node16" href="$classAtHDF5ReadTask.html" title=" " alt="" coords="163,664,291,691"/>
+<area shape="rect" id="node17" href="$classAtHDF5WriteTask.html" title=" " alt="" coords="163,715,291,741"/>
+<area shape="rect" id="node18" href="$classAtLinkDAQTask.html" title=" " alt="" coords="169,765,286,792"/>
+<area shape="rect" id="node19" href="$classAtMacroTask.html" title=" " alt="" coords="177,816,277,843"/>
+<area shape="rect" id="node20" href="$classAtMCFitterTask.html" title=" " alt="" coords="170,867,285,893"/>
+<area shape="rect" id="node21" href="$classAtMergeTask.html" title=" " alt="" coords="177,917,277,944"/>
+<area shape="rect" id="node22" href="$classAtPRAtask.html" title="Task for finding patterns in hit clouds." alt="" coords="184,968,271,995"/>
+<area shape="rect" id="node23" href="$classAtPSAtask.html" title=" " alt="" coords="184,1019,271,1045"/>
+<area shape="rect" id="node24" href="$classAtPulseTask.html" title=" " alt="" coords="179,1069,276,1096"/>
+<area shape="rect" id="node26" href="$classAtRansacTask.html" title=" " alt="" coords="173,1120,281,1147"/>
+<area shape="rect" id="node27" href="$classAtS800Task.html" title=" " alt="" coords="180,1171,275,1197"/>
+<area shape="rect" id="node28" href="$classAtSampleConsensusTask.html" title=" " alt="" coords="141,1221,314,1248"/>
+<area shape="rect" id="node29" href="$classAtSeGADigitizer.html" title=" " alt="" coords="169,1272,285,1299"/>
+<area shape="rect" id="node30" href="$classAtSpaceChargeCorrectionTask.html" title=" " alt="" coords="127,1323,328,1349"/>
+<area shape="rect" id="node31" href="$classAtSpaceChargeTask.html" title=" " alt="" coords="156,1373,299,1400"/>
+<area shape="rect" id="node32" href="$classAtTestSimulation.html" title=" " alt="" coords="166,1424,289,1451"/>
+<area shape="rect" id="node33" href="$classAtTriggerTask.html" title=" " alt="" coords="175,1475,279,1501"/>
+<area shape="rect" id="node34" href="$classAtUnpackTask.html" title=" " alt="" coords="173,1525,282,1552"/>
 <area shape="rect" id="node5" href="$classAtClusterizeLineTask.html" title=" " alt="" coords="376,107,523,133"/>
-<area shape="rect" id="node19" href="$classAtPulseLineTask.html" title=" " alt="" coords="388,765,511,792"/>
+<area shape="rect" id="node25" href="$classAtPulseLineTask.html" title=" " alt="" coords="388,1069,511,1096"/>
 </map>

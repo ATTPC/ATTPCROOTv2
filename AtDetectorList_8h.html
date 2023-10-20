@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">ATTPCROOT
-   &#160;<span id="projectnumber">1.0.0</span>
+   &#160;<span id="projectnumber">0.3.0-alpha</span>
    </div>
    <div id="projectbrief">A ROOT-based framework for analyzing data from active target detectors</div>
   </td>
@@ -78,12 +78,13 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
 <div class="center"><img src="AtDetectorList_8h__dep__incl.png" border="0" usemap="#_2github_2workspace_2AtSimulationData_2AtDetectorList_8hdep" alt=""/></div>
 <map name="_2github_2workspace_2AtSimulationData_2AtDetectorList_8hdep" id="_2github_2workspace_2AtSimulationData_2AtDetectorList_8hdep">
-<area shape="rect" title=" " alt="" coords="271,5,478,47"/>
+<area shape="rect" title=" " alt="" coords="415,5,622,47"/>
 <area shape="rect" href="AtApollo_8cxx.html" title=" " alt="" coords="5,184,187,225"/>
-<area shape="rect" href="AtSiArray_8cxx.html" title=" " alt="" coords="211,184,397,225"/>
-<area shape="rect" href="AtStack_8h.html" title=" " alt="" coords="342,95,549,136"/>
-<area shape="rect" href="AtTpc_8cxx.html" title=" " alt="" coords="653,184,819,225"/>
-<area shape="rect" href="AtStack_8cxx.html" title=" " alt="" coords="422,184,629,225"/>
+<area shape="rect" href="AtSeGA_8cxx.html" title=" " alt="" coords="211,184,391,225"/>
+<area shape="rect" href="AtSiArray_8cxx.html" title=" " alt="" coords="647,184,833,225"/>
+<area shape="rect" href="AtStack_8h.html" title=" " alt="" coords="415,95,622,136"/>
+<area shape="rect" href="AtTpc_8cxx.html" title=" " alt="" coords="858,184,1025,225"/>
+<area shape="rect" href="AtStack_8cxx.html" title=" " alt="" coords="415,184,622,225"/>
 </map>
 </div>
 </div>
@@ -92,14 +93,12 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
 Enumerations</h2></td></tr>
 <tr class="memitem:a1806da1a0fbae8ab81f7330906f65680"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AtDetectorList_8h.html#a1806da1a0fbae8ab81f7330906f65680">DetectorId</a> { <br />
-&#160;&#160;<a class="el" href="AtEventDrawTask_8h.html#a1806da1a0fbae8ab81f7330906f65680a1c035cc9b5c2c71eacdf1d479216baf1">kAtTpc</a>, 
-<a class="el" href="AtEventDrawTask_8h.html#a1806da1a0fbae8ab81f7330906f65680a391190b94db5278ff2e42090e760d4cf">kGADGETII</a>, 
-<a class="el" href="AtEventDrawTask_8h.html#a1806da1a0fbae8ab81f7330906f65680a8bfe51f9aaa80aeb0108d0b21ae7cea9">kSpecMAT</a>, 
-<a class="el" href="AtDetectorList_8h.html#a1806da1a0fbae8ab81f7330906f65680a1c035cc9b5c2c71eacdf1d479216baf1">kAtTpc</a>, 
-<br />
-&#160;&#160;<a class="el" href="AtDetectorList_8h.html#a1806da1a0fbae8ab81f7330906f65680a9716ac6be6975dbe901d3e3edebf8182">kAtSiArray</a>, 
+&#160;&#160;<a class="el" href="AtDetectorList_8h.html#a1806da1a0fbae8ab81f7330906f65680a1c035cc9b5c2c71eacdf1d479216baf1">kAtTpc</a>, 
+<a class="el" href="AtDetectorList_8h.html#a1806da1a0fbae8ab81f7330906f65680a9716ac6be6975dbe901d3e3edebf8182">kAtSiArray</a>, 
 <a class="el" href="AtDetectorList_8h.html#a1806da1a0fbae8ab81f7330906f65680a4d51ba059a0c113f47f47ddebc3bd2c7">kAtApollo</a>, 
-<a class="el" href="AtDetectorList_8h.html#a1806da1a0fbae8ab81f7330906f65680a7ad21b65706681a8d00e043e4ba4b643">kSTOPHERE</a>
+<a class="el" href="AtDetectorList_8h.html#a1806da1a0fbae8ab81f7330906f65680a7f95b04aa311db305279c3e5fd6b269d">kAtSeGA</a>, 
+<br />
+&#160;&#160;<a class="el" href="AtDetectorList_8h.html#a1806da1a0fbae8ab81f7330906f65680a7ad21b65706681a8d00e043e4ba4b643">kSTOPHERE</a>
 <br />
  }</td></tr>
 <tr class="separator:a1806da1a0fbae8ab81f7330906f65680"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -112,18 +111,16 @@ Enumerations</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">enum <a class="el" href="AtEventDrawTask_8h.html#a1806da1a0fbae8ab81f7330906f65680">DetectorId</a></td>
+          <td class="memname">enum <a class="el" href="AtDetectorList_8h.html#a1806da1a0fbae8ab81f7330906f65680">DetectorId</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
 <p>Defines unique identifier for all detectors system THis is needed for stack filtring </p>
 <table class="fieldtable">
 <tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a1806da1a0fbae8ab81f7330906f65680a1c035cc9b5c2c71eacdf1d479216baf1"></a>kAtTpc&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a1806da1a0fbae8ab81f7330906f65680a391190b94db5278ff2e42090e760d4cf"></a>kGADGETII&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a1806da1a0fbae8ab81f7330906f65680a8bfe51f9aaa80aeb0108d0b21ae7cea9"></a>kSpecMAT&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a1806da1a0fbae8ab81f7330906f65680a1c035cc9b5c2c71eacdf1d479216baf1"></a>kAtTpc&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="a1806da1a0fbae8ab81f7330906f65680a9716ac6be6975dbe901d3e3edebf8182"></a>kAtSiArray&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="a1806da1a0fbae8ab81f7330906f65680a4d51ba059a0c113f47f47ddebc3bd2c7"></a>kAtApollo&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a1806da1a0fbae8ab81f7330906f65680a7f95b04aa311db305279c3e5fd6b269d"></a>kAtSeGA&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="a1806da1a0fbae8ab81f7330906f65680a7ad21b65706681a8d00e043e4ba4b643"></a>kSTOPHERE&#160;</td><td class="fielddoc"></td></tr>
 </table>
 
@@ -134,7 +131,7 @@ Enumerations</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Apr 27 2022 00:47:49 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Oct 20 2023 16:23:01 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.18
 </small></address>

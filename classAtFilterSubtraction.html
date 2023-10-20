@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">ATTPCROOT
-   &#160;<span id="projectnumber">1.0.0</span>
+   &#160;<span id="projectnumber">0.3.0-alpha</span>
    </div>
    <div id="projectbrief">A ROOT-based framework for analyzing data from active target detectors</div>
   </td>
@@ -65,9 +65,11 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pro-methods">Protected Member Functions</a> &#124;
+<a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="classAtFilterSubtraction-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">AtFilterSubtraction Class Reference</div>  </div>
+<div class="title">AtFilterSubtraction Class Reference<div class="ingroups"><a class="el" href="group__RawFilters.html">Raw Event Fitlers</a></div></div>  </div>
 </div><!--header-->
 <div class="contents">
 
@@ -78,6 +80,7 @@ Inheritance diagram for AtFilterSubtraction:</div>
 <div class="center"><img src="classAtFilterSubtraction__inherit__graph.png" border="0" usemap="#AtFilterSubtraction_inherit__map" alt="Inheritance graph"/></div>
 <map name="AtFilterSubtraction_inherit__map" id="AtFilterSubtraction_inherit__map">
 <area shape="rect" title=" " alt="" coords="5,80,136,107"/>
+<area shape="rect" href="classAtFilterFPN.html" title=" " alt="" coords="25,155,116,181"/>
 <area shape="rect" href="classAtFilter.html" title=" " alt="" coords="39,5,103,32"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
@@ -86,39 +89,96 @@ Collaboration diagram for AtFilterSubtraction:</div>
 <div class="dyncontent">
 <div class="center"><img src="classAtFilterSubtraction__coll__graph.png" border="0" usemap="#AtFilterSubtraction_coll__map" alt="Collaboration graph"/></div>
 <map name="AtFilterSubtraction_coll__map" id="AtFilterSubtraction_coll__map">
-<area shape="rect" title=" " alt="" coords="5,80,136,107"/>
-<area shape="rect" href="classAtFilter.html" title=" " alt="" coords="39,5,103,32"/>
+<area shape="rect" title=" " alt="" coords="1168,92,1299,119"/>
+<area shape="rect" href="classAtFilter.html" title=" " alt="" coords="935,33,999,60"/>
+<area shape="rect" title=" " alt="" coords="891,85,1044,126"/>
+<area shape="rect" title=" " alt="" coords="884,151,1051,177"/>
+<area shape="rect" href="classAtMap.html" title=" " alt="" coords="757,151,817,177"/>
+<area shape="rect" title=" " alt="" coords="470,5,542,32"/>
+<area shape="rect" title=" " alt="" coords="426,57,586,98"/>
+<area shape="rect" href="structAtPadReference.html" title=" " alt="" coords="179,148,296,175"/>
+<area shape="rect" title=" " alt="" coords="401,123,611,149"/>
+<area shape="rect" title=" " alt="" coords="419,173,593,229"/>
+<area shape="rect" title=" " alt="" coords="429,253,583,309"/>
+<area shape="rect" title=" " alt="" coords="442,333,570,360"/>
+<area shape="rect" title="STL class." alt="" coords="198,268,277,295"/>
+<area shape="rect" title="STL class." alt="" coords="5,261,129,302"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a6e14427b4c9a4f57ca27474597603c58"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtFilterSubtraction.html#a6e14427b4c9a4f57ca27474597603c58">AtFilterSubtraction</a> (<a class="el" href="AtPulseTask_8h.html#afb3fd71d91d15f5f9a946c048cbbd8fd">AtMapPtr</a> map, Int_t numCoBos=10)</td></tr>
-<tr class="separator:a6e14427b4c9a4f57ca27474597603c58"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1f12ee47734cb5a1df7e194af9f5577b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtFilterSubtraction.html#a1f12ee47734cb5a1df7e194af9f5577b">AtFilterSubtraction</a> (<a class="el" href="AtSpaceChargeTask_8h.html#afb3fd71d91d15f5f9a946c048cbbd8fd">AtMapPtr</a> map, Int_t numCoBos=10, Int_t numAget=4)</td></tr>
+<tr class="separator:a1f12ee47734cb5a1df7e194af9f5577b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3bf72af3f748d96424f61c0b96235cdf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtFilterSubtraction.html#a3bf72af3f748d96424f61c0b96235cdf">SetThreshold</a> (Double_t thresh)</td></tr>
 <tr class="separator:a3bf72af3f748d96424f61c0b96235cdf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a90b1be7e1bce9f1dd619023dc5e1794f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtFilterSubtraction.html#a90b1be7e1bce9f1dd619023dc5e1794f">SetIsGood</a> (Bool_t val)</td></tr>
+<tr class="memdesc:a90b1be7e1bce9f1dd619023dc5e1794f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set if we should mark the event bad if we cannot find every AGET to do subtraction.  <a href="classAtFilterSubtraction.html#a90b1be7e1bce9f1dd619023dc5e1794f">More...</a><br /></td></tr>
 <tr class="separator:a90b1be7e1bce9f1dd619023dc5e1794f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae154f6e5baa19b052b05347820e64cdb"><td class="memItemLeft" align="right" valign="top">Double_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtFilterSubtraction.html#ae154f6e5baa19b052b05347820e64cdb">GetThreshold</a> () const</td></tr>
 <tr class="separator:ae154f6e5baa19b052b05347820e64cdb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad59dc104c7fbbefec57d4fe9d6404fa9"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtFilterSubtraction.html#ad59dc104c7fbbefec57d4fe9d6404fa9">Init</a> () override</td></tr>
+<tr class="memdesc:ad59dc104c7fbbefec57d4fe9d6404fa9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called at the init stage of the <a class="el" href="classAtFilterTask.html">AtFilterTask</a>.  <a href="classAtFilterSubtraction.html#ad59dc104c7fbbefec57d4fe9d6404fa9">More...</a><br /></td></tr>
 <tr class="separator:ad59dc104c7fbbefec57d4fe9d6404fa9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8596286493cb66467463b0bba9d482ff"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtFilterSubtraction.html#a8596286493cb66467463b0bba9d482ff">InitEvent</a> (<a class="el" href="classAtRawEvent.html">AtRawEvent</a> *event) override</td></tr>
+<tr class="memdesc:a8596286493cb66467463b0bba9d482ff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called once for each event at the start of the Exec phase.  <a href="classAtFilterSubtraction.html#a8596286493cb66467463b0bba9d482ff">More...</a><br /></td></tr>
 <tr class="separator:a8596286493cb66467463b0bba9d482ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abbc13fa2282ada213d1d97906d59744d"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtFilterSubtraction.html#abbc13fa2282ada213d1d97906d59744d">Filter</a> (<a class="el" href="classAtPad.html">AtPad</a> *pad) override</td></tr>
-<tr class="separator:abbc13fa2282ada213d1d97906d59744d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abc369036735813395bc1c59178bf2a96"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtFilterSubtraction.html#abc369036735813395bc1c59178bf2a96">Filter</a> (<a class="el" href="classAtPad.html">AtPad</a> *pad, <a class="el" href="structAtPadReference.html">AtPadReference</a> *padReference) override</td></tr>
+<tr class="memdesc:abc369036735813395bc1c59178bf2a96"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called to filter each pad.  <a href="classAtFilterSubtraction.html#abc369036735813395bc1c59178bf2a96">More...</a><br /></td></tr>
+<tr class="separator:abc369036735813395bc1c59178bf2a96"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a227714b67f09151ce29042aea7fa2cf9"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtFilterSubtraction.html#a227714b67f09151ce29042aea7fa2cf9">IsGoodEvent</a> () override</td></tr>
+<tr class="memdesc:a227714b67f09151ce29042aea7fa2cf9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called at the end of an event. Returns if filtering was successful.  <a href="classAtFilterSubtraction.html#a227714b67f09151ce29042aea7fa2cf9">More...</a><br /></td></tr>
 <tr class="separator:a227714b67f09151ce29042aea7fa2cf9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classAtFilter"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classAtFilter')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classAtFilter.html">AtFilter</a></td></tr>
+<tr class="memitem:ae7feac4acab59a6788c66f9368d34c97 inherit pub_methods_classAtFilter"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtFilter.html#ae7feac4acab59a6788c66f9368d34c97">~AtFilter</a> ()=default</td></tr>
+<tr class="separator:ae7feac4acab59a6788c66f9368d34c97 inherit pub_methods_classAtFilter"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4127c2a19c1049e0b247ddb410c191be inherit pub_methods_classAtFilter"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classAtRawEvent.html">AtRawEvent</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtFilter.html#a4127c2a19c1049e0b247ddb410c191be">ConstructOutputEvent</a> (TClonesArray *outputEventArray, <a class="el" href="classAtRawEvent.html">AtRawEvent</a> *inputEvent)</td></tr>
+<tr class="memdesc:a4127c2a19c1049e0b247ddb410c191be inherit pub_methods_classAtFilter"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct output event from input event array.  <a href="classAtFilter.html#a4127c2a19c1049e0b247ddb410c191be">More...</a><br /></td></tr>
 <tr class="separator:a4127c2a19c1049e0b247ddb410c191be inherit pub_methods_classAtFilter"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
+Protected Member Functions</h2></td></tr>
+<tr class="memitem:abe39cf4689543b3354c06bdf4378e757"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtFilterSubtraction.html#abe39cf4689543b3354c06bdf4378e757">Clear</a> ()</td></tr>
+<tr class="separator:abe39cf4689543b3354c06bdf4378e757"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ada69f243d59ef52f2a424a56e3bb0f77"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtFilterSubtraction.html#ada69f243d59ef52f2a424a56e3bb0f77">AddChToBaseline</a> (const <a class="el" href="structAtPadReference.html">AtPadReference</a> &amp;ref, const <a class="el" href="classAtPad.html">AtPad</a> &amp;pad)</td></tr>
+<tr class="separator:ada69f243d59ef52f2a424a56e3bb0f77"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a844650d2269802968cb2947f471e90b5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtFilterSubtraction.html#a844650d2269802968cb2947f471e90b5">AverageBaseline</a> ()</td></tr>
+<tr class="separator:a844650d2269802968cb2947f471e90b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a33e84826fc6c5203618666db212ae4b5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtFilterSubtraction.html#a33e84826fc6c5203618666db212ae4b5">processPad</a> (const <a class="el" href="structAtPadReference.html">AtPadReference</a> &amp;ref, const <a class="el" href="classAtPad.html">AtPad</a> &amp;pad)</td></tr>
+<tr class="separator:a33e84826fc6c5203618666db212ae4b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adcaee3601d20b7e59a891eb95485539e"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtFilterSubtraction.html#adcaee3601d20b7e59a891eb95485539e">isValidPad</a> (const <a class="el" href="classAtPad.html">AtPad</a> &amp;pad)</td></tr>
+<tr class="separator:adcaee3601d20b7e59a891eb95485539e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a369a084b30a78acce3dc02e289e330d7"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtFilterSubtraction.html#a369a084b30a78acce3dc02e289e330d7">getAsad</a> (const <a class="el" href="structAtPadReference.html">AtPadReference</a> &amp;ref)</td></tr>
+<tr class="separator:a369a084b30a78acce3dc02e289e330d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
+Protected Attributes</h2></td></tr>
+<tr class="memitem:abaaaa818a5e1493d35fea80d5d3b3d57"><td class="memItemLeft" align="right" valign="top">const Int_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtFilterSubtraction.html#abaaaa818a5e1493d35fea80d5d3b3d57">fNumberCoBo</a></td></tr>
+<tr class="separator:abaaaa818a5e1493d35fea80d5d3b3d57"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a063331af8097f653d25f2f064967775a"><td class="memItemLeft" align="right" valign="top">Int_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtFilterSubtraction.html#a063331af8097f653d25f2f064967775a">fEventNumber</a> {-1}</td></tr>
+<tr class="separator:a063331af8097f653d25f2f064967775a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a073c111fe387e22f238a6e7259be38fd"><td class="memItemLeft" align="right" valign="top">Double_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtFilterSubtraction.html#a073c111fe387e22f238a6e7259be38fd">fThreshold</a> = 0</td></tr>
+<tr class="separator:a073c111fe387e22f238a6e7259be38fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4c39b5538b25248a710e0be36f1daaaf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AtSpaceChargeTask_8h.html#afb3fd71d91d15f5f9a946c048cbbd8fd">AtMapPtr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtFilterSubtraction.html#a4c39b5538b25248a710e0be36f1daaaf">fMapping</a></td></tr>
+<tr class="separator:a4c39b5538b25248a710e0be36f1daaaf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afb44225a8bdf2845e87198bcde9c19df"><td class="memItemLeft" align="right" valign="top">Int_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtFilterSubtraction.html#afb44225a8bdf2845e87198bcde9c19df">fNumberMissedAsads</a> {}</td></tr>
+<tr class="separator:afb44225a8bdf2845e87198bcde9c19df"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aab3e3cbcb07a2f419358bed6c8cabb3d"><td class="memItemLeft" align="right" valign="top">Bool_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtFilterSubtraction.html#aab3e3cbcb07a2f419358bed6c8cabb3d">fSetIsGood</a> {false}</td></tr>
+<tr class="separator:aab3e3cbcb07a2f419358bed6c8cabb3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2ea5b61ac5ff856e5f2933501a4cb691"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AtFilterSubtraction_8h.html#a3a593e75d138a351b456d021cdffed65">vecDoubleCoBo</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtFilterSubtraction.html#a2ea5b61ac5ff856e5f2933501a4cb691">fBaseline</a></td></tr>
+<tr class="separator:a2ea5b61ac5ff856e5f2933501a4cb691"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aed465688dfd882581a3b9604cbd5975d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AtFilterSubtraction_8h.html#ae3b810f11589e009aecfd698207e20e4">vecIntCoBo</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtFilterSubtraction.html#aed465688dfd882581a3b9604cbd5975d">fRawBaseline</a></td></tr>
+<tr class="separator:aed465688dfd882581a3b9604cbd5975d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab34432427a50f7d6d1a7030e6492c400"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AtFilterSubtraction_8h.html#a60af95f18563cb01e1824910bf1a1aaa">vecAgetCount</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtFilterSubtraction.html#ab34432427a50f7d6d1a7030e6492c400">fAgetCount</a></td></tr>
+<tr class="separator:ab34432427a50f7d6d1a7030e6492c400"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock">
-<p class="definition">Definition at line <a class="el" href="AtFilterSubtraction_8h_source.html#l00028">28</a> of file <a class="el" href="AtFilterSubtraction_8h_source.html">AtFilterSubtraction.h</a>.</p>
+<div class="textblock"><p>Filter that will subtract the average of every ch0 aget in a AsAd from all channels in an AsAd. Adam Anthony 7/16/21 </p>
+
+<p class="definition">Definition at line <a class="el" href="AtFilterSubtraction_8h_source.html#l00029">29</a> of file <a class="el" href="AtFilterSubtraction_8h_source.html">AtFilterSubtraction.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a6e14427b4c9a4f57ca27474597603c58"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6e14427b4c9a4f57ca27474597603c58">&#9670;&nbsp;</a></span>AtFilterSubtraction()</h2>
+<a id="a1f12ee47734cb5a1df7e194af9f5577b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1f12ee47734cb5a1df7e194af9f5577b">&#9670;&nbsp;</a></span>AtFilterSubtraction()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -126,14 +186,20 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">AtFilterSubtraction::AtFilterSubtraction </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="AtPulseTask_8h.html#afb3fd71d91d15f5f9a946c048cbbd8fd">AtMapPtr</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="AtSpaceChargeTask_8h.html#afb3fd71d91d15f5f9a946c048cbbd8fd">AtMapPtr</a>&#160;</td>
           <td class="paramname"><em>map</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">Int_t&#160;</td>
-          <td class="paramname"><em>numCoBos</em> = <code>10</code>&#160;</td>
+          <td class="paramname"><em>numCoBos</em> = <code>10</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Int_t&#160;</td>
+          <td class="paramname"><em>numAget</em> = <code>4</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -148,8 +214,100 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="abbc13fa2282ada213d1d97906d59744d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abbc13fa2282ada213d1d97906d59744d">&#9670;&nbsp;</a></span>Filter()</h2>
+<a id="ada69f243d59ef52f2a424a56e3bb0f77"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ada69f243d59ef52f2a424a56e3bb0f77">&#9670;&nbsp;</a></span>AddChToBaseline()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void AtFilterSubtraction::AddChToBaseline </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structAtPadReference.html">AtPadReference</a> &amp;&#160;</td>
+          <td class="paramname"><em>ref</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classAtPad.html">AtPad</a> &amp;&#160;</td>
+          <td class="paramname"><em>pad</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtFilterSubtraction_8cxx_source.html#l00075">75</a> of file <a class="el" href="AtFilterSubtraction_8cxx_source.html">AtFilterSubtraction.cxx</a>.</p>
+
+</div>
+</div>
+<a id="a844650d2269802968cb2947f471e90b5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a844650d2269802968cb2947f471e90b5">&#9670;&nbsp;</a></span>AverageBaseline()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void AtFilterSubtraction::AverageBaseline </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtFilterSubtraction_8cxx_source.html#l00085">85</a> of file <a class="el" href="AtFilterSubtraction_8cxx_source.html">AtFilterSubtraction.cxx</a>.</p>
+
+</div>
+</div>
+<a id="abe39cf4689543b3354c06bdf4378e757"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abe39cf4689543b3354c06bdf4378e757">&#9670;&nbsp;</a></span>Clear()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void AtFilterSubtraction::Clear </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtFilterSubtraction_8cxx_source.html#l00026">26</a> of file <a class="el" href="AtFilterSubtraction_8cxx_source.html">AtFilterSubtraction.cxx</a>.</p>
+
+</div>
+</div>
+<a id="abc369036735813395bc1c59178bf2a96"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abc369036735813395bc1c59178bf2a96">&#9670;&nbsp;</a></span>Filter()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -161,8 +319,18 @@ Public Member Functions</h2></td></tr>
           <td class="memname">void AtFilterSubtraction::Filter </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classAtPad.html">AtPad</a> *&#160;</td>
-          <td class="paramname"><em>pad</em></td><td>)</td>
+          <td class="paramname"><em>pad</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype"><a class="el" href="structAtPadReference.html">AtPadReference</a> *&#160;</td>
+          <td class="paramname"><em>padReference</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -172,9 +340,49 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implements <a class="el" href="classAtFilter.html#ad0499f1b4860cd8d504d69514e4d8005">AtFilter</a>.</p>
+<p>Called to filter each pad. </p>
+<p>Optional padRef currently only used by SCA filter (10/20/22).</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">pad</td><td>Pad to filter. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">[in[</td><td>padRefernece optional parameter only needed when when filtering FPN channels. </td></tr>
+  </table>
+  </dd>
+</dl>
 
-<p class="definition">Definition at line <a class="el" href="AtFilterSubtraction_8cxx_source.html#l00082">82</a> of file <a class="el" href="AtFilterSubtraction_8cxx_source.html">AtFilterSubtraction.cxx</a>.</p>
+<p>Implements <a class="el" href="classAtFilter.html#a24a3245f1e11e52a34ef24e6d09bd108">AtFilter</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="AtFilterSubtraction_8cxx_source.html#l00100">100</a> of file <a class="el" href="AtFilterSubtraction_8cxx_source.html">AtFilterSubtraction.cxx</a>.</p>
+
+</div>
+</div>
+<a id="a369a084b30a78acce3dc02e289e330d7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a369a084b30a78acce3dc02e289e330d7">&#9670;&nbsp;</a></span>getAsad()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int AtFilterSubtraction::getAsad </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structAtPadReference.html">AtPadReference</a> &amp;&#160;</td>
+          <td class="paramname"><em>ref</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented in <a class="el" href="classAtFilterFPN.html#a0644f51ed35f0daf3bccf9b9e56752e6">AtFilterFPN</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="AtFilterSubtraction_8cxx_source.html#l00065">65</a> of file <a class="el" href="AtFilterSubtraction_8cxx_source.html">AtFilterSubtraction.cxx</a>.</p>
 
 </div>
 </div>
@@ -201,7 +409,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtFilterSubtraction_8h_source.html#l00054">54</a> of file <a class="el" href="AtFilterSubtraction_8h_source.html">AtFilterSubtraction.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtFilterSubtraction_8h_source.html#l00059">59</a> of file <a class="el" href="AtFilterSubtraction_8h_source.html">AtFilterSubtraction.h</a>.</p>
 
 </div>
 </div>
@@ -228,9 +436,11 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Called at the init stage of the <a class="el" href="classAtFilterTask.html">AtFilterTask</a>. </p>
+
 <p>Implements <a class="el" href="classAtFilter.html#a10b9c7088be2ccd5e6a9df5c6002955a">AtFilter</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="AtFilterSubtraction_8cxx_source.html#l00099">99</a> of file <a class="el" href="AtFilterSubtraction_8cxx_source.html">AtFilterSubtraction.cxx</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtFilterSubtraction_8cxx_source.html#l00117">117</a> of file <a class="el" href="AtFilterSubtraction_8cxx_source.html">AtFilterSubtraction.cxx</a>.</p>
 
 </div>
 </div>
@@ -247,7 +457,7 @@ Public Member Functions</h2></td></tr>
           <td class="memname">void AtFilterSubtraction::InitEvent </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classAtRawEvent.html">AtRawEvent</a> *&#160;</td>
-          <td class="paramname"><em>event</em></td><td>)</td>
+          <td class="paramname"><em>inputEvent</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -258,9 +468,13 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Called once for each event at the start of the Exec phase. </p>
+
 <p>Implements <a class="el" href="classAtFilter.html#aa0bcfc2d3d54a0a22cec29d754ebef67">AtFilter</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="AtFilterSubtraction_8cxx_source.html#l00034">34</a> of file <a class="el" href="AtFilterSubtraction_8cxx_source.html">AtFilterSubtraction.cxx</a>.</p>
+<p>Reimplemented in <a class="el" href="classAtFilterFPN.html#aa9357028c43afa1d0d3be76f0a08163f">AtFilterFPN</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="AtFilterSubtraction_8cxx_source.html#l00041">41</a> of file <a class="el" href="AtFilterSubtraction_8cxx_source.html">AtFilterSubtraction.cxx</a>.</p>
 
 </div>
 </div>
@@ -287,9 +501,80 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Called at the end of an event. Returns if filtering was successful. </p>
+
 <p>Implements <a class="el" href="classAtFilter.html#a3e829564ee802ca80cf84eaab6ef253c">AtFilter</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="AtFilterSubtraction_8cxx_source.html#l00101">101</a> of file <a class="el" href="AtFilterSubtraction_8cxx_source.html">AtFilterSubtraction.cxx</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtFilterSubtraction_8cxx_source.html#l00119">119</a> of file <a class="el" href="AtFilterSubtraction_8cxx_source.html">AtFilterSubtraction.cxx</a>.</p>
+
+</div>
+</div>
+<a id="adcaee3601d20b7e59a891eb95485539e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adcaee3601d20b7e59a891eb95485539e">&#9670;&nbsp;</a></span>isValidPad()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool AtFilterSubtraction::isValidPad </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classAtPad.html">AtPad</a> &amp;&#160;</td>
+          <td class="paramname"><em>pad</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Should this pad be added to the average to subtract </p>
+
+<p>Reimplemented in <a class="el" href="classAtFilterFPN.html#a38aa25d91e293beb94da1a09d432f90d">AtFilterFPN</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="AtFilterSubtraction_8cxx_source.html#l00053">53</a> of file <a class="el" href="AtFilterSubtraction_8cxx_source.html">AtFilterSubtraction.cxx</a>.</p>
+
+</div>
+</div>
+<a id="a33e84826fc6c5203618666db212ae4b5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a33e84826fc6c5203618666db212ae4b5">&#9670;&nbsp;</a></span>processPad()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void AtFilterSubtraction::processPad </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structAtPadReference.html">AtPadReference</a> &amp;&#160;</td>
+          <td class="paramname"><em>ref</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classAtPad.html">AtPad</a> &amp;&#160;</td>
+          <td class="paramname"><em>pad</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtFilterSubtraction_8cxx_source.html#l00069">69</a> of file <a class="el" href="AtFilterSubtraction_8cxx_source.html">AtFilterSubtraction.cxx</a>.</p>
 
 </div>
 </div>
@@ -317,7 +602,9 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtFilterSubtraction_8h_source.html#l00053">53</a> of file <a class="el" href="AtFilterSubtraction_8h_source.html">AtFilterSubtraction.h</a>.</p>
+<p>Set if we should mark the event bad if we cannot find every AGET to do subtraction. </p>
+
+<p class="definition">Definition at line <a class="el" href="AtFilterSubtraction_8h_source.html#l00058">58</a> of file <a class="el" href="AtFilterSubtraction_8h_source.html">AtFilterSubtraction.h</a>.</p>
 
 </div>
 </div>
@@ -345,7 +632,224 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtFilterSubtraction_8h_source.html#l00052">52</a> of file <a class="el" href="AtFilterSubtraction_8h_source.html">AtFilterSubtraction.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtFilterSubtraction_8h_source.html#l00056">56</a> of file <a class="el" href="AtFilterSubtraction_8h_source.html">AtFilterSubtraction.h</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="ab34432427a50f7d6d1a7030e6492c400"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab34432427a50f7d6d1a7030e6492c400">&#9670;&nbsp;</a></span>fAgetCount</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="AtFilterSubtraction_8h.html#a60af95f18563cb01e1824910bf1a1aaa">vecAgetCount</a> AtFilterSubtraction::fAgetCount</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtFilterSubtraction_8h_source.html#l00043">43</a> of file <a class="el" href="AtFilterSubtraction_8h_source.html">AtFilterSubtraction.h</a>.</p>
+
+</div>
+</div>
+<a id="a2ea5b61ac5ff856e5f2933501a4cb691"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2ea5b61ac5ff856e5f2933501a4cb691">&#9670;&nbsp;</a></span>fBaseline</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="AtFilterSubtraction_8h.html#a3a593e75d138a351b456d021cdffed65">vecDoubleCoBo</a> AtFilterSubtraction::fBaseline</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtFilterSubtraction_8h_source.html#l00039">39</a> of file <a class="el" href="AtFilterSubtraction_8h_source.html">AtFilterSubtraction.h</a>.</p>
+
+</div>
+</div>
+<a id="a063331af8097f653d25f2f064967775a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a063331af8097f653d25f2f064967775a">&#9670;&nbsp;</a></span>fEventNumber</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Int_t AtFilterSubtraction::fEventNumber {-1}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtFilterSubtraction_8h_source.html#l00032">32</a> of file <a class="el" href="AtFilterSubtraction_8h_source.html">AtFilterSubtraction.h</a>.</p>
+
+</div>
+</div>
+<a id="a4c39b5538b25248a710e0be36f1daaaf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4c39b5538b25248a710e0be36f1daaaf">&#9670;&nbsp;</a></span>fMapping</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="AtSpaceChargeTask_8h.html#afb3fd71d91d15f5f9a946c048cbbd8fd">AtMapPtr</a> AtFilterSubtraction::fMapping</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtFilterSubtraction_8h_source.html#l00034">34</a> of file <a class="el" href="AtFilterSubtraction_8h_source.html">AtFilterSubtraction.h</a>.</p>
+
+</div>
+</div>
+<a id="abaaaa818a5e1493d35fea80d5d3b3d57"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abaaaa818a5e1493d35fea80d5d3b3d57">&#9670;&nbsp;</a></span>fNumberCoBo</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const Int_t AtFilterSubtraction::fNumberCoBo</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtFilterSubtraction_8h_source.html#l00031">31</a> of file <a class="el" href="AtFilterSubtraction_8h_source.html">AtFilterSubtraction.h</a>.</p>
+
+</div>
+</div>
+<a id="afb44225a8bdf2845e87198bcde9c19df"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afb44225a8bdf2845e87198bcde9c19df">&#9670;&nbsp;</a></span>fNumberMissedAsads</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Int_t AtFilterSubtraction::fNumberMissedAsads {}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtFilterSubtraction_8h_source.html#l00035">35</a> of file <a class="el" href="AtFilterSubtraction_8h_source.html">AtFilterSubtraction.h</a>.</p>
+
+</div>
+</div>
+<a id="aed465688dfd882581a3b9604cbd5975d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aed465688dfd882581a3b9604cbd5975d">&#9670;&nbsp;</a></span>fRawBaseline</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="AtFilterSubtraction_8h.html#ae3b810f11589e009aecfd698207e20e4">vecIntCoBo</a> AtFilterSubtraction::fRawBaseline</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtFilterSubtraction_8h_source.html#l00041">41</a> of file <a class="el" href="AtFilterSubtraction_8h_source.html">AtFilterSubtraction.h</a>.</p>
+
+</div>
+</div>
+<a id="aab3e3cbcb07a2f419358bed6c8cabb3d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aab3e3cbcb07a2f419358bed6c8cabb3d">&#9670;&nbsp;</a></span>fSetIsGood</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Bool_t AtFilterSubtraction::fSetIsGood {false}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtFilterSubtraction_8h_source.html#l00036">36</a> of file <a class="el" href="AtFilterSubtraction_8h_source.html">AtFilterSubtraction.h</a>.</p>
+
+</div>
+</div>
+<a id="a073c111fe387e22f238a6e7259be38fd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a073c111fe387e22f238a6e7259be38fd">&#9670;&nbsp;</a></span>fThreshold</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Double_t AtFilterSubtraction::fThreshold = 0</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtFilterSubtraction_8h_source.html#l00033">33</a> of file <a class="el" href="AtFilterSubtraction_8h_source.html">AtFilterSubtraction.h</a>.</p>
 
 </div>
 </div>
@@ -356,7 +860,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Apr 27 2022 00:47:49 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Oct 20 2023 16:23:02 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.18
 </small></address>

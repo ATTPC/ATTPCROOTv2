@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.18"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>ATTPCROOT: /github/workspace/AtReconstruction/AtPatternRecognition/msd.h Source File</title>
+<title>ATTPCROOT: /github/workspace/AtReconstruction/AtPatternRecognition/trackfinder/msd.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">ATTPCROOT
-   &#160;<span id="projectnumber">1.0.0</span>
+   &#160;<span id="projectnumber">0.3.0-alpha</span>
    </div>
    <div id="projectbrief">A ROOT-based framework for analyzing data from active target detectors</div>
   </td>
@@ -63,7 +63,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_b4724c5ca6c4d299c31d2ca5fc322d19.html">AtReconstruction</a></li><li class="navelem"><a class="el" href="dir_9e9f569468dc2a59662c07838aeb1f6d.html">AtPatternRecognition</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_b4724c5ca6c4d299c31d2ca5fc322d19.html">AtReconstruction</a></li><li class="navelem"><a class="el" href="dir_9e9f569468dc2a59662c07838aeb1f6d.html">AtPatternRecognition</a></li><li class="navelem"><a class="el" href="dir_f9990ffdd0c71c72ec9feeaf8a355cdf.html">trackfinder</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -73,18 +73,21 @@ $(function() {
 <div class="contents">
 <a href="msd_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#ifndef MSD_H</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#define MSD_H</span></div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &lt;pcl/common/common.h&gt;</span></div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespacemsd.html">msd</a> {</div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="keywordtype">float</span> <a class="code" href="namespacemsd.html#a9fc652da7485915c8764cab475a43224">first_quartile</a>(pcl::PointCloud&lt;pcl::PointXYZ&gt;::Ptr cloud);</div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;}</div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160; </div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160; </div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &lt;pcl/point_cloud.h&gt;</span> <span class="comment">// for PointCloud, PointCloud&lt;&gt;::Ptr</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;pcl/point_types.h&gt;</span> <span class="comment">// for PointXYZ</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160; </div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespacemsd.html">msd</a> {</div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="keywordtype">float</span> <a class="code" href="namespacemsd.html#a9fc652da7485915c8764cab475a43224">first_quartile</a>(pcl::PointCloud&lt;pcl::PointXYZ&gt;::Ptr cloud);</div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;}</div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160; </div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#endif</span></div>
 </div><!-- fragment --></div><!-- contents -->
-<div class="ttc" id="anamespacemsd_html"><div class="ttname"><a href="namespacemsd.html">msd</a></div><div class="ttdef"><b>Definition:</b> <a href="msd_8cxx_source.html#l00008">msd.cxx:8</a></div></div>
-<div class="ttc" id="anamespacemsd_html_a9fc652da7485915c8764cab475a43224"><div class="ttname"><a href="namespacemsd.html#a9fc652da7485915c8764cab475a43224">msd::first_quartile</a></div><div class="ttdeci">float first_quartile(pcl::PointCloud&lt; pcl::PointXYZ &gt;::Ptr cloud)</div><div class="ttdef"><b>Definition:</b> <a href="msd_8cxx_source.html#l00061">msd.cxx:61</a></div></div>
+<div class="ttc" id="anamespacemsd_html"><div class="ttname"><a href="namespacemsd.html">msd</a></div><div class="ttdef"><b>Definition:</b> <a href="msd_8cxx_source.html#l00012">msd.cxx:12</a></div></div>
+<div class="ttc" id="anamespacemsd_html_a9fc652da7485915c8764cab475a43224"><div class="ttname"><a href="namespacemsd.html#a9fc652da7485915c8764cab475a43224">msd::first_quartile</a></div><div class="ttdeci">float first_quartile(pcl::PointCloud&lt; pcl::PointXYZ &gt;::Ptr cloud)</div><div class="ttdef"><b>Definition:</b> <a href="msd_8cxx_source.html#l00065">msd.cxx:65</a></div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Apr 27 2022 00:47:48 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Oct 20 2023 16:23:00 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.18
 </small></address>

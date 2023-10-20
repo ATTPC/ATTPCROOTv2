@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['z_5266',['z',['../structPoint.html#a9a666531e0e99adff132be93d2407d0c',1,'Point::z()'],['../structAtHit_1_1MCSimPoint.html#af1c8d9c991954ca6ba8423ae02de1f36',1,'AtHit::MCSimPoint::Z()']]]
+  ['x_7545',['x',['../structAtHit__t.html#aa9608a721dd96ad4ea896d2f6d45c064',1,'AtHit_t::x()'],['../structPoint.html#a05dfe2dfbde813ad234b514f30e662f1',1,'Point::x()'],['../structPoint.html#ab99c56589bc8ad5fa5071387110a5bc7',1,'Point::x()']]],
+  ['xtol_7546',['xtol',['../structlm__control__struct.html#a51294ab068d30ba084ef0c17c9766744',1,'lm_control_struct']]]
 ];

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['getdecoder2ptr_5279',['GETDecoder2Ptr',['../AtGRAWUnpacker_8h.html#a1e4a7616f40df91dc8416deddf5456b2',1,'AtGRAWUnpacker.h']]]
+  ['doublevector_7566',['DoubleVector',['../namespaceKdtree.html#a57dc58519798b10585137bc88cf9eb5a',1,'Kdtree']]]
 ];

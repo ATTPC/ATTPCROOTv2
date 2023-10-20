@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">ATTPCROOT
-   &#160;<span id="projectnumber">1.0.0</span>
+   &#160;<span id="projectnumber">0.3.0-alpha</span>
    </div>
    <div id="projectbrief">A ROOT-based framework for analyzing data from active target detectors</div>
   </td>
@@ -108,23 +108,30 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ac87e34c443139f80354e0e23167000a8"><td class="memItemLeft" align="right" valign="top">Int_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtTrapezoidFilter.html#ac87e34c443139f80354e0e23167000a8">GetTopTime</a> ()</td></tr>
 <tr class="separator:ac87e34c443139f80354e0e23167000a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af650d465f08390af9b1e1f34e6635fe8"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtTrapezoidFilter.html#af650d465f08390af9b1e1f34e6635fe8">Init</a> () override</td></tr>
+<tr class="memdesc:af650d465f08390af9b1e1f34e6635fe8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called at the init stage of the <a class="el" href="classAtFilterTask.html">AtFilterTask</a>.  <a href="classAtTrapezoidFilter.html#af650d465f08390af9b1e1f34e6635fe8">More...</a><br /></td></tr>
 <tr class="separator:af650d465f08390af9b1e1f34e6635fe8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4b38f42d5401ccddba91986b2da45c75"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtTrapezoidFilter.html#a4b38f42d5401ccddba91986b2da45c75">InitEvent</a> (<a class="el" href="classAtRawEvent.html">AtRawEvent</a> *event) override</td></tr>
+<tr class="memdesc:a4b38f42d5401ccddba91986b2da45c75"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called once for each event at the start of the Exec phase.  <a href="classAtTrapezoidFilter.html#a4b38f42d5401ccddba91986b2da45c75">More...</a><br /></td></tr>
 <tr class="separator:a4b38f42d5401ccddba91986b2da45c75"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9431b583c663d39163f9e770f85b9563"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtTrapezoidFilter.html#a9431b583c663d39163f9e770f85b9563">Filter</a> (<a class="el" href="classAtPad.html">AtPad</a> *pad) override</td></tr>
-<tr class="separator:a9431b583c663d39163f9e770f85b9563"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a997114f1a18ad41417b8e6b6ab0b23a4"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtTrapezoidFilter.html#a997114f1a18ad41417b8e6b6ab0b23a4">Filter</a> (<a class="el" href="classAtPad.html">AtPad</a> *pad, <a class="el" href="structAtPadReference.html">AtPadReference</a> *padReference) override</td></tr>
+<tr class="memdesc:a997114f1a18ad41417b8e6b6ab0b23a4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called to filter each pad.  <a href="classAtTrapezoidFilter.html#a997114f1a18ad41417b8e6b6ab0b23a4">More...</a><br /></td></tr>
+<tr class="separator:a997114f1a18ad41417b8e6b6ab0b23a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad2786f4c0d9895150d1f04203f5c2442"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtTrapezoidFilter.html#ad2786f4c0d9895150d1f04203f5c2442">IsGoodEvent</a> () override</td></tr>
+<tr class="memdesc:ad2786f4c0d9895150d1f04203f5c2442"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called at the end of an event. Returns if filtering was successful.  <a href="classAtTrapezoidFilter.html#ad2786f4c0d9895150d1f04203f5c2442">More...</a><br /></td></tr>
 <tr class="separator:ad2786f4c0d9895150d1f04203f5c2442"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classAtFilter"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classAtFilter')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classAtFilter.html">AtFilter</a></td></tr>
+<tr class="memitem:ae7feac4acab59a6788c66f9368d34c97 inherit pub_methods_classAtFilter"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtFilter.html#ae7feac4acab59a6788c66f9368d34c97">~AtFilter</a> ()=default</td></tr>
+<tr class="separator:ae7feac4acab59a6788c66f9368d34c97 inherit pub_methods_classAtFilter"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4127c2a19c1049e0b247ddb410c191be inherit pub_methods_classAtFilter"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classAtRawEvent.html">AtRawEvent</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtFilter.html#a4127c2a19c1049e0b247ddb410c191be">ConstructOutputEvent</a> (TClonesArray *outputEventArray, <a class="el" href="classAtRawEvent.html">AtRawEvent</a> *inputEvent)</td></tr>
+<tr class="memdesc:a4127c2a19c1049e0b247ddb410c191be inherit pub_methods_classAtFilter"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct output event from input event array.  <a href="classAtFilter.html#a4127c2a19c1049e0b247ddb410c191be">More...</a><br /></td></tr>
 <tr class="separator:a4127c2a19c1049e0b247ddb410c191be inherit pub_methods_classAtFilter"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="AtTrapezoidFilter_8h_source.html#l00013">13</a> of file <a class="el" href="AtTrapezoidFilter_8h_source.html">AtTrapezoidFilter.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtTrapezoidFilter_8h_source.html#l00014">14</a> of file <a class="el" href="AtTrapezoidFilter_8h_source.html">AtTrapezoidFilter.h</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a9431b583c663d39163f9e770f85b9563"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9431b583c663d39163f9e770f85b9563">&#9670;&nbsp;</a></span>Filter()</h2>
+<a id="a997114f1a18ad41417b8e6b6ab0b23a4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a997114f1a18ad41417b8e6b6ab0b23a4">&#9670;&nbsp;</a></span>Filter()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -136,8 +143,18 @@ Public Member Functions</h2></td></tr>
           <td class="memname">void AtTrapezoidFilter::Filter </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classAtPad.html">AtPad</a> *&#160;</td>
-          <td class="paramname"><em>pad</em></td><td>)</td>
+          <td class="paramname"><em>pad</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype"><a class="el" href="structAtPadReference.html">AtPadReference</a> *&#160;</td>
+          <td class="paramname"><em>padReference</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -147,7 +164,17 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implements <a class="el" href="classAtFilter.html#ad0499f1b4860cd8d504d69514e4d8005">AtFilter</a>.</p>
+<p>Called to filter each pad. </p>
+<p>Optional padRef currently only used by SCA filter (10/20/22).</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">pad</td><td>Pad to filter. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">[in[</td><td>padRefernece optional parameter only needed when when filtering FPN channels. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Implements <a class="el" href="classAtFilter.html#a24a3245f1e11e52a34ef24e6d09bd108">AtFilter</a>.</p>
 
 <p class="definition">Definition at line <a class="el" href="AtTrapezoidFilter_8cxx_source.html#l00007">7</a> of file <a class="el" href="AtTrapezoidFilter_8cxx_source.html">AtTrapezoidFilter.cxx</a>.</p>
 
@@ -176,7 +203,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtTrapezoidFilter_8h_source.html#l00039">39</a> of file <a class="el" href="AtTrapezoidFilter_8h_source.html">AtTrapezoidFilter.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtTrapezoidFilter_8h_source.html#l00040">40</a> of file <a class="el" href="AtTrapezoidFilter_8h_source.html">AtTrapezoidFilter.h</a>.</p>
 
 </div>
 </div>
@@ -203,7 +230,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtTrapezoidFilter_8h_source.html#l00040">40</a> of file <a class="el" href="AtTrapezoidFilter_8h_source.html">AtTrapezoidFilter.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtTrapezoidFilter_8h_source.html#l00041">41</a> of file <a class="el" href="AtTrapezoidFilter_8h_source.html">AtTrapezoidFilter.h</a>.</p>
 
 </div>
 </div>
@@ -230,7 +257,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtTrapezoidFilter_8h_source.html#l00041">41</a> of file <a class="el" href="AtTrapezoidFilter_8h_source.html">AtTrapezoidFilter.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtTrapezoidFilter_8h_source.html#l00042">42</a> of file <a class="el" href="AtTrapezoidFilter_8h_source.html">AtTrapezoidFilter.h</a>.</p>
 
 </div>
 </div>
@@ -257,9 +284,11 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Called at the init stage of the <a class="el" href="classAtFilterTask.html">AtFilterTask</a>. </p>
+
 <p>Implements <a class="el" href="classAtFilter.html#a10b9c7088be2ccd5e6a9df5c6002955a">AtFilter</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="AtTrapezoidFilter_8h_source.html#l00043">43</a> of file <a class="el" href="AtTrapezoidFilter_8h_source.html">AtTrapezoidFilter.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtTrapezoidFilter_8h_source.html#l00044">44</a> of file <a class="el" href="AtTrapezoidFilter_8h_source.html">AtTrapezoidFilter.h</a>.</p>
 
 </div>
 </div>
@@ -276,7 +305,7 @@ Public Member Functions</h2></td></tr>
           <td class="memname">virtual void AtTrapezoidFilter::InitEvent </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classAtRawEvent.html">AtRawEvent</a> *&#160;</td>
-          <td class="paramname"><em>event</em></td><td>)</td>
+          <td class="paramname"><em>inputEvent</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -287,9 +316,11 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Called once for each event at the start of the Exec phase. </p>
+
 <p>Implements <a class="el" href="classAtFilter.html#aa0bcfc2d3d54a0a22cec29d754ebef67">AtFilter</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="AtTrapezoidFilter_8h_source.html#l00044">44</a> of file <a class="el" href="AtTrapezoidFilter_8h_source.html">AtTrapezoidFilter.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtTrapezoidFilter_8h_source.html#l00045">45</a> of file <a class="el" href="AtTrapezoidFilter_8h_source.html">AtTrapezoidFilter.h</a>.</p>
 
 </div>
 </div>
@@ -316,9 +347,11 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Called at the end of an event. Returns if filtering was successful. </p>
+
 <p>Implements <a class="el" href="classAtFilter.html#a3e829564ee802ca80cf84eaab6ef253c">AtFilter</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="AtTrapezoidFilter_8h_source.html#l00046">46</a> of file <a class="el" href="AtTrapezoidFilter_8h_source.html">AtTrapezoidFilter.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtTrapezoidFilter_8h_source.html#l00047">47</a> of file <a class="el" href="AtTrapezoidFilter_8h_source.html">AtTrapezoidFilter.h</a>.</p>
 
 </div>
 </div>
@@ -346,7 +379,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtTrapezoidFilter_8h_source.html#l00037">37</a> of file <a class="el" href="AtTrapezoidFilter_8h_source.html">AtTrapezoidFilter.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtTrapezoidFilter_8h_source.html#l00038">38</a> of file <a class="el" href="AtTrapezoidFilter_8h_source.html">AtTrapezoidFilter.h</a>.</p>
 
 </div>
 </div>
@@ -374,7 +407,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtTrapezoidFilter_8h_source.html#l00034">34</a> of file <a class="el" href="AtTrapezoidFilter_8h_source.html">AtTrapezoidFilter.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtTrapezoidFilter_8h_source.html#l00035">35</a> of file <a class="el" href="AtTrapezoidFilter_8h_source.html">AtTrapezoidFilter.h</a>.</p>
 
 </div>
 </div>
@@ -402,7 +435,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtTrapezoidFilter_8h_source.html#l00035">35</a> of file <a class="el" href="AtTrapezoidFilter_8h_source.html">AtTrapezoidFilter.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtTrapezoidFilter_8h_source.html#l00036">36</a> of file <a class="el" href="AtTrapezoidFilter_8h_source.html">AtTrapezoidFilter.h</a>.</p>
 
 </div>
 </div>
@@ -430,7 +463,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtTrapezoidFilter_8h_source.html#l00036">36</a> of file <a class="el" href="AtTrapezoidFilter_8h_source.html">AtTrapezoidFilter.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtTrapezoidFilter_8h_source.html#l00037">37</a> of file <a class="el" href="AtTrapezoidFilter_8h_source.html">AtTrapezoidFilter.h</a>.</p>
 
 </div>
 </div>
@@ -441,7 +474,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Apr 27 2022 00:47:50 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Oct 20 2023 16:23:02 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.18
 </small></address>

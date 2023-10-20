@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">ATTPCROOT
-   &#160;<span id="projectnumber">1.0.0</span>
+   &#160;<span id="projectnumber">0.3.0-alpha</span>
    </div>
    <div id="projectbrief">A ROOT-based framework for analyzing data from active target detectors</div>
   </td>
@@ -67,7 +67,30 @@ $(function() {
 
 <h3><a id="index_t"></a>- t -</h3><ul>
 <li>t
-: <a class="el" href="structhc__params.html#a7a99dc725baa378813bed5b6786365e6">hc_params</a>
+: <a class="el" href="structAtHit__t.html#a25d8eb577a254e49eb6dc47a5d2b5a62">AtHit_t</a>
+, <a class="el" href="structAtPATTERN_1_1hc__params.html#a7a99dc725baa378813bed5b6786365e6">AtPATTERN::hc_params</a>
+</li>
+<li>TEveEventManagerPtr
+: <a class="el" href="classAtTabMain.html#aec743eb94ef1ebb81a7b0c5745fc844c">AtTabMain</a>
+</li>
+<li>TEveLineVec
+: <a class="el" href="classAtPatterns_1_1AtPattern.html#a5bfa1d5dc50d29ee316d394653e78c9d">AtPatterns::AtPattern</a>
+</li>
+<li>TEvePointSetPtr
+: <a class="el" href="classAtTabMain.html#add186bfbe1340da30122178090b50a82">AtTabMain</a>
+</li>
+<li>TF1Vec
+: <a class="el" href="classAtTabPad.html#a9023e819144f1119e75298c21254a1c2">AtTabPad</a>
+</li>
+<li>TH1Ptr
+: <a class="el" href="classAtTabEnergyLoss.html#a859dd2400ca5265e37ed3c5c329930d6">AtTabEnergyLoss</a>
+, <a class="el" href="classAtTabFF.html#abce7ae544bc5038a442611f71973bd19">AtTabFF</a>
+</li>
+<li>throwRandomAndGetPadAfterDiffusion()
+: <a class="el" href="classAtPulseLine.html#a4b0bb2797d1a74935446378e6633e2f9">AtPulseLine</a>
+</li>
+<li>THStackPtr
+: <a class="el" href="classAtTabFF.html#a383b6ae959f35f819662291052e682ea">AtTabFF</a>
 </li>
 <li>TimeOffset()
 : <a class="el" href="classS800Calibration.html#a18bd77605876fc11ede561adf18129e8">S800Calibration</a>
@@ -83,16 +106,30 @@ $(function() {
 , <a class="el" href="classAtEventManagerS800.html#af3dc4af5de7459b8830230b6c264e270">AtEventManagerS800</a>
 </li>
 <li>trace
-: <a class="el" href="classAtPad.html#a0e52aacfe76a3940c018c481476263e6">AtPad</a>
+: <a class="el" href="classAtGenericTrace.html#a9a9f5c1281759bd8ab594f18e29f65a0">AtGenericTrace</a>
+, <a class="el" href="classAtPad.html#a0e52aacfe76a3940c018c481476263e6">AtPad</a>
+</li>
+<li>TraceArray
+: <a class="el" href="classAtEvent.html#ad4ffebd77c3429b544b25918661dd2d2">AtEvent</a>
+</li>
+<li>traceDouble
+: <a class="el" href="classAtPadArray.html#af1354d4e0a7d89505a84af79b8559268">AtPadArray</a>
 </li>
 <li>TraceTrans
 : <a class="el" href="classAtPadFFT.html#a079a035bdab27ca21fb559f45bfe01d8">AtPadFFT</a>
 </li>
 <li>trackID
 : <a class="el" href="structAtHit_1_1MCSimPoint.html#a2864f7b042ca099fdc576ee4f48c063a">AtHit::MCSimPoint</a>
+, <a class="el" href="structAtHit__t.html#a95731f7b3e3fcd0b69bfdc5afeaee69d">AtHit_t</a>
+</li>
+<li>trackIDMC
+: <a class="el" href="structAtHit__t.html#ae043e31234718ffa660821f6fcce0f68">AtHit_t</a>
 </li>
 <li>TrackMCPoints()
 : <a class="el" href="classAtPSA.html#ab2bed09c8e8a027377a71c1b2fa195ba">AtPSA</a>
+</li>
+<li>tracks
+: <a class="el" href="structtracksFromVertex.html#a36f2f1b6bd4354a66403fe2b5c84894e">tracksFromVertex</a>
 </li>
 <li>TRANSF()
 : <a class="el" href="classAtTPC__Background.html#a295a7f045137bd74b395beff40c22f95">AtTPC_Background</a>
@@ -104,6 +141,11 @@ $(function() {
 <li>triplets
 : <a class="el" href="structhc_1_1cluster__history.html#a6bb8f72fa5af646ed2cc49ff062dd659">hc::cluster_history</a>
 </li>
+<li>TruncateSpace()
+: <a class="el" href="classMCFitter_1_1AtParameterDistribution.html#a34acf3ad5cda602619cc1e8411bcc772">MCFitter::AtParameterDistribution</a>
+, <a class="el" href="classMCFitter_1_1AtStudentDistribution.html#a6f747c95bb79b5ccb8cd94f50ed648e9">MCFitter::AtStudentDistribution</a>
+, <a class="el" href="classMCFitter_1_1AtUniformDistribution.html#ae249d4176e246085f561e4260726dd25">MCFitter::AtUniformDistribution</a>
+</li>
 <li>TwoB()
 : <a class="el" href="classAtTPC__Background.html#a49c6e3b2894d75ceaa304402b5160edb">AtTPC_Background</a>
 </li>
@@ -114,7 +156,7 @@ $(function() {
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Apr 27 2022 00:47:50 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Oct 20 2023 16:23:03 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.18
 </small></address>

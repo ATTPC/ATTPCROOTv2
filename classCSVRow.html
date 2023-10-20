@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">ATTPCROOT
-   &#160;<span id="projectnumber">1.0.0</span>
+   &#160;<span id="projectnumber">0.3.0-alpha</span>
    </div>
    <div id="projectbrief">A ROOT-based framework for analyzing data from active target detectors</div>
   </td>
@@ -71,6 +71,9 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
+<p>A simple CSV reader w/ modern cpp features.  
+ <a href="classCSVRow.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="AtCSVReader_8h_source.html">AtCSVReader.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
@@ -88,8 +91,13 @@ Public Member Functions</h2></td></tr>
 <div class="textblock"><h3>template&lt;typename T&gt;<br />
 class CSVRow&lt; T &gt;</h3>
 
+<p>A simple CSV reader w/ modern cpp features. </p>
+<p>Assumes no commas or newlines in the file except as deliminators (ie you can't escape them) Will work for strings or basic numbers (basically anything that stringstream is overloaded for Skips over entries that don't match the type. i.e. CSVRow&lt;int&gt; will parse "0,tr,-2" into {0,-2} Supports ranged loops, example below</p>
+<p>std::ifstream file("input.csv");</p>
+<p>for(auto&amp; row : CSVRange&lt;double&gt;(file)) std::cout &lt;&lt; "4th Element(" &lt;&lt; row[3] &lt;&lt; ")" &lt;&lt; std::endl; for(auto&amp; row : CSVRange&lt;double&gt;(file)) for(int i = 0; i &lt; row.size(); ++i) std::cout &lt;&lt; i + 1 &lt;&lt; "th Element(" &lt;&lt; row[i] &lt;&lt; ")" &lt;&lt; std::endl;</p>
+<p>Based on: <a href="https://stackoverflow.com/questions/1120140/how-can-i-read-and-parse-csv-files-in-c">https://stackoverflow.com/questions/1120140/how-can-i-read-and-parse-csv-files-in-c</a> Represents a row of CSV file of type T </p>
 
-<p class="definition">Definition at line <a class="el" href="AtCSVReader_8h_source.html#l00030">30</a> of file <a class="el" href="AtCSVReader_8h_source.html">AtCSVReader.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtCSVReader_8h_source.html#l00029">29</a> of file <a class="el" href="AtCSVReader_8h_source.html">AtCSVReader.h</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="a9022dea5b3f908acccce98bc93c93ba5"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a9022dea5b3f908acccce98bc93c93ba5">&#9670;&nbsp;</a></span>getLine()</h2>
@@ -116,7 +124,7 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtCSVReader_8h_source.html#l00034">34</a> of file <a class="el" href="AtCSVReader_8h_source.html">AtCSVReader.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtCSVReader_8h_source.html#l00033">33</a> of file <a class="el" href="AtCSVReader_8h_source.html">AtCSVReader.h</a>.</p>
 
 </div>
 </div>
@@ -146,7 +154,7 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtCSVReader_8h_source.html#l00032">32</a> of file <a class="el" href="AtCSVReader_8h_source.html">AtCSVReader.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtCSVReader_8h_source.html#l00031">31</a> of file <a class="el" href="AtCSVReader_8h_source.html">AtCSVReader.h</a>.</p>
 
 </div>
 </div>
@@ -176,7 +184,7 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtCSVReader_8h_source.html#l00035">35</a> of file <a class="el" href="AtCSVReader_8h_source.html">AtCSVReader.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtCSVReader_8h_source.html#l00034">34</a> of file <a class="el" href="AtCSVReader_8h_source.html">AtCSVReader.h</a>.</p>
 
 </div>
 </div>
@@ -205,7 +213,7 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtCSVReader_8h_source.html#l00033">33</a> of file <a class="el" href="AtCSVReader_8h_source.html">AtCSVReader.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtCSVReader_8h_source.html#l00032">32</a> of file <a class="el" href="AtCSVReader_8h_source.html">AtCSVReader.h</a>.</p>
 
 </div>
 </div>
@@ -215,7 +223,7 @@ template&lt;typename T &gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Apr 27 2022 00:47:50 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Oct 20 2023 16:23:02 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.18
 </small></address>

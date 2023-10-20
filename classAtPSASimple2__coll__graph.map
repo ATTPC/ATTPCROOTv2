@@ -1,11 +1,4 @@
 <map id="AtPSASimple2" name="AtPSASimple2">
-<area shape="rect" id="node1" title=" " alt="" coords="187,408,297,435"/>
-<area shape="rect" id="node2" href="$classAtPSA.html" title=" " alt="" coords="211,332,273,359"/>
-<area shape="rect" id="node3" title=" " alt="" coords="59,243,262,269"/>
-<area shape="rect" id="node4" href="$classAtCalibration.html" title=" " alt="" coords="113,153,209,180"/>
-<area shape="rect" id="node5" title=" " alt="" coords="5,13,73,39"/>
-<area shape="rect" id="node6" title=" " alt="" coords="98,5,223,47"/>
-<area shape="rect" id="node7" title=" " alt="" coords="247,5,373,47"/>
-<area shape="rect" id="node8" href="$classAtDigiPar.html" title=" " alt="" coords="286,243,363,269"/>
-<area shape="rect" id="node9" title=" " alt="" coords="260,153,389,180"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,80,115,107"/>
+<area shape="rect" id="node2" href="$classAtPSA.html" title=" " alt="" coords="29,5,91,32"/>
 </map>

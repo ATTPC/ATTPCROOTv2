@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">ATTPCROOT
-   &#160;<span id="projectnumber">1.0.0</span>
+   &#160;<span id="projectnumber">0.3.0-alpha</span>
    </div>
    <div id="projectbrief">A ROOT-based framework for analyzing data from active target detectors</div>
   </td>
@@ -74,8 +74,7 @@ $(function() {
 <div class="title">AtCSVReader.h File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;iostream&gt;</code><br />
-<code>#include &lt;iterator&gt;</code><br />
+<div class="textblock"><code>#include &lt;cstddef&gt;</code><br />
 <code>#include &lt;sstream&gt;</code><br />
 <code>#include &lt;string&gt;</code><br />
 <code>#include &lt;vector&gt;</code><br />
@@ -84,12 +83,11 @@ Include dependency graph for AtCSVReader.h:</div>
 <div class="dyncontent">
 <div class="center"><img src="AtCSVReader_8h__incl.png" border="0" usemap="#_2github_2workspace_2AtTools_2AtCSVReader_8h" alt=""/></div>
 <map name="_2github_2workspace_2AtTools_2AtCSVReader_8h" id="_2github_2workspace_2AtTools_2AtCSVReader_8h">
-<area shape="rect" title=" " alt="" coords="135,5,313,47"/>
-<area shape="rect" title=" " alt="" coords="5,95,77,121"/>
-<area shape="rect" title=" " alt="" coords="102,95,165,121"/>
-<area shape="rect" title=" " alt="" coords="189,95,259,121"/>
-<area shape="rect" title=" " alt="" coords="283,95,338,121"/>
-<area shape="rect" title=" " alt="" coords="363,95,421,121"/>
+<area shape="rect" title=" " alt="" coords="84,5,261,47"/>
+<area shape="rect" title=" " alt="" coords="5,95,71,121"/>
+<area shape="rect" title=" " alt="" coords="95,95,165,121"/>
+<area shape="rect" title=" " alt="" coords="189,95,244,121"/>
+<area shape="rect" title=" " alt="" coords="269,95,327,121"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -97,8 +95,11 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
 <div class="center"><img src="AtCSVReader_8h__dep__incl.png" border="0" usemap="#_2github_2workspace_2AtTools_2AtCSVReader_8hdep" alt=""/></div>
 <map name="_2github_2workspace_2AtTools_2AtCSVReader_8hdep" id="_2github_2workspace_2AtTools_2AtCSVReader_8hdep">
-<area shape="rect" title=" " alt="" coords="21,5,199,47"/>
-<area shape="rect" href="AtTPCFissionGeneratorV3_8cxx.html" title=" " alt="" coords="5,95,215,136"/>
+<area shape="rect" title=" " alt="" coords="379,5,557,47"/>
+<area shape="rect" href="AtE12014_8cxx.html" title=" " alt="" coords="5,95,200,136"/>
+<area shape="rect" href="AtTabEnergyLoss_8cxx.html" title=" " alt="" coords="225,95,463,136"/>
+<area shape="rect" href="AtTPCFissionGeneratorV3_8cxx.html" title=" " alt="" coords="487,95,697,136"/>
+<area shape="rect" href="AtCSVReader_8cxx.html" title=" " alt="" coords="721,95,898,136"/>
 </map>
 </div>
 </div>
@@ -107,16 +108,20 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCSVRow.html">CSVRow&lt; T &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A simple CSV reader w/ modern cpp features.  <a href="classCSVRow.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCSVIterator.html">CSVIterator&lt; T &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Iterator for <a class="el" href="classCSVRow.html" title="A simple CSV reader w/ modern cpp features.">CSVRow</a>.  <a href="classCSVIterator.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCSVRange.html">CSVRange&lt; T &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Range class for <a class="el" href="classCSVIterator.html" title="Iterator for CSVRow.">CSVIterator</a>.  <a href="classCSVRange.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a38504f8837a886125efa11456be860c4"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr class="memitem:a38504f8837a886125efa11456be860c4"><td class="memTemplItemLeft" align="right" valign="top">std::istream &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="AtCSVReader_8h.html#a38504f8837a886125efa11456be860c4">operator&gt;&gt;</a> (std::istream &amp;stream, <a class="el" href="classCSVRow.html">CSVRow</a>&lt; T &gt; &amp;data)</td></tr>
+<tr class="memdesc:a38504f8837a886125efa11456be860c4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method to stream into this type of object.  <a href="AtCSVReader_8h.html#a38504f8837a886125efa11456be860c4">More...</a><br /></td></tr>
 <tr class="separator:a38504f8837a886125efa11456be860c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
@@ -148,14 +153,16 @@ template&lt;typename T &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtCSVReader_8h_source.html#l00057">57</a> of file <a class="el" href="AtCSVReader_8h_source.html">AtCSVReader.h</a>.</p>
+<p>Method to stream into this type of object. </p>
+
+<p class="definition">Definition at line <a class="el" href="AtCSVReader_8h_source.html#l00056">56</a> of file <a class="el" href="AtCSVReader_8h_source.html">AtCSVReader.h</a>.</p>
 
 </div>
 </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Apr 27 2022 00:47:49 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Oct 20 2023 16:23:01 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.18
 </small></address>

@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">ATTPCROOT
-   &#160;<span id="projectnumber">1.0.0</span>
+   &#160;<span id="projectnumber">0.3.0-alpha</span>
    </div>
    <div id="projectbrief">A ROOT-based framework for analyzing data from active target detectors</div>
   </td>
@@ -64,29 +64,286 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a>  </div>
+<a href="#namespaces">Namespaces</a> &#124;
+<a href="#nested-classes">Classes</a> &#124;
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">AtTools Namespace Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
+Namespaces</h2></td></tr>
+<tr class="memitem:namespaceAtTools_1_1Kinematics"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceAtTools_1_1Kinematics.html">Kinematics</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtTools_1_1AtELossManager.html">AtELossManager</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtTools_1_1AtELossModel.html">AtELossModel</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtTools_1_1AtELossTable.html">AtELossTable</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtTools_1_1AtKinematics.html">AtKinematics</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtTools_1_1AtParsers.html">AtParsers</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtTools_1_1AtTrackTransformer.html">AtTrackTransformer</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtTools_1_1AtVirtualTerminal.html">AtVirtualTerminal</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structAtTools_1_1IonFitInfo.html">IonFitInfo</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:a9898804d4d152d2e4c28b151b5f49390"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; TF1 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceAtTools.html#a9898804d4d152d2e4c28b151b5f49390">GetHitFunctionTB</a> (const <a class="el" href="classAtHit.html">AtHit</a> &amp;hit, const <a class="el" href="classAtDigiPar.html">AtDigiPar</a> *par=nullptr)</td></tr>
+<tr class="memdesc:a9898804d4d152d2e4c28b151b5f49390"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get charge as a function of TB.  <a href="namespaceAtTools.html#a9898804d4d152d2e4c28b151b5f49390">More...</a><br /></td></tr>
+<tr class="separator:a9898804d4d152d2e4c28b151b5f49390"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adf19454be13829c5b2550a31abbe20c7"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; TF1 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceAtTools.html#adf19454be13829c5b2550a31abbe20c7">GetHitFunction</a> (const <a class="el" href="classAtHit.html">AtHit</a> &amp;hit, const <a class="el" href="classAtDigiPar.html">AtDigiPar</a> *par=nullptr)</td></tr>
+<tr class="memdesc:adf19454be13829c5b2550a31abbe20c7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get charge as a function of z (mm).  <a href="namespaceAtTools.html#adf19454be13829c5b2550a31abbe20c7">More...</a><br /></td></tr>
+<tr class="separator:adf19454be13829c5b2550a31abbe20c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a96497be312723c7fa11a40d204e9d0b3"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceAtTools.html#a96497be312723c7fa11a40d204e9d0b3">GetTB</a> (double z, const <a class="el" href="classAtDigiPar.html">AtDigiPar</a> *par=nullptr)</td></tr>
+<tr class="memdesc:a96497be312723c7fa11a40d204e9d0b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get TB that corresponds to the passed z position [mm].  <a href="namespaceAtTools.html#a96497be312723c7fa11a40d204e9d0b3">More...</a><br /></td></tr>
+<tr class="separator:a96497be312723c7fa11a40d204e9d0b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7be51865e0f2a350a9db0a2d6fac7b5e"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceAtTools.html#a7be51865e0f2a350a9db0a2d6fac7b5e">GetDriftTB</a> (double d, const <a class="el" href="classAtDigiPar.html">AtDigiPar</a> *par=nullptr)</td></tr>
+<tr class="memdesc:a7be51865e0f2a350a9db0a2d6fac7b5e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get TB that corresponds to a drift of distance d [mm].  <a href="namespaceAtTools.html#a7be51865e0f2a350a9db0a2d6fac7b5e">More...</a><br /></td></tr>
+<tr class="separator:a7be51865e0f2a350a9db0a2d6fac7b5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a64007ed93b2fb858c62dc545404ccc29"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceAtTools.html#a64007ed93b2fb858c62dc545404ccc29">SplitString</a> (const std::string &amp;s, char delim)</td></tr>
+<tr class="memdesc:a64007ed93b2fb858c62dc545404ccc29"><td class="mdescLeft">&#160;</td><td class="mdescRight">split string, s, into vector of tokens split by delim.  <a href="namespaceAtTools.html#a64007ed93b2fb858c62dc545404ccc29">More...</a><br /></td></tr>
+<tr class="separator:a64007ed93b2fb858c62dc545404ccc29"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a88617d150a6ef9d13c9647261b12afed"><td class="memTemplParams" colspan="2">template&lt;class Vector &gt; </td></tr>
+<tr class="memitem:a88617d150a6ef9d13c9647261b12afed"><td class="memTemplItemLeft" align="right" valign="top">ROOT::Math::AxisAngle&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceAtTools.html#a88617d150a6ef9d13c9647261b12afed">GetRotationToZ</a> (const Vector &amp;vec)</td></tr>
+<tr class="separator:a88617d150a6ef9d13c9647261b12afed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac5358b1ba55985dcb21b027614f3bc3b"><td class="memTemplParams" colspan="2">template&lt;class Vector1 , class Vector2 &gt; </td></tr>
+<tr class="memitem:ac5358b1ba55985dcb21b027614f3bc3b"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="AtTrackTransformer_8cxx.html#acdbe604dea12970b4e97a316f9046ae7">ROOT::Math::XYZPoint</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceAtTools.html#ac5358b1ba55985dcb21b027614f3bc3b">GetIntersection</a> (const std::vector&lt; Vector1 &gt; &amp;point, const std::vector&lt; Vector2 &gt; &amp;direction)</td></tr>
+<tr class="separator:ac5358b1ba55985dcb21b027614f3bc3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Namespace for helper functions manipulating things in AtData (and others). Will take in the parameter class to use. If nullptr then looks for it in the runtime DB N.B. FairRoot implentations mean only the primary thread can find things (the underlying static variable referenced FairRun::Instance() is thread_local). </p>
+</div><h2 class="groupheader">Function Documentation</h2>
+<a id="a7be51865e0f2a350a9db0a2d6fac7b5e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7be51865e0f2a350a9db0a2d6fac7b5e">&#9670;&nbsp;</a></span>GetDriftTB()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double AtTools::GetDriftTB </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>d</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classAtDigiPar.html">AtDigiPar</a> *&#160;</td>
+          <td class="paramname"><em>par</em> = <code>nullptr</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get TB that corresponds to a drift of distance d [mm]. </p>
+
+<p class="definition">Definition at line <a class="el" href="AtDataManip_8cxx_source.html#l00037">37</a> of file <a class="el" href="AtDataManip_8cxx_source.html">AtDataManip.cxx</a>.</p>
+
+</div>
+</div>
+<a id="adf19454be13829c5b2550a31abbe20c7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adf19454be13829c5b2550a31abbe20c7">&#9670;&nbsp;</a></span>GetHitFunction()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::unique_ptr&lt; TF1 &gt; AtTools::GetHitFunction </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classAtHit.html">AtHit</a> &amp;&#160;</td>
+          <td class="paramname"><em>hit</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classAtDigiPar.html">AtDigiPar</a> *&#160;</td>
+          <td class="paramname"><em>par</em> = <code>nullptr</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get charge as a function of z (mm). </p>
+
+<p class="definition">Definition at line <a class="el" href="AtDataManip_8cxx_source.html#l00048">48</a> of file <a class="el" href="AtDataManip_8cxx_source.html">AtDataManip.cxx</a>.</p>
+
+</div>
+</div>
+<a id="a9898804d4d152d2e4c28b151b5f49390"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9898804d4d152d2e4c28b151b5f49390">&#9670;&nbsp;</a></span>GetHitFunctionTB()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::unique_ptr&lt; TF1 &gt; AtTools::GetHitFunctionTB </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classAtHit.html">AtHit</a> &amp;&#160;</td>
+          <td class="paramname"><em>hit</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classAtDigiPar.html">AtDigiPar</a> *&#160;</td>
+          <td class="paramname"><em>par</em> = <code>nullptr</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get charge as a function of TB. </p>
+
+<p class="definition">Definition at line <a class="el" href="AtDataManip_8cxx_source.html#l00074">74</a> of file <a class="el" href="AtDataManip_8cxx_source.html">AtDataManip.cxx</a>.</p>
+
+</div>
+</div>
+<a id="ac5358b1ba55985dcb21b027614f3bc3b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac5358b1ba55985dcb21b027614f3bc3b">&#9670;&nbsp;</a></span>GetIntersection()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class Vector1 , class Vector2 &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="AtTrackTransformer_8cxx.html#acdbe604dea12970b4e97a316f9046ae7">ROOT::Math::XYZPoint</a> AtTools::GetIntersection </td>
+          <td>(</td>
+          <td class="paramtype">const std::vector&lt; Vector1 &gt; &amp;&#160;</td>
+          <td class="paramname"><em>point</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::vector&lt; Vector2 &gt; &amp;&#160;</td>
+          <td class="paramname"><em>direction</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Get the intersection (or point of closest approach) between two lines. The lines are parameterized as point[i] + t*direction[i]. </p>
+
+<p class="definition">Definition at line <a class="el" href="AtVectorUtil_8h_source.html#l00032">32</a> of file <a class="el" href="AtVectorUtil_8h_source.html">AtVectorUtil.h</a>.</p>
+
+</div>
+</div>
+<a id="a88617d150a6ef9d13c9647261b12afed"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a88617d150a6ef9d13c9647261b12afed">&#9670;&nbsp;</a></span>GetRotationToZ()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class Vector &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">ROOT::Math::AxisAngle AtTools::GetRotationToZ </td>
+          <td>(</td>
+          <td class="paramtype">const Vector &amp;&#160;</td>
+          <td class="paramname"><em>vec</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Get the rotation matrix that will take vec and make it the z-axis. That is <code>vec*GetRotationToZ(vec) == |vec|\hat{z}</code>. </p>
+
+<p class="definition">Definition at line <a class="el" href="AtVectorUtil_8h_source.html#l00020">20</a> of file <a class="el" href="AtVectorUtil_8h_source.html">AtVectorUtil.h</a>.</p>
+
+</div>
+</div>
+<a id="a96497be312723c7fa11a40d204e9d0b3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a96497be312723c7fa11a40d204e9d0b3">&#9670;&nbsp;</a></span>GetTB()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double AtTools::GetTB </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>z</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classAtDigiPar.html">AtDigiPar</a> *&#160;</td>
+          <td class="paramname"><em>fPar</em> = <code>nullptr</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get TB that corresponds to the passed z position [mm]. </p>
+<p>Assumes that window is at z = 0, and the electrons are drifting towards the pad plane at the z locations specified in the parameter file. </p>
+
+<p class="definition">Definition at line <a class="el" href="AtDataManip_8cxx_source.html#l00021">21</a> of file <a class="el" href="AtDataManip_8cxx_source.html">AtDataManip.cxx</a>.</p>
+
+</div>
+</div>
+<a id="a64007ed93b2fb858c62dc545404ccc29"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a64007ed93b2fb858c62dc545404ccc29">&#9670;&nbsp;</a></span>SplitString()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; std::string &gt; AtTools::SplitString </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>s</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char&#160;</td>
+          <td class="paramname"><em>delim</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>split string, s, into vector of tokens split by delim. </p>
+
+<p class="definition">Definition at line <a class="el" href="AtStringManip_8cxx_source.html#l00006">6</a> of file <a class="el" href="AtStringManip_8cxx_source.html">AtStringManip.cxx</a>.</p>
+
+</div>
+</div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Apr 27 2022 00:47:50 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Oct 20 2023 16:23:03 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.18
 </small></address>

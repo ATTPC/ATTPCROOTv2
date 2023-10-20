@@ -1,7 +1,8 @@
 <map id="/github/workspace/AtSimulationData/AtStack.h" name="/github/workspace/AtSimulationData/AtStack.h">
-<area shape="rect" id="node1" title=" " alt="" coords="311,5,518,47"/>
+<area shape="rect" id="node1" title=" " alt="" coords="406,5,613,47"/>
 <area shape="rect" id="node2" href="$AtApollo_8cxx.html" title=" " alt="" coords="5,95,187,136"/>
-<area shape="rect" id="node3" href="$AtSiArray_8cxx.html" title=" " alt="" coords="211,95,397,136"/>
-<area shape="rect" id="node4" href="$AtStack_8cxx.html" title=" " alt="" coords="422,95,629,136"/>
-<area shape="rect" id="node5" href="$AtTpc_8cxx.html" title=" " alt="" coords="653,95,819,136"/>
+<area shape="rect" id="node3" href="$AtSeGA_8cxx.html" title=" " alt="" coords="211,95,391,136"/>
+<area shape="rect" id="node4" href="$AtSiArray_8cxx.html" title=" " alt="" coords="416,95,603,136"/>
+<area shape="rect" id="node5" href="$AtStack_8cxx.html" title=" " alt="" coords="627,95,834,136"/>
+<area shape="rect" id="node6" href="$AtTpc_8cxx.html" title=" " alt="" coords="858,95,1025,136"/>
 </map>

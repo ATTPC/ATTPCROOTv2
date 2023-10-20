@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">ATTPCROOT
-   &#160;<span id="projectnumber">1.0.0</span>
+   &#160;<span id="projectnumber">0.3.0-alpha</span>
    </div>
    <div id="projectbrief">A ROOT-based framework for analyzing data from active target detectors</div>
   </td>
@@ -110,10 +110,18 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ab0be929ae13860ebefc8fc6a8697f479"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a68e50376360319ec975e1a72ebf31998"><td class="memItemLeft" align="right" valign="top">Double_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtTools_1_1AtKinematics.html#a68e50376360319ec975e1a72ebf31998">omega</a> (Double_t x, Double_t <a class="el" href="lmcurve_8cxx.html#ac41520b3fdae6af3fa0d9dbbf3211471">y</a>, Double_t z)</td></tr>
 <tr class="separator:a68e50376360319ec975e1a72ebf31998"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a597068435ba9ea7fd9c2ebb57499b5e6"><td class="memItemLeft" align="right" valign="top">std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtTools_1_1AtKinematics.html#a597068435ba9ea7fd9c2ebb57499b5e6">KinematicalFit</a> (std::vector&lt; double &gt; &amp;parameters)</td></tr>
+<tr class="separator:a597068435ba9ea7fd9c2ebb57499b5e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a77835b42780a609e94164a740a4a248c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtTools_1_1AtKinematics.html#a77835b42780a609e94164a740a4a248c">SetKFIterations</a> (Int_t iter)</td></tr>
+<tr class="separator:a77835b42780a609e94164a740a4a248c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abc007108380b51790fa77a4a06d4aff7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtTools_1_1AtKinematics.html#abc007108380b51790fa77a4a06d4aff7">SetKFWeighting</a> (Double_t weight)</td></tr>
+<tr class="separator:abc007108380b51790fa77a4a06d4aff7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a466a48d416a3f4e0bbe83e42d55e314c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtTools_1_1AtKinematics.html#a466a48d416a3f4e0bbe83e42d55e314c">SetKFTargetMass</a> (Double_t mass)</td></tr>
+<tr class="separator:a466a48d416a3f4e0bbe83e42d55e314c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="AtKinematics_8h_source.html#l00022">22</a> of file <a class="el" href="AtKinematics_8h_source.html">AtKinematics.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtKinematics_8h_source.html#l00027">27</a> of file <a class="el" href="AtKinematics_8h_source.html">AtKinematics.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="ac5ca90c918555042dc5e348fedf83e21"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac5ca90c918555042dc5e348fedf83e21">&#9670;&nbsp;</a></span>AtKinematics()</h2>
@@ -130,7 +138,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtKinematics_8cxx_source.html#l00012">12</a> of file <a class="el" href="AtKinematics_8cxx_source.html">AtKinematics.cxx</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtKinematics_8cxx_source.html#l00016">16</a> of file <a class="el" href="AtKinematics_8cxx_source.html">AtKinematics.cxx</a>.</p>
 
 </div>
 </div>
@@ -194,7 +202,27 @@ Public Member Functions</h2></td></tr>
 
 <p>Returns momentum (in GeV) from Brho assuming M (amu) and Z;. </p>
 
-<p class="definition">Definition at line <a class="el" href="AtKinematics_8cxx_source.html#l00014">14</a> of file <a class="el" href="AtKinematics_8cxx_source.html">AtKinematics.cxx</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtKinematics_8cxx_source.html#l00031">31</a> of file <a class="el" href="AtKinematics_8cxx_source.html">AtKinematics.cxx</a>.</p>
+
+</div>
+</div>
+<a id="a597068435ba9ea7fd9c2ebb57499b5e6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a597068435ba9ea7fd9c2ebb57499b5e6">&#9670;&nbsp;</a></span>KinematicalFit()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; double &gt; AtTools::AtKinematics::KinematicalFit </td>
+          <td>(</td>
+          <td class="paramtype">std::vector&lt; double &gt; &amp;&#160;</td>
+          <td class="paramname"><em>parameters</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtKinematics_8cxx_source.html#l00080">80</a> of file <a class="el" href="AtKinematics_8cxx_source.html">AtKinematics.cxx</a>.</p>
 
 </div>
 </div>
@@ -230,7 +258,91 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtKinematics_8cxx_source.html#l00058">58</a> of file <a class="el" href="AtKinematics_8cxx_source.html">AtKinematics.cxx</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtKinematics_8cxx_source.html#l00075">75</a> of file <a class="el" href="AtKinematics_8cxx_source.html">AtKinematics.cxx</a>.</p>
+
+</div>
+</div>
+<a id="a77835b42780a609e94164a740a4a248c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a77835b42780a609e94164a740a4a248c">&#9670;&nbsp;</a></span>SetKFIterations()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void AtTools::AtKinematics::SetKFIterations </td>
+          <td>(</td>
+          <td class="paramtype">Int_t&#160;</td>
+          <td class="paramname"><em>iter</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtKinematics_8h_source.html#l00060">60</a> of file <a class="el" href="AtKinematics_8h_source.html">AtKinematics.h</a>.</p>
+
+</div>
+</div>
+<a id="a466a48d416a3f4e0bbe83e42d55e314c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a466a48d416a3f4e0bbe83e42d55e314c">&#9670;&nbsp;</a></span>SetKFTargetMass()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void AtTools::AtKinematics::SetKFTargetMass </td>
+          <td>(</td>
+          <td class="paramtype">Double_t&#160;</td>
+          <td class="paramname"><em>mass</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtKinematics_8h_source.html#l00062">62</a> of file <a class="el" href="AtKinematics_8h_source.html">AtKinematics.h</a>.</p>
+
+</div>
+</div>
+<a id="abc007108380b51790fa77a4a06d4aff7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abc007108380b51790fa77a4a06d4aff7">&#9670;&nbsp;</a></span>SetKFWeighting()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void AtTools::AtKinematics::SetKFWeighting </td>
+          <td>(</td>
+          <td class="paramtype">Double_t&#160;</td>
+          <td class="paramname"><em>weight</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtKinematics_8h_source.html#l00061">61</a> of file <a class="el" href="AtKinematics_8h_source.html">AtKinematics.h</a>.</p>
 
 </div>
 </div>
@@ -258,7 +370,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtKinematics_8h_source.html#l00028">28</a> of file <a class="el" href="AtKinematics_8h_source.html">AtKinematics.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtKinematics_8h_source.html#l00050">50</a> of file <a class="el" href="AtKinematics_8h_source.html">AtKinematics.h</a>.</p>
 
 </div>
 </div>
@@ -318,7 +430,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtKinematics_8cxx_source.html#l00025">25</a> of file <a class="el" href="AtKinematics_8cxx_source.html">AtKinematics.cxx</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtKinematics_8cxx_source.html#l00042">42</a> of file <a class="el" href="AtKinematics_8cxx_source.html">AtKinematics.cxx</a>.</p>
 
 </div>
 </div>
@@ -329,7 +441,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Apr 27 2022 00:47:50 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Oct 20 2023 16:23:03 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.18
 </small></address>

@@ -1,0 +1,7 @@
+<map id="RandomSample::AtIndependentSample" name="RandomSample::AtIndependentSample">
+<area shape="rect" id="node1" title="Interface for independent samples." alt="" coords="121,80,325,121"/>
+<area shape="rect" id="node3" href="$classRandomSample_1_1AtChargeWeighted.html" title="Sample AtHits according to charge." alt="" coords="5,169,233,196"/>
+<area shape="rect" id="node5" href="$classRandomSample_1_1AtY.html" title="Sample AtHits according to charge for Y shaped tracks." alt="" coords="257,169,400,196"/>
+<area shape="rect" id="node2" href="$classRandomSample_1_1AtSample.html" title="Interface for randomly sampling AtHits." alt="" coords="135,5,312,32"/>
+<area shape="rect" id="node4" href="$classRandomSample_1_1AtWeightedY.html" title="Sample AtHits according to charge for Y shaped tracks." alt="" coords="21,244,217,271"/>
+</map>

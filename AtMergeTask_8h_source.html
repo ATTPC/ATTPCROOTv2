@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">ATTPCROOT
-   &#160;<span id="projectnumber">1.0.0</span>
+   &#160;<span id="projectnumber">0.3.0-alpha</span>
    </div>
    <div id="projectbrief">A ROOT-based framework for analyzing data from active target detectors</div>
   </td>
@@ -74,127 +74,122 @@ $(function() {
 <a href="AtMergeTask_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#ifndef AtMergeTask_H</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#define AtMergeTask_H</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160; </div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &lt;Rtypes.h&gt;</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;TString.h&gt;</span></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">// FAIRROOT classes</span></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &lt;FairTask.h&gt;</span></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &lt;FairTask.h&gt;</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160; </div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &lt;Rtypes.h&gt;</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &lt;TString.h&gt;</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160; </div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &lt;vector&gt;</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="S800Ana_8h.html">S800Ana.h</a>&quot;</span></div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160; </div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="comment">// AtTPCROOT classes</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &lt;vector&gt;</span></div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160; </div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="keyword">class </span>FairLogger;</div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="keyword">class </span><a class="code" href="classS800Calc.html">S800Calc</a>;</div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="keyword">class </span>TBuffer;</div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="keyword">class </span>TClass;</div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="keyword">class </span>TClonesArray;</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="keyword">class </span>TCutG;</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="keyword">class </span>TF1;</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="keyword">class </span>TFile;</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="keyword">class </span>TGraph;</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="keyword">class </span>TMemberInspector;</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
-<div class="line"><a name="l00024"></a><span class="lineno"><a class="line" href="classAtMergeTask.html">   24</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAtMergeTask.html">AtMergeTask</a> : <span class="keyword">public</span> FairTask {</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;   <a class="code" href="classAtMergeTask.html#a6414fdc3b95f84093643901be00cbd4e">AtMergeTask</a>();</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;   <a class="code" href="classAtMergeTask.html#adc5a6b1322446bf544cba1ab03d7f24a">~AtMergeTask</a>();</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;   <span class="keywordtype">void</span> <a class="code" href="classAtMergeTask.html#a666d8769414b177553ad94d16bc253e3">SetPersistence</a>(Bool_t value = kTRUE);</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;   <span class="keywordtype">void</span> <a class="code" href="classAtMergeTask.html#aa1b4ee70a51e317e4c450bb15428f958">SetS800File</a>(TString file);</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;   <span class="keywordtype">void</span> <a class="code" href="classAtMergeTask.html#ac80772218df4308bd1a3f4e57cbf761d">SetGlom</a>(Double_t glom);</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;   <span class="keywordtype">void</span> <a class="code" href="classAtMergeTask.html#ab82fcd77b5c09772b4f259c1d9d4948d">SetOptiEvtDelta</a>(Int_t EvtDelta);</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;   <span class="keywordtype">void</span> <a class="code" href="classAtMergeTask.html#a5e2dd2fa81ba55dc39a43690cacd9f24">SetPID1cut</a>(TString file);</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;   <span class="keywordtype">void</span> <a class="code" href="classAtMergeTask.html#af7d67e12cd22409cee69712a2c340453">SetPID2cut</a>(TString file);</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;   <span class="keywordtype">void</span> <a class="code" href="classAtMergeTask.html#a00c29d3c809111cdd2c806e14669a789">SetPID3cut</a>(TString file);</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;   <span class="keywordtype">void</span> <a class="code" href="classAtMergeTask.html#ab707a3cc7619d6917d587e58085601f5">SetTsDelta</a>(Int_t TsDelta);</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;   <span class="keywordtype">void</span> <a class="code" href="classAtMergeTask.html#a5b52bda257559062c775810b13a8d227">SetParameters</a>(std::vector&lt;Double_t&gt; vec);</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;   <span class="keywordtype">void</span> <a class="code" href="classAtMergeTask.html#ab51a88d8aa097a1b04aec783d6a25e45">SetTofObjCorr</a>(std::vector&lt;Double_t&gt; vec);</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;   <span class="keywordtype">void</span> <a class="code" href="classAtMergeTask.html#acdf3185625e0eef60197713bf8f355f0">SetMTDCObjRange</a>(std::vector&lt;Double_t&gt; vec);</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;   <span class="keywordtype">void</span> <a class="code" href="classAtMergeTask.html#a0eb9fe5ffcf83c09ab0ed5f64b62d640">SetMTDCXfRange</a>(std::vector&lt;Double_t&gt; vec);</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;   Int_t <a class="code" href="classAtMergeTask.html#a58c1dcd7d78b2b910c8cdbf501552a5f">GetS800TsSize</a>();</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;   Int_t <a class="code" href="classAtMergeTask.html#aeb015129f7aba86312ee987c83861fef">GetMergedTsSize</a>();</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;   std::vector&lt;Double_t&gt; <a class="code" href="classAtMergeTask.html#a92eed3df598c9538e6edfc0c4d1900bf">GetParameters</a>();</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;   std::vector&lt;Double_t&gt; <a class="code" href="classAtMergeTask.html#a746f25dc12a5e275422dad96250afe84">GetTofObjCorr</a>();</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;   std::vector&lt;Double_t&gt; <a class="code" href="classAtMergeTask.html#a6c8b246942f4e55acdd76ac4526abd60">GetMTDCObjRange</a>();</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;   std::vector&lt;Double_t&gt; <a class="code" href="classAtMergeTask.html#addd6535c5899ba9f8d9849538a0ad00b">GetMTDCXfRange</a>();</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="keyword">class </span>TF1;</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="keyword">class </span>TFile;</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="keyword">class </span>TGraph;</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="keyword">class </span>TMemberInspector;</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160; </div>
+<div class="line"><a name="l00023"></a><span class="lineno"><a class="line" href="classAtMergeTask.html">   23</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAtMergeTask.html">AtMergeTask</a> : <span class="keyword">public</span> FairTask {</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;   <a class="code" href="classAtMergeTask.html#a6414fdc3b95f84093643901be00cbd4e">AtMergeTask</a>();</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;   <a class="code" href="classAtMergeTask.html#adc5a6b1322446bf544cba1ab03d7f24a">~AtMergeTask</a>();</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;   <span class="keywordtype">void</span> <a class="code" href="classAtMergeTask.html#a666d8769414b177553ad94d16bc253e3">SetPersistence</a>(Bool_t value = kTRUE);</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;   <span class="keywordtype">void</span> <a class="code" href="classAtMergeTask.html#aa1b4ee70a51e317e4c450bb15428f958">SetS800File</a>(TString file);</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;   <span class="keywordtype">void</span> <a class="code" href="classAtMergeTask.html#ac80772218df4308bd1a3f4e57cbf761d">SetGlom</a>(Double_t glom);</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;   <span class="keywordtype">void</span> <a class="code" href="classAtMergeTask.html#ab82fcd77b5c09772b4f259c1d9d4948d">SetOptiEvtDelta</a>(Int_t EvtDelta);</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;   <span class="keywordtype">void</span> <a class="code" href="classAtMergeTask.html#a5e2dd2fa81ba55dc39a43690cacd9f24">SetPID1cut</a>(TString file);</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;   <span class="keywordtype">void</span> <a class="code" href="classAtMergeTask.html#af7d67e12cd22409cee69712a2c340453">SetPID2cut</a>(TString file);</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;   <span class="keywordtype">void</span> <a class="code" href="classAtMergeTask.html#a00c29d3c809111cdd2c806e14669a789">SetPID3cut</a>(TString file);</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;   <span class="keywordtype">void</span> <a class="code" href="classAtMergeTask.html#ab707a3cc7619d6917d587e58085601f5">SetTsDelta</a>(Int_t TsDelta);</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;   <span class="keywordtype">void</span> <a class="code" href="classAtMergeTask.html#a5b52bda257559062c775810b13a8d227">SetParameters</a>(std::vector&lt;Double_t&gt; vec);</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;   <span class="keywordtype">void</span> <a class="code" href="classAtMergeTask.html#ab51a88d8aa097a1b04aec783d6a25e45">SetTofObjCorr</a>(std::vector&lt;Double_t&gt; vec);</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;   <span class="keywordtype">void</span> <a class="code" href="classAtMergeTask.html#acdf3185625e0eef60197713bf8f355f0">SetMTDCObjRange</a>(std::vector&lt;Double_t&gt; vec);</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;   <span class="keywordtype">void</span> <a class="code" href="classAtMergeTask.html#a0eb9fe5ffcf83c09ab0ed5f64b62d640">SetMTDCXfRange</a>(std::vector&lt;Double_t&gt; vec);</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;   <span class="keywordtype">void</span> <a class="code" href="classAtMergeTask.html#acc4af2cf74fda16dbb614f7076c33dab">SetATTPCClock</a>(Bool_t value = kTRUE);</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;   <span class="keywordtype">void</span> <a class="code" href="classAtMergeTask.html#a0764d38aa203bba44b0c264792ae2b8e">SetATTPCClockFreq</a>(Double_t value);</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160; </div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;   Int_t <a class="code" href="classAtMergeTask.html#a58c1dcd7d78b2b910c8cdbf501552a5f">GetS800TsSize</a>();</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;   Int_t <a class="code" href="classAtMergeTask.html#aeb015129f7aba86312ee987c83861fef">GetMergedTsSize</a>();</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;   Bool_t <a class="code" href="classAtMergeTask.html#a62ed46edf683377c3093b5a670b2f28e">isInGlom</a>(Long64_t ts1, Long64_t ts2);</div>
+<div class="line"><a name="l00048"></a><span class="lineno"><a class="line" href="classAtMergeTask.html#a0269e28bf45a905680e648eb47933806">   48</a></span>&#160;   Bool_t <a class="code" href="classAtMergeTask.html#a0269e28bf45a905680e648eb47933806">isInPID</a>(<a class="code" href="classS800Calc.html">S800Calc</a> *s800calc);</div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160; </div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;   Bool_t <a class="code" href="classAtMergeTask.html#a62ed46edf683377c3093b5a670b2f28e">isInGlom</a>(Long64_t ts1, Long64_t ts2);</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;   Bool_t <a class="code" href="classAtMergeTask.html#a0269e28bf45a905680e648eb47933806">isInPID</a>(<a class="code" href="classS800Calc.html">S800Calc</a> *s800calc);</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;   <span class="keyword">virtual</span> InitStatus <a class="code" href="classAtMergeTask.html#a0906cd193854d937482c031e3a1d195c">Init</a>();</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;   <span class="comment">//    virtual void SetParContainers();</span></div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;   <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classAtMergeTask.html#a19d5fcb687f67b9c9e204c146672e795">Exec</a>(Option_t *opt);</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;   <span class="keyword">virtual</span> InitStatus <a class="code" href="classAtMergeTask.html#a0906cd193854d937482c031e3a1d195c">Init</a>();</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;   <span class="comment">//    virtual void SetParContainers();</span></div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;   <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classAtMergeTask.html#a19d5fcb687f67b9c9e204c146672e795">Exec</a>(Option_t *opt);</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160; </div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;   FairLogger *fLogger;</div>
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160; </div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;   FairLogger *fLogger;</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;   TClonesArray *fRawEventArray{};</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;   <a class="code" href="classS800Calc.html">S800Calc</a> *fS800CalcBr;</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;   TFile *fS800file{};</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160; </div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;   Int_t fTsEvtS800Size{}, fEvtMerged{}, fEvtDelta{5}, fTsDelta{1272};</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;   TString fS800File;</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;   std::vector&lt;Long64_t&gt; fS800Ts;</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;   std::vector&lt;Double_t&gt; fS800Evt;</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;   std::vector&lt;Double_t&gt; fParameters;</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;   std::vector&lt;Double_t&gt; fTofObjCorr;</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;   std::vector&lt;Double_t&gt; fMTDCObjRange;</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;   std::vector&lt;Double_t&gt; fMTDCXfRange;</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160; </div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;   TF1 *fS800TsFunc{};</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;   <span class="comment">// TF1 *fOptiFit;</span></div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;   Double_t fGlom{2};</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160; </div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;   std::vector&lt;TCutG *&gt; fcutPID1;</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;   std::vector&lt;TCutG *&gt; fcutPID2;</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;   std::vector&lt;TCutG *&gt; fcutPID3;</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;   std::vector&lt;TString&gt; fcutPID1File;</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;   std::vector&lt;TString&gt; fcutPID2File;</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;   std::vector&lt;TString&gt; fcutPID3File;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;   TClonesArray *fRawEventArray{};</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;   <a class="code" href="classS800Calc.html">S800Calc</a> *fS800CalcBr;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;   TFile *fS800file{};</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160; </div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;   Int_t fTsEvtS800Size{}, fEvtMerged{}, fEvtDelta{5}, fTsDelta{1272};</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;   TString fS800File;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;   Long64_t fATTPCTs0{}, fATTPCTsPrev{};</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;   std::vector&lt;Long64_t&gt; fS800Ts;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;   std::vector&lt;Double_t&gt; fS800Evt;</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;   std::vector&lt;Double_t&gt; fParameters;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;   std::vector&lt;Double_t&gt; fTofObjCorr;</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;   std::vector&lt;Double_t&gt; fMTDCObjRange;</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;   std::vector&lt;Double_t&gt; fMTDCXfRange;</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160; </div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;   TF1 *fS800TsFunc{};</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;   Double_t fGlom{2};</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;   Double_t fATTPCClockFreq{};</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160; </div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;   std::vector&lt;TString&gt; fcutPID1File;</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;   std::vector&lt;TString&gt; fcutPID2File;</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;   std::vector&lt;TString&gt; fcutPID3File;</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160; </div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;   Bool_t fIsPersistence{<span class="keyword">false</span>};</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;   Bool_t fUseATTPCClock{<span class="keyword">false</span>};</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160; </div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;   <a class="code" href="classS800Ana.html">S800Ana</a> fS800Ana;</div>
 <div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160; </div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;   Bool_t fIsPersistence{<span class="keyword">false</span>};</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;   Bool_t fSetCut1{<span class="keyword">false</span>};</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;   Bool_t fSetCut2{<span class="keyword">false</span>};</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;   Bool_t fSetCut3{<span class="keyword">false</span>};</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;   TGraph *fS800TsGraph{};</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160; </div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;   ClassDef(<a class="code" href="classAtMergeTask.html">AtMergeTask</a>, 1);</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;};</div>
 <div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160; </div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;   TGraph *fS800TsGraph{};</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160; </div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;   ClassDef(<a class="code" href="classAtMergeTask.html">AtMergeTask</a>, 1);</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;};</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160; </div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;<span class="preprocessor">#endif</span></div>
 </div><!-- fragment --></div><!-- contents -->
 <div class="ttc" id="aclassAtMergeTask_html_a6414fdc3b95f84093643901be00cbd4e"><div class="ttname"><a href="classAtMergeTask.html#a6414fdc3b95f84093643901be00cbd4e">AtMergeTask::AtMergeTask</a></div><div class="ttdeci">AtMergeTask()</div><div class="ttdef"><b>Definition:</b> <a href="AtMergeTask_8cxx_source.html#l00033">AtMergeTask.cxx:33</a></div></div>
-<div class="ttc" id="aclassAtMergeTask_html_a746f25dc12a5e275422dad96250afe84"><div class="ttname"><a href="classAtMergeTask.html#a746f25dc12a5e275422dad96250afe84">AtMergeTask::GetTofObjCorr</a></div><div class="ttdeci">std::vector&lt; Double_t &gt; GetTofObjCorr()</div><div class="ttdef"><b>Definition:</b> <a href="AtMergeTask_8cxx_source.html#l00117">AtMergeTask.cxx:117</a></div></div>
-<div class="ttc" id="aclassAtMergeTask_html_a666d8769414b177553ad94d16bc253e3"><div class="ttname"><a href="classAtMergeTask.html#a666d8769414b177553ad94d16bc253e3">AtMergeTask::SetPersistence</a></div><div class="ttdeci">void SetPersistence(Bool_t value=kTRUE)</div><div class="ttdef"><b>Definition:</b> <a href="AtMergeTask_8cxx_source.html#l00057">AtMergeTask.cxx:57</a></div></div>
-<div class="ttc" id="aclassAtMergeTask_html_a0eb9fe5ffcf83c09ab0ed5f64b62d640"><div class="ttname"><a href="classAtMergeTask.html#a0eb9fe5ffcf83c09ab0ed5f64b62d640">AtMergeTask::SetMTDCXfRange</a></div><div class="ttdeci">void SetMTDCXfRange(std::vector&lt; Double_t &gt; vec)</div><div class="ttdef"><b>Definition:</b> <a href="AtMergeTask_8cxx_source.html#l00104">AtMergeTask.cxx:104</a></div></div>
-<div class="ttc" id="aclassAtMergeTask_html"><div class="ttname"><a href="classAtMergeTask.html">AtMergeTask</a></div><div class="ttdef"><b>Definition:</b> <a href="AtMergeTask_8h_source.html#l00024">AtMergeTask.h:24</a></div></div>
+<div class="ttc" id="aclassAtMergeTask_html_a666d8769414b177553ad94d16bc253e3"><div class="ttname"><a href="classAtMergeTask.html#a666d8769414b177553ad94d16bc253e3">AtMergeTask::SetPersistence</a></div><div class="ttdeci">void SetPersistence(Bool_t value=kTRUE)</div><div class="ttdef"><b>Definition:</b> <a href="AtMergeTask_8cxx_source.html#l00054">AtMergeTask.cxx:54</a></div></div>
+<div class="ttc" id="aclassAtMergeTask_html_a0eb9fe5ffcf83c09ab0ed5f64b62d640"><div class="ttname"><a href="classAtMergeTask.html#a0eb9fe5ffcf83c09ab0ed5f64b62d640">AtMergeTask::SetMTDCXfRange</a></div><div class="ttdeci">void SetMTDCXfRange(std::vector&lt; Double_t &gt; vec)</div><div class="ttdef"><b>Definition:</b> <a href="AtMergeTask_8cxx_source.html#l00098">AtMergeTask.cxx:98</a></div></div>
+<div class="ttc" id="aclassAtMergeTask_html"><div class="ttname"><a href="classAtMergeTask.html">AtMergeTask</a></div><div class="ttdef"><b>Definition:</b> <a href="AtMergeTask_8h_source.html#l00023">AtMergeTask.h:23</a></div></div>
 <div class="ttc" id="aclassS800Calc_html"><div class="ttname"><a href="classS800Calc.html">S800Calc</a></div><div class="ttdef"><b>Definition:</b> <a href="S800Calc_8h_source.html#l00455">S800Calc.h:455</a></div></div>
-<div class="ttc" id="aclassAtMergeTask_html_a5e2dd2fa81ba55dc39a43690cacd9f24"><div class="ttname"><a href="classAtMergeTask.html#a5e2dd2fa81ba55dc39a43690cacd9f24">AtMergeTask::SetPID1cut</a></div><div class="ttdeci">void SetPID1cut(TString file)</div><div class="ttdef"><b>Definition:</b> <a href="AtMergeTask_8cxx_source.html#l00073">AtMergeTask.cxx:73</a></div></div>
-<div class="ttc" id="aclassAtMergeTask_html_addd6535c5899ba9f8d9849538a0ad00b"><div class="ttname"><a href="classAtMergeTask.html#addd6535c5899ba9f8d9849538a0ad00b">AtMergeTask::GetMTDCXfRange</a></div><div class="ttdeci">std::vector&lt; Double_t &gt; GetMTDCXfRange()</div><div class="ttdef"><b>Definition:</b> <a href="AtMergeTask_8cxx_source.html#l00125">AtMergeTask.cxx:125</a></div></div>
-<div class="ttc" id="aclassAtMergeTask_html_a0906cd193854d937482c031e3a1d195c"><div class="ttname"><a href="classAtMergeTask.html#a0906cd193854d937482c031e3a1d195c">AtMergeTask::Init</a></div><div class="ttdeci">virtual InitStatus Init()</div><div class="ttdef"><b>Definition:</b> <a href="AtMergeTask_8cxx_source.html#l00243">AtMergeTask.cxx:243</a></div></div>
-<div class="ttc" id="aclassAtMergeTask_html_a00c29d3c809111cdd2c806e14669a789"><div class="ttname"><a href="classAtMergeTask.html#a00c29d3c809111cdd2c806e14669a789">AtMergeTask::SetPID3cut</a></div><div class="ttdeci">void SetPID3cut(TString file)</div><div class="ttdef"><b>Definition:</b> <a href="AtMergeTask_8cxx_source.html#l00083">AtMergeTask.cxx:83</a></div></div>
-<div class="ttc" id="aclassAtMergeTask_html_af7d67e12cd22409cee69712a2c340453"><div class="ttname"><a href="classAtMergeTask.html#af7d67e12cd22409cee69712a2c340453">AtMergeTask::SetPID2cut</a></div><div class="ttdeci">void SetPID2cut(TString file)</div><div class="ttdef"><b>Definition:</b> <a href="AtMergeTask_8cxx_source.html#l00078">AtMergeTask.cxx:78</a></div></div>
-<div class="ttc" id="aclassAtMergeTask_html_aeb015129f7aba86312ee987c83861fef"><div class="ttname"><a href="classAtMergeTask.html#aeb015129f7aba86312ee987c83861fef">AtMergeTask::GetMergedTsSize</a></div><div class="ttdeci">Int_t GetMergedTsSize()</div><div class="ttdef"><b>Definition:</b> <a href="AtMergeTask_8cxx_source.html#l00113">AtMergeTask.cxx:113</a></div></div>
-<div class="ttc" id="aclassAtMergeTask_html_aa1b4ee70a51e317e4c450bb15428f958"><div class="ttname"><a href="classAtMergeTask.html#aa1b4ee70a51e317e4c450bb15428f958">AtMergeTask::SetS800File</a></div><div class="ttdeci">void SetS800File(TString file)</div><div class="ttdef"><b>Definition:</b> <a href="AtMergeTask_8cxx_source.html#l00061">AtMergeTask.cxx:61</a></div></div>
-<div class="ttc" id="aclassAtMergeTask_html_ab82fcd77b5c09772b4f259c1d9d4948d"><div class="ttname"><a href="classAtMergeTask.html#ab82fcd77b5c09772b4f259c1d9d4948d">AtMergeTask::SetOptiEvtDelta</a></div><div class="ttdeci">void SetOptiEvtDelta(Int_t EvtDelta)</div><div class="ttdef"><b>Definition:</b> <a href="AtMergeTask_8cxx_source.html#l00069">AtMergeTask.cxx:69</a></div></div>
-<div class="ttc" id="aclassAtMergeTask_html_ab707a3cc7619d6917d587e58085601f5"><div class="ttname"><a href="classAtMergeTask.html#ab707a3cc7619d6917d587e58085601f5">AtMergeTask::SetTsDelta</a></div><div class="ttdeci">void SetTsDelta(Int_t TsDelta)</div><div class="ttdef"><b>Definition:</b> <a href="AtMergeTask_8cxx_source.html#l00088">AtMergeTask.cxx:88</a></div></div>
-<div class="ttc" id="aclassAtMergeTask_html_ab51a88d8aa097a1b04aec783d6a25e45"><div class="ttname"><a href="classAtMergeTask.html#ab51a88d8aa097a1b04aec783d6a25e45">AtMergeTask::SetTofObjCorr</a></div><div class="ttdeci">void SetTofObjCorr(std::vector&lt; Double_t &gt; vec)</div><div class="ttdef"><b>Definition:</b> <a href="AtMergeTask_8cxx_source.html#l00096">AtMergeTask.cxx:96</a></div></div>
-<div class="ttc" id="aclassAtMergeTask_html_a92eed3df598c9538e6edfc0c4d1900bf"><div class="ttname"><a href="classAtMergeTask.html#a92eed3df598c9538e6edfc0c4d1900bf">AtMergeTask::GetParameters</a></div><div class="ttdeci">std::vector&lt; Double_t &gt; GetParameters()</div><div class="ttdef"><b>Definition:</b> <a href="AtMergeTask_8cxx_source.html#l00129">AtMergeTask.cxx:129</a></div></div>
-<div class="ttc" id="aclassAtMergeTask_html_a62ed46edf683377c3093b5a670b2f28e"><div class="ttname"><a href="classAtMergeTask.html#a62ed46edf683377c3093b5a670b2f28e">AtMergeTask::isInGlom</a></div><div class="ttdeci">Bool_t isInGlom(Long64_t ts1, Long64_t ts2)</div><div class="ttdef"><b>Definition:</b> <a href="AtMergeTask_8cxx_source.html#l00134">AtMergeTask.cxx:134</a></div></div>
-<div class="ttc" id="aclassAtMergeTask_html_ac80772218df4308bd1a3f4e57cbf761d"><div class="ttname"><a href="classAtMergeTask.html#ac80772218df4308bd1a3f4e57cbf761d">AtMergeTask::SetGlom</a></div><div class="ttdeci">void SetGlom(Double_t glom)</div><div class="ttdef"><b>Definition:</b> <a href="AtMergeTask_8cxx_source.html#l00065">AtMergeTask.cxx:65</a></div></div>
-<div class="ttc" id="aclassAtMergeTask_html_a5b52bda257559062c775810b13a8d227"><div class="ttname"><a href="classAtMergeTask.html#a5b52bda257559062c775810b13a8d227">AtMergeTask::SetParameters</a></div><div class="ttdeci">void SetParameters(std::vector&lt; Double_t &gt; vec)</div><div class="ttdef"><b>Definition:</b> <a href="AtMergeTask_8cxx_source.html#l00092">AtMergeTask.cxx:92</a></div></div>
-<div class="ttc" id="aclassAtMergeTask_html_a19d5fcb687f67b9c9e204c146672e795"><div class="ttname"><a href="classAtMergeTask.html#a19d5fcb687f67b9c9e204c146672e795">AtMergeTask::Exec</a></div><div class="ttdeci">virtual void Exec(Option_t *opt)</div><div class="ttdef"><b>Definition:</b> <a href="AtMergeTask_8cxx_source.html#l00352">AtMergeTask.cxx:352</a></div></div>
-<div class="ttc" id="aclassAtMergeTask_html_adc5a6b1322446bf544cba1ab03d7f24a"><div class="ttname"><a href="classAtMergeTask.html#adc5a6b1322446bf544cba1ab03d7f24a">AtMergeTask::~AtMergeTask</a></div><div class="ttdeci">~AtMergeTask()</div><div class="ttdef"><b>Definition:</b> <a href="AtMergeTask_8cxx_source.html#l00048">AtMergeTask.cxx:48</a></div></div>
-<div class="ttc" id="aclassAtMergeTask_html_a58c1dcd7d78b2b910c8cdbf501552a5f"><div class="ttname"><a href="classAtMergeTask.html#a58c1dcd7d78b2b910c8cdbf501552a5f">AtMergeTask::GetS800TsSize</a></div><div class="ttdeci">Int_t GetS800TsSize()</div><div class="ttdef"><b>Definition:</b> <a href="AtMergeTask_8cxx_source.html#l00109">AtMergeTask.cxx:109</a></div></div>
-<div class="ttc" id="aclassAtMergeTask_html_acdf3185625e0eef60197713bf8f355f0"><div class="ttname"><a href="classAtMergeTask.html#acdf3185625e0eef60197713bf8f355f0">AtMergeTask::SetMTDCObjRange</a></div><div class="ttdeci">void SetMTDCObjRange(std::vector&lt; Double_t &gt; vec)</div><div class="ttdef"><b>Definition:</b> <a href="AtMergeTask_8cxx_source.html#l00100">AtMergeTask.cxx:100</a></div></div>
-<div class="ttc" id="aclassAtMergeTask_html_a0269e28bf45a905680e648eb47933806"><div class="ttname"><a href="classAtMergeTask.html#a0269e28bf45a905680e648eb47933806">AtMergeTask::isInPID</a></div><div class="ttdeci">Bool_t isInPID(S800Calc *s800calc)</div><div class="ttdef"><b>Definition:</b> <a href="AtMergeTask_8cxx_source.html#l00143">AtMergeTask.cxx:143</a></div></div>
-<div class="ttc" id="aclassAtMergeTask_html_a6c8b246942f4e55acdd76ac4526abd60"><div class="ttname"><a href="classAtMergeTask.html#a6c8b246942f4e55acdd76ac4526abd60">AtMergeTask::GetMTDCObjRange</a></div><div class="ttdeci">std::vector&lt; Double_t &gt; GetMTDCObjRange()</div><div class="ttdef"><b>Definition:</b> <a href="AtMergeTask_8cxx_source.html#l00121">AtMergeTask.cxx:121</a></div></div>
+<div class="ttc" id="aclassAtMergeTask_html_a5e2dd2fa81ba55dc39a43690cacd9f24"><div class="ttname"><a href="classAtMergeTask.html#a5e2dd2fa81ba55dc39a43690cacd9f24">AtMergeTask::SetPID1cut</a></div><div class="ttdeci">void SetPID1cut(TString file)</div><div class="ttdef"><b>Definition:</b> <a href="AtMergeTask_8cxx_source.html#l00070">AtMergeTask.cxx:70</a></div></div>
+<div class="ttc" id="aclassAtMergeTask_html_a0906cd193854d937482c031e3a1d195c"><div class="ttname"><a href="classAtMergeTask.html#a0906cd193854d937482c031e3a1d195c">AtMergeTask::Init</a></div><div class="ttdeci">virtual InitStatus Init()</div><div class="ttdef"><b>Definition:</b> <a href="AtMergeTask_8cxx_source.html#l00129">AtMergeTask.cxx:129</a></div></div>
+<div class="ttc" id="aclassAtMergeTask_html_a00c29d3c809111cdd2c806e14669a789"><div class="ttname"><a href="classAtMergeTask.html#a00c29d3c809111cdd2c806e14669a789">AtMergeTask::SetPID3cut</a></div><div class="ttdeci">void SetPID3cut(TString file)</div><div class="ttdef"><b>Definition:</b> <a href="AtMergeTask_8cxx_source.html#l00078">AtMergeTask.cxx:78</a></div></div>
+<div class="ttc" id="aclassAtMergeTask_html_af7d67e12cd22409cee69712a2c340453"><div class="ttname"><a href="classAtMergeTask.html#af7d67e12cd22409cee69712a2c340453">AtMergeTask::SetPID2cut</a></div><div class="ttdeci">void SetPID2cut(TString file)</div><div class="ttdef"><b>Definition:</b> <a href="AtMergeTask_8cxx_source.html#l00074">AtMergeTask.cxx:74</a></div></div>
+<div class="ttc" id="aclassAtMergeTask_html_aeb015129f7aba86312ee987c83861fef"><div class="ttname"><a href="classAtMergeTask.html#aeb015129f7aba86312ee987c83861fef">AtMergeTask::GetMergedTsSize</a></div><div class="ttdeci">Int_t GetMergedTsSize()</div><div class="ttdef"><b>Definition:</b> <a href="AtMergeTask_8cxx_source.html#l00115">AtMergeTask.cxx:115</a></div></div>
+<div class="ttc" id="aS800Ana_8h_html"><div class="ttname"><a href="S800Ana_8h.html">S800Ana.h</a></div></div>
+<div class="ttc" id="aclassAtMergeTask_html_aa1b4ee70a51e317e4c450bb15428f958"><div class="ttname"><a href="classAtMergeTask.html#aa1b4ee70a51e317e4c450bb15428f958">AtMergeTask::SetS800File</a></div><div class="ttdeci">void SetS800File(TString file)</div><div class="ttdef"><b>Definition:</b> <a href="AtMergeTask_8cxx_source.html#l00058">AtMergeTask.cxx:58</a></div></div>
+<div class="ttc" id="aclassAtMergeTask_html_ab82fcd77b5c09772b4f259c1d9d4948d"><div class="ttname"><a href="classAtMergeTask.html#ab82fcd77b5c09772b4f259c1d9d4948d">AtMergeTask::SetOptiEvtDelta</a></div><div class="ttdeci">void SetOptiEvtDelta(Int_t EvtDelta)</div><div class="ttdef"><b>Definition:</b> <a href="AtMergeTask_8cxx_source.html#l00066">AtMergeTask.cxx:66</a></div></div>
+<div class="ttc" id="aclassAtMergeTask_html_ab707a3cc7619d6917d587e58085601f5"><div class="ttname"><a href="classAtMergeTask.html#ab707a3cc7619d6917d587e58085601f5">AtMergeTask::SetTsDelta</a></div><div class="ttdeci">void SetTsDelta(Int_t TsDelta)</div><div class="ttdef"><b>Definition:</b> <a href="AtMergeTask_8cxx_source.html#l00082">AtMergeTask.cxx:82</a></div></div>
+<div class="ttc" id="aclassAtMergeTask_html_ab51a88d8aa097a1b04aec783d6a25e45"><div class="ttname"><a href="classAtMergeTask.html#ab51a88d8aa097a1b04aec783d6a25e45">AtMergeTask::SetTofObjCorr</a></div><div class="ttdeci">void SetTofObjCorr(std::vector&lt; Double_t &gt; vec)</div><div class="ttdef"><b>Definition:</b> <a href="AtMergeTask_8cxx_source.html#l00090">AtMergeTask.cxx:90</a></div></div>
+<div class="ttc" id="aclassAtMergeTask_html_a62ed46edf683377c3093b5a670b2f28e"><div class="ttname"><a href="classAtMergeTask.html#a62ed46edf683377c3093b5a670b2f28e">AtMergeTask::isInGlom</a></div><div class="ttdeci">Bool_t isInGlom(Long64_t ts1, Long64_t ts2)</div><div class="ttdef"><b>Definition:</b> <a href="AtMergeTask_8cxx_source.html#l00120">AtMergeTask.cxx:120</a></div></div>
+<div class="ttc" id="aclassAtMergeTask_html_ac80772218df4308bd1a3f4e57cbf761d"><div class="ttname"><a href="classAtMergeTask.html#ac80772218df4308bd1a3f4e57cbf761d">AtMergeTask::SetGlom</a></div><div class="ttdeci">void SetGlom(Double_t glom)</div><div class="ttdef"><b>Definition:</b> <a href="AtMergeTask_8cxx_source.html#l00062">AtMergeTask.cxx:62</a></div></div>
+<div class="ttc" id="aclassAtMergeTask_html_a5b52bda257559062c775810b13a8d227"><div class="ttname"><a href="classAtMergeTask.html#a5b52bda257559062c775810b13a8d227">AtMergeTask::SetParameters</a></div><div class="ttdeci">void SetParameters(std::vector&lt; Double_t &gt; vec)</div><div class="ttdef"><b>Definition:</b> <a href="AtMergeTask_8cxx_source.html#l00086">AtMergeTask.cxx:86</a></div></div>
+<div class="ttc" id="aclassAtMergeTask_html_a0764d38aa203bba44b0c264792ae2b8e"><div class="ttname"><a href="classAtMergeTask.html#a0764d38aa203bba44b0c264792ae2b8e">AtMergeTask::SetATTPCClockFreq</a></div><div class="ttdeci">void SetATTPCClockFreq(Double_t value)</div><div class="ttdef"><b>Definition:</b> <a href="AtMergeTask_8cxx_source.html#l00106">AtMergeTask.cxx:106</a></div></div>
+<div class="ttc" id="aclassAtMergeTask_html_a19d5fcb687f67b9c9e204c146672e795"><div class="ttname"><a href="classAtMergeTask.html#a19d5fcb687f67b9c9e204c146672e795">AtMergeTask::Exec</a></div><div class="ttdeci">virtual void Exec(Option_t *opt)</div><div class="ttdef"><b>Definition:</b> <a href="AtMergeTask_8cxx_source.html#l00196">AtMergeTask.cxx:196</a></div></div>
+<div class="ttc" id="aclassAtMergeTask_html_adc5a6b1322446bf544cba1ab03d7f24a"><div class="ttname"><a href="classAtMergeTask.html#adc5a6b1322446bf544cba1ab03d7f24a">AtMergeTask::~AtMergeTask</a></div><div class="ttdeci">~AtMergeTask()</div><div class="ttdef"><b>Definition:</b> <a href="AtMergeTask_8cxx_source.html#l00045">AtMergeTask.cxx:45</a></div></div>
+<div class="ttc" id="aclassAtMergeTask_html_a58c1dcd7d78b2b910c8cdbf501552a5f"><div class="ttname"><a href="classAtMergeTask.html#a58c1dcd7d78b2b910c8cdbf501552a5f">AtMergeTask::GetS800TsSize</a></div><div class="ttdeci">Int_t GetS800TsSize()</div><div class="ttdef"><b>Definition:</b> <a href="AtMergeTask_8cxx_source.html#l00111">AtMergeTask.cxx:111</a></div></div>
+<div class="ttc" id="aclassS800Ana_html"><div class="ttname"><a href="classS800Ana.html">S800Ana</a></div><div class="ttdef"><b>Definition:</b> <a href="S800Ana_8h_source.html#l00019">S800Ana.h:19</a></div></div>
+<div class="ttc" id="aclassAtMergeTask_html_acdf3185625e0eef60197713bf8f355f0"><div class="ttname"><a href="classAtMergeTask.html#acdf3185625e0eef60197713bf8f355f0">AtMergeTask::SetMTDCObjRange</a></div><div class="ttdeci">void SetMTDCObjRange(std::vector&lt; Double_t &gt; vec)</div><div class="ttdef"><b>Definition:</b> <a href="AtMergeTask_8cxx_source.html#l00094">AtMergeTask.cxx:94</a></div></div>
+<div class="ttc" id="aclassAtMergeTask_html_acc4af2cf74fda16dbb614f7076c33dab"><div class="ttname"><a href="classAtMergeTask.html#acc4af2cf74fda16dbb614f7076c33dab">AtMergeTask::SetATTPCClock</a></div><div class="ttdeci">void SetATTPCClock(Bool_t value=kTRUE)</div><div class="ttdef"><b>Definition:</b> <a href="AtMergeTask_8cxx_source.html#l00102">AtMergeTask.cxx:102</a></div></div>
+<div class="ttc" id="aclassAtMergeTask_html_a0269e28bf45a905680e648eb47933806"><div class="ttname"><a href="classAtMergeTask.html#a0269e28bf45a905680e648eb47933806">AtMergeTask::isInPID</a></div><div class="ttdeci">Bool_t isInPID(S800Calc *s800calc)</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Apr 27 2022 00:47:48 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Oct 20 2023 16:23:00 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.18
 </small></address>

@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">ATTPCROOT
-   &#160;<span id="projectnumber">1.0.0</span>
+   &#160;<span id="projectnumber">0.3.0-alpha</span>
    </div>
    <div id="projectbrief">A ROOT-based framework for analyzing data from active target detectors</div>
   </td>
@@ -73,19 +73,35 @@ $(function() {
 <div class="contents">
 <a href="AtSpaceChargeModel_8cxx.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="AtSpaceChargeModel_8h.html">AtSpaceChargeModel.h</a>&quot;</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160; </div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &lt;Rtypes.h&gt;</span></div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160; </div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<a class="code" href="classAtSpaceChargeModel.html#aeba2993a92ac9b46fb0a9cd2d63cbd70">AtSpaceChargeModel::AtSpaceChargeModel</a>() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160; </div>
-<div class="line"><a name="l00007"></a><span class="lineno"><a class="line" href="AtSpaceChargeModel_8cxx.html#a6b0469a9a86b94ddb8f5cc20dc7320ab">    7</a></span>&#160;<a class="code" href="AtSpaceChargeModel_8cxx.html#a6b0469a9a86b94ddb8f5cc20dc7320ab">ClassImp</a>(<a class="code" href="classAtSpaceChargeModel.html">AtSpaceChargeModel</a>);</div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &lt;Math/Point3D.h&gt;</span></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &lt;Math/Vector3D.h&gt;</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160; </div>
+<div class="line"><a name="l00006"></a><span class="lineno"><a class="line" href="AtSpaceChargeModel_8cxx.html#acdbe604dea12970b4e97a316f9046ae7">    6</a></span>&#160;<span class="keyword">using</span> <a class="code" href="AtPatternCircle2D_8h.html#acdbe604dea12970b4e97a316f9046ae7">XYZPoint</a> = <a class="code" href="AtSpaceChargeModel_8cxx.html#acdbe604dea12970b4e97a316f9046ae7">ROOT::Math::XYZPoint</a>;</div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160; </div>
+<div class="line"><a name="l00008"></a><span class="lineno"><a class="line" href="classAtSpaceChargeModel.html#a61da6ae3150ef27eb4f18511c613e96c">    8</a></span>&#160;<a class="code" href="classAtSpaceChargeModel.html#ae91f4dc9a66e4ab895e84cd1fbc6c7b5">XYZPoint</a> <a class="code" href="classAtSpaceChargeModel.html#a61da6ae3150ef27eb4f18511c613e96c">AtSpaceChargeModel::OffsetForBeam</a>(<a class="code" href="classAtSpaceChargeModel.html#ae91f4dc9a66e4ab895e84cd1fbc6c7b5">XYZPoint</a> point)</div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;{</div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;   <a class="code" href="classAtSpaceChargeModel.html#ae91f4dc9a66e4ab895e84cd1fbc6c7b5">XYZPoint</a> fOffset = <a class="code" href="classAtSpaceChargeModel.html#a67d93d4dd63d865aaa13eff6805bf974">fWindow</a> + (<a class="code" href="classAtSpaceChargeModel.html#a70a8ad92d94ac94e038c9b1f0f0ce6d0">fPadPlane</a> - <a class="code" href="classAtSpaceChargeModel.html#a67d93d4dd63d865aaa13eff6805bf974">fWindow</a>) / (<a class="code" href="classAtSpaceChargeModel.html#a70a8ad92d94ac94e038c9b1f0f0ce6d0">fPadPlane</a>.Z() - <a class="code" href="classAtSpaceChargeModel.html#a67d93d4dd63d865aaa13eff6805bf974">fWindow</a>.Z()) * point.Z();</div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160; </div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;   <span class="keywordflow">return</span> {point.X() - fOffset.X(), point.Y() - fOffset.Y(), point.Z()};</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;}</div>
+<div class="line"><a name="l00014"></a><span class="lineno"><a class="line" href="classAtSpaceChargeModel.html#aecf5ff55e39f686ba8222aefe9c0cea1">   14</a></span>&#160;<a class="code" href="classAtSpaceChargeModel.html#ae91f4dc9a66e4ab895e84cd1fbc6c7b5">XYZPoint</a> <a class="code" href="classAtSpaceChargeModel.html#aecf5ff55e39f686ba8222aefe9c0cea1">AtSpaceChargeModel::UndoOffsetForBeam</a>(<a class="code" href="classAtSpaceChargeModel.html#ae91f4dc9a66e4ab895e84cd1fbc6c7b5">XYZPoint</a> point)</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;{</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;   <a class="code" href="classAtSpaceChargeModel.html#ae91f4dc9a66e4ab895e84cd1fbc6c7b5">XYZPoint</a> fOffset = <a class="code" href="classAtSpaceChargeModel.html#a67d93d4dd63d865aaa13eff6805bf974">fWindow</a> + (<a class="code" href="classAtSpaceChargeModel.html#a70a8ad92d94ac94e038c9b1f0f0ce6d0">fPadPlane</a> - <a class="code" href="classAtSpaceChargeModel.html#a67d93d4dd63d865aaa13eff6805bf974">fWindow</a>) / (<a class="code" href="classAtSpaceChargeModel.html#a70a8ad92d94ac94e038c9b1f0f0ce6d0">fPadPlane</a>.Z() - <a class="code" href="classAtSpaceChargeModel.html#a67d93d4dd63d865aaa13eff6805bf974">fWindow</a>.Z()) * point.Z();</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;   <span class="keywordflow">return</span> {point.X() + fOffset.X(), point.Y() + fOffset.Y(), point.Z()};</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
-<div class="ttc" id="aclassAtSpaceChargeModel_html_aeba2993a92ac9b46fb0a9cd2d63cbd70"><div class="ttname"><a href="classAtSpaceChargeModel.html#aeba2993a92ac9b46fb0a9cd2d63cbd70">AtSpaceChargeModel::AtSpaceChargeModel</a></div><div class="ttdeci">AtSpaceChargeModel()</div></div>
-<div class="ttc" id="aAtSpaceChargeModel_8cxx_html_a6b0469a9a86b94ddb8f5cc20dc7320ab"><div class="ttname"><a href="AtSpaceChargeModel_8cxx.html#a6b0469a9a86b94ddb8f5cc20dc7320ab">ClassImp</a></div><div class="ttdeci">ClassImp(AtSpaceChargeModel)</div></div>
+<div class="ttc" id="aclassAtSpaceChargeModel_html_a70a8ad92d94ac94e038c9b1f0f0ce6d0"><div class="ttname"><a href="classAtSpaceChargeModel.html#a70a8ad92d94ac94e038c9b1f0f0ce6d0">AtSpaceChargeModel::fPadPlane</a></div><div class="ttdeci">XYZPoint fPadPlane</div><div class="ttdef"><b>Definition:</b> <a href="AtSpaceChargeModel_8h_source.html#l00014">AtSpaceChargeModel.h:14</a></div></div>
+<div class="ttc" id="aAtPatternCircle2D_8h_html_acdbe604dea12970b4e97a316f9046ae7"><div class="ttname"><a href="AtPatternCircle2D_8h.html#acdbe604dea12970b4e97a316f9046ae7">XYZPoint</a></div><div class="ttdeci">ROOT::Math::XYZPoint XYZPoint</div><div class="ttdef"><b>Definition:</b> <a href="AtPatternCircle2D_8h_source.html#l00018">AtPatternCircle2D.h:18</a></div></div>
+<div class="ttc" id="aclassAtSpaceChargeModel_html_aecf5ff55e39f686ba8222aefe9c0cea1"><div class="ttname"><a href="classAtSpaceChargeModel.html#aecf5ff55e39f686ba8222aefe9c0cea1">AtSpaceChargeModel::UndoOffsetForBeam</a></div><div class="ttdeci">XYZPoint UndoOffsetForBeam(XYZPoint point)</div><div class="ttdef"><b>Definition:</b> <a href="AtSpaceChargeModel_8cxx_source.html#l00014">AtSpaceChargeModel.cxx:14</a></div></div>
+<div class="ttc" id="aclassAtSpaceChargeModel_html_ae91f4dc9a66e4ab895e84cd1fbc6c7b5"><div class="ttname"><a href="classAtSpaceChargeModel.html#ae91f4dc9a66e4ab895e84cd1fbc6c7b5">AtSpaceChargeModel::XYZPoint</a></div><div class="ttdeci">ROOT::Math::XYZPoint XYZPoint</div><div class="ttdef"><b>Definition:</b> <a href="AtSpaceChargeModel_8h_source.html#l00011">AtSpaceChargeModel.h:11</a></div></div>
 <div class="ttc" id="aAtSpaceChargeModel_8h_html"><div class="ttname"><a href="AtSpaceChargeModel_8h.html">AtSpaceChargeModel.h</a></div></div>
-<div class="ttc" id="aclassAtSpaceChargeModel_html"><div class="ttname"><a href="classAtSpaceChargeModel.html">AtSpaceChargeModel</a></div><div class="ttdef"><b>Definition:</b> <a href="AtSpaceChargeModel_8h_source.html#l00016">AtSpaceChargeModel.h:16</a></div></div>
+<div class="ttc" id="aclassAtSpaceChargeModel_html_a61da6ae3150ef27eb4f18511c613e96c"><div class="ttname"><a href="classAtSpaceChargeModel.html#a61da6ae3150ef27eb4f18511c613e96c">AtSpaceChargeModel::OffsetForBeam</a></div><div class="ttdeci">XYZPoint OffsetForBeam(XYZPoint point)</div><div class="ttdef"><b>Definition:</b> <a href="AtSpaceChargeModel_8cxx_source.html#l00008">AtSpaceChargeModel.cxx:8</a></div></div>
+<div class="ttc" id="aclassAtSpaceChargeModel_html_a67d93d4dd63d865aaa13eff6805bf974"><div class="ttname"><a href="classAtSpaceChargeModel.html#a67d93d4dd63d865aaa13eff6805bf974">AtSpaceChargeModel::fWindow</a></div><div class="ttdeci">XYZPoint fWindow</div><div class="ttdef"><b>Definition:</b> <a href="AtSpaceChargeModel_8h_source.html#l00013">AtSpaceChargeModel.h:13</a></div></div>
+<div class="ttc" id="aAtSpaceChargeModel_8cxx_html_acdbe604dea12970b4e97a316f9046ae7"><div class="ttname"><a href="AtSpaceChargeModel_8cxx.html#acdbe604dea12970b4e97a316f9046ae7">XYZPoint</a></div><div class="ttdeci">ROOT::Math::XYZPoint XYZPoint</div><div class="ttdef"><b>Definition:</b> <a href="AtSpaceChargeModel_8cxx_source.html#l00006">AtSpaceChargeModel.cxx:6</a></div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Apr 27 2022 00:47:48 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Oct 20 2023 16:23:00 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.18
 </small></address>

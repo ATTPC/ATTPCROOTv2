@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">ATTPCROOT
-   &#160;<span id="projectnumber">1.0.0</span>
+   &#160;<span id="projectnumber">0.3.0-alpha</span>
    </div>
    <div id="projectbrief">A ROOT-based framework for analyzing data from active target detectors</div>
   </td>
@@ -78,47 +78,38 @@ $(function() {
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#ifndef ATCLUSTERIZELINETASK_H</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#define ATCLUSTERIZELINETASK_H</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160; </div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="AtClusterizeTask_8h.html">AtClusterizeTask.h</a>&quot;</span></div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160; </div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &lt;FairTask.h&gt;</span></div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160; </div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#include &lt;Rtypes.h&gt;</span></div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160; </div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="keyword">class </span>TBuffer;</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="keyword">class </span>TClass;</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="keyword">class </span>TMemberInspector;</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
-<div class="line"><a name="l00018"></a><span class="lineno"><a class="line" href="classAtClusterizeLineTask.html">   18</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAtClusterizeLineTask.html">AtClusterizeLineTask</a> : <span class="keyword">public</span> <a class="code" href="classAtClusterizeTask.html">AtClusterizeTask</a> {</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;   Double_t fTBTime{}; </div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="keyword">protected</span>:</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;   <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classAtClusterizeLineTask.html#a16409fcb9bf81956e136c0e7875ce56b">getParameters</a>() <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;   <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classAtClusterizeLineTask.html#a84b7a460f65cfd000a7abb2605e44ccd">processPoint</a>(Int_t mcPointID) <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;   <a class="code" href="classAtClusterizeLineTask.html#af87b0c80d88f4f5881cac29523440c1c">AtClusterizeLineTask</a>();</div>
-<div class="line"><a name="l00028"></a><span class="lineno"><a class="line" href="classAtClusterizeLineTask.html#a580bed9ba9eedb25ec992ad58957e300">   28</a></span>&#160;   <a class="code" href="classAtClusterizeLineTask.html#a580bed9ba9eedb25ec992ad58957e300">~AtClusterizeLineTask</a>();</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;   <span class="keyword">virtual</span> InitStatus <a class="code" href="classAtClusterizeLineTask.html#a7be929a92adced3e5d01a185699f9154">Init</a>() <span class="keyword">override</span>; </div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
-<div class="line"><a name="l00032"></a><span class="lineno"><a class="line" href="classAtClusterizeLineTask.html#a2ce0ed356f92718206abfd67cb1298d3">   32</a></span>&#160;   <a class="code" href="classAtClusterizeLineTask.html#a2ce0ed356f92718206abfd67cb1298d3">ClassDefOverride</a>(<a class="code" href="classAtClusterizeLineTask.html">AtClusterizeLineTask</a>, 1);</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;};</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#endif //#define ATCLUSTERIZELINETASK_H</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="AtClusterizeLine_8h.html">AtClusterizeLine.h</a>&quot;</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="AtClusterizeTask_8h.html">AtClusterizeTask.h</a>&quot;</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160; </div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &lt;Rtypes.h&gt;</span></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160; </div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor">#include &lt;memory&gt;</span> <span class="comment">// for make_shared, shared_ptr</span></div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160; </div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="keyword">class </span>TBuffer;</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="keyword">class </span>TClass;</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="keyword">class </span>TMemberInspector;</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160; </div>
+<div class="line"><a name="l00019"></a><span class="lineno"><a class="line" href="classAtClusterizeLineTask.html">   19</a></span>&#160;<span class="keyword">class </span>[[deprecated(</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;   &quot;<a class="code" href="classAtClusterizeLineTask.html">AtClusterizeLineTask</a> is deprecated. Use <a class="code" href="classAtClusterizeTask.html">AtClusterizeTask</a> with <a class="code" href="classAtClusterizeLine.html">AtClusterizeLine</a> instead.&quot;)]] <a class="code" href="classAtClusterizeLineTask.html">AtClusterizeLineTask</a></div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;   : <span class="keyword">public</span> <a class="code" href="classAtClusterizeTask.html">AtClusterizeTask</a></div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;{</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;   <a class="code" href="classAtClusterizeLineTask.html">AtClusterizeLineTask</a>() : <a class="code" href="classAtClusterizeTask.html#ab8194763d71cc18a459a0397d11a2e1b">AtClusterizeTask</a>(std::make_shared&lt;AtClusterizeLine&gt;()) {}</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;   <a class="code" href="classAtClusterizeTask.html#a382932ccf97344bdf418c0adef6234b7">ClassDefOverride</a>(<a class="code" href="classAtClusterizeLineTask.html">AtClusterizeLineTask</a>, 2);</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;};</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#endif //#define ATCLUSTERIZELINETASK_H</span></div>
 </div><!-- fragment --></div><!-- contents -->
-<div class="ttc" id="aclassAtClusterizeLineTask_html_a2ce0ed356f92718206abfd67cb1298d3"><div class="ttname"><a href="classAtClusterizeLineTask.html#a2ce0ed356f92718206abfd67cb1298d3">AtClusterizeLineTask::ClassDefOverride</a></div><div class="ttdeci">ClassDefOverride(AtClusterizeLineTask, 1)</div></div>
-<div class="ttc" id="aclassAtClusterizeLineTask_html_a580bed9ba9eedb25ec992ad58957e300"><div class="ttname"><a href="classAtClusterizeLineTask.html#a580bed9ba9eedb25ec992ad58957e300">AtClusterizeLineTask::~AtClusterizeLineTask</a></div><div class="ttdeci">~AtClusterizeLineTask()</div></div>
-<div class="ttc" id="aclassAtClusterizeLineTask_html_a84b7a460f65cfd000a7abb2605e44ccd"><div class="ttname"><a href="classAtClusterizeLineTask.html#a84b7a460f65cfd000a7abb2605e44ccd">AtClusterizeLineTask::processPoint</a></div><div class="ttdeci">virtual void processPoint(Int_t mcPointID) override</div><div class="ttdef"><b>Definition:</b> <a href="AtClusterizeLineTask_8cxx_source.html#l00045">AtClusterizeLineTask.cxx:45</a></div></div>
-<div class="ttc" id="aclassAtClusterizeLineTask_html_af87b0c80d88f4f5881cac29523440c1c"><div class="ttname"><a href="classAtClusterizeLineTask.html#af87b0c80d88f4f5881cac29523440c1c">AtClusterizeLineTask::AtClusterizeLineTask</a></div><div class="ttdeci">AtClusterizeLineTask()</div><div class="ttdef"><b>Definition:</b> <a href="AtClusterizeLineTask_8cxx_source.html#l00018">AtClusterizeLineTask.cxx:18</a></div></div>
-<div class="ttc" id="aclassAtClusterizeLineTask_html"><div class="ttname"><a href="classAtClusterizeLineTask.html">AtClusterizeLineTask</a></div><div class="ttdef"><b>Definition:</b> <a href="AtClusterizeLineTask_8h_source.html#l00018">AtClusterizeLineTask.h:18</a></div></div>
+<div class="ttc" id="aAtClusterizeLine_8h_html"><div class="ttname"><a href="AtClusterizeLine_8h.html">AtClusterizeLine.h</a></div></div>
+<div class="ttc" id="aclassAtClusterizeTask_html_a382932ccf97344bdf418c0adef6234b7"><div class="ttname"><a href="classAtClusterizeTask.html#a382932ccf97344bdf418c0adef6234b7">AtClusterizeTask::ClassDefOverride</a></div><div class="ttdeci">ClassDefOverride(AtClusterizeTask, 2)</div></div>
+<div class="ttc" id="aclassAtClusterizeLineTask_html"><div class="ttname"><a href="classAtClusterizeLineTask.html">AtClusterizeLineTask</a></div><div class="ttdef"><b>Definition:</b> <a href="AtClusterizeLineTask_8h_source.html#l00019">AtClusterizeLineTask.h:22</a></div></div>
+<div class="ttc" id="aclassAtClusterizeTask_html_ab8194763d71cc18a459a0397d11a2e1b"><div class="ttname"><a href="classAtClusterizeTask.html#ab8194763d71cc18a459a0397d11a2e1b">AtClusterizeTask::AtClusterizeTask</a></div><div class="ttdeci">AtClusterizeTask(std::shared_ptr&lt; AtClusterize &gt; clusterize=std::make_shared&lt; AtClusterize &gt;(), const char *name=&quot;AtClusterizeTask&quot;)</div><div class="ttdef"><b>Definition:</b> <a href="AtClusterizeTask_8cxx_source.html#l00034">AtClusterizeTask.cxx:34</a></div></div>
 <div class="ttc" id="aAtClusterizeTask_8h_html"><div class="ttname"><a href="AtClusterizeTask_8h.html">AtClusterizeTask.h</a></div></div>
-<div class="ttc" id="aclassAtClusterizeLineTask_html_a7be929a92adced3e5d01a185699f9154"><div class="ttname"><a href="classAtClusterizeLineTask.html#a7be929a92adced3e5d01a185699f9154">AtClusterizeLineTask::Init</a></div><div class="ttdeci">virtual InitStatus Init() override</div><div class="ttdoc">Initiliazation of task at the beginning of a run.</div><div class="ttdef"><b>Definition:</b> <a href="AtClusterizeLineTask_8cxx_source.html#l00022">AtClusterizeLineTask.cxx:22</a></div></div>
-<div class="ttc" id="aclassAtClusterizeLineTask_html_a16409fcb9bf81956e136c0e7875ce56b"><div class="ttname"><a href="classAtClusterizeLineTask.html#a16409fcb9bf81956e136c0e7875ce56b">AtClusterizeLineTask::getParameters</a></div><div class="ttdeci">virtual void getParameters() override</div><div class="ttdef"><b>Definition:</b> <a href="AtClusterizeLineTask_8cxx_source.html#l00038">AtClusterizeLineTask.cxx:38</a></div></div>
-<div class="ttc" id="aclassAtClusterizeTask_html"><div class="ttname"><a href="classAtClusterizeTask.html">AtClusterizeTask</a></div><div class="ttdef"><b>Definition:</b> <a href="AtClusterizeTask_8h_source.html#l00027">AtClusterizeTask.h:27</a></div></div>
+<div class="ttc" id="aclassAtClusterizeTask_html"><div class="ttname"><a href="classAtClusterizeTask.html">AtClusterizeTask</a></div><div class="ttdef"><b>Definition:</b> <a href="AtClusterizeTask_8h_source.html#l00024">AtClusterizeTask.h:24</a></div></div>
+<div class="ttc" id="aclassAtClusterizeLine_html"><div class="ttname"><a href="classAtClusterizeLine.html">AtClusterizeLine</a></div><div class="ttdef"><b>Definition:</b> <a href="AtClusterizeLine_8h_source.html#l00017">AtClusterizeLine.h:17</a></div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Apr 27 2022 00:47:46 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Oct 20 2023 16:22:58 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.18
 </small></address>

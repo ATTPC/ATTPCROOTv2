@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.18"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>ATTPCROOT: /github/workspace/AtEventDisplay/AtEventManager.cxx File Reference</title>
+<title>ATTPCROOT: /github/workspace/AtEventDisplay/Deprecated/AtEventManager.cxx File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">ATTPCROOT
-   &#160;<span id="projectnumber">1.0.0</span>
+   &#160;<span id="projectnumber">0.3.0-alpha</span>
    </div>
    <div id="projectbrief">A ROOT-based framework for analyzing data from active target detectors</div>
   </td>
@@ -63,7 +63,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_93d25abbc6f0ef98b9f9d466bdcb18a2.html">AtEventDisplay</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_93d25abbc6f0ef98b9f9d466bdcb18a2.html">AtEventDisplay</a></li><li class="navelem"><a class="el" href="dir_ade193244e8182e28566ee49794683fa.html">Deprecated</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -75,11 +75,13 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="AtEventManager_8h_source.html">AtEventManager.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="AtEvent_8h_source.html">AtEvent.h</a>&quot;</code><br />
 <code>#include &lt;FairRootManager.h&gt;</code><br />
 <code>#include &lt;FairRunAna.h&gt;</code><br />
 <code>#include &lt;Rtypes.h&gt;</code><br />
 <code>#include &lt;TCanvas.h&gt;</code><br />
 <code>#include &lt;TChain.h&gt;</code><br />
+<code>#include &lt;TClonesArray.h&gt;</code><br />
 <code>#include &lt;TEveBrowser.h&gt;</code><br />
 <code>#include &lt;TEveEventManager.h&gt;</code><br />
 <code>#include &lt;TEveGeoNode.h&gt;</code><br />
@@ -109,51 +111,65 @@ $(function() {
 <code>#include &lt;TSystem.h&gt;</code><br />
 <code>#include &lt;TVirtualPad.h&gt;</code><br />
 <code>#include &lt;TVirtualX.h&gt;</code><br />
+<code>#include &quot;<a class="el" href="S800Ana_8h_source.html">S800Ana.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="S800Calc_8h_source.html">S800Calc.h</a>&quot;</code><br />
 <code>#include &lt;iostream&gt;</code><br />
 <code>#include &lt;string&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for AtEventManager.cxx:</div>
 <div class="dyncontent">
-<div class="center"><img src="AtEventManager_8cxx__incl.png" border="0" usemap="#_2github_2workspace_2AtEventDisplay_2AtEventManager_8cxx" alt=""/></div>
-<map name="_2github_2workspace_2AtEventDisplay_2AtEventManager_8cxx" id="_2github_2workspace_2AtEventDisplay_2AtEventManager_8cxx">
-<area shape="rect" title=" " alt="" coords="1989,5,2175,47"/>
-<area shape="rect" href="AtEventManager_8h.html" title=" " alt="" coords="139,95,267,121"/>
-<area shape="rect" title=" " alt="" coords="5,169,105,196"/>
-<area shape="rect" title=" " alt="" coords="133,169,205,196"/>
-<area shape="rect" title=" " alt="" coords="231,169,376,196"/>
-<area shape="rect" title=" " alt="" coords="342,95,473,121"/>
-<area shape="rect" title=" " alt="" coords="497,95,581,121"/>
-<area shape="rect" title=" " alt="" coords="605,95,679,121"/>
-<area shape="rect" title=" " alt="" coords="703,95,813,121"/>
-<area shape="rect" title=" " alt="" coords="838,95,955,121"/>
-<area shape="rect" title=" " alt="" coords="979,95,1091,121"/>
-<area shape="rect" title=" " alt="" coords="1116,95,1219,121"/>
-<area shape="rect" title=" " alt="" coords="1243,95,1351,121"/>
-<area shape="rect" title=" " alt="" coords="1375,95,1437,121"/>
-<area shape="rect" title=" " alt="" coords="1461,95,1549,121"/>
-<area shape="rect" title=" " alt="" coords="1573,95,1655,121"/>
-<area shape="rect" title=" " alt="" coords="1680,95,1767,121"/>
-<area shape="rect" title=" " alt="" coords="1791,95,1893,121"/>
-<area shape="rect" title=" " alt="" coords="1918,95,2017,121"/>
-<area shape="rect" title=" " alt="" coords="2041,95,2123,121"/>
-<area shape="rect" title=" " alt="" coords="2148,95,2237,121"/>
-<area shape="rect" title=" " alt="" coords="2262,95,2387,121"/>
-<area shape="rect" title=" " alt="" coords="2411,95,2483,121"/>
-<area shape="rect" title=" " alt="" coords="2507,95,2603,121"/>
-<area shape="rect" title=" " alt="" coords="2627,95,2742,121"/>
-<area shape="rect" title=" " alt="" coords="2767,95,2875,121"/>
-<area shape="rect" title=" " alt="" coords="2899,95,2956,121"/>
-<area shape="rect" title=" " alt="" coords="2981,95,3063,121"/>
-<area shape="rect" title=" " alt="" coords="3088,95,3167,121"/>
-<area shape="rect" title=" " alt="" coords="3191,95,3306,121"/>
-<area shape="rect" title=" " alt="" coords="3331,95,3503,121"/>
-<area shape="rect" title=" " alt="" coords="3527,95,3602,121"/>
-<area shape="rect" title=" " alt="" coords="3626,95,3695,121"/>
-<area shape="rect" title=" " alt="" coords="3720,95,3804,121"/>
-<area shape="rect" title=" " alt="" coords="3828,95,3928,121"/>
-<area shape="rect" title=" " alt="" coords="3952,95,4039,121"/>
-<area shape="rect" title=" " alt="" coords="4063,95,4135,121"/>
-<area shape="rect" title=" " alt="" coords="4160,95,4215,121"/>
+<div class="center"><img src="AtEventManager_8cxx__incl.png" border="0" usemap="#_2github_2workspace_2AtEventDisplay_2Deprecated_2AtEventManager_8cxx" alt=""/></div>
+<map name="_2github_2workspace_2AtEventDisplay_2Deprecated_2AtEventManager_8cxx" id="_2github_2workspace_2AtEventDisplay_2Deprecated_2AtEventManager_8cxx">
+<area shape="rect" title=" " alt="" coords="2144,5,2400,47"/>
+<area shape="rect" href="AtEventManager_8h.html" title=" " alt="" coords="298,95,426,121"/>
+<area shape="rect" title=" " alt="" coords="39,169,139,196"/>
+<area shape="rect" title=" " alt="" coords="502,244,574,271"/>
+<area shape="rect" title=" " alt="" coords="324,169,470,196"/>
+<area shape="rect" href="S800Ana_8h.html" title=" " alt="" coords="164,169,249,196"/>
+<area shape="rect" title=" " alt="" coords="283,244,362,271"/>
+<area shape="rect" href="AtEvent_8h.html" title=" " alt="" coords="820,95,899,121"/>
+<area shape="rect" title=" " alt="" coords="1326,244,1380,271"/>
+<area shape="rect" title=" " alt="" coords="974,95,1105,121"/>
+<area shape="rect" title=" " alt="" coords="1130,95,1214,121"/>
+<area shape="rect" title=" " alt="" coords="1238,95,1311,121"/>
+<area shape="rect" title=" " alt="" coords="1335,95,1446,121"/>
+<area shape="rect" title=" " alt="" coords="1470,95,1580,121"/>
+<area shape="rect" title=" " alt="" coords="1605,95,1722,121"/>
+<area shape="rect" title=" " alt="" coords="1746,95,1858,121"/>
+<area shape="rect" title=" " alt="" coords="1883,95,1986,121"/>
+<area shape="rect" title=" " alt="" coords="2010,95,2118,121"/>
+<area shape="rect" title=" " alt="" coords="2142,95,2204,121"/>
+<area shape="rect" title=" " alt="" coords="2228,95,2316,121"/>
+<area shape="rect" title=" " alt="" coords="2340,95,2422,121"/>
+<area shape="rect" title=" " alt="" coords="2447,95,2534,121"/>
+<area shape="rect" title=" " alt="" coords="2558,95,2660,121"/>
+<area shape="rect" title=" " alt="" coords="2685,95,2784,121"/>
+<area shape="rect" title=" " alt="" coords="2808,95,2890,121"/>
+<area shape="rect" title=" " alt="" coords="2915,95,3004,121"/>
+<area shape="rect" title=" " alt="" coords="3029,95,3154,121"/>
+<area shape="rect" title=" " alt="" coords="3178,95,3250,121"/>
+<area shape="rect" title=" " alt="" coords="3274,95,3370,121"/>
+<area shape="rect" title=" " alt="" coords="3394,95,3509,121"/>
+<area shape="rect" title=" " alt="" coords="3534,95,3642,121"/>
+<area shape="rect" title=" " alt="" coords="3666,95,3723,121"/>
+<area shape="rect" title=" " alt="" coords="3748,95,3830,121"/>
+<area shape="rect" title=" " alt="" coords="3854,95,3969,121"/>
+<area shape="rect" title=" " alt="" coords="3994,95,4166,121"/>
+<area shape="rect" title=" " alt="" coords="4190,95,4265,121"/>
+<area shape="rect" title=" " alt="" coords="4289,95,4358,121"/>
+<area shape="rect" title=" " alt="" coords="4383,95,4467,121"/>
+<area shape="rect" title=" " alt="" coords="4491,95,4591,121"/>
+<area shape="rect" title=" " alt="" coords="4615,95,4702,121"/>
+<area shape="rect" href="S800Calc_8h.html" title=" " alt="" coords="494,169,582,196"/>
+<area shape="rect" title=" " alt="" coords="620,244,692,271"/>
+<area shape="rect" title=" " alt="" coords="724,244,782,271"/>
+<area shape="rect" href="AtBaseEvent_8h.html" title=" " alt="" coords="948,169,1056,196"/>
+<area shape="rect" title=" " alt="" coords="1071,244,1118,271"/>
+<area shape="rect" href="AtHit_8h.html" title=" " alt="" coords="708,169,771,196"/>
+<area shape="rect" title=" " alt="" coords="842,244,910,271"/>
+<area shape="rect" title=" " alt="" coords="1080,169,1175,196"/>
+<area shape="rect" title=" " alt="" coords="1200,169,1250,196"/>
+<area shape="rect" title=" " alt="" coords="1274,169,1357,196"/>
 </map>
 </div>
 </div>
@@ -219,7 +235,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtEventManager_8cxx_source.html#l00044">44</a> of file <a class="el" href="AtEventManager_8cxx_source.html">AtEventManager.cxx</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtEventManager_8cxx_source.html#l00050">50</a> of file <a class="el" href="AtEventManager_8cxx_source.html">AtEventManager.cxx</a>.</p>
 
 </div>
 </div>
@@ -243,7 +259,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtEventManager_8cxx_source.html#l00043">43</a> of file <a class="el" href="AtEventManager_8cxx_source.html">AtEventManager.cxx</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtEventManager_8cxx_source.html#l00049">49</a> of file <a class="el" href="AtEventManager_8cxx_source.html">AtEventManager.cxx</a>.</p>
 
 </div>
 </div>
@@ -267,7 +283,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtEventManager_8cxx_source.html#l00042">42</a> of file <a class="el" href="AtEventManager_8cxx_source.html">AtEventManager.cxx</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtEventManager_8cxx_source.html#l00048">48</a> of file <a class="el" href="AtEventManager_8cxx_source.html">AtEventManager.cxx</a>.</p>
 
 </div>
 </div>
@@ -291,7 +307,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtEventManager_8cxx_source.html#l00040">40</a> of file <a class="el" href="AtEventManager_8cxx_source.html">AtEventManager.cxx</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtEventManager_8cxx_source.html#l00046">46</a> of file <a class="el" href="AtEventManager_8cxx_source.html">AtEventManager.cxx</a>.</p>
 
 </div>
 </div>
@@ -315,7 +331,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtEventManager_8cxx_source.html#l00045">45</a> of file <a class="el" href="AtEventManager_8cxx_source.html">AtEventManager.cxx</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtEventManager_8cxx_source.html#l00051">51</a> of file <a class="el" href="AtEventManager_8cxx_source.html">AtEventManager.cxx</a>.</p>
 
 </div>
 </div>
@@ -339,14 +355,14 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtEventManager_8cxx_source.html#l00041">41</a> of file <a class="el" href="AtEventManager_8cxx_source.html">AtEventManager.cxx</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtEventManager_8cxx_source.html#l00047">47</a> of file <a class="el" href="AtEventManager_8cxx_source.html">AtEventManager.cxx</a>.</p>
 
 </div>
 </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Apr 27 2022 00:47:48 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Oct 20 2023 16:23:01 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.18
 </small></address>

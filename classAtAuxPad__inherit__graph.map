@@ -1,5 +1,6 @@
 <map id="AtAuxPad" name="AtAuxPad">
-<area shape="rect" id="node1" title=" " alt="" coords="5,155,85,181"/>
-<area shape="rect" id="node2" href="$classAtPad.html" title=" " alt="" coords="16,80,75,107"/>
-<area shape="rect" id="node3" title=" " alt="" coords="11,5,79,32"/>
+<area shape="rect" id="node1" title=" " alt="" coords="9,229,89,256"/>
+<area shape="rect" id="node2" href="$classAtPad.html" title="Container class for AtPadBase objects." alt="" coords="20,155,79,181"/>
+<area shape="rect" id="node3" href="$classAtPadBase.html" title="Base class for AtPad composition pattern." alt="" coords="5,80,93,107"/>
+<area shape="rect" id="node4" title=" " alt="" coords="15,5,83,32"/>
 </map>

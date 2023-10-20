@@ -1,5 +1,6 @@
 <map id="AtPATTERN::AtPRA" name="AtPATTERN::AtPRA">
-<area shape="rect" id="node1" title=" " alt="" coords="35,80,178,107"/>
+<area shape="rect" id="node1" title="Find patterns in hit clouds." alt="" coords="149,80,291,107"/>
 <area shape="rect" id="node3" href="$classAtPATTERN_1_1AtTrackFinderHC.html" title=" " alt="" coords="5,155,208,181"/>
-<area shape="rect" id="node2" title=" " alt="" coords="73,5,141,32"/>
+<area shape="rect" id="node4" href="$classAtPATTERN_1_1AtTrackFinderTC.html" title=" " alt="" coords="233,155,434,181"/>
+<area shape="rect" id="node2" title=" " alt="" coords="186,5,254,32"/>
 </map>

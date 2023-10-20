@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">ATTPCROOT
-   &#160;<span id="projectnumber">1.0.0</span>
+   &#160;<span id="projectnumber">0.3.0-alpha</span>
    </div>
    <div id="projectbrief">A ROOT-based framework for analyzing data from active target detectors</div>
   </td>
@@ -88,9 +88,17 @@ Collaboration diagram for AtTpcMap:</div>
 <div class="dyncontent">
 <div class="center"><img src="classAtTpcMap__coll__graph.png" border="0" usemap="#AtTpcMap_coll__map" alt="Collaboration graph"/></div>
 <map name="AtTpcMap_coll__map" id="AtTpcMap_coll__map">
-<area shape="rect" title=" " alt="" coords="5,155,88,181"/>
-<area shape="rect" href="classAtMap.html" title=" " alt="" coords="17,80,77,107"/>
-<area shape="rect" title=" " alt="" coords="11,5,83,32"/>
+<area shape="rect" title=" " alt="" coords="867,151,949,177"/>
+<area shape="rect" href="classAtMap.html" title=" " alt="" coords="757,151,817,177"/>
+<area shape="rect" title=" " alt="" coords="470,5,542,32"/>
+<area shape="rect" title=" " alt="" coords="426,57,586,98"/>
+<area shape="rect" href="structAtPadReference.html" title=" " alt="" coords="179,148,296,175"/>
+<area shape="rect" title=" " alt="" coords="401,123,611,149"/>
+<area shape="rect" title=" " alt="" coords="419,173,593,229"/>
+<area shape="rect" title=" " alt="" coords="429,253,583,309"/>
+<area shape="rect" title=" " alt="" coords="442,333,570,360"/>
+<area shape="rect" title="STL class." alt="" coords="198,268,277,295"/>
+<area shape="rect" title="STL class." alt="" coords="5,261,129,302"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
@@ -104,10 +112,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a725b4225f5610f4db2009ee1d842753e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a94c9d74f2c23331fbdfffc3ec6902bbe"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtTpcMap.html#a94c9d74f2c23331fbdfffc3ec6902bbe">GeneratePadPlane</a> () override</td></tr>
 <tr class="separator:a94c9d74f2c23331fbdfffc3ec6902bbe"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5caf38df5bf1438e602b85092be322f9"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="AtTpcProtoMap_8cxx.html#aa22c237a573cf8be8b06fce090a73290">ROOT::Math::XYPoint</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtTpcMap.html#a5caf38df5bf1438e602b85092be322f9">CalcPadCenter</a> (Int_t PadRef) override</td></tr>
+<tr class="memitem:a5caf38df5bf1438e602b85092be322f9"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="AtRadialChargeModel_8cxx.html#aa22c237a573cf8be8b06fce090a73290">ROOT::Math::XYPoint</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtTpcMap.html#a5caf38df5bf1438e602b85092be322f9">CalcPadCenter</a> (Int_t PadRef) override</td></tr>
 <tr class="separator:a5caf38df5bf1438e602b85092be322f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a10324ed94900a9f6d0762d7bc342c576"><td class="memItemLeft" align="right" valign="top">virtual TH2Poly *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtTpcMap.html#a10324ed94900a9f6d0762d7bc342c576">GetPadPlane</a> () override</td></tr>
-<tr class="separator:a10324ed94900a9f6d0762d7bc342c576"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8168fb81e614f379c8f5e744c57f00b5"><td class="memItemLeft" align="right" valign="top">virtual Int_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtTpcMap.html#a8168fb81e614f379c8f5e744c57f00b5">BinToPad</a> (Int_t binval) override</td></tr>
 <tr class="separator:a8168fb81e614f379c8f5e744c57f00b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6418bbc7bb964304e316f1b8f0128f22"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtTpcMap.html#a6418bbc7bb964304e316f1b8f0128f22">ClassDefOverride</a> (<a class="el" href="classAtTpcMap.html">AtTpcMap</a>, 1)</td></tr>
@@ -117,13 +123,17 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a3b46f9b02b23b73ad04b03f0940b105b inherit pub_methods_classAtMap"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a268dc1977b2b41518c82894983df1144 inherit pub_methods_classAtMap"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtMap.html#a268dc1977b2b41518c82894983df1144">~AtMap</a> ()=default</td></tr>
 <tr class="separator:a268dc1977b2b41518c82894983df1144 inherit pub_methods_classAtMap"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad1e83e9432af91ee952dc4472e44bda0 inherit pub_methods_classAtMap"><td class="memItemLeft" align="right" valign="top">TH2Poly *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtMap.html#ad1e83e9432af91ee952dc4472e44bda0">GetPadPlane</a> ()</td></tr>
+<tr class="separator:ad1e83e9432af91ee952dc4472e44bda0 inherit pub_methods_classAtMap"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a54848a4620d8fedcdb245ca4334c88af inherit pub_methods_classAtMap"><td class="memItemLeft" align="right" valign="top">UInt_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtMap.html#a54848a4620d8fedcdb245ca4334c88af">GetNumPads</a> () const</td></tr>
 <tr class="separator:a54848a4620d8fedcdb245ca4334c88af inherit pub_methods_classAtMap"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a524360641e9cf17dff325a17537f04d0 inherit pub_methods_classAtMap"><td class="memItemLeft" align="right" valign="top">Int_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtMap.html#a524360641e9cf17dff325a17537f04d0">GetPadNum</a> (const <a class="el" href="structAtPadReference.html">AtPadReference</a> &amp;PadRef) const</td></tr>
 <tr class="separator:a524360641e9cf17dff325a17537f04d0 inherit pub_methods_classAtMap"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a91e9017a50cc4bbcde61dadcdbf29f74 inherit pub_methods_classAtMap"><td class="memItemLeft" align="right" valign="top">multiarray&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtMap.html#a91e9017a50cc4bbcde61dadcdbf29f74">GetPadCoordArr</a> ()</td></tr>
+<tr class="memitem:ac3e239f3affc54dfaeb24c64a4d08770 inherit pub_methods_classAtMap"><td class="memItemLeft" align="right" valign="top">Int_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtMap.html#ac3e239f3affc54dfaeb24c64a4d08770">GetPadNum</a> (<a class="el" href="AtRadialChargeModel_8cxx.html#aa22c237a573cf8be8b06fce090a73290">ROOT::Math::XYPoint</a> &amp;point)</td></tr>
+<tr class="separator:ac3e239f3affc54dfaeb24c64a4d08770 inherit pub_methods_classAtMap"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a91e9017a50cc4bbcde61dadcdbf29f74 inherit pub_methods_classAtMap"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAtMap.html#a5ef1a6d5c79efd497a9e217bc951dd75">multiarray</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtMap.html#a91e9017a50cc4bbcde61dadcdbf29f74">GetPadCoordArr</a> ()</td></tr>
 <tr class="separator:a91e9017a50cc4bbcde61dadcdbf29f74 inherit pub_methods_classAtMap"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a551c68c3853d522411427f517b8f729d inherit pub_methods_classAtMap"><td class="memItemLeft" align="right" valign="top">multiarray *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtMap.html#a551c68c3853d522411427f517b8f729d">GetPadCoord</a> ()</td></tr>
+<tr class="memitem:a551c68c3853d522411427f517b8f729d inherit pub_methods_classAtMap"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAtMap.html#a5ef1a6d5c79efd497a9e217bc951dd75">multiarray</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtMap.html#a551c68c3853d522411427f517b8f729d">GetPadCoord</a> ()</td></tr>
 <tr class="separator:a551c68c3853d522411427f517b8f729d inherit pub_methods_classAtMap"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6d9db5ff2d4c4c54dfad3fce111d5fd7 inherit pub_methods_classAtMap"><td class="memItemLeft" align="right" valign="top">Bool_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtMap.html#a6d9db5ff2d4c4c54dfad3fce111d5fd7">ParseXMLMap</a> (Char_t const *xmlfile)</td></tr>
 <tr class="separator:a6d9db5ff2d4c4c54dfad3fce111d5fd7 inherit pub_methods_classAtMap"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -139,16 +149,26 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a8addc8f00efa9c67d11721db00168d4f inherit pub_methods_classAtMap"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aba9df4b58591263cb47709d8734aea71 inherit pub_methods_classAtMap"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtMap.html#aba9df4b58591263cb47709d8734aea71">IsAuxPad</a> (const <a class="el" href="structAtPadReference.html">AtPadReference</a> &amp;ref) const</td></tr>
 <tr class="separator:aba9df4b58591263cb47709d8734aea71 inherit pub_methods_classAtMap"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afd069fc7c06782cac7e23d67b56189f6 inherit pub_methods_classAtMap"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtMap.html#afd069fc7c06782cac7e23d67b56189f6">IsFPNchannel</a> (const <a class="el" href="structAtPadReference.html">AtPadReference</a> &amp;ref) const</td></tr>
+<tr class="separator:afd069fc7c06782cac7e23d67b56189f6 inherit pub_methods_classAtMap"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a22e0461deffa6780764fd338eb15733b inherit pub_methods_classAtMap"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structAtPadReference.html">AtPadReference</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtMap.html#a22e0461deffa6780764fd338eb15733b">GetNearestFPN</a> (int padNum) const</td></tr>
+<tr class="separator:a22e0461deffa6780764fd338eb15733b inherit pub_methods_classAtMap"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad3de03959fc0ad0d18106d0639175484 inherit pub_methods_classAtMap"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structAtPadReference.html">AtPadReference</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtMap.html#ad3de03959fc0ad0d18106d0639175484">GetNearestFPN</a> (const <a class="el" href="structAtPadReference.html">AtPadReference</a> &amp;ref) const</td></tr>
+<tr class="separator:ad3de03959fc0ad0d18106d0639175484 inherit pub_methods_classAtMap"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a34a6ddf0747ffcc62d9d88ed81a4486f inherit pub_methods_classAtMap"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtMap.html#a34a6ddf0747ffcc62d9d88ed81a4486f">GetAuxName</a> (const <a class="el" href="structAtPadReference.html">AtPadReference</a> &amp;ref) const</td></tr>
 <tr class="separator:a34a6ddf0747ffcc62d9d88ed81a4486f inherit pub_methods_classAtMap"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4202239405bc2a6df7b2ec04ee1e1218 inherit pub_methods_classAtMap"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtMap.html#a4202239405bc2a6df7b2ec04ee1e1218">SetGUIMode</a> ()</td></tr>
-<tr class="separator:a4202239405bc2a6df7b2ec04ee1e1218 inherit pub_methods_classAtMap"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab0e553c781e62eb619b4107e7921a150 inherit pub_methods_classAtMap"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtMap.html#ab0e553c781e62eb619b4107e7921a150">SetDebugMode</a> (Bool_t flag=true)</td></tr>
 <tr class="separator:ab0e553c781e62eb619b4107e7921a150 inherit pub_methods_classAtMap"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5df9b074a05327f73d8f69cde5520d2b inherit pub_methods_classAtMap"><td class="memItemLeft" align="right" valign="top">Bool_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtMap.html#a5df9b074a05327f73d8f69cde5520d2b">ParseInhibitMap</a> (TString inimap, <a class="el" href="classAtMap.html#aef2e09c3313f3051a753491752985a82">AtMap::InhibitType</a> type)</td></tr>
+<tr class="memitem:a5df9b074a05327f73d8f69cde5520d2b inherit pub_methods_classAtMap"><td class="memItemLeft" align="right" valign="top">Bool_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtMap.html#a5df9b074a05327f73d8f69cde5520d2b">ParseInhibitMap</a> (TString inimap, <a class="el" href="classAtMap.html#a60dda23eb1d67e0eae848a1ec117c2f0">AtMap::InhibitType</a> type)</td></tr>
 <tr class="separator:a5df9b074a05327f73d8f69cde5520d2b inherit pub_methods_classAtMap"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a38edd1454606ac402d33b8c726cfee87 inherit pub_methods_classAtMap"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAtMap.html#aef2e09c3313f3051a753491752985a82">AtMap::InhibitType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtMap.html#a38edd1454606ac402d33b8c726cfee87">IsInhibited</a> (Int_t PadNum)</td></tr>
+<tr class="memitem:ad9fa125de87b8446c3cacdf7d4255aa0 inherit pub_methods_classAtMap"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtMap.html#ad9fa125de87b8446c3cacdf7d4255aa0">InhibitPad</a> (Int_t padNum, <a class="el" href="classAtMap.html#a60dda23eb1d67e0eae848a1ec117c2f0">AtMap::InhibitType</a> type)</td></tr>
+<tr class="separator:ad9fa125de87b8446c3cacdf7d4255aa0 inherit pub_methods_classAtMap"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a012399050c7bac1ab4aab0895f0a767a inherit pub_methods_classAtMap"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtMap.html#a012399050c7bac1ab4aab0895f0a767a">InhibitPad</a> (<a class="el" href="structAtPadReference.html">AtPadReference</a> padRef, <a class="el" href="classAtMap.html#a60dda23eb1d67e0eae848a1ec117c2f0">AtMap::InhibitType</a> type)</td></tr>
+<tr class="separator:a012399050c7bac1ab4aab0895f0a767a inherit pub_methods_classAtMap"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a38edd1454606ac402d33b8c726cfee87 inherit pub_methods_classAtMap"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAtMap.html#a60dda23eb1d67e0eae848a1ec117c2f0">AtMap::InhibitType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtMap.html#a38edd1454606ac402d33b8c726cfee87">IsInhibited</a> (Int_t PadNum)</td></tr>
 <tr class="separator:a38edd1454606ac402d33b8c726cfee87 inherit pub_methods_classAtMap"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adbceaa9a2c9e60235ff0cd4fc92c6f28 inherit pub_methods_classAtMap"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAtMap.html#a60dda23eb1d67e0eae848a1ec117c2f0">AtMap::InhibitType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtMap.html#adbceaa9a2c9e60235ff0cd4fc92c6f28">IsInhibited</a> (<a class="el" href="structAtPadReference.html">AtPadReference</a> padRef)</td></tr>
+<tr class="separator:adbceaa9a2c9e60235ff0cd4fc92c6f28 inherit pub_methods_classAtMap"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6742be906922c2207cdb9ef715e61d46 inherit pub_methods_classAtMap"><td class="memItemLeft" align="right" valign="top">Int_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtMap.html#a6742be906922c2207cdb9ef715e61d46">GetPadSize</a> (int padNum)</td></tr>
 <tr class="separator:a6742be906922c2207cdb9ef715e61d46 inherit pub_methods_classAtMap"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aea7dc454410ea96e28964a8c5fe2ac3e inherit pub_methods_classAtMap"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtMap.html#aea7dc454410ea96e28964a8c5fe2ac3e">ClassDefOverride</a> (<a class="el" href="classAtMap.html">AtMap</a>, 5)</td></tr>
@@ -165,19 +185,50 @@ Protected Member Functions</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
 <tr class="inherit_header pub_types_classAtMap"><td colspan="2" onclick="javascript:toggleInherit('pub_types_classAtMap')"><img src="closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="classAtMap.html">AtMap</a></td></tr>
-<tr class="memitem:aef2e09c3313f3051a753491752985a82 inherit pub_types_classAtMap"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtMap.html#aef2e09c3313f3051a753491752985a82">InhibitType</a> : char { <a class="el" href="classAtMap.html#aef2e09c3313f3051a753491752985a82a3ef44187379ca9e555101de1baf751bc">kNone</a> = 0, 
-<a class="el" href="classAtMap.html#aef2e09c3313f3051a753491752985a82af5d79f9acb4cfc87f332743a78217e88">kLowGain</a> = 1, 
-<a class="el" href="classAtMap.html#aef2e09c3313f3051a753491752985a82abeb3a29ee7488c34d1ee6cb60f871c69">kXTalk</a> = 2, 
-<a class="el" href="classAtMap.html#aef2e09c3313f3051a753491752985a82af41c508bde07ffc340bf4c7d60cdf46a">kTotal</a> = 3
+<tr class="memitem:a60dda23eb1d67e0eae848a1ec117c2f0 inherit pub_types_classAtMap"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtMap.html#a60dda23eb1d67e0eae848a1ec117c2f0">InhibitType</a> { <br />
+&#160;&#160;<a class="el" href="classAtMap.html#a60dda23eb1d67e0eae848a1ec117c2f0a35c3ace1970663a16e5c65baa5941b13">InhibitType::kNone</a> = 0, 
+<a class="el" href="classAtMap.html#a60dda23eb1d67e0eae848a1ec117c2f0a3f51c5eeca3992eab774e31a9d5e9f9c">InhibitType::kLowGain</a> = 1, 
+<a class="el" href="classAtMap.html#a60dda23eb1d67e0eae848a1ec117c2f0a34a27203c91c2857d7f158e1b5eb2689">InhibitType::kXTalk</a> = 2, 
+<a class="el" href="classAtMap.html#a60dda23eb1d67e0eae848a1ec117c2f0ac5773fa6682ca4cde48ab9f265398de3">InhibitType::kTotal</a> = 3, 
+<br />
+&#160;&#160;<a class="el" href="classAtMap.html#a60dda23eb1d67e0eae848a1ec117c2f0aed326e07de90d5eec9a790fbc8712729">InhibitType::kBadPad</a> = 4
+<br />
  }</td></tr>
-<tr class="separator:aef2e09c3313f3051a753491752985a82 inherit pub_types_classAtMap"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:a60dda23eb1d67e0eae848a1ec117c2f0 inherit pub_types_classAtMap"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_types_classAtMap"><td colspan="2" onclick="javascript:toggleInherit('pro_types_classAtMap')"><img src="closed.png" alt="-"/>&#160;Protected Types inherited from <a class="el" href="classAtMap.html">AtMap</a></td></tr>
-<tr class="memitem:ada5046dffdf12604ade1ff31caaf01e1 inherit pro_types_classAtMap"><td class="memItemLeft" align="right" valign="top">typedef boost::multi_array&lt; double, 3 &gt; multiarray typedef multiarray::index index multiarray AtPadCoord multiarray *fAtPadCoordPtr Bool_t kIsParsed Bool_t kGUIMode Bool_t kDebug std::map&lt; Int_t, <a class="el" href="classAtMap.html#aef2e09c3313f3051a753491752985a82">AtMap::InhibitType</a> &gt; fIniPads TCanvas *fPadPlaneCanvas TH2Poly *fPadPlane UInt_t fNumberPads std::unordered_map&lt; <a class="el" href="structAtPadReference.html">AtPadReference</a>, int &gt; fPadMap std::map&lt; int, <a class="el" href="structAtPadReference.html">AtPadReference</a> &gt; fPadMapInverse std::unordered_map&lt; <a class="el" href="structAtPadReference.html">AtPadReference</a>, std::string &gt; fAuxPadMap std::map&lt; int, int &gt; fPadSizeMap void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtMap.html#ada5046dffdf12604ade1ff31caaf01e1">inhibitPad</a>(Int_t padNum, <a class="el" href="classAtMap.html#aef2e09c3313f3051a753491752985a82">AtMap::InhibitType</a> type) {}</td></tr>
-<tr class="separator:ada5046dffdf12604ade1ff31caaf01e1 inherit pro_types_classAtMap"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5ef1a6d5c79efd497a9e217bc951dd75 inherit pro_types_classAtMap"><td class="memItemLeft" align="right" valign="top">typedef boost::multi_array&lt; double, 3 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtMap.html#a5ef1a6d5c79efd497a9e217bc951dd75">multiarray</a></td></tr>
+<tr class="separator:a5ef1a6d5c79efd497a9e217bc951dd75 inherit pro_types_classAtMap"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a24764a4cd0d0cf2919642c287711a9f9 inherit pro_types_classAtMap"><td class="memItemLeft" align="right" valign="top">typedef multiarray::index&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtMap.html#a24764a4cd0d0cf2919642c287711a9f9">index</a></td></tr>
+<tr class="separator:a24764a4cd0d0cf2919642c287711a9f9 inherit pro_types_classAtMap"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pro_attribs_classAtMap"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classAtMap')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classAtMap.html">AtMap</a></td></tr>
+<tr class="memitem:a8110bec60b297323a53c1b10c4a23676 inherit pro_attribs_classAtMap"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAtMap.html#a5ef1a6d5c79efd497a9e217bc951dd75">multiarray</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtMap.html#a8110bec60b297323a53c1b10c4a23676">AtPadCoord</a></td></tr>
+<tr class="separator:a8110bec60b297323a53c1b10c4a23676 inherit pro_attribs_classAtMap"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a408e915d7649f831848c151c14870ecf inherit pro_attribs_classAtMap"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAtMap.html#a5ef1a6d5c79efd497a9e217bc951dd75">multiarray</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtMap.html#a408e915d7649f831848c151c14870ecf">fAtPadCoordPtr</a> {}</td></tr>
+<tr class="separator:a408e915d7649f831848c151c14870ecf inherit pro_attribs_classAtMap"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a00bed873a8fd0ca7365f93927e395e52 inherit pro_attribs_classAtMap"><td class="memItemLeft" align="right" valign="top">Bool_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtMap.html#a00bed873a8fd0ca7365f93927e395e52">kIsParsed</a> = false</td></tr>
+<tr class="separator:a00bed873a8fd0ca7365f93927e395e52 inherit pro_attribs_classAtMap"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad3fd8fee2dfe720afabecdffa238e90e inherit pro_attribs_classAtMap"><td class="memItemLeft" align="right" valign="top">Bool_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtMap.html#ad3fd8fee2dfe720afabecdffa238e90e">kDebug</a> = false</td></tr>
+<tr class="separator:ad3fd8fee2dfe720afabecdffa238e90e inherit pro_attribs_classAtMap"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4c7752f781afbcd5e5963267022725ba inherit pro_attribs_classAtMap"><td class="memItemLeft" align="right" valign="top">std::unordered_map&lt; <a class="el" href="structAtPadReference.html">AtPadReference</a>, <a class="el" href="classAtMap.html#a60dda23eb1d67e0eae848a1ec117c2f0">AtMap::InhibitType</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtMap.html#a4c7752f781afbcd5e5963267022725ba">fIniPads</a></td></tr>
+<tr class="separator:a4c7752f781afbcd5e5963267022725ba inherit pro_attribs_classAtMap"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a085929248a0358d5bb4b26563ddfc797 inherit pro_attribs_classAtMap"><td class="memItemLeft" align="right" valign="top">TCanvas *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtMap.html#a085929248a0358d5bb4b26563ddfc797">fPadPlaneCanvas</a> {}</td></tr>
+<tr class="separator:a085929248a0358d5bb4b26563ddfc797 inherit pro_attribs_classAtMap"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a82a27c79c29211e86ef672b094902949 inherit pro_attribs_classAtMap"><td class="memItemLeft" align="right" valign="top">TH2Poly *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtMap.html#a82a27c79c29211e86ef672b094902949">fPadPlane</a></td></tr>
+<tr class="separator:a82a27c79c29211e86ef672b094902949 inherit pro_attribs_classAtMap"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0824f4238853ea94354b51849fb714bc inherit pro_attribs_classAtMap"><td class="memItemLeft" align="right" valign="top">UInt_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtMap.html#a0824f4238853ea94354b51849fb714bc">fNumberPads</a> {}</td></tr>
+<tr class="separator:a0824f4238853ea94354b51849fb714bc inherit pro_attribs_classAtMap"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af327caaa32de321487965eff33b82f35 inherit pro_attribs_classAtMap"><td class="memItemLeft" align="right" valign="top">std::unordered_map&lt; <a class="el" href="structAtPadReference.html">AtPadReference</a>, int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtMap.html#af327caaa32de321487965eff33b82f35">fPadMap</a></td></tr>
+<tr class="separator:af327caaa32de321487965eff33b82f35 inherit pro_attribs_classAtMap"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6818510aa45f025dc6e1ce22ae04240e inherit pro_attribs_classAtMap"><td class="memItemLeft" align="right" valign="top">std::map&lt; int, <a class="el" href="structAtPadReference.html">AtPadReference</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtMap.html#a6818510aa45f025dc6e1ce22ae04240e">fPadMapInverse</a></td></tr>
+<tr class="separator:a6818510aa45f025dc6e1ce22ae04240e inherit pro_attribs_classAtMap"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae076069dec3ae1e2842d71ca47961bbb inherit pro_attribs_classAtMap"><td class="memItemLeft" align="right" valign="top">std::unordered_map&lt; <a class="el" href="structAtPadReference.html">AtPadReference</a>, std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtMap.html#ae076069dec3ae1e2842d71ca47961bbb">fAuxPadMap</a></td></tr>
+<tr class="separator:ae076069dec3ae1e2842d71ca47961bbb inherit pro_attribs_classAtMap"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a03d4aff12bd1f6aa2306cf5bc5fff43a inherit pro_attribs_classAtMap"><td class="memItemLeft" align="right" valign="top">std::map&lt; int, int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtMap.html#a03d4aff12bd1f6aa2306cf5bc5fff43a">fPadSizeMap</a></td></tr>
+<tr class="separator:a03d4aff12bd1f6aa2306cf5bc5fff43a inherit pro_attribs_classAtMap"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="AtTpcMap_8h_source.html#l00020">20</a> of file <a class="el" href="AtTpcMap_8h_source.html">AtTpcMap.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtTpcMap_8h_source.html#l00019">19</a> of file <a class="el" href="AtTpcMap_8h_source.html">AtTpcMap.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a31ed67bb2599b86594e462e9636bbec4"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a31ed67bb2599b86594e462e9636bbec4">&#9670;&nbsp;</a></span>AtTpcMap()</h2>
@@ -250,7 +301,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classAtMap.html#ae2bcd6d33ca86b837de195a1060beea0">AtMap</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="AtTpcMap_8h_source.html#l00030">30</a> of file <a class="el" href="AtTpcMap_8h_source.html">AtTpcMap.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtTpcMap_8h_source.html#l00028">28</a> of file <a class="el" href="AtTpcMap_8h_source.html">AtTpcMap.h</a>.</p>
 
 </div>
 </div>
@@ -264,7 +315,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="AtGadgetIIMap_8cxx.html#aa22c237a573cf8be8b06fce090a73290">XYPoint</a> AtTpcMap::CalcPadCenter </td>
+          <td class="memname"><a class="el" href="AtPatternCircle2D_8cxx.html#aa22c237a573cf8be8b06fce090a73290">XYPoint</a> AtTpcMap::CalcPadCenter </td>
           <td>(</td>
           <td class="paramtype">Int_t&#160;</td>
           <td class="paramname"><em>PadRef</em></td><td>)</td>
@@ -280,7 +331,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classAtMap.html#a07ea3fb165f08c1d523ef8ee609ce559">AtMap</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="AtTpcMap_8cxx_source.html#l00240">240</a> of file <a class="el" href="AtTpcMap_8cxx_source.html">AtTpcMap.cxx</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtTpcMap_8cxx_source.html#l00232">232</a> of file <a class="el" href="AtTpcMap_8cxx_source.html">AtTpcMap.cxx</a>.</p>
 
 </div>
 </div>
@@ -393,7 +444,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtTpcMap_8cxx_source.html#l00200">200</a> of file <a class="el" href="AtTpcMap_8cxx_source.html">AtTpcMap.cxx</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtTpcMap_8cxx_source.html#l00221">221</a> of file <a class="el" href="AtTpcMap_8cxx_source.html">AtTpcMap.cxx</a>.</p>
 
 </div>
 </div>
@@ -419,39 +470,11 @@ Additional Inherited Members</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>Virtual function that creates the TH2Poly that stores the pad plane geometry </p>
 
 <p>Implements <a class="el" href="classAtMap.html#aa9340a20063f875edc0d9ff0903edd2e">AtMap</a>.</p>
 
 <p class="definition">Definition at line <a class="el" href="AtTpcMap_8cxx_source.html#l00075">75</a> of file <a class="el" href="AtTpcMap_8cxx_source.html">AtTpcMap.cxx</a>.</p>
-
-</div>
-</div>
-<a id="a10324ed94900a9f6d0762d7bc342c576"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a10324ed94900a9f6d0762d7bc342c576">&#9670;&nbsp;</a></span>GetPadPlane()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">TH2Poly * AtTpcMap::GetPadPlane </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Implements <a class="el" href="classAtMap.html#a99e5a0f03af8c8b4750d5792f4222685">AtMap</a>.</p>
-
-<p class="definition">Definition at line <a class="el" href="AtTpcMap_8cxx_source.html#l00211">211</a> of file <a class="el" href="AtTpcMap_8cxx_source.html">AtTpcMap.cxx</a>.</p>
 
 </div>
 </div>
@@ -462,7 +485,7 @@ Additional Inherited Members</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Apr 27 2022 00:47:49 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Oct 20 2023 16:23:02 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.18
 </small></address>

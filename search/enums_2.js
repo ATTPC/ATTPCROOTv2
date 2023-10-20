@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['hclust_5ffast_5fmethods_5310',['hclust_fast_methods',['../fastcluster_8h.html#a4205a14ad66b3320d2e94c61d74913dd',1,'fastcluster.h']]]
+  ['eframetype_7630',['EFrameType',['../classGETDecoder2.html#a3ed1ba9c23cd87f946ecd982d819bcdd',1,'GETDecoder2']]],
+  ['estimators_7631',['Estimators',['../group__SampleConsensus.html#ga3f41f25b8c1dd17e4e1785fba2380d5d',1,'SampleConsensus']]]
 ];

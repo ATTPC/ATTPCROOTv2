@@ -1,10 +1,8 @@
 <map id="/github/workspace/AtData/AtProtoQuadrant.h" name="/github/workspace/AtData/AtProtoQuadrant.h">
-<area shape="rect" id="node1" title=" " alt="" coords="431,5,603,47"/>
-<area shape="rect" id="node2" href="$AtProtoEvent_8h.html" title=" " alt="" coords="370,95,542,136"/>
-<area shape="rect" id="node4" href="$AtEventDrawTaskProto_8cxx.html" title=" " alt="" coords="5,184,232,225"/>
-<area shape="rect" id="node5" href="$AtEventDrawTaskS800_8cxx.html" title=" " alt="" coords="710,184,935,225"/>
-<area shape="rect" id="node8" href="$AtProtoQuadrant_8cxx.html" title=" " alt="" coords="618,95,790,136"/>
-<area shape="rect" id="node3" href="$AtProtoEvent_8cxx.html" title=" " alt="" coords="257,184,429,225"/>
-<area shape="rect" id="node6" href="$AtTrackFinderHCTask_8h.html" title=" " alt="" coords="453,184,685,225"/>
-<area shape="rect" id="node7" href="$AtTrackFinderHCTask_8cxx.html" title=" " alt="" coords="453,273,685,315"/>
+<area shape="rect" id="node1" title=" " alt="" coords="305,5,477,47"/>
+<area shape="rect" id="node2" href="$AtProtoEvent_8h.html" title=" " alt="" coords="244,95,416,136"/>
+<area shape="rect" id="node4" href="$AtEventDrawTaskProto_8cxx.html" title=" " alt="" coords="5,184,220,240"/>
+<area shape="rect" id="node5" href="$AtEventDrawTaskS800_8cxx.html" title=" " alt="" coords="440,184,655,240"/>
+<area shape="rect" id="node6" href="$AtProtoQuadrant_8cxx.html" title=" " alt="" coords="492,95,664,136"/>
+<area shape="rect" id="node3" href="$AtProtoEvent_8cxx.html" title=" " alt="" coords="244,191,416,233"/>
 </map>

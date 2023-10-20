@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">ATTPCROOT
-   &#160;<span id="projectnumber">1.0.0</span>
+   &#160;<span id="projectnumber">0.3.0-alpha</span>
    </div>
    <div id="projectbrief">A ROOT-based framework for analyzing data from active target detectors</div>
   </td>
@@ -77,47 +77,49 @@ $(function() {
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="AtPad_8h.html">AtPad.h</a>&quot;</span></div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160; </div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="keyword">class </span><a class="code" href="classAtRawEvent.html">AtRawEvent</a>;</div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160; </div>
-<div class="line"><a name="l00008"></a><span class="lineno"><a class="line" href="classAtFilterDivide.html#a42b74198bc792b13256f548befda7252">    8</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classAtFilterDivide.html#a42b74198bc792b13256f548befda7252">AtFilterDivide::SetDivisor</a>(Double_t div)</div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;{</div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;   fDivisor = div;</div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;}</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160; </div>
-<div class="line"><a name="l00013"></a><span class="lineno"><a class="line" href="classAtFilterDivide.html#a5be797fdd62370a66129310e5c7331bd">   13</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classAtFilterDivide.html#a5be797fdd62370a66129310e5c7331bd">AtFilterDivide::Init</a>() {}</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160; </div>
-<div class="line"><a name="l00015"></a><span class="lineno"><a class="line" href="classAtFilterDivide.html#ae69291b1073300993eae97b1abea8ae4">   15</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classAtFilterDivide.html#ae69291b1073300993eae97b1abea8ae4">AtFilterDivide::InitEvent</a>(<a class="code" href="classAtRawEvent.html">AtRawEvent</a> *event) {}</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160; </div>
-<div class="line"><a name="l00017"></a><span class="lineno"><a class="line" href="classAtFilterDivide.html#ae96e48f8bf85631afa70f0b5de6b4dc3">   17</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classAtFilterDivide.html#ae96e48f8bf85631afa70f0b5de6b4dc3">AtFilterDivide::Filter</a>(<a class="code" href="classAtPad.html">AtPad</a> *pad)</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;{</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;   <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; 512; ++i) {</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;      pad-&gt;<a class="code" href="classAtPad.html#ab2788c724a02de7149438a4205273b75">SetRawADC</a>(i, pad-&gt;<a class="code" href="classAtPad.html#a036ace819d34b7c745fb6f554b6ee8b8">GetRawADC</a>(i) / fDivisor);</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;      <span class="keywordflow">if</span> (pad-&gt;<a class="code" href="classAtPad.html#a209eb8e1eb9243078bef8fd6132c64ac">IsPedestalSubtracted</a>())</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;         pad-&gt;<a class="code" href="classAtPad.html#abb35f4fb9eef12c24317bed59398d816">SetADC</a>(i, pad-&gt;<a class="code" href="classAtPad.html#a91c89e0b6f1f521b663ee7246965f1eb">GetADC</a>(i) / fDivisor);</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;   }</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;}</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
-<div class="line"><a name="l00026"></a><span class="lineno"><a class="line" href="classAtFilterDivide.html#a8f3cbb5c8db2f146cb5528b92665e951">   26</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="classAtFilterDivide.html#a8f3cbb5c8db2f146cb5528b92665e951">AtFilterDivide::IsGoodEvent</a>()</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;{</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;   <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;}</div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="keyword">struct </span><a class="code" href="structAtPadReference.html">AtPadReference</a>;</div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160; </div>
+<div class="line"><a name="l00009"></a><span class="lineno"><a class="line" href="classAtFilterDivide.html#a42b74198bc792b13256f548befda7252">    9</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classAtFilterDivide.html#a42b74198bc792b13256f548befda7252">AtFilterDivide::SetDivisor</a>(Double_t div)</div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;{</div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;   fDivisor = div;</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;}</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160; </div>
+<div class="line"><a name="l00014"></a><span class="lineno"><a class="line" href="classAtFilterDivide.html#a5be797fdd62370a66129310e5c7331bd">   14</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classAtFilterDivide.html#a5be797fdd62370a66129310e5c7331bd">AtFilterDivide::Init</a>() {}</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160; </div>
+<div class="line"><a name="l00016"></a><span class="lineno"><a class="line" href="classAtFilterDivide.html#ae69291b1073300993eae97b1abea8ae4">   16</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classAtFilterDivide.html#ae69291b1073300993eae97b1abea8ae4">AtFilterDivide::InitEvent</a>(<a class="code" href="classAtRawEvent.html">AtRawEvent</a> *event) {}</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
+<div class="line"><a name="l00018"></a><span class="lineno"><a class="line" href="classAtFilterDivide.html#a760bbb6d244337fa8a08fe7eac8d85fd">   18</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classAtFilterDivide.html#a760bbb6d244337fa8a08fe7eac8d85fd">AtFilterDivide::Filter</a>(<a class="code" href="classAtPad.html">AtPad</a> *pad, <a class="code" href="structAtPadReference.html">AtPadReference</a> *padReference)</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;{</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;   <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; 512; ++i) {</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;      pad-&gt;<a class="code" href="classAtPad.html#ab2788c724a02de7149438a4205273b75">SetRawADC</a>(i, pad-&gt;<a class="code" href="classAtPad.html#a036ace819d34b7c745fb6f554b6ee8b8">GetRawADC</a>(i) / fDivisor);</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;      <span class="keywordflow">if</span> (pad-&gt;<a class="code" href="classAtPad.html#a209eb8e1eb9243078bef8fd6132c64ac">IsPedestalSubtracted</a>())</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;         pad-&gt;<a class="code" href="classAtPad.html#abb35f4fb9eef12c24317bed59398d816">SetADC</a>(i, pad-&gt;<a class="code" href="classAtPad.html#a91c89e0b6f1f521b663ee7246965f1eb">GetADC</a>(i) / fDivisor);</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;   }</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;}</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
+<div class="line"><a name="l00027"></a><span class="lineno"><a class="line" href="classAtFilterDivide.html#a8f3cbb5c8db2f146cb5528b92665e951">   27</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="classAtFilterDivide.html#a8f3cbb5c8db2f146cb5528b92665e951">AtFilterDivide::IsGoodEvent</a>()</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;{</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;   <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
 <div class="ttc" id="aAtPad_8h_html"><div class="ttname"><a href="AtPad_8h.html">AtPad.h</a></div></div>
 <div class="ttc" id="aAtFilterDivide_8h_html"><div class="ttname"><a href="AtFilterDivide_8h.html">AtFilterDivide.h</a></div></div>
-<div class="ttc" id="aclassAtFilterDivide_html_a5be797fdd62370a66129310e5c7331bd"><div class="ttname"><a href="classAtFilterDivide.html#a5be797fdd62370a66129310e5c7331bd">AtFilterDivide::Init</a></div><div class="ttdeci">virtual void Init() override</div><div class="ttdef"><b>Definition:</b> <a href="AtFilterDivide_8cxx_source.html#l00013">AtFilterDivide.cxx:13</a></div></div>
-<div class="ttc" id="aclassAtFilterDivide_html_ae96e48f8bf85631afa70f0b5de6b4dc3"><div class="ttname"><a href="classAtFilterDivide.html#ae96e48f8bf85631afa70f0b5de6b4dc3">AtFilterDivide::Filter</a></div><div class="ttdeci">virtual void Filter(AtPad *pad) override</div><div class="ttdef"><b>Definition:</b> <a href="AtFilterDivide_8cxx_source.html#l00017">AtFilterDivide.cxx:17</a></div></div>
-<div class="ttc" id="aclassAtPad_html_ab2788c724a02de7149438a4205273b75"><div class="ttname"><a href="classAtPad.html#ab2788c724a02de7149438a4205273b75">AtPad::SetRawADC</a></div><div class="ttdeci">void SetRawADC(const rawTrace &amp;val)</div><div class="ttdef"><b>Definition:</b> <a href="AtPad_8h_source.html#l00054">AtPad.h:54</a></div></div>
-<div class="ttc" id="aclassAtPad_html_abb35f4fb9eef12c24317bed59398d816"><div class="ttname"><a href="classAtPad.html#abb35f4fb9eef12c24317bed59398d816">AtPad::SetADC</a></div><div class="ttdeci">void SetADC(const trace &amp;val)</div><div class="ttdef"><b>Definition:</b> <a href="AtPad_8h_source.html#l00056">AtPad.h:56</a></div></div>
-<div class="ttc" id="aclassAtFilterDivide_html_a42b74198bc792b13256f548befda7252"><div class="ttname"><a href="classAtFilterDivide.html#a42b74198bc792b13256f548befda7252">AtFilterDivide::SetDivisor</a></div><div class="ttdeci">void SetDivisor(Double_t divisor)</div><div class="ttdef"><b>Definition:</b> <a href="AtFilterDivide_8cxx_source.html#l00008">AtFilterDivide.cxx:8</a></div></div>
-<div class="ttc" id="aclassAtRawEvent_html"><div class="ttname"><a href="classAtRawEvent.html">AtRawEvent</a></div><div class="ttdef"><b>Definition:</b> <a href="AtRawEvent_8h_source.html#l00035">AtRawEvent.h:35</a></div></div>
-<div class="ttc" id="aclassAtPad_html_a91c89e0b6f1f521b663ee7246965f1eb"><div class="ttname"><a href="classAtPad.html#a91c89e0b6f1f521b663ee7246965f1eb">AtPad::GetADC</a></div><div class="ttdeci">const trace &amp; GetADC() const</div><div class="ttdef"><b>Definition:</b> <a href="AtPad_8cxx_source.html#l00027">AtPad.cxx:27</a></div></div>
-<div class="ttc" id="aclassAtPad_html_a209eb8e1eb9243078bef8fd6132c64ac"><div class="ttname"><a href="classAtPad.html#a209eb8e1eb9243078bef8fd6132c64ac">AtPad::IsPedestalSubtracted</a></div><div class="ttdeci">Bool_t IsPedestalSubtracted() const</div><div class="ttdef"><b>Definition:</b> <a href="AtPad_8h_source.html#l00059">AtPad.h:59</a></div></div>
-<div class="ttc" id="aclassAtFilterDivide_html_a8f3cbb5c8db2f146cb5528b92665e951"><div class="ttname"><a href="classAtFilterDivide.html#a8f3cbb5c8db2f146cb5528b92665e951">AtFilterDivide::IsGoodEvent</a></div><div class="ttdeci">virtual bool IsGoodEvent() override</div><div class="ttdef"><b>Definition:</b> <a href="AtFilterDivide_8cxx_source.html#l00026">AtFilterDivide.cxx:26</a></div></div>
-<div class="ttc" id="aclassAtPad_html"><div class="ttname"><a href="classAtPad.html">AtPad</a></div><div class="ttdef"><b>Definition:</b> <a href="AtPad_8h_source.html#l00025">AtPad.h:25</a></div></div>
-<div class="ttc" id="aclassAtPad_html_a036ace819d34b7c745fb6f554b6ee8b8"><div class="ttname"><a href="classAtPad.html#a036ace819d34b7c745fb6f554b6ee8b8">AtPad::GetRawADC</a></div><div class="ttdeci">const rawTrace &amp; GetRawADC() const</div><div class="ttdef"><b>Definition:</b> <a href="AtPad_8h_source.html#l00069">AtPad.h:69</a></div></div>
-<div class="ttc" id="aclassAtFilterDivide_html_ae69291b1073300993eae97b1abea8ae4"><div class="ttname"><a href="classAtFilterDivide.html#ae69291b1073300993eae97b1abea8ae4">AtFilterDivide::InitEvent</a></div><div class="ttdeci">virtual void InitEvent(AtRawEvent *event) override</div><div class="ttdef"><b>Definition:</b> <a href="AtFilterDivide_8cxx_source.html#l00015">AtFilterDivide.cxx:15</a></div></div>
+<div class="ttc" id="aclassAtFilterDivide_html_a5be797fdd62370a66129310e5c7331bd"><div class="ttname"><a href="classAtFilterDivide.html#a5be797fdd62370a66129310e5c7331bd">AtFilterDivide::Init</a></div><div class="ttdeci">virtual void Init() override</div><div class="ttdoc">Called at the init stage of the AtFilterTask.</div><div class="ttdef"><b>Definition:</b> <a href="AtFilterDivide_8cxx_source.html#l00014">AtFilterDivide.cxx:14</a></div></div>
+<div class="ttc" id="aclassAtPad_html_ab2788c724a02de7149438a4205273b75"><div class="ttname"><a href="classAtPad.html#ab2788c724a02de7149438a4205273b75">AtPad::SetRawADC</a></div><div class="ttdeci">void SetRawADC(const rawTrace &amp;val)</div><div class="ttdef"><b>Definition:</b> <a href="AtPad_8h_source.html#l00089">AtPad.h:89</a></div></div>
+<div class="ttc" id="aclassAtPad_html_abb35f4fb9eef12c24317bed59398d816"><div class="ttname"><a href="classAtPad.html#abb35f4fb9eef12c24317bed59398d816">AtPad::SetADC</a></div><div class="ttdeci">void SetADC(const trace &amp;val)</div><div class="ttdef"><b>Definition:</b> <a href="AtPad_8h_source.html#l00091">AtPad.h:91</a></div></div>
+<div class="ttc" id="aclassAtFilterDivide_html_a42b74198bc792b13256f548befda7252"><div class="ttname"><a href="classAtFilterDivide.html#a42b74198bc792b13256f548befda7252">AtFilterDivide::SetDivisor</a></div><div class="ttdeci">void SetDivisor(Double_t divisor)</div><div class="ttdef"><b>Definition:</b> <a href="AtFilterDivide_8cxx_source.html#l00009">AtFilterDivide.cxx:9</a></div></div>
+<div class="ttc" id="aclassAtRawEvent_html"><div class="ttname"><a href="classAtRawEvent.html">AtRawEvent</a></div><div class="ttdef"><b>Definition:</b> <a href="AtRawEvent_8h_source.html#l00034">AtRawEvent.h:34</a></div></div>
+<div class="ttc" id="aclassAtFilterDivide_html_a760bbb6d244337fa8a08fe7eac8d85fd"><div class="ttname"><a href="classAtFilterDivide.html#a760bbb6d244337fa8a08fe7eac8d85fd">AtFilterDivide::Filter</a></div><div class="ttdeci">virtual void Filter(AtPad *pad, AtPadReference *padReference) override</div><div class="ttdoc">Called to filter each pad.</div><div class="ttdef"><b>Definition:</b> <a href="AtFilterDivide_8cxx_source.html#l00018">AtFilterDivide.cxx:18</a></div></div>
+<div class="ttc" id="aclassAtPad_html_a91c89e0b6f1f521b663ee7246965f1eb"><div class="ttname"><a href="classAtPad.html#a91c89e0b6f1f521b663ee7246965f1eb">AtPad::GetADC</a></div><div class="ttdeci">const trace &amp; GetADC() const</div><div class="ttdef"><b>Definition:</b> <a href="AtPad_8cxx_source.html#l00097">AtPad.cxx:97</a></div></div>
+<div class="ttc" id="aclassAtPad_html_a209eb8e1eb9243078bef8fd6132c64ac"><div class="ttname"><a href="classAtPad.html#a209eb8e1eb9243078bef8fd6132c64ac">AtPad::IsPedestalSubtracted</a></div><div class="ttdeci">Bool_t IsPedestalSubtracted() const</div><div class="ttdef"><b>Definition:</b> <a href="AtPad_8h_source.html#l00094">AtPad.h:94</a></div></div>
+<div class="ttc" id="aclassAtFilterDivide_html_a8f3cbb5c8db2f146cb5528b92665e951"><div class="ttname"><a href="classAtFilterDivide.html#a8f3cbb5c8db2f146cb5528b92665e951">AtFilterDivide::IsGoodEvent</a></div><div class="ttdeci">virtual bool IsGoodEvent() override</div><div class="ttdoc">Called at the end of an event. Returns if filtering was successful.</div><div class="ttdef"><b>Definition:</b> <a href="AtFilterDivide_8cxx_source.html#l00027">AtFilterDivide.cxx:27</a></div></div>
+<div class="ttc" id="aclassAtPad_html"><div class="ttname"><a href="classAtPad.html">AtPad</a></div><div class="ttdoc">Container class for AtPadBase objects.</div><div class="ttdef"><b>Definition:</b> <a href="AtPad_8h_source.html#l00038">AtPad.h:38</a></div></div>
+<div class="ttc" id="aclassAtPad_html_a036ace819d34b7c745fb6f554b6ee8b8"><div class="ttname"><a href="classAtPad.html#a036ace819d34b7c745fb6f554b6ee8b8">AtPad::GetRawADC</a></div><div class="ttdeci">const rawTrace &amp; GetRawADC() const</div><div class="ttdef"><b>Definition:</b> <a href="AtPad_8h_source.html#l00104">AtPad.h:104</a></div></div>
+<div class="ttc" id="astructAtPadReference_html"><div class="ttname"><a href="structAtPadReference.html">AtPadReference</a></div><div class="ttdef"><b>Definition:</b> <a href="AtPadReference_8h_source.html#l00020">AtPadReference.h:20</a></div></div>
+<div class="ttc" id="aclassAtFilterDivide_html_ae69291b1073300993eae97b1abea8ae4"><div class="ttname"><a href="classAtFilterDivide.html#ae69291b1073300993eae97b1abea8ae4">AtFilterDivide::InitEvent</a></div><div class="ttdeci">virtual void InitEvent(AtRawEvent *event) override</div><div class="ttdoc">Called once for each event at the start of the Exec phase.</div><div class="ttdef"><b>Definition:</b> <a href="AtFilterDivide_8cxx_source.html#l00016">AtFilterDivide.cxx:16</a></div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Apr 27 2022 00:47:47 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Oct 20 2023 16:22:59 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.18
 </small></address>

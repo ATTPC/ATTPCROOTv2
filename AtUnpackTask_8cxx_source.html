@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">ATTPCROOT
-   &#160;<span id="projectnumber">1.0.0</span>
+   &#160;<span id="projectnumber">0.3.0-alpha</span>
    </div>
    <div id="projectbrief">A ROOT-based framework for analyzing data from active target detectors</div>
   </td>
@@ -112,42 +112,47 @@ $(function() {
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;   fOutputEventArray.Clear(<span class="stringliteral">&quot;C&quot;</span>);</div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;   <span class="keyword">auto</span> rawEvent = <span class="keyword">dynamic_cast&lt;</span><a class="code" href="classAtRawEvent.html">AtRawEvent</a> *<span class="keyword">&gt;</span>(fOutputEventArray.ConstructedAt(0));</div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;   <span class="comment">// Hacked solution to the fact that FinishEvent() is not normally called with how</span></div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;   <span class="comment">// we unpack runs.</span></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;   <span class="keywordflow">if</span> (!fUnpacker-&gt;IsLastEvent())</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;      fUnpacker-&gt;FillRawEvent(*rawEvent);</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;   <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;      LOG(warn) &lt;&lt; <span class="stringliteral">&quot;Hit last event at: &quot;</span> &lt;&lt; fUnpacker-&gt;GetNextEventID();</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;      fRawEvent-&gt;<a class="code" href="classAtRawEvent.html#a8e61f8ee84da0b0d52ba832a2091304a">SetIsGood</a>(<span class="keyword">false</span>);</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;   }</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;}</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
-<div class="line"><a name="l00052"></a><span class="lineno"><a class="line" href="classAtUnpackTask.html#a7f271f31068b2a3f46f285ca18ecaacc">   52</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classAtUnpackTask.html#a7f271f31068b2a3f46f285ca18ecaacc">AtUnpackTask::FinishEvent</a>()</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;{</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;   <span class="comment">// Note this is only called if we are not running a &quot;DummyRun&quot;</span></div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;   <span class="comment">// ie FairRoot thinks there is some sort of source. This is, in general</span></div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;   <span class="comment">// not true so will never be called.</span></div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;   <span class="keywordflow">if</span> (fUnpacker-&gt;IsLastEvent()) {</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;      LOG(info) &lt;&lt; <span class="stringliteral">&quot;Unpacked last event. Terminating run.&quot;</span>;</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;      FairRootManager::Instance()-&gt;SetFinishRun();</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;   }</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;}</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;   LOG(debug) &lt;&lt; <span class="stringliteral">&quot;Unpacking event: &quot;</span> &lt;&lt; fUnpacker-&gt;GetNextEventID();</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160; </div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;   <span class="comment">// Hacked solution to the fact that FinishEvent() is not normally called with how</span></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;   <span class="comment">// we unpack runs.</span></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;   <span class="keywordflow">if</span> (!fFinishedUnpacking) {</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;      fUnpacker-&gt;FillRawEvent(*rawEvent);</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;   } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;      LOG(warn) &lt;&lt; <span class="stringliteral">&quot;Hit last event at: &quot;</span> &lt;&lt; fUnpacker-&gt;GetNextEventID();</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;      fRawEvent-&gt;<a class="code" href="classAtBaseEvent.html#abe75a4a9b689a722e59fb44eec414e3b">SetIsGood</a>(<span class="keyword">false</span>);</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;      <span class="keywordflow">return</span>;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;   }</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160; </div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;   fFinishedUnpacking = fUnpacker-&gt;IsLastEvent();</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;}</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160; </div>
+<div class="line"><a name="l00057"></a><span class="lineno"><a class="line" href="classAtUnpackTask.html#a7f271f31068b2a3f46f285ca18ecaacc">   57</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classAtUnpackTask.html#a7f271f31068b2a3f46f285ca18ecaacc">AtUnpackTask::FinishEvent</a>()</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;{</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;   <span class="comment">// Note this is only called if we are not running a &quot;DummyRun&quot;</span></div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;   <span class="comment">// ie FairRoot thinks there is some sort of source. This is, in general</span></div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;   <span class="comment">// not true so will never be called.</span></div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;   <span class="keywordflow">if</span> (fUnpacker-&gt;IsLastEvent()) {</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;      LOG(info) &lt;&lt; <span class="stringliteral">&quot;Unpacked last event. Terminating run.&quot;</span>;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;      FairRootManager::Instance()-&gt;SetFinishRun();</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;   }</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
 <div class="ttc" id="aclassAtUnpackTask_html_a64f520c36c3a0f913117a2107d7d3760"><div class="ttname"><a href="classAtUnpackTask.html#a64f520c36c3a0f913117a2107d7d3760">AtUnpackTask::SetParContainers</a></div><div class="ttdeci">virtual void SetParContainers() override</div><div class="ttdef"><b>Definition:</b> <a href="AtUnpackTask_8cxx_source.html#l00035">AtUnpackTask.cxx:35</a></div></div>
 <div class="ttc" id="aAtRawEvent_8h_html"><div class="ttname"><a href="AtRawEvent_8h.html">AtRawEvent.h</a></div></div>
 <div class="ttc" id="aclassAtUnpackTask_html"><div class="ttname"><a href="classAtUnpackTask.html">AtUnpackTask</a></div><div class="ttdef"><b>Definition:</b> <a href="AtUnpackTask_8h_source.html#l00028">AtUnpackTask.h:28</a></div></div>
-<div class="ttc" id="aclassAtUnpackTask_html_a7f271f31068b2a3f46f285ca18ecaacc"><div class="ttname"><a href="classAtUnpackTask.html#a7f271f31068b2a3f46f285ca18ecaacc">AtUnpackTask::FinishEvent</a></div><div class="ttdeci">virtual void FinishEvent() override</div><div class="ttdef"><b>Definition:</b> <a href="AtUnpackTask_8cxx_source.html#l00052">AtUnpackTask.cxx:52</a></div></div>
+<div class="ttc" id="aclassAtUnpackTask_html_a7f271f31068b2a3f46f285ca18ecaacc"><div class="ttname"><a href="classAtUnpackTask.html#a7f271f31068b2a3f46f285ca18ecaacc">AtUnpackTask::FinishEvent</a></div><div class="ttdeci">virtual void FinishEvent() override</div><div class="ttdef"><b>Definition:</b> <a href="AtUnpackTask_8cxx_source.html#l00057">AtUnpackTask.cxx:57</a></div></div>
 <div class="ttc" id="aclassAtUnpackTask_html_a24e03e775eec3241d38240a3ea11b78f"><div class="ttname"><a href="classAtUnpackTask.html#a24e03e775eec3241d38240a3ea11b78f">AtUnpackTask::Exec</a></div><div class="ttdeci">virtual void Exec(Option_t *opt) override</div><div class="ttdef"><b>Definition:</b> <a href="AtUnpackTask_8cxx_source.html#l00037">AtUnpackTask.cxx:37</a></div></div>
-<div class="ttc" id="aclassAtRawEvent_html"><div class="ttname"><a href="classAtRawEvent.html">AtRawEvent</a></div><div class="ttdef"><b>Definition:</b> <a href="AtRawEvent_8h_source.html#l00035">AtRawEvent.h:35</a></div></div>
+<div class="ttc" id="aclassAtBaseEvent_html_abe75a4a9b689a722e59fb44eec414e3b"><div class="ttname"><a href="classAtBaseEvent.html#abe75a4a9b689a722e59fb44eec414e3b">AtBaseEvent::SetIsGood</a></div><div class="ttdeci">void SetIsGood(Bool_t value)</div><div class="ttdef"><b>Definition:</b> <a href="AtBaseEvent_8h_source.html#l00061">AtBaseEvent.h:61</a></div></div>
+<div class="ttc" id="aclassAtRawEvent_html"><div class="ttname"><a href="classAtRawEvent.html">AtRawEvent</a></div><div class="ttdef"><b>Definition:</b> <a href="AtRawEvent_8h_source.html#l00034">AtRawEvent.h:34</a></div></div>
 <div class="ttc" id="aAtUnpackTask_8h_html_a6e4189298dd2639df18061586a6beb55"><div class="ttname"><a href="AtUnpackTask_8h.html#a6e4189298dd2639df18061586a6beb55">unpackerPtr</a></div><div class="ttdeci">std::unique_ptr&lt; AtUnpacker &gt; unpackerPtr</div><div class="ttdef"><b>Definition:</b> <a href="AtUnpackTask_8h_source.html#l00026">AtUnpackTask.h:26</a></div></div>
 <div class="ttc" id="aclassAtUnpackTask_html_af8879c1a48cc5646a9b8e6bbe82417a8"><div class="ttname"><a href="classAtUnpackTask.html#af8879c1a48cc5646a9b8e6bbe82417a8">AtUnpackTask::AtUnpackTask</a></div><div class="ttdeci">AtUnpackTask(unpackerPtr unpacker)</div><div class="ttdef"><b>Definition:</b> <a href="AtUnpackTask_8cxx_source.html#l00016">AtUnpackTask.cxx:16</a></div></div>
 <div class="ttc" id="aclassAtUnpackTask_html_ab71e98e435cffaf98ea8f8358419da51"><div class="ttname"><a href="classAtUnpackTask.html#ab71e98e435cffaf98ea8f8358419da51">AtUnpackTask::Init</a></div><div class="ttdeci">virtual InitStatus Init() override</div><div class="ttdef"><b>Definition:</b> <a href="AtUnpackTask_8cxx_source.html#l00021">AtUnpackTask.cxx:21</a></div></div>
-<div class="ttc" id="aclassAtRawEvent_html_a8e61f8ee84da0b0d52ba832a2091304a"><div class="ttname"><a href="classAtRawEvent.html#a8e61f8ee84da0b0d52ba832a2091304a">AtRawEvent::SetIsGood</a></div><div class="ttdeci">void SetIsGood(Bool_t value)</div><div class="ttdef"><b>Definition:</b> <a href="AtRawEvent_8h_source.html#l00085">AtRawEvent.h:85</a></div></div>
 <div class="ttc" id="aAtUnpackTask_8cxx_html_ae7d3d62e42c9b8293ef462841efc6a5c"><div class="ttname"><a href="AtUnpackTask_8cxx.html#ae7d3d62e42c9b8293ef462841efc6a5c">ClassImp</a></div><div class="ttdeci">ClassImp(AtUnpackTask)</div></div>
 <div class="ttc" id="aAtUnpackTask_8h_html"><div class="ttname"><a href="AtUnpackTask_8h.html">AtUnpackTask.h</a></div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Apr 27 2022 00:47:48 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Oct 20 2023 16:23:00 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.18
 </small></address>

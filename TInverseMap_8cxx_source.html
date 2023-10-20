@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">ATTPCROOT
-   &#160;<span id="projectnumber">1.0.0</span>
+   &#160;<span id="projectnumber">0.3.0-alpha</span>
    </div>
    <div id="projectbrief">A ROOT-based framework for analyzing data from active target detectors</div>
   </td>
@@ -202,7 +202,7 @@ $(function() {
 <div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;            coeff_v.push_back(buff_v);</div>
 <div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;            <span class="keywordtype">char</span> fname[20];</div>
 <div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;            sprintf(fname, <span class="stringliteral">&quot;f_%d&quot;</span>, icoeff);</div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;            spline[icoeff] = <span class="keyword">new</span> TSpline3(fname, &amp;fMapDist_v[0], &amp;buff_v[0], fMap_v.size());</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;            spline[icoeff] = <span class="keyword">new</span> TSpline3(fname, &amp;fMapDist_v[0], &amp;buff_v[0], fMap_v.size()); <span class="comment">// NOLINT</span></div>
 <div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;            <span class="comment">// graph[icoeff] = new TGraph(fMap_v.size(),&amp;mapdist_v[0], &amp;buff_v[0]);</span></div>
 <div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;            <span class="comment">// std::cout&lt;&lt;&quot;debug  : &quot;&lt;&lt;j&lt;&lt;&quot; &quot;&lt;&lt;k&lt;&lt;&quot; &quot;&lt;&lt;fMap_v.size()&lt;&lt;&quot; &quot;&lt;&lt;fMapDist_v.back()&lt;&lt;&quot;</span></div>
 <div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;            <span class="comment">// &quot;&lt;&lt;spline[icoeff]-&gt;Eval(0.35)&lt;&lt;std::endl;</span></div>
@@ -466,7 +466,7 @@ $(function() {
 <div class="ttc" id="aTInverseMap_8h_html"><div class="ttname"><a href="TInverseMap_8h.html">TInverseMap.h</a></div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Apr 27 2022 00:47:48 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Oct 20 2023 16:23:00 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.18
 </small></address>

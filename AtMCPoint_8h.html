@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">ATTPCROOT
-   &#160;<span id="projectnumber">1.0.0</span>
+   &#160;<span id="projectnumber">0.3.0-alpha</span>
    </div>
    <div id="projectbrief">A ROOT-based framework for analyzing data from active target detectors</div>
   </td>
@@ -74,6 +74,10 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &lt;FairMCPoint.h&gt;</code><br />
+<code>#include &lt;Math/Point3D.h&gt;</code><br />
+<code>#include &lt;Math/Point3Dfwd.h&gt;</code><br />
+<code>#include &lt;Math/Vector3D.h&gt;</code><br />
+<code>#include &lt;Math/Vector3Dfwd.h&gt;</code><br />
 <code>#include &lt;Rtypes.h&gt;</code><br />
 <code>#include &lt;TString.h&gt;</code><br />
 <code>#include &lt;TVector3.h&gt;</code><br />
@@ -82,11 +86,15 @@ Include dependency graph for AtMCPoint.h:</div>
 <div class="dyncontent">
 <div class="center"><img src="AtMCPoint_8h__incl.png" border="0" usemap="#_2github_2workspace_2AtSimulationData_2AtMCPoint_8h" alt=""/></div>
 <map name="_2github_2workspace_2AtSimulationData_2AtMCPoint_8h" id="_2github_2workspace_2AtSimulationData_2AtMCPoint_8h">
-<area shape="rect" title=" " alt="" coords="114,5,321,47"/>
+<area shape="rect" title=" " alt="" coords="457,5,663,47"/>
 <area shape="rect" title=" " alt="" coords="5,95,109,121"/>
-<area shape="rect" title=" " alt="" coords="133,95,205,121"/>
-<area shape="rect" title=" " alt="" coords="229,95,304,121"/>
-<area shape="rect" title=" " alt="" coords="328,95,413,121"/>
+<area shape="rect" title=" " alt="" coords="134,95,245,121"/>
+<area shape="rect" title=" " alt="" coords="269,95,401,121"/>
+<area shape="rect" title=" " alt="" coords="425,95,543,121"/>
+<area shape="rect" title=" " alt="" coords="567,95,707,121"/>
+<area shape="rect" title=" " alt="" coords="732,95,804,121"/>
+<area shape="rect" title=" " alt="" coords="828,95,903,121"/>
+<area shape="rect" title=" " alt="" coords="927,95,1012,121"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -94,18 +102,26 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
 <div class="center"><img src="AtMCPoint_8h__dep__incl.png" border="0" usemap="#_2github_2workspace_2AtSimulationData_2AtMCPoint_8hdep" alt=""/></div>
 <map name="_2github_2workspace_2AtSimulationData_2AtMCPoint_8hdep" id="_2github_2workspace_2AtSimulationData_2AtMCPoint_8hdep">
-<area shape="rect" title=" " alt="" coords="934,5,1141,47"/>
-<area shape="rect" href="AtClusterizeLineTask_8cxx.html" title=" " alt="" coords="5,95,213,136"/>
-<area shape="rect" href="AtClusterizeTask_8cxx.html" title=" " alt="" coords="237,95,445,136"/>
+<area shape="rect" title=" " alt="" coords="1217,5,1423,47"/>
+<area shape="rect" href="AtClusterize_8cxx.html" title=" " alt="" coords="5,95,213,136"/>
+<area shape="rect" href="AtClusterizeLine_8cxx.html" title=" " alt="" coords="237,95,445,136"/>
 <area shape="rect" href="AtPulseLineTask_8cxx.html" title=" " alt="" coords="469,95,677,136"/>
 <area shape="rect" href="AtPulseTask_8cxx.html" title=" " alt="" coords="701,95,909,136"/>
-<area shape="rect" href="AtSpaceChargeTask_8cxx.html" title=" " alt="" coords="933,95,1141,136"/>
-<area shape="rect" href="AtPSA_8cxx.html" title=" " alt="" coords="1165,95,1397,136"/>
-<area shape="rect" href="AtSiPoint_8h.html" title=" " alt="" coords="1421,95,1608,136"/>
-<area shape="rect" href="AtMCPoint_8cxx.html" title=" " alt="" coords="1633,95,1839,136"/>
-<area shape="rect" href="AtTpc_8cxx.html" title=" " alt="" coords="1863,95,2030,136"/>
-<area shape="rect" href="AtSiArray_8cxx.html" title=" " alt="" coords="1316,184,1503,225"/>
-<area shape="rect" href="AtSiPoint_8cxx.html" title=" " alt="" coords="1527,184,1713,225"/>
+<area shape="rect" href="AtSimpleSimulation_8h.html" title=" " alt="" coords="984,95,1192,136"/>
+<area shape="rect" href="AtSimpleSimulation_8cxx.html" title=" " alt="" coords="681,184,889,225"/>
+<area shape="rect" href="AtSpaceChargeTask_8cxx.html" title=" " alt="" coords="1216,95,1424,136"/>
+<area shape="rect" href="AtPSA_8cxx.html" title=" " alt="" coords="1448,95,1680,136"/>
+<area shape="rect" href="AtSeGA_8cxx.html" title=" " alt="" coords="1705,95,1885,136"/>
+<area shape="rect" href="AtSeGADigitizer_8cxx.html" title=" " alt="" coords="1909,95,2089,136"/>
+<area shape="rect" href="AtSiPoint_8h.html" title=" " alt="" coords="2113,95,2300,136"/>
+<area shape="rect" href="AtMCPoint_8cxx.html" title=" " alt="" coords="2325,95,2531,136"/>
+<area shape="rect" href="AtTpc_8cxx.html" title=" " alt="" coords="2555,95,2722,136"/>
+<area shape="rect" href="AtTestSimulation_8h.html" title=" " alt="" coords="913,184,1121,225"/>
+<area shape="rect" href="AtTestSimulation_8cxx.html" title=" " alt="" coords="984,273,1192,315"/>
+<area shape="rect" href="AtMCFission_8cxx.html" title=" " alt="" coords="1196,184,1428,225"/>
+<area shape="rect" href="AtMCFitter_8cxx.html" title=" " alt="" coords="1452,184,1684,225"/>
+<area shape="rect" href="AtSiArray_8cxx.html" title=" " alt="" coords="2008,184,2195,225"/>
+<area shape="rect" href="AtSiPoint_8cxx.html" title=" " alt="" coords="2219,184,2405,225"/>
 </map>
 </div>
 </div>
@@ -119,7 +135,7 @@ Classes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Apr 27 2022 00:47:49 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Oct 20 2023 16:23:01 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.18
 </small></address>

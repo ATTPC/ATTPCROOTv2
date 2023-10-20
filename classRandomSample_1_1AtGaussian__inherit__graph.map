@@ -1,0 +1,5 @@
+<map id="RandomSample::AtGaussian" name="RandomSample::AtGaussian">
+<area shape="rect" id="node1" title="Sample AtHits in gaussian from reference." alt="" coords="15,169,203,196"/>
+<area shape="rect" id="node2" href="$classRandomSample_1_1AtSampleFromReference.html" title="Sample when PDF depends on reference." alt="" coords="5,80,212,121"/>
+<area shape="rect" id="node3" href="$classRandomSample_1_1AtSample.html" title="Interface for randomly sampling AtHits." alt="" coords="20,5,197,32"/>
+</map>

@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">ATTPCROOT
-   &#160;<span id="projectnumber">1.0.0</span>
+   &#160;<span id="projectnumber">0.3.0-alpha</span>
    </div>
    <div id="projectbrief">A ROOT-based framework for analyzing data from active target detectors</div>
   </td>
@@ -67,7 +67,7 @@ $(function() {
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="classAtFilterDivide-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">AtFilterDivide Class Reference</div>  </div>
+<div class="title">AtFilterDivide Class Reference<div class="ingroups"><a class="el" href="group__RawFilters.html">Raw Event Fitlers</a></div></div>  </div>
 </div><!--header-->
 <div class="contents">
 
@@ -98,23 +98,31 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a62a91c7d3e12a0382a661c87cf27abd1"><td class="memItemLeft" align="right" valign="top">Double_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtFilterDivide.html#a62a91c7d3e12a0382a661c87cf27abd1">GetDivisor</a> ()</td></tr>
 <tr class="separator:a62a91c7d3e12a0382a661c87cf27abd1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5be797fdd62370a66129310e5c7331bd"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtFilterDivide.html#a5be797fdd62370a66129310e5c7331bd">Init</a> () override</td></tr>
+<tr class="memdesc:a5be797fdd62370a66129310e5c7331bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called at the init stage of the <a class="el" href="classAtFilterTask.html">AtFilterTask</a>.  <a href="classAtFilterDivide.html#a5be797fdd62370a66129310e5c7331bd">More...</a><br /></td></tr>
 <tr class="separator:a5be797fdd62370a66129310e5c7331bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae69291b1073300993eae97b1abea8ae4"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtFilterDivide.html#ae69291b1073300993eae97b1abea8ae4">InitEvent</a> (<a class="el" href="classAtRawEvent.html">AtRawEvent</a> *event) override</td></tr>
+<tr class="memdesc:ae69291b1073300993eae97b1abea8ae4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called once for each event at the start of the Exec phase.  <a href="classAtFilterDivide.html#ae69291b1073300993eae97b1abea8ae4">More...</a><br /></td></tr>
 <tr class="separator:ae69291b1073300993eae97b1abea8ae4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae96e48f8bf85631afa70f0b5de6b4dc3"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtFilterDivide.html#ae96e48f8bf85631afa70f0b5de6b4dc3">Filter</a> (<a class="el" href="classAtPad.html">AtPad</a> *pad) override</td></tr>
-<tr class="separator:ae96e48f8bf85631afa70f0b5de6b4dc3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a760bbb6d244337fa8a08fe7eac8d85fd"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtFilterDivide.html#a760bbb6d244337fa8a08fe7eac8d85fd">Filter</a> (<a class="el" href="classAtPad.html">AtPad</a> *pad, <a class="el" href="structAtPadReference.html">AtPadReference</a> *padReference) override</td></tr>
+<tr class="memdesc:a760bbb6d244337fa8a08fe7eac8d85fd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called to filter each pad.  <a href="classAtFilterDivide.html#a760bbb6d244337fa8a08fe7eac8d85fd">More...</a><br /></td></tr>
+<tr class="separator:a760bbb6d244337fa8a08fe7eac8d85fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8f3cbb5c8db2f146cb5528b92665e951"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtFilterDivide.html#a8f3cbb5c8db2f146cb5528b92665e951">IsGoodEvent</a> () override</td></tr>
+<tr class="memdesc:a8f3cbb5c8db2f146cb5528b92665e951"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called at the end of an event. Returns if filtering was successful.  <a href="classAtFilterDivide.html#a8f3cbb5c8db2f146cb5528b92665e951">More...</a><br /></td></tr>
 <tr class="separator:a8f3cbb5c8db2f146cb5528b92665e951"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classAtFilter"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classAtFilter')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classAtFilter.html">AtFilter</a></td></tr>
+<tr class="memitem:ae7feac4acab59a6788c66f9368d34c97 inherit pub_methods_classAtFilter"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtFilter.html#ae7feac4acab59a6788c66f9368d34c97">~AtFilter</a> ()=default</td></tr>
+<tr class="separator:ae7feac4acab59a6788c66f9368d34c97 inherit pub_methods_classAtFilter"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4127c2a19c1049e0b247ddb410c191be inherit pub_methods_classAtFilter"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classAtRawEvent.html">AtRawEvent</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtFilter.html#a4127c2a19c1049e0b247ddb410c191be">ConstructOutputEvent</a> (TClonesArray *outputEventArray, <a class="el" href="classAtRawEvent.html">AtRawEvent</a> *inputEvent)</td></tr>
+<tr class="memdesc:a4127c2a19c1049e0b247ddb410c191be inherit pub_methods_classAtFilter"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct output event from input event array.  <a href="classAtFilter.html#a4127c2a19c1049e0b247ddb410c191be">More...</a><br /></td></tr>
 <tr class="separator:a4127c2a19c1049e0b247ddb410c191be inherit pub_methods_classAtFilter"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock">
-<p class="definition">Definition at line <a class="el" href="AtFilterDivide_8h_source.html#l00011">11</a> of file <a class="el" href="AtFilterDivide_8h_source.html">AtFilterDivide.h</a>.</p>
+<div class="textblock"><p>Example filter to divide the signal by some amount specified at run time </p>
+
+<p class="definition">Definition at line <a class="el" href="AtFilterDivide_8h_source.html#l00015">15</a> of file <a class="el" href="AtFilterDivide_8h_source.html">AtFilterDivide.h</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="ae96e48f8bf85631afa70f0b5de6b4dc3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae96e48f8bf85631afa70f0b5de6b4dc3">&#9670;&nbsp;</a></span>Filter()</h2>
+<a id="a760bbb6d244337fa8a08fe7eac8d85fd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a760bbb6d244337fa8a08fe7eac8d85fd">&#9670;&nbsp;</a></span>Filter()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -126,8 +134,18 @@ Public Member Functions</h2></td></tr>
           <td class="memname">void AtFilterDivide::Filter </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classAtPad.html">AtPad</a> *&#160;</td>
-          <td class="paramname"><em>pad</em></td><td>)</td>
+          <td class="paramname"><em>pad</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype"><a class="el" href="structAtPadReference.html">AtPadReference</a> *&#160;</td>
+          <td class="paramname"><em>padReference</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -137,9 +155,19 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implements <a class="el" href="classAtFilter.html#ad0499f1b4860cd8d504d69514e4d8005">AtFilter</a>.</p>
+<p>Called to filter each pad. </p>
+<p>Optional padRef currently only used by SCA filter (10/20/22).</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">pad</td><td>Pad to filter. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">[in[</td><td>padRefernece optional parameter only needed when when filtering FPN channels. </td></tr>
+  </table>
+  </dd>
+</dl>
 
-<p class="definition">Definition at line <a class="el" href="AtFilterDivide_8cxx_source.html#l00017">17</a> of file <a class="el" href="AtFilterDivide_8cxx_source.html">AtFilterDivide.cxx</a>.</p>
+<p>Implements <a class="el" href="classAtFilter.html#a24a3245f1e11e52a34ef24e6d09bd108">AtFilter</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="AtFilterDivide_8cxx_source.html#l00018">18</a> of file <a class="el" href="AtFilterDivide_8cxx_source.html">AtFilterDivide.cxx</a>.</p>
 
 </div>
 </div>
@@ -166,7 +194,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtFilterDivide_8h_source.html#l00018">18</a> of file <a class="el" href="AtFilterDivide_8h_source.html">AtFilterDivide.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtFilterDivide_8h_source.html#l00022">22</a> of file <a class="el" href="AtFilterDivide_8h_source.html">AtFilterDivide.h</a>.</p>
 
 </div>
 </div>
@@ -193,9 +221,11 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Called at the init stage of the <a class="el" href="classAtFilterTask.html">AtFilterTask</a>. </p>
+
 <p>Implements <a class="el" href="classAtFilter.html#a10b9c7088be2ccd5e6a9df5c6002955a">AtFilter</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="AtFilterDivide_8cxx_source.html#l00013">13</a> of file <a class="el" href="AtFilterDivide_8cxx_source.html">AtFilterDivide.cxx</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtFilterDivide_8cxx_source.html#l00014">14</a> of file <a class="el" href="AtFilterDivide_8cxx_source.html">AtFilterDivide.cxx</a>.</p>
 
 </div>
 </div>
@@ -212,7 +242,7 @@ Public Member Functions</h2></td></tr>
           <td class="memname">void AtFilterDivide::InitEvent </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classAtRawEvent.html">AtRawEvent</a> *&#160;</td>
-          <td class="paramname"><em>event</em></td><td>)</td>
+          <td class="paramname"><em>inputEvent</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -223,9 +253,11 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Called once for each event at the start of the Exec phase. </p>
+
 <p>Implements <a class="el" href="classAtFilter.html#aa0bcfc2d3d54a0a22cec29d754ebef67">AtFilter</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="AtFilterDivide_8cxx_source.html#l00015">15</a> of file <a class="el" href="AtFilterDivide_8cxx_source.html">AtFilterDivide.cxx</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtFilterDivide_8cxx_source.html#l00016">16</a> of file <a class="el" href="AtFilterDivide_8cxx_source.html">AtFilterDivide.cxx</a>.</p>
 
 </div>
 </div>
@@ -252,9 +284,11 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Called at the end of an event. Returns if filtering was successful. </p>
+
 <p>Implements <a class="el" href="classAtFilter.html#a3e829564ee802ca80cf84eaab6ef253c">AtFilter</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="AtFilterDivide_8cxx_source.html#l00026">26</a> of file <a class="el" href="AtFilterDivide_8cxx_source.html">AtFilterDivide.cxx</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtFilterDivide_8cxx_source.html#l00027">27</a> of file <a class="el" href="AtFilterDivide_8cxx_source.html">AtFilterDivide.cxx</a>.</p>
 
 </div>
 </div>
@@ -274,7 +308,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtFilterDivide_8cxx_source.html#l00008">8</a> of file <a class="el" href="AtFilterDivide_8cxx_source.html">AtFilterDivide.cxx</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtFilterDivide_8cxx_source.html#l00009">9</a> of file <a class="el" href="AtFilterDivide_8cxx_source.html">AtFilterDivide.cxx</a>.</p>
 
 </div>
 </div>
@@ -285,7 +319,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Apr 27 2022 00:47:49 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Oct 20 2023 16:23:02 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.18
 </small></address>

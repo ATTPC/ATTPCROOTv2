@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">ATTPCROOT
-   &#160;<span id="projectnumber">1.0.0</span>
+   &#160;<span id="projectnumber">0.3.0-alpha</span>
    </div>
    <div id="projectbrief">A ROOT-based framework for analyzing data from active target detectors</div>
   </td>
@@ -65,6 +65,8 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="#pro-types">Protected Types</a> &#124;
 <a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="classAtMCPoint-members.html">List of all members</a>  </div>
   <div class="headertitle">
@@ -99,6 +101,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a3fd597f46d454f349eb22d5c178b6a20"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad43331e346a754740273a81815157e98"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtMCPoint.html#ad43331e346a754740273a81815157e98">AtMCPoint</a> (Int_t trackID, Int_t detID, TVector3 pos, TVector3 mom, Double_t tof, Double_t length, Double_t eLoss)</td></tr>
 <tr class="separator:ad43331e346a754740273a81815157e98"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aea42cbdf84a234df0b2a084155649763"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtMCPoint.html#aea42cbdf84a234df0b2a084155649763">AtMCPoint</a> (Int_t trackID, Int_t detID, <a class="el" href="classAtMCPoint.html#a0fd754a565fd89625d4f3a672be273e1">XYZPoint</a> pos, <a class="el" href="classAtMCPoint.html#aa8c83c24575f297f67f590699703cd4c">XYZVector</a> mom, Double_t tof, Double_t length, Double_t eLoss)</td></tr>
+<tr class="separator:aea42cbdf84a234df0b2a084155649763"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7edc852b3effe2c143c5d974e8311657"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtMCPoint.html#a7edc852b3effe2c143c5d974e8311657">AtMCPoint</a> (Int_t trackID, Int_t detID, TVector3 pos, TVector3 mom, Double_t tof, Double_t length, Double_t eLoss, TString VolName, Int_t detCopyID, Double_t EIni, Double_t AIni, Int_t A, Int_t Z)</td></tr>
 <tr class="separator:a7edc852b3effe2c143c5d974e8311657"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9ba1f09bdf2dff28ad308a3e75ab49aa"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtMCPoint.html#a9ba1f09bdf2dff28ad308a3e75ab49aa">~AtMCPoint</a> ()=default</td></tr>
@@ -107,6 +111,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:afa799fe92f513eb352d508618d410da6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad05c2c5773cd5e67302d496bc055a0e6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAtMCPoint.html">AtMCPoint</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtMCPoint.html#ad05c2c5773cd5e67302d496bc055a0e6">operator=</a> (const <a class="el" href="classAtMCPoint.html">AtMCPoint</a> &amp;point)=delete</td></tr>
 <tr class="separator:ad05c2c5773cd5e67302d496bc055a0e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a36845c47961088d59ae1a4f47d4bb97b"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtMCPoint.html#a36845c47961088d59ae1a4f47d4bb97b">Clear</a> (Option_t *) override</td></tr>
+<tr class="separator:a36845c47961088d59ae1a4f47d4bb97b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a00baf255338197cfcc290bbf9ebef170"><td class="memItemLeft" align="right" valign="top">Int_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtMCPoint.html#a00baf255338197cfcc290bbf9ebef170">GetDetCopyID</a> () const</td></tr>
 <tr class="separator:a00baf255338197cfcc290bbf9ebef170"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a92d03a97edc578e1933830d840e103d8"><td class="memItemLeft" align="right" valign="top">TString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtMCPoint.html#a92d03a97edc578e1933830d840e103d8">GetVolName</a> () const</td></tr>
@@ -121,8 +127,26 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a28638b8c75d13ab686063865a008a7c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a772e01fd991492856ce963e72f6030e4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtMCPoint.html#a772e01fd991492856ce963e72f6030e4">SetDetCopyID</a> (Int_t id)</td></tr>
 <tr class="separator:a772e01fd991492856ce963e72f6030e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9db106723fbba26b811e37c137407616"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtMCPoint.html#a9db106723fbba26b811e37c137407616">SetVolName</a> (TString VolName)</td></tr>
+<tr class="separator:a9db106723fbba26b811e37c137407616"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa8ac60a16e32a5302855b3cddc725a68"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtMCPoint.html#aa8ac60a16e32a5302855b3cddc725a68">SetPosition</a> (const <a class="el" href="classAtMCPoint.html#a0fd754a565fd89625d4f3a672be273e1">XYZPoint</a> &amp;pos)</td></tr>
+<tr class="separator:aa8ac60a16e32a5302855b3cddc725a68"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9dd64a38276e9665c49bacba8273d503"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtMCPoint.html#a9dd64a38276e9665c49bacba8273d503">SetMomentum</a> (const <a class="el" href="classAtMCPoint.html#aa8c83c24575f297f67f590699703cd4c">XYZVector</a> &amp;mom)</td></tr>
+<tr class="separator:a9dd64a38276e9665c49bacba8273d503"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa8b40f52acb42d153b2263a5a63f27f5"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtMCPoint.html#aa8b40f52acb42d153b2263a5a63f27f5">Print</a> (const Option_t *opt) const override</td></tr>
 <tr class="separator:aa8b40f52acb42d153b2263a5a63f27f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:ac0e05f02ccae0e2deeca81ea2a8ca40c"><td class="memItemLeft" align="right" valign="top">friend&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtMCPoint.html#ac0e05f02ccae0e2deeca81ea2a8ca40c">AtSimpleSimulation</a></td></tr>
+<tr class="separator:ac0e05f02ccae0e2deeca81ea2a8ca40c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-types"></a>
+Protected Types</h2></td></tr>
+<tr class="memitem:a0fd754a565fd89625d4f3a672be273e1"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtMCPoint.html#a0fd754a565fd89625d4f3a672be273e1">XYZPoint</a> = ROOT::Math::XYZPoint</td></tr>
+<tr class="separator:a0fd754a565fd89625d4f3a672be273e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa8c83c24575f297f67f590699703cd4c"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtMCPoint.html#aa8c83c24575f297f67f590699703cd4c">XYZVector</a> = ROOT::Math::XYZVector</td></tr>
+<tr class="separator:aa8c83c24575f297f67f590699703cd4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
@@ -141,10 +165,59 @@ Protected Attributes</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="AtMCPoint_8h_source.html#l00021">21</a> of file <a class="el" href="AtMCPoint_8h_source.html">AtMCPoint.h</a>.</p>
-</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<p class="definition">Definition at line <a class="el" href="AtMCPoint_8h_source.html#l00026">26</a> of file <a class="el" href="AtMCPoint_8h_source.html">AtMCPoint.h</a>.</p>
+</div><h2 class="groupheader">Member Typedef Documentation</h2>
+<a id="a0fd754a565fd89625d4f3a672be273e1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0fd754a565fd89625d4f3a672be273e1">&#9670;&nbsp;</a></span>XYZPoint</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="classAtMCPoint.html#a0fd754a565fd89625d4f3a672be273e1">AtMCPoint::XYZPoint</a> =  ROOT::Math::XYZPoint</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtMCPoint_8h_source.html#l00029">29</a> of file <a class="el" href="AtMCPoint_8h_source.html">AtMCPoint.h</a>.</p>
+
+</div>
+</div>
+<a id="aa8c83c24575f297f67f590699703cd4c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa8c83c24575f297f67f590699703cd4c">&#9670;&nbsp;</a></span>XYZVector</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="classAtMCPoint.html#aa8c83c24575f297f67f590699703cd4c">AtMCPoint::XYZVector</a> =  ROOT::Math::XYZVector</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtMCPoint_8h_source.html#l00030">30</a> of file <a class="el" href="AtMCPoint_8h_source.html">AtMCPoint.h</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a3fd597f46d454f349eb22d5c178b6a20"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3fd597f46d454f349eb22d5c178b6a20">&#9670;&nbsp;</a></span>AtMCPoint() <span class="overload">[1/4]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a3fd597f46d454f349eb22d5c178b6a20">&#9670;&nbsp;</a></span>AtMCPoint() <span class="overload">[1/5]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -159,12 +232,12 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p>Default constructor </p>
 
-<p class="definition">Definition at line <a class="el" href="AtMCPoint_8cxx_source.html#l00021">21</a> of file <a class="el" href="AtMCPoint_8cxx_source.html">AtMCPoint.cxx</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtMCPoint_8cxx_source.html#l00020">20</a> of file <a class="el" href="AtMCPoint_8cxx_source.html">AtMCPoint.cxx</a>.</p>
 
 </div>
 </div>
 <a id="ad43331e346a754740273a81815157e98"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad43331e346a754740273a81815157e98">&#9670;&nbsp;</a></span>AtMCPoint() <span class="overload">[2/4]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ad43331e346a754740273a81815157e98">&#9670;&nbsp;</a></span>AtMCPoint() <span class="overload">[2/5]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -231,12 +304,72 @@ Protected Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="AtMCPoint_8cxx_source.html#l00025">25</a> of file <a class="el" href="AtMCPoint_8cxx_source.html">AtMCPoint.cxx</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtMCPoint_8cxx_source.html#l00022">22</a> of file <a class="el" href="AtMCPoint_8cxx_source.html">AtMCPoint.cxx</a>.</p>
+
+</div>
+</div>
+<a id="aea42cbdf84a234df0b2a084155649763"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aea42cbdf84a234df0b2a084155649763">&#9670;&nbsp;</a></span>AtMCPoint() <span class="overload">[3/5]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">AtMCPoint::AtMCPoint </td>
+          <td>(</td>
+          <td class="paramtype">Int_t&#160;</td>
+          <td class="paramname"><em>trackID</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Int_t&#160;</td>
+          <td class="paramname"><em>detID</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classAtMCPoint.html#a0fd754a565fd89625d4f3a672be273e1">XYZPoint</a>&#160;</td>
+          <td class="paramname"><em>pos</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classAtMCPoint.html#aa8c83c24575f297f67f590699703cd4c">XYZVector</a>&#160;</td>
+          <td class="paramname"><em>mom</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Double_t&#160;</td>
+          <td class="paramname"><em>tof</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Double_t&#160;</td>
+          <td class="paramname"><em>length</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Double_t&#160;</td>
+          <td class="paramname"><em>eLoss</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtMCPoint_8cxx_source.html#l00035">35</a> of file <a class="el" href="AtMCPoint_8cxx_source.html">AtMCPoint.cxx</a>.</p>
 
 </div>
 </div>
 <a id="a7edc852b3effe2c143c5d974e8311657"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7edc852b3effe2c143c5d974e8311657">&#9670;&nbsp;</a></span>AtMCPoint() <span class="overload">[3/4]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a7edc852b3effe2c143c5d974e8311657">&#9670;&nbsp;</a></span>AtMCPoint() <span class="overload">[4/5]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -327,7 +460,7 @@ Protected Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtMCPoint_8cxx_source.html#l00032">32</a> of file <a class="el" href="AtMCPoint_8cxx_source.html">AtMCPoint.cxx</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtMCPoint_8cxx_source.html#l00028">28</a> of file <a class="el" href="AtMCPoint_8cxx_source.html">AtMCPoint.cxx</a>.</p>
 
 </div>
 </div>
@@ -358,7 +491,7 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <a id="afa799fe92f513eb352d508618d410da6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afa799fe92f513eb352d508618d410da6">&#9670;&nbsp;</a></span>AtMCPoint() <span class="overload">[4/4]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#afa799fe92f513eb352d508618d410da6">&#9670;&nbsp;</a></span>AtMCPoint() <span class="overload">[5/5]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -385,6 +518,34 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a36845c47961088d59ae1a4f47d4bb97b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a36845c47961088d59ae1a4f47d4bb97b">&#9670;&nbsp;</a></span>Clear()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void AtMCPoint::Clear </td>
+          <td>(</td>
+          <td class="paramtype">Option_t *&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtMCPoint_8cxx_source.html#l00051">51</a> of file <a class="el" href="AtMCPoint_8cxx_source.html">AtMCPoint.cxx</a>.</p>
+
+</div>
+</div>
 <a id="a56c3a7751d7f895f96868b5d650245c8"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a56c3a7751d7f895f96868b5d650245c8">&#9670;&nbsp;</a></span>GetAIni()</h2>
 
@@ -408,7 +569,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtMCPoint_8h_source.html#l00059">59</a> of file <a class="el" href="AtMCPoint_8h_source.html">AtMCPoint.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtMCPoint_8h_source.html#l00070">70</a> of file <a class="el" href="AtMCPoint_8h_source.html">AtMCPoint.h</a>.</p>
 
 </div>
 </div>
@@ -435,7 +596,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtMCPoint_8h_source.html#l00061">61</a> of file <a class="el" href="AtMCPoint_8h_source.html">AtMCPoint.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtMCPoint_8h_source.html#l00072">72</a> of file <a class="el" href="AtMCPoint_8h_source.html">AtMCPoint.h</a>.</p>
 
 </div>
 </div>
@@ -463,7 +624,7 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p>Accessors </p>
 
-<p class="definition">Definition at line <a class="el" href="AtMCPoint_8h_source.html#l00056">56</a> of file <a class="el" href="AtMCPoint_8h_source.html">AtMCPoint.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtMCPoint_8h_source.html#l00067">67</a> of file <a class="el" href="AtMCPoint_8h_source.html">AtMCPoint.h</a>.</p>
 
 </div>
 </div>
@@ -490,7 +651,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtMCPoint_8h_source.html#l00058">58</a> of file <a class="el" href="AtMCPoint_8h_source.html">AtMCPoint.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtMCPoint_8h_source.html#l00069">69</a> of file <a class="el" href="AtMCPoint_8h_source.html">AtMCPoint.h</a>.</p>
 
 </div>
 </div>
@@ -517,7 +678,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtMCPoint_8h_source.html#l00060">60</a> of file <a class="el" href="AtMCPoint_8h_source.html">AtMCPoint.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtMCPoint_8h_source.html#l00071">71</a> of file <a class="el" href="AtMCPoint_8h_source.html">AtMCPoint.h</a>.</p>
 
 </div>
 </div>
@@ -544,7 +705,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtMCPoint_8h_source.html#l00057">57</a> of file <a class="el" href="AtMCPoint_8h_source.html">AtMCPoint.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtMCPoint_8h_source.html#l00068">68</a> of file <a class="el" href="AtMCPoint_8h_source.html">AtMCPoint.h</a>.</p>
 
 </div>
 </div>
@@ -601,7 +762,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Reimplemented in <a class="el" href="classAtSiPoint.html#af739c16db5679e057b07b8801c96524e">AtSiPoint</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="AtMCPoint_8cxx_source.html#l00039">39</a> of file <a class="el" href="AtMCPoint_8cxx_source.html">AtMCPoint.cxx</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtMCPoint_8cxx_source.html#l00042">42</a> of file <a class="el" href="AtMCPoint_8cxx_source.html">AtMCPoint.cxx</a>.</p>
 
 </div>
 </div>
@@ -629,11 +790,111 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtMCPoint_8h_source.html#l00063">63</a> of file <a class="el" href="AtMCPoint_8h_source.html">AtMCPoint.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtMCPoint_8h_source.html#l00074">74</a> of file <a class="el" href="AtMCPoint_8h_source.html">AtMCPoint.h</a>.</p>
+
+</div>
+</div>
+<a id="a9dd64a38276e9665c49bacba8273d503"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9dd64a38276e9665c49bacba8273d503">&#9670;&nbsp;</a></span>SetMomentum()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void AtMCPoint::SetMomentum </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classAtMCPoint.html#aa8c83c24575f297f67f590699703cd4c">XYZVector</a> &amp;&#160;</td>
+          <td class="paramname"><em>mom</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtMCPoint_8h_source.html#l00077">77</a> of file <a class="el" href="AtMCPoint_8h_source.html">AtMCPoint.h</a>.</p>
+
+</div>
+</div>
+<a id="aa8ac60a16e32a5302855b3cddc725a68"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa8ac60a16e32a5302855b3cddc725a68">&#9670;&nbsp;</a></span>SetPosition()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void AtMCPoint::SetPosition </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classAtMCPoint.html#a0fd754a565fd89625d4f3a672be273e1">XYZPoint</a> &amp;&#160;</td>
+          <td class="paramname"><em>pos</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtMCPoint_8h_source.html#l00076">76</a> of file <a class="el" href="AtMCPoint_8h_source.html">AtMCPoint.h</a>.</p>
+
+</div>
+</div>
+<a id="a9db106723fbba26b811e37c137407616"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9db106723fbba26b811e37c137407616">&#9670;&nbsp;</a></span>SetVolName()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void AtMCPoint::SetVolName </td>
+          <td>(</td>
+          <td class="paramtype">TString&#160;</td>
+          <td class="paramname"><em>VolName</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtMCPoint_8h_source.html#l00075">75</a> of file <a class="el" href="AtMCPoint_8h_source.html">AtMCPoint.h</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
+<a id="ac0e05f02ccae0e2deeca81ea2a8ca40c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac0e05f02ccae0e2deeca81ea2a8ca40c">&#9670;&nbsp;</a></span>AtSimpleSimulation</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">friend AtMCPoint::AtSimpleSimulation</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtMCPoint_8h_source.html#l00086">86</a> of file <a class="el" href="AtMCPoint_8h_source.html">AtMCPoint.h</a>.</p>
+
+</div>
+</div>
 <a id="ad2f1ee4fbe95270d6292c4ad2c572f96"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad2f1ee4fbe95270d6292c4ad2c572f96">&#9670;&nbsp;</a></span>fAiso</h2>
 
@@ -654,7 +915,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtMCPoint_8h_source.html#l00028">28</a> of file <a class="el" href="AtMCPoint_8h_source.html">AtMCPoint.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtMCPoint_8h_source.html#l00036">36</a> of file <a class="el" href="AtMCPoint_8h_source.html">AtMCPoint.h</a>.</p>
 
 </div>
 </div>
@@ -678,7 +939,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtMCPoint_8h_source.html#l00027">27</a> of file <a class="el" href="AtMCPoint_8h_source.html">AtMCPoint.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtMCPoint_8h_source.html#l00035">35</a> of file <a class="el" href="AtMCPoint_8h_source.html">AtMCPoint.h</a>.</p>
 
 </div>
 </div>
@@ -702,7 +963,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtMCPoint_8h_source.html#l00024">24</a> of file <a class="el" href="AtMCPoint_8h_source.html">AtMCPoint.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtMCPoint_8h_source.html#l00032">32</a> of file <a class="el" href="AtMCPoint_8h_source.html">AtMCPoint.h</a>.</p>
 
 </div>
 </div>
@@ -726,7 +987,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtMCPoint_8h_source.html#l00026">26</a> of file <a class="el" href="AtMCPoint_8h_source.html">AtMCPoint.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtMCPoint_8h_source.html#l00034">34</a> of file <a class="el" href="AtMCPoint_8h_source.html">AtMCPoint.h</a>.</p>
 
 </div>
 </div>
@@ -750,7 +1011,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtMCPoint_8h_source.html#l00025">25</a> of file <a class="el" href="AtMCPoint_8h_source.html">AtMCPoint.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtMCPoint_8h_source.html#l00033">33</a> of file <a class="el" href="AtMCPoint_8h_source.html">AtMCPoint.h</a>.</p>
 
 </div>
 </div>
@@ -774,7 +1035,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtMCPoint_8h_source.html#l00029">29</a> of file <a class="el" href="AtMCPoint_8h_source.html">AtMCPoint.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtMCPoint_8h_source.html#l00037">37</a> of file <a class="el" href="AtMCPoint_8h_source.html">AtMCPoint.h</a>.</p>
 
 </div>
 </div>
@@ -785,7 +1046,7 @@ Protected Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Apr 27 2022 00:47:49 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Oct 20 2023 16:23:02 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.18
 </small></address>

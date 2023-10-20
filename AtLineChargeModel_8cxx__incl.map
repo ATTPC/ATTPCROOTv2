@@ -1,12 +1,11 @@
 <map id="/github/workspace/AtTools/AtLineChargeModel.cxx" name="/github/workspace/AtTools/AtLineChargeModel.cxx">
-<area shape="rect" id="node1" title=" " alt="" coords="431,5,608,47"/>
-<area shape="rect" id="node2" href="$AtLineChargeModel_8h.html" title=" " alt="" coords="247,95,394,121"/>
-<area shape="rect" id="node6" title=" " alt="" coords="399,244,471,271"/>
-<area shape="rect" id="node8" title=" " alt="" coords="472,95,567,121"/>
-<area shape="rect" id="node9" title=" " alt="" coords="591,95,650,121"/>
-<area shape="rect" id="node10" title=" " alt="" coords="675,95,743,121"/>
-<area shape="rect" id="node3" href="$AtSpaceChargeModel_8h.html" title=" " alt="" coords="124,169,283,196"/>
-<area shape="rect" id="node4" title=" " alt="" coords="264,244,375,271"/>
-<area shape="rect" id="node5" title=" " alt="" coords="5,244,137,271"/>
-<area shape="rect" id="node7" title=" " alt="" coords="161,244,240,271"/>
+<area shape="rect" id="node1" title=" " alt="" coords="313,5,491,47"/>
+<area shape="rect" id="node2" href="$AtLineChargeModel_8h.html" title=" " alt="" coords="146,95,293,121"/>
+<area shape="rect" id="node4" title=" " alt="" coords="5,244,116,271"/>
+<area shape="rect" id="node6" href="$AtDigiPar_8h.html" title=" " alt="" coords="359,95,445,121"/>
+<area shape="rect" id="node8" title=" " alt="" coords="495,169,567,196"/>
+<area shape="rect" id="node9" title=" " alt="" coords="521,95,579,121"/>
+<area shape="rect" id="node3" href="$AtSpaceChargeModel_8h.html" title=" " alt="" coords="99,169,257,196"/>
+<area shape="rect" id="node5" title=" " alt="" coords="184,244,316,271"/>
+<area shape="rect" id="node7" title=" " alt="" coords="333,169,471,196"/>
 </map>

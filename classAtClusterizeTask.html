@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">ATTPCROOT
-   &#160;<span id="projectnumber">1.0.0</span>
+   &#160;<span id="projectnumber">0.3.0-alpha</span>
    </div>
    <div id="projectbrief">A ROOT-based framework for analyzing data from active target detectors</div>
   </td>
@@ -65,7 +65,6 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="classAtClusterizeTask-members.html">List of all members</a>  </div>
   <div class="headertitle">
@@ -89,26 +88,26 @@ Collaboration diagram for AtClusterizeTask:</div>
 <div class="dyncontent">
 <div class="center"><img src="classAtClusterizeTask__coll__graph.png" border="0" usemap="#AtClusterizeTask_coll__map" alt="Collaboration graph"/></div>
 <map name="AtClusterizeTask_coll__map" id="AtClusterizeTask_coll__map">
-<area shape="rect" title=" " alt="" coords="203,185,324,212"/>
-<area shape="rect" title=" " alt="" coords="5,89,79,115"/>
-<area shape="rect" title=" " alt="" coords="103,81,269,123"/>
-<area shape="rect" href="classAtDigiPar.html" title=" " alt="" coords="298,89,375,115"/>
-<area shape="rect" title=" " alt="" coords="264,5,393,32"/>
-<area shape="rect" href="classAtMCPoint.html" title=" " alt="" coords="407,89,493,115"/>
-<area shape="rect" title=" " alt="" coords="417,5,512,32"/>
+<area shape="rect" title=" " alt="" coords="291,199,412,225"/>
+<area shape="rect" title=" " alt="" coords="5,102,79,129"/>
+<area shape="rect" title=" " alt="" coords="103,102,301,129"/>
+<area shape="rect" href="classAtClusterize.html" title=" " alt="" coords="156,5,248,32"/>
+<area shape="rect" title=" " alt="" coords="325,95,490,136"/>
+<area shape="rect" href="classAtDigiPar.html" title=" " alt="" coords="519,102,597,129"/>
+<area shape="rect" title=" " alt="" coords="493,5,623,32"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:af2a090ee94fea4484b72cc0472358aae"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtClusterizeTask.html#af2a090ee94fea4484b72cc0472358aae">AtClusterizeTask</a> ()</td></tr>
-<tr class="separator:af2a090ee94fea4484b72cc0472358aae"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a51122cacf6eecd09e74de9234ee8a263"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtClusterizeTask.html#a51122cacf6eecd09e74de9234ee8a263">AtClusterizeTask</a> (const char *name)</td></tr>
-<tr class="separator:a51122cacf6eecd09e74de9234ee8a263"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab8194763d71cc18a459a0397d11a2e1b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtClusterizeTask.html#ab8194763d71cc18a459a0397d11a2e1b">AtClusterizeTask</a> (std::shared_ptr&lt; <a class="el" href="classAtClusterize.html">AtClusterize</a> &gt; clusterize=std::make_shared&lt; <a class="el" href="classAtClusterize.html">AtClusterize</a> &gt;(), const char *name=&quot;AtClusterizeTask&quot;)</td></tr>
+<tr class="separator:ab8194763d71cc18a459a0397d11a2e1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4447bc4539de2f280026a2b2b801d991"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtClusterizeTask.html#a4447bc4539de2f280026a2b2b801d991">~AtClusterizeTask</a> ()</td></tr>
 <tr class="separator:a4447bc4539de2f280026a2b2b801d991"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6dfc402fb87c9401fc47d6793f03a52b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtClusterizeTask.html#a6dfc402fb87c9401fc47d6793f03a52b">SetPersistence</a> (Bool_t val)</td></tr>
 <tr class="separator:a6dfc402fb87c9401fc47d6793f03a52b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae02891d93e0d72a17409a7e69f818ea6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtClusterizeTask.html#ae02891d93e0d72a17409a7e69f818ea6">SetClusterizeMethod</a> (std::shared_ptr&lt; <a class="el" href="classAtClusterize.html">AtClusterize</a> &gt; cluster)</td></tr>
+<tr class="separator:ae02891d93e0d72a17409a7e69f818ea6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9091369dae66455e1b9bdd92e8380a93"><td class="memItemLeft" align="right" valign="top">virtual InitStatus&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtClusterizeTask.html#a9091369dae66455e1b9bdd92e8380a93">Init</a> () override</td></tr>
 <tr class="memdesc:a9091369dae66455e1b9bdd92e8380a93"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initiliazation of task at the beginning of a run.  <a href="classAtClusterizeTask.html#a9091369dae66455e1b9bdd92e8380a93">More...</a><br /></td></tr>
 <tr class="separator:a9091369dae66455e1b9bdd92e8380a93"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -118,73 +117,36 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a20d8f2a8226ea6b8d0954d741f8fd430"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtClusterizeTask.html#a20d8f2a8226ea6b8d0954d741f8fd430">SetParContainers</a> () override</td></tr>
 <tr class="memdesc:a20d8f2a8226ea6b8d0954d741f8fd430"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load the parameter container from the runtime database.  <a href="classAtClusterizeTask.html#a20d8f2a8226ea6b8d0954d741f8fd430">More...</a><br /></td></tr>
 <tr class="separator:a20d8f2a8226ea6b8d0954d741f8fd430"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3487791f51682188d02296add2b483b0"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtClusterizeTask.html#a3487791f51682188d02296add2b483b0">ClassDefOverride</a> (<a class="el" href="classAtClusterizeTask.html">AtClusterizeTask</a>, 1)</td></tr>
-<tr class="separator:a3487791f51682188d02296add2b483b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
-Protected Member Functions</h2></td></tr>
-<tr class="memitem:a98990528edafbcf49abd48fa8ee9d76b"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtClusterizeTask.html#a98990528edafbcf49abd48fa8ee9d76b">getParameters</a> ()</td></tr>
-<tr class="separator:a98990528edafbcf49abd48fa8ee9d76b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa8f39e2c1fbf336f44404233633f4859"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtClusterizeTask.html#aa8f39e2c1fbf336f44404233633f4859">processPoint</a> (Int_t mcPointID)</td></tr>
-<tr class="separator:aa8f39e2c1fbf336f44404233633f4859"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac01bffd6f8e73177690c8e297c215f21"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtClusterizeTask.html#ac01bffd6f8e73177690c8e297c215f21">setNewTrack</a> ()</td></tr>
-<tr class="separator:ac01bffd6f8e73177690c8e297c215f21"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a409ee93e1464ac9977be6477074fdd32"><td class="memItemLeft" align="right" valign="top">Double_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtClusterizeTask.html#a409ee93e1464ac9977be6477074fdd32">getTransverseDiffusion</a> (Double_t driftTime)</td></tr>
-<tr class="separator:a409ee93e1464ac9977be6477074fdd32"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a532cbdde8f0c1243943f6e3d3e3672ff"><td class="memItemLeft" align="right" valign="top">Double_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtClusterizeTask.html#a532cbdde8f0c1243943f6e3d3e3672ff">getLongitudinalDiffusion</a> (Double_t driftTime)</td></tr>
-<tr class="separator:a532cbdde8f0c1243943f6e3d3e3672ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae777d0b498f11a55a9a454fe2e11d157"><td class="memItemLeft" align="right" valign="top">UInt_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtClusterizeTask.html#ae777d0b498f11a55a9a454fe2e11d157">getNumberOfElectronsGenerated</a> ()</td></tr>
-<tr class="separator:ae777d0b498f11a55a9a454fe2e11d157"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3ce13d98f68c9c56bb98fec678ec1b2d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AtSimulatedPoint_8cxx.html#a26aee3b2de2720f24802d48feab0c40a">ROOT::Math::XYZVector</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtClusterizeTask.html#a3ce13d98f68c9c56bb98fec678ec1b2d">getCurrentPointLocation</a> ()</td></tr>
-<tr class="separator:a3ce13d98f68c9c56bb98fec678ec1b2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a382932ccf97344bdf418c0adef6234b7"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtClusterizeTask.html#a382932ccf97344bdf418c0adef6234b7">ClassDefOverride</a> (<a class="el" href="classAtClusterizeTask.html">AtClusterizeTask</a>, 2)</td></tr>
+<tr class="separator:a382932ccf97344bdf418c0adef6234b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
 <tr class="memitem:a28b4d934c79007bc36c36e89fa87393b"><td class="memItemLeft" align="right" valign="top">Int_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtClusterizeTask.html#a28b4d934c79007bc36c36e89fa87393b">fEventID</a> {0}</td></tr>
 <tr class="memdesc:a28b4d934c79007bc36c36e89fa87393b"><td class="mdescLeft">&#160;</td><td class="mdescRight">EventID.  <a href="classAtClusterizeTask.html#a28b4d934c79007bc36c36e89fa87393b">More...</a><br /></td></tr>
 <tr class="separator:a28b4d934c79007bc36c36e89fa87393b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5effead9e6c9c2e27066c22d8d1f79fd"><td class="memItemLeft" align="right" valign="top">Double_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtClusterizeTask.html#a5effead9e6c9c2e27066c22d8d1f79fd">fEIonize</a> {}</td></tr>
-<tr class="memdesc:a5effead9e6c9c2e27066c22d8d1f79fd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Effective ionization energy of gas. [eV].  <a href="classAtClusterizeTask.html#a5effead9e6c9c2e27066c22d8d1f79fd">More...</a><br /></td></tr>
-<tr class="separator:a5effead9e6c9c2e27066c22d8d1f79fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a95e95b1e1cf82dbb5d7be9ed98480545"><td class="memItemLeft" align="right" valign="top">Double_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtClusterizeTask.html#a95e95b1e1cf82dbb5d7be9ed98480545">fFano</a> {}</td></tr>
-<tr class="memdesc:a95e95b1e1cf82dbb5d7be9ed98480545"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fano factor of the gas.  <a href="classAtClusterizeTask.html#a95e95b1e1cf82dbb5d7be9ed98480545">More...</a><br /></td></tr>
-<tr class="separator:a95e95b1e1cf82dbb5d7be9ed98480545"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a31870ba5a551553c3d9d13d1c4c03c7a"><td class="memItemLeft" align="right" valign="top">Double_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtClusterizeTask.html#a31870ba5a551553c3d9d13d1c4c03c7a">fVelDrift</a> {}</td></tr>
-<tr class="memdesc:a31870ba5a551553c3d9d13d1c4c03c7a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Drift velocity of electron in gas. [mm/ns].  <a href="classAtClusterizeTask.html#a31870ba5a551553c3d9d13d1c4c03c7a">More...</a><br /></td></tr>
-<tr class="separator:a31870ba5a551553c3d9d13d1c4c03c7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abc386b211180cfdc2e3aa6ea4e06f1a6"><td class="memItemLeft" align="right" valign="top">Double_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtClusterizeTask.html#abc386b211180cfdc2e3aa6ea4e06f1a6">fCoefT</a> {}</td></tr>
-<tr class="memdesc:abc386b211180cfdc2e3aa6ea4e06f1a6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Transversal diffusion coefficient. [mm^(-1/2)].  <a href="classAtClusterizeTask.html#abc386b211180cfdc2e3aa6ea4e06f1a6">More...</a><br /></td></tr>
-<tr class="separator:abc386b211180cfdc2e3aa6ea4e06f1a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaa174ef5a2adb672a64f5203cea0ac3b"><td class="memItemLeft" align="right" valign="top">Double_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtClusterizeTask.html#aaa174ef5a2adb672a64f5203cea0ac3b">fCoefL</a> {}</td></tr>
-<tr class="memdesc:aaa174ef5a2adb672a64f5203cea0ac3b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Longitudinal diffusion coefficient. [mm^(-1/2)].  <a href="classAtClusterizeTask.html#aaa174ef5a2adb672a64f5203cea0ac3b">More...</a><br /></td></tr>
-<tr class="separator:aaa174ef5a2adb672a64f5203cea0ac3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3168152439fa22861367bd75dfec3e14"><td class="memItemLeft" align="right" valign="top">Double_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtClusterizeTask.html#a3168152439fa22861367bd75dfec3e14">fDetPadPlane</a> {}</td></tr>
-<tr class="memdesc:a3168152439fa22861367bd75dfec3e14"><td class="mdescLeft">&#160;</td><td class="mdescRight">Position of the pad plane with respect to the entrance [mm].  <a href="classAtClusterizeTask.html#a3168152439fa22861367bd75dfec3e14">More...</a><br /></td></tr>
-<tr class="separator:a3168152439fa22861367bd75dfec3e14"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1f1627a6be250b3d7b7e779cdad63520"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAtDigiPar.html">AtDigiPar</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtClusterizeTask.html#a1f1627a6be250b3d7b7e779cdad63520">fPar</a> {}</td></tr>
 <tr class="memdesc:a1f1627a6be250b3d7b7e779cdad63520"><td class="mdescLeft">&#160;</td><td class="mdescRight">Base parameter container.  <a href="classAtClusterizeTask.html#a1f1627a6be250b3d7b7e779cdad63520">More...</a><br /></td></tr>
 <tr class="separator:a1f1627a6be250b3d7b7e779cdad63520"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3535130bc08228efe3dbfea052373213"><td class="memItemLeft" align="right" valign="top">TString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtClusterizeTask.html#a3535130bc08228efe3dbfea052373213">fMCPointName</a> {&quot;AtTpcPoint&quot;}</td></tr>
+<tr class="separator:a3535130bc08228efe3dbfea052373213"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a55b597011ddcb1415b486da8bfedfc69"><td class="memItemLeft" align="right" valign="top">TClonesArray *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtClusterizeTask.html#a55b597011ddcb1415b486da8bfedfc69">fMCPointArray</a> {}</td></tr>
 <tr class="separator:a55b597011ddcb1415b486da8bfedfc69"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0b3f155067e51d2bbbb05e66155d01eb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAtMCPoint.html">AtMCPoint</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtClusterizeTask.html#a0b3f155067e51d2bbbb05e66155d01eb">fMCPoint</a> {}</td></tr>
-<tr class="separator:a0b3f155067e51d2bbbb05e66155d01eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a705fe77d190cfa4a19c5f7558818a5ba"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; TClonesArray &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtClusterizeTask.html#a705fe77d190cfa4a19c5f7558818a5ba">fSimulatedPointArray</a> {nullptr}</td></tr>
 <tr class="memdesc:a705fe77d190cfa4a19c5f7558818a5ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Primary cluster array.  <a href="classAtClusterizeTask.html#a705fe77d190cfa4a19c5f7558818a5ba">More...</a><br /></td></tr>
 <tr class="separator:a705fe77d190cfa4a19c5f7558818a5ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab29c7a4c95562856f404bc7c0fbf149e"><td class="memItemLeft" align="right" valign="top">Bool_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtClusterizeTask.html#ab29c7a4c95562856f404bc7c0fbf149e">fIsPersistent</a> {false}</td></tr>
 <tr class="memdesc:ab29c7a4c95562856f404bc7c0fbf149e"><td class="mdescLeft">&#160;</td><td class="mdescRight">If true, save container.  <a href="classAtClusterizeTask.html#ab29c7a4c95562856f404bc7c0fbf149e">More...</a><br /></td></tr>
 <tr class="separator:ab29c7a4c95562856f404bc7c0fbf149e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad984c7e501423015239eb756ebfc363d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AtSimulatedPoint_8cxx.html#a26aee3b2de2720f24802d48feab0c40a">ROOT::Math::XYZVector</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtClusterizeTask.html#ad984c7e501423015239eb756ebfc363d">fPrevPoint</a></td></tr>
-<tr class="separator:ad984c7e501423015239eb756ebfc363d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa6f1f984d4fdfbbb11500327e4c779d8"><td class="memItemLeft" align="right" valign="top">Int_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtClusterizeTask.html#aa6f1f984d4fdfbbb11500327e4c779d8">fCurrTrackID</a> {}</td></tr>
-<tr class="separator:aa6f1f984d4fdfbbb11500327e4c779d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3865ca0ce298b6b443cfeaeb2b361da5"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classAtClusterize.html">AtClusterize</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtClusterizeTask.html#a3865ca0ce298b6b443cfeaeb2b361da5">fClusterize</a></td></tr>
+<tr class="separator:a3865ca0ce298b6b443cfeaeb2b361da5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="AtClusterizeTask_8h_source.html#l00027">27</a> of file <a class="el" href="AtClusterizeTask_8h_source.html">AtClusterizeTask.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtClusterizeTask_8h_source.html#l00024">24</a> of file <a class="el" href="AtClusterizeTask_8h_source.html">AtClusterizeTask.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="af2a090ee94fea4484b72cc0472358aae"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af2a090ee94fea4484b72cc0472358aae">&#9670;&nbsp;</a></span>AtClusterizeTask() <span class="overload">[1/2]</span></h2>
+<a id="ab8194763d71cc18a459a0397d11a2e1b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab8194763d71cc18a459a0397d11a2e1b">&#9670;&nbsp;</a></span>AtClusterizeTask()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -192,33 +154,24 @@ Protected Attributes</h2></td></tr>
         <tr>
           <td class="memname">AtClusterizeTask::AtClusterizeTask </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
+          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="classAtClusterize.html">AtClusterize</a> &gt;&#160;</td>
+          <td class="paramname"><em>clusterize</em> = <code>std::make_shared&lt;<a class="el" href="classAtClusterize.html">AtClusterize</a>&gt;()</code>, </td>
         </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="AtClusterizeTask_8cxx_source.html#l00029">29</a> of file <a class="el" href="AtClusterizeTask_8cxx_source.html">AtClusterizeTask.cxx</a>.</p>
-
-</div>
-</div>
-<a id="a51122cacf6eecd09e74de9234ee8a263"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a51122cacf6eecd09e74de9234ee8a263">&#9670;&nbsp;</a></span>AtClusterizeTask() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
         <tr>
-          <td class="memname">AtClusterizeTask::AtClusterizeTask </td>
-          <td>(</td>
+          <td class="paramkey"></td>
+          <td></td>
           <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>name</em></td><td>)</td>
+          <td class="paramname"><em>name</em> = <code>&quot;AtClusterizeTask&quot;</code>&#160;</td>
+        </tr>
+        <tr>
           <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtClusterizeTask_8cxx_source.html#l00031">31</a> of file <a class="el" href="AtClusterizeTask_8cxx_source.html">AtClusterizeTask.cxx</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtClusterizeTask_8cxx_source.html#l00034">34</a> of file <a class="el" href="AtClusterizeTask_8cxx_source.html">AtClusterizeTask.cxx</a>.</p>
 
 </div>
 </div>
@@ -237,13 +190,13 @@ Protected Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtClusterizeTask_8cxx_source.html#l00033">33</a> of file <a class="el" href="AtClusterizeTask_8cxx_source.html">AtClusterizeTask.cxx</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtClusterizeTask_8cxx_source.html#l00039">39</a> of file <a class="el" href="AtClusterizeTask_8cxx_source.html">AtClusterizeTask.cxx</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a3487791f51682188d02296add2b483b0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3487791f51682188d02296add2b483b0">&#9670;&nbsp;</a></span>ClassDefOverride()</h2>
+<a id="a382932ccf97344bdf418c0adef6234b7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a382932ccf97344bdf418c0adef6234b7">&#9670;&nbsp;</a></span>ClassDefOverride()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -257,7 +210,7 @@ Protected Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">1&#160;</td>
+          <td class="paramtype">2&#160;</td>
           <td class="paramname">&#160;</td>
         </tr>
         <tr>
@@ -296,146 +249,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Executed for each event. </p>
 
-<p class="definition">Definition at line <a class="el" href="AtClusterizeTask_8cxx_source.html#l00127">127</a> of file <a class="el" href="AtClusterizeTask_8cxx_source.html">AtClusterizeTask.cxx</a>.</p>
-
-</div>
-</div>
-<a id="a3ce13d98f68c9c56bb98fec678ec1b2d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3ce13d98f68c9c56bb98fec678ec1b2d">&#9670;&nbsp;</a></span>getCurrentPointLocation()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="AtHit_8h.html#a26aee3b2de2720f24802d48feab0c40a">XYZVector</a> AtClusterizeTask::getCurrentPointLocation </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="AtClusterizeTask_8cxx_source.html#l00162">162</a> of file <a class="el" href="AtClusterizeTask_8cxx_source.html">AtClusterizeTask.cxx</a>.</p>
-
-</div>
-</div>
-<a id="a532cbdde8f0c1243943f6e3d3e3672ff"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a532cbdde8f0c1243943f6e3d3e3672ff">&#9670;&nbsp;</a></span>getLongitudinalDiffusion()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">Double_t AtClusterizeTask::getLongitudinalDiffusion </td>
-          <td>(</td>
-          <td class="paramtype">Double_t&#160;</td>
-          <td class="paramname"><em>driftTime</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="AtClusterizeTask_8cxx_source.html#l00141">141</a> of file <a class="el" href="AtClusterizeTask_8cxx_source.html">AtClusterizeTask.cxx</a>.</p>
-
-</div>
-</div>
-<a id="ae777d0b498f11a55a9a454fe2e11d157"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae777d0b498f11a55a9a454fe2e11d157">&#9670;&nbsp;</a></span>getNumberOfElectronsGenerated()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">UInt_t AtClusterizeTask::getNumberOfElectronsGenerated </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="AtClusterizeTask_8cxx_source.html#l00154">154</a> of file <a class="el" href="AtClusterizeTask_8cxx_source.html">AtClusterizeTask.cxx</a>.</p>
-
-</div>
-</div>
-<a id="a98990528edafbcf49abd48fa8ee9d76b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a98990528edafbcf49abd48fa8ee9d76b">&#9670;&nbsp;</a></span>getParameters()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void AtClusterizeTask::getParameters </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Reimplemented in <a class="el" href="classAtClusterizeLineTask.html#a16409fcb9bf81956e136c0e7875ce56b">AtClusterizeLineTask</a>.</p>
-
-<p class="definition">Definition at line <a class="el" href="AtClusterizeTask_8cxx_source.html#l00050">50</a> of file <a class="el" href="AtClusterizeTask_8cxx_source.html">AtClusterizeTask.cxx</a>.</p>
-
-</div>
-</div>
-<a id="a409ee93e1464ac9977be6477074fdd32"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a409ee93e1464ac9977be6477074fdd32">&#9670;&nbsp;</a></span>getTransverseDiffusion()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">Double_t AtClusterizeTask::getTransverseDiffusion </td>
-          <td>(</td>
-          <td class="paramtype">Double_t&#160;</td>
-          <td class="paramname"><em>driftTime</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="AtClusterizeTask_8cxx_source.html#l00149">149</a> of file <a class="el" href="AtClusterizeTask_8cxx_source.html">AtClusterizeTask.cxx</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtClusterizeTask_8cxx_source.html#l00074">74</a> of file <a class="el" href="AtClusterizeTask_8cxx_source.html">AtClusterizeTask.cxx</a>.</p>
 
 </div>
 </div>
@@ -464,14 +278,12 @@ Protected Attributes</h2></td></tr>
 
 <p>Initiliazation of task at the beginning of a run. </p>
 
-<p>Reimplemented in <a class="el" href="classAtClusterizeLineTask.html#a7be929a92adced3e5d01a185699f9154">AtClusterizeLineTask</a>.</p>
-
-<p class="definition">Definition at line <a class="el" href="AtClusterizeTask_8cxx_source.html#l00068">68</a> of file <a class="el" href="AtClusterizeTask_8cxx_source.html">AtClusterizeTask.cxx</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtClusterizeTask_8cxx_source.html#l00055">55</a> of file <a class="el" href="AtClusterizeTask_8cxx_source.html">AtClusterizeTask.cxx</a>.</p>
 
 </div>
 </div>
-<a id="aa8f39e2c1fbf336f44404233633f4859"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa8f39e2c1fbf336f44404233633f4859">&#9670;&nbsp;</a></span>processPoint()</h2>
+<a id="ae02891d93e0d72a17409a7e69f818ea6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae02891d93e0d72a17409a7e69f818ea6">&#9670;&nbsp;</a></span>SetClusterizeMethod()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -480,50 +292,21 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void AtClusterizeTask::processPoint </td>
+          <td class="memname">void AtClusterizeTask::SetClusterizeMethod </td>
           <td>(</td>
-          <td class="paramtype">Int_t&#160;</td>
-          <td class="paramname"><em>mcPointID</em></td><td>)</td>
+          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="classAtClusterize.html">AtClusterize</a> &gt;&#160;</td>
+          <td class="paramname"><em>cluster</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
-<p>Reimplemented in <a class="el" href="classAtClusterizeLineTask.html#a84b7a460f65cfd000a7abb2605e44ccd">AtClusterizeLineTask</a>.</p>
-
-<p class="definition">Definition at line <a class="el" href="AtClusterizeTask_8cxx_source.html#l00094">94</a> of file <a class="el" href="AtClusterizeTask_8cxx_source.html">AtClusterizeTask.cxx</a>.</p>
-
-</div>
-</div>
-<a id="ac01bffd6f8e73177690c8e297c215f21"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac01bffd6f8e73177690c8e297c215f21">&#9670;&nbsp;</a></span>setNewTrack()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void AtClusterizeTask::setNewTrack </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="AtClusterizeTask_8cxx_source.html#l00088">88</a> of file <a class="el" href="AtClusterizeTask_8cxx_source.html">AtClusterizeTask.cxx</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtClusterizeTask_8h_source.html#l00045">45</a> of file <a class="el" href="AtClusterizeTask_8h_source.html">AtClusterizeTask.h</a>.</p>
 
 </div>
 </div>
@@ -552,7 +335,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Load the parameter container from the runtime database. </p>
 
-<p class="definition">Definition at line <a class="el" href="AtClusterizeTask_8cxx_source.html#l00038">38</a> of file <a class="el" href="AtClusterizeTask_8cxx_source.html">AtClusterizeTask.cxx</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtClusterizeTask_8cxx_source.html#l00044">44</a> of file <a class="el" href="AtClusterizeTask_8cxx_source.html">AtClusterizeTask.cxx</a>.</p>
 
 </div>
 </div>
@@ -580,13 +363,13 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtClusterizeTask_8h_source.html#l00065">65</a> of file <a class="el" href="AtClusterizeTask_8h_source.html">AtClusterizeTask.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtClusterizeTask_8h_source.html#l00044">44</a> of file <a class="el" href="AtClusterizeTask_8h_source.html">AtClusterizeTask.h</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="aaa174ef5a2adb672a64f5203cea0ac3b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aaa174ef5a2adb672a64f5203cea0ac3b">&#9670;&nbsp;</a></span>fCoefL</h2>
+<a id="a3865ca0ce298b6b443cfeaeb2b361da5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3865ca0ce298b6b443cfeaeb2b361da5">&#9670;&nbsp;</a></span>fClusterize</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -595,7 +378,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Double_t AtClusterizeTask::fCoefL {}</td>
+          <td class="memname">std::shared_ptr&lt;<a class="el" href="classAtClusterize.html">AtClusterize</a>&gt; AtClusterizeTask::fClusterize</td>
         </tr>
       </table>
   </td>
@@ -605,111 +388,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Longitudinal diffusion coefficient. [mm^(-1/2)]. </p>
-
-<p class="definition">Definition at line <a class="el" href="AtClusterizeTask_8h_source.html#l00034">34</a> of file <a class="el" href="AtClusterizeTask_8h_source.html">AtClusterizeTask.h</a>.</p>
-
-</div>
-</div>
-<a id="abc386b211180cfdc2e3aa6ea4e06f1a6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abc386b211180cfdc2e3aa6ea4e06f1a6">&#9670;&nbsp;</a></span>fCoefT</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">Double_t AtClusterizeTask::fCoefT {}</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Transversal diffusion coefficient. [mm^(-1/2)]. </p>
-
-<p class="definition">Definition at line <a class="el" href="AtClusterizeTask_8h_source.html#l00033">33</a> of file <a class="el" href="AtClusterizeTask_8h_source.html">AtClusterizeTask.h</a>.</p>
-
-</div>
-</div>
-<a id="aa6f1f984d4fdfbbb11500327e4c779d8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa6f1f984d4fdfbbb11500327e4c779d8">&#9670;&nbsp;</a></span>fCurrTrackID</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">Int_t AtClusterizeTask::fCurrTrackID {}</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="AtClusterizeTask_8h_source.html#l00045">45</a> of file <a class="el" href="AtClusterizeTask_8h_source.html">AtClusterizeTask.h</a>.</p>
-
-</div>
-</div>
-<a id="a3168152439fa22861367bd75dfec3e14"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3168152439fa22861367bd75dfec3e14">&#9670;&nbsp;</a></span>fDetPadPlane</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">Double_t AtClusterizeTask::fDetPadPlane {}</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Position of the pad plane with respect to the entrance [mm]. </p>
-
-<p class="definition">Definition at line <a class="el" href="AtClusterizeTask_8h_source.html#l00035">35</a> of file <a class="el" href="AtClusterizeTask_8h_source.html">AtClusterizeTask.h</a>.</p>
-
-</div>
-</div>
-<a id="a5effead9e6c9c2e27066c22d8d1f79fd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5effead9e6c9c2e27066c22d8d1f79fd">&#9670;&nbsp;</a></span>fEIonize</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">Double_t AtClusterizeTask::fEIonize {}</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Effective ionization energy of gas. [eV]. </p>
-
-<p class="definition">Definition at line <a class="el" href="AtClusterizeTask_8h_source.html#l00030">30</a> of file <a class="el" href="AtClusterizeTask_8h_source.html">AtClusterizeTask.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtClusterizeTask_8h_source.html#l00037">37</a> of file <a class="el" href="AtClusterizeTask_8h_source.html">AtClusterizeTask.h</a>.</p>
 
 </div>
 </div>
@@ -735,33 +414,7 @@ Protected Attributes</h2></td></tr>
 
 <p>EventID. </p>
 
-<p class="definition">Definition at line <a class="el" href="AtClusterizeTask_8h_source.html#l00029">29</a> of file <a class="el" href="AtClusterizeTask_8h_source.html">AtClusterizeTask.h</a>.</p>
-
-</div>
-</div>
-<a id="a95e95b1e1cf82dbb5d7be9ed98480545"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a95e95b1e1cf82dbb5d7be9ed98480545">&#9670;&nbsp;</a></span>fFano</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">Double_t AtClusterizeTask::fFano {}</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Fano factor of the gas. </p>
-
-<p class="definition">Definition at line <a class="el" href="AtClusterizeTask_8h_source.html#l00031">31</a> of file <a class="el" href="AtClusterizeTask_8h_source.html">AtClusterizeTask.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtClusterizeTask_8h_source.html#l00026">26</a> of file <a class="el" href="AtClusterizeTask_8h_source.html">AtClusterizeTask.h</a>.</p>
 
 </div>
 </div>
@@ -787,31 +440,7 @@ Protected Attributes</h2></td></tr>
 
 <p>If true, save container. </p>
 
-<p class="definition">Definition at line <a class="el" href="AtClusterizeTask_8h_source.html#l00042">42</a> of file <a class="el" href="AtClusterizeTask_8h_source.html">AtClusterizeTask.h</a>.</p>
-
-</div>
-</div>
-<a id="a0b3f155067e51d2bbbb05e66155d01eb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0b3f155067e51d2bbbb05e66155d01eb">&#9670;&nbsp;</a></span>fMCPoint</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classAtMCPoint.html">AtMCPoint</a>* AtClusterizeTask::fMCPoint {}</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="AtClusterizeTask_8h_source.html#l00040">40</a> of file <a class="el" href="AtClusterizeTask_8h_source.html">AtClusterizeTask.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtClusterizeTask_8h_source.html#l00035">35</a> of file <a class="el" href="AtClusterizeTask_8h_source.html">AtClusterizeTask.h</a>.</p>
 
 </div>
 </div>
@@ -835,7 +464,31 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtClusterizeTask_8h_source.html#l00039">39</a> of file <a class="el" href="AtClusterizeTask_8h_source.html">AtClusterizeTask.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtClusterizeTask_8h_source.html#l00032">32</a> of file <a class="el" href="AtClusterizeTask_8h_source.html">AtClusterizeTask.h</a>.</p>
+
+</div>
+</div>
+<a id="a3535130bc08228efe3dbfea052373213"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3535130bc08228efe3dbfea052373213">&#9670;&nbsp;</a></span>fMCPointName</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TString AtClusterizeTask::fMCPointName {&quot;AtTpcPoint&quot;}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtClusterizeTask_8h_source.html#l00031">31</a> of file <a class="el" href="AtClusterizeTask_8h_source.html">AtClusterizeTask.h</a>.</p>
 
 </div>
 </div>
@@ -861,31 +514,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Base parameter container. </p>
 
-<p class="definition">Definition at line <a class="el" href="AtClusterizeTask_8h_source.html#l00037">37</a> of file <a class="el" href="AtClusterizeTask_8h_source.html">AtClusterizeTask.h</a>.</p>
-
-</div>
-</div>
-<a id="ad984c7e501423015239eb756ebfc363d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad984c7e501423015239eb756ebfc363d">&#9670;&nbsp;</a></span>fPrevPoint</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="AtSimulatedPoint_8cxx.html#a26aee3b2de2720f24802d48feab0c40a">ROOT::Math::XYZVector</a> AtClusterizeTask::fPrevPoint</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="AtClusterizeTask_8h_source.html#l00044">44</a> of file <a class="el" href="AtClusterizeTask_8h_source.html">AtClusterizeTask.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtClusterizeTask_8h_source.html#l00028">28</a> of file <a class="el" href="AtClusterizeTask_8h_source.html">AtClusterizeTask.h</a>.</p>
 
 </div>
 </div>
@@ -911,33 +540,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Primary cluster array. </p>
 
-<p class="definition">Definition at line <a class="el" href="AtClusterizeTask_8h_source.html#l00041">41</a> of file <a class="el" href="AtClusterizeTask_8h_source.html">AtClusterizeTask.h</a>.</p>
-
-</div>
-</div>
-<a id="a31870ba5a551553c3d9d13d1c4c03c7a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a31870ba5a551553c3d9d13d1c4c03c7a">&#9670;&nbsp;</a></span>fVelDrift</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">Double_t AtClusterizeTask::fVelDrift {}</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Drift velocity of electron in gas. [mm/ns]. </p>
-
-<p class="definition">Definition at line <a class="el" href="AtClusterizeTask_8h_source.html#l00032">32</a> of file <a class="el" href="AtClusterizeTask_8h_source.html">AtClusterizeTask.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtClusterizeTask_8h_source.html#l00034">34</a> of file <a class="el" href="AtClusterizeTask_8h_source.html">AtClusterizeTask.h</a>.</p>
 
 </div>
 </div>
@@ -948,7 +551,7 @@ Protected Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Apr 27 2022 00:47:49 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Oct 20 2023 16:23:01 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.18
 </small></address>

@@ -1,0 +1,52 @@
+<map id="/github/workspace/AtReconstruction/AtPatternRecognition/AtSampleConsensus.cxx" name="/github/workspace/AtReconstruction/AtPatternRecognition/AtSampleConsensus.cxx">
+<area shape="rect" id="node1" title=" " alt="" coords="3018,5,3315,47"/>
+<area shape="rect" id="node2" href="$AtSampleConsensus_8h.html" title=" " alt="" coords="2707,95,2861,121"/>
+<area shape="rect" id="node5" href="$AtPattern_8h.html" title=" " alt="" coords="2013,393,2099,420"/>
+<area shape="rect" id="node12" title=" " alt="" coords="2953,543,3021,569"/>
+<area shape="rect" id="node14" href="$AtPatternTypes_8h.html" title=" " alt="" coords="3105,169,3228,196"/>
+<area shape="rect" id="node15" href="$AtSampleMethods_8h.html" title=" " alt="" coords="1204,169,1343,196"/>
+<area shape="rect" id="node17" href="$AtHit_8h.html" title=" " alt="" coords="1722,468,1785,495"/>
+<area shape="rect" id="node21" href="$AtSample_8h.html" title=" " alt="" coords="1447,468,1537,495"/>
+<area shape="rect" id="node30" href="$AtContainerManip_8h.html" title=" " alt="" coords="3607,468,3742,495"/>
+<area shape="rect" id="node31" title=" " alt="" coords="4139,543,4234,569"/>
+<area shape="rect" id="node40" href="$AtBaseEvent_8h.html" title=" " alt="" coords="3506,319,3614,345"/>
+<area shape="rect" id="node46" href="$AtEvent_8h.html" title=" " alt="" coords="3429,244,3507,271"/>
+<area shape="rect" id="node47" href="$AtPatternEvent_8h.html" title=" " alt="" coords="2849,244,2969,271"/>
+<area shape="rect" id="node48" href="$AtSampleEstimator_8h.html" title=" " alt="" coords="5,169,149,196"/>
+<area shape="rect" id="node49" title=" " alt="" coords="4265,95,4332,121"/>
+<area shape="rect" id="node50" title=" " alt="" coords="4356,95,4396,121"/>
+<area shape="rect" id="node3" href="$AtEstimatorMethods_8h.html" title=" " alt="" coords="174,169,325,196"/>
+<area shape="rect" id="node4" title=" " alt="" coords="875,543,933,569"/>
+<area shape="rect" id="node8" title=" " alt="" coords="3179,543,3251,569"/>
+<area shape="rect" id="node13" title=" " alt="" coords="2807,468,2859,495"/>
+<area shape="rect" id="node29" href="$AtTrack_8h.html" title=" " alt="" coords="2237,319,2315,345"/>
+<area shape="rect" id="node6" title=" " alt="" coords="1913,543,2023,569"/>
+<area shape="rect" id="node7" title=" " alt="" coords="1757,543,1889,569"/>
+<area shape="rect" id="node9" title=" " alt="" coords="2069,543,2147,569"/>
+<area shape="rect" id="node10" title=" " alt="" coords="2223,543,2297,569"/>
+<area shape="rect" id="node11" title=" " alt="" coords="1961,468,2020,495"/>
+<area shape="rect" id="node16" href="$AtChargeWeighted_8h.html" title=" " alt="" coords="1027,319,1167,345"/>
+<area shape="rect" id="node22" href="$AtGaussian_8h.html" title=" " alt="" coords="1294,319,1394,345"/>
+<area shape="rect" id="node24" href="$AtUniform_8h.html" title=" " alt="" coords="540,393,631,420"/>
+<area shape="rect" id="node25" href="$AtWeightedGaussian_8h.html" title=" " alt="" coords="1135,244,1289,271"/>
+<area shape="rect" id="node26" href="$AtWeightedGaussianTrunc_8h.html" title=" " alt="" coords="655,393,841,420"/>
+<area shape="rect" id="node27" href="$AtWeightedY_8h.html" title=" " alt="" coords="793,244,901,271"/>
+<area shape="rect" id="node28" href="$AtY_8h.html" title=" " alt="" coords="662,319,717,345"/>
+<area shape="rect" id="node20" href="$AtIndependentSample_8h.html" title=" " alt="" coords="1017,393,1177,420"/>
+<area shape="rect" id="node18" title=" " alt="" coords="1614,543,1733,569"/>
+<area shape="rect" id="node19" title=" " alt="" coords="1450,543,1590,569"/>
+<area shape="rect" id="node23" href="$AtSampleFromReference_8h.html" title=" " alt="" coords="1303,393,1481,420"/>
+<area shape="rect" id="node36" href="$AtHitCluster_8h.html" title=" " alt="" coords="2466,393,2569,420"/>
+<area shape="rect" id="node38" title=" " alt="" coords="2321,393,2391,420"/>
+<area shape="rect" id="node39" title=" " alt="" coords="2225,393,2297,420"/>
+<area shape="rect" id="node32" title=" " alt="" coords="3658,543,3715,569"/>
+<area shape="rect" id="node33" title=" " alt="" coords="3571,543,3634,569"/>
+<area shape="rect" id="node34" title=" " alt="" coords="3753,543,3807,569"/>
+<area shape="rect" id="node35" title=" " alt="" coords="3832,543,3915,569"/>
+<area shape="rect" id="node37" title=" " alt="" coords="2449,468,2580,495"/>
+<area shape="rect" id="node41" href="$AtAuxPad_8h.html" title=" " alt="" coords="3556,393,3647,420"/>
+<area shape="rect" id="node44" title=" " alt="" coords="3993,543,4039,569"/>
+<area shape="rect" id="node45" title=" " alt="" coords="3721,393,3804,420"/>
+<area shape="rect" id="node42" href="$AtPad_8h.html" title=" " alt="" coords="3818,468,3886,495"/>
+<area shape="rect" id="node43" title=" " alt="" coords="4064,543,4115,569"/>
+</map>

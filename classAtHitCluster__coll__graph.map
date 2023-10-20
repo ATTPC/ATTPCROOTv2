@@ -1,6 +1,6 @@
 <map id="AtHitCluster" name="AtHitCluster">
-<area shape="rect" id="node1" title=" " alt="" coords="14,275,107,301"/>
-<area shape="rect" id="node2" href="$classAtHit.html" title=" " alt="" coords="35,199,87,225"/>
+<area shape="rect" id="node1" title=": Class representing a cluster of hits that arise from the same deposition of charge in space...." alt="" coords="14,275,107,301"/>
+<area shape="rect" id="node2" href="$classAtHit.html" title="Point in space with charge." alt="" coords="35,199,87,225"/>
 <area shape="rect" id="node3" title=" " alt="" coords="5,102,73,129"/>
 <area shape="rect" id="node4" title=" " alt="" coords="98,95,221,136"/>
 <area shape="rect" id="node5" href="$structAtHit_1_1MCSimPoint.html" title=" " alt="" coords="94,5,225,32"/>

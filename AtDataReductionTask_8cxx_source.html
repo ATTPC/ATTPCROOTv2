@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">ATTPCROOT
-   &#160;<span id="projectnumber">1.0.0</span>
+   &#160;<span id="projectnumber">0.3.0-alpha</span>
    </div>
    <div id="projectbrief">A ROOT-based framework for analyzing data from active target detectors</div>
   </td>
@@ -73,7 +73,7 @@ $(function() {
 <div class="contents">
 <a href="AtDataReductionTask_8cxx.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="AtDataReductionTask_8h.html">AtDataReductionTask.h</a>&quot;</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160; </div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="AtRawEvent_8h.html">AtRawEvent.h</a>&quot;</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="AtBaseEvent_8h.html">AtBaseEvent.h</a>&quot;</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160; </div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;FairLogger.h&gt;</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &lt;FairRootManager.h&gt;</span></div>
@@ -83,58 +83,76 @@ $(function() {
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &lt;TClonesArray.h&gt;</span></div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &lt;TObject.h&gt;</span></div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160; </div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor">#include &lt;memory&gt;</span></div>
+<div class="line"><a name="l00013"></a><span class="lineno"><a class="line" href="AtDataReductionTask_8cxx.html#aa9f383cf6fb3229c3c61357efe70f305">   13</a></span>&#160;<a class="code" href="AtDataReductionTask_8cxx.html#aa9f383cf6fb3229c3c61357efe70f305">ClassImp</a>(<a class="code" href="classAtDataReductionTask.html">AtDataReductionTask</a>);</div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160; </div>
-<div class="line"><a name="l00015"></a><span class="lineno"><a class="line" href="classAtDataReductionTask.html#ac55833cf2dcd331b2aa091ed5bb02714">   15</a></span>&#160;<a class="code" href="classAtDataReductionTask.html#ac55833cf2dcd331b2aa091ed5bb02714">AtDataReductionTask::AtDataReductionTask</a>() : reduceFunc(nullptr), fInputBranchName(<span class="stringliteral">&quot;AtRawEvent&quot;</span>) {}</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160; </div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<a class="code" href="classAtDataReductionTask.html#a530aad964c0d3dc59c3236da37368290">AtDataReductionTask::~AtDataReductionTask</a>() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160; </div>
-<div class="line"><a name="l00019"></a><span class="lineno"><a class="line" href="classAtDataReductionTask.html#a726935ed3811a6e87f0e5e63cddd46f3">   19</a></span>&#160;InitStatus <a class="code" href="classAtDataReductionTask.html#a726935ed3811a6e87f0e5e63cddd46f3">AtDataReductionTask::Init</a>()</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;{</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;   FairRootManager *ioMan = FairRootManager::Instance();</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;   <span class="keywordflow">if</span> (ioMan == <span class="keyword">nullptr</span>) {</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;      LOG(fatal) &lt;&lt; <span class="stringliteral">&quot;Cannot find RootManager!&quot;</span>;</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;      <span class="keywordflow">return</span> kFATAL;</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;   }</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;   fInputEventArray = <span class="keyword">dynamic_cast&lt;</span>TClonesArray *<span class="keyword">&gt;</span>(ioMan-&gt;GetObject(fInputBranchName));</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;   <span class="keywordflow">if</span> (fInputEventArray == <span class="keyword">nullptr</span>) {</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;      LOG(fatal) &lt;&lt; <span class="stringliteral">&quot;Cannot find AtRawEvent array in branch &quot;</span> &lt;&lt; fInputBranchName &lt;&lt; <span class="stringliteral">&quot;!&quot;</span>;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;      <span class="keywordflow">return</span> kFATAL;</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;   }</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;   <span class="keywordflow">return</span> kSUCCESS;</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;}</div>
+<div class="line"><a name="l00015"></a><span class="lineno"><a class="line" href="classAtDataReductionTask.html#a4492feff8110ef9c04bef07b66c470ca">   15</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classAtDataReductionTask.html#a8f5e5d224b21347ced90ef67dcebf1d2">AtDataReductionTask::SetReductionFunction</a>(std::function&lt;<span class="keywordtype">bool</span>(<a class="code" href="classAtBaseEvent.html">AtBaseEvent</a> *)&gt; func)</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;{</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;   <span class="comment">// Bind the reduction function to the passed function, having it call that function with the current</span></div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;   <span class="comment">// AtRawEvent in the pointer this-&gt;fRawEvent.</span></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;   fReductionFunc = [<span class="keyword">this</span>, func]() { <span class="keywordflow">return</span> func(fEvent); };</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;}</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
+<div class="line"><a name="l00022"></a><span class="lineno"><a class="line" href="classAtDataReductionTask.html#a726935ed3811a6e87f0e5e63cddd46f3">   22</a></span>&#160;InitStatus <a class="code" href="classAtDataReductionTask.html#a726935ed3811a6e87f0e5e63cddd46f3">AtDataReductionTask::Init</a>()</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;{</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;   FairRootManager *ioMan = FairRootManager::Instance();</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;   <span class="keywordflow">if</span> (ioMan == <span class="keyword">nullptr</span>) {</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;      LOG(fatal) &lt;&lt; <span class="stringliteral">&quot;Cannot find RootManager!&quot;</span>;</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;      <span class="keywordflow">return</span> kFATAL;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;   }</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;   fInputEventArray = <span class="keyword">dynamic_cast&lt;</span>TClonesArray *<span class="keyword">&gt;</span>(ioMan-&gt;GetObject(fInputBranchName));</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;   <span class="keywordflow">if</span> (fInputEventArray == <span class="keyword">nullptr</span>) {</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;      LOG(fatal) &lt;&lt; <span class="stringliteral">&quot;Cannot find TClonesArray in branch &quot;</span> &lt;&lt; fInputBranchName &lt;&lt; <span class="stringliteral">&quot;!&quot;</span>;</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;      <span class="keywordflow">return</span> kFATAL;</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;   }</div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
-<div class="line"><a name="l00036"></a><span class="lineno"><a class="line" href="classAtDataReductionTask.html#a8b990e5554d799aad584a8b83f0ea8b6">   36</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classAtDataReductionTask.html#a8b990e5554d799aad584a8b83f0ea8b6">AtDataReductionTask::Exec</a>(Option_t *opt)</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;{</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;   <span class="comment">// Get raw event</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;   <span class="keywordflow">if</span> (fInputEventArray-&gt;GetEntriesFast() == 0)</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;      <span class="keywordflow">return</span>;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;   fRawEvent = <span class="keyword">dynamic_cast&lt;</span><a class="code" href="classAtRawEvent.html">AtRawEvent</a> *<span class="keyword">&gt;</span>(fInputEventArray-&gt;At(0));</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;   <span class="comment">// If we should skip this event</span></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;   <span class="keywordflow">if</span> ((*reduceFunc)(fRawEvent))</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;      LOG(info) &lt;&lt; <span class="stringliteral">&quot;Keeping event &quot;</span> &lt;&lt; fRawEvent-&gt;<a class="code" href="classAtRawEvent.html#af742a72f09bbe4901a34b2ebb81af947">GetEventID</a>() &lt;&lt; <span class="stringliteral">&quot; with &quot;</span> &lt;&lt; fRawEvent-&gt;<a class="code" href="classAtRawEvent.html#ac18dff1b17635a8da7ba460e04dc4678">GetNumPads</a>() &lt;&lt; <span class="stringliteral">&quot; pads&quot;</span>;</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;   <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;      fRawEvent-&gt;<a class="code" href="classAtRawEvent.html#a8e61f8ee84da0b0d52ba832a2091304a">SetIsGood</a>(<span class="keyword">false</span>);</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;      FairRunAna::Instance()-&gt;MarkFill(<span class="keyword">false</span>);</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;   }</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;}</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;   <span class="keywordflow">return</span> kSUCCESS;</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;}</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
+<div class="line"><a name="l00039"></a><span class="lineno"><a class="line" href="classAtDataReductionTask.html#a8b990e5554d799aad584a8b83f0ea8b6">   39</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classAtDataReductionTask.html#a8b990e5554d799aad584a8b83f0ea8b6">AtDataReductionTask::Exec</a>(Option_t *opt)</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;{</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;   <span class="comment">// Get raw event</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;   <span class="keywordflow">if</span> (fInputEventArray-&gt;GetEntriesFast() == 0)</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;      <span class="keywordflow">return</span>;</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;   fEvent = <span class="keyword">dynamic_cast&lt;</span><a class="code" href="classAtBaseEvent.html">AtBaseEvent</a> *<span class="keyword">&gt;</span>(fInputEventArray-&gt;At(0));</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;   <span class="comment">// If we should skip this event mark bad and don&#39;t fill tree</span></div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;   <span class="keywordflow">if</span> (fReductionFunc())</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;      LOG(info) &lt;&lt; <span class="stringliteral">&quot;Keeping event &quot;</span> &lt;&lt; fEvent-&gt;<a class="code" href="classAtBaseEvent.html#a8ab430e5c1e4404b055a82052f4c7dd3">GetEventID</a>() &lt;&lt; <span class="stringliteral">&quot; at &quot;</span> &lt;&lt; FairRootManager::Instance()-&gt;GetEntryNr();</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;   <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;      LOG(info) &lt;&lt; <span class="stringliteral">&quot;Skipping event &quot;</span> &lt;&lt; fEvent-&gt;<a class="code" href="classAtBaseEvent.html#a8ab430e5c1e4404b055a82052f4c7dd3">GetEventID</a>() &lt;&lt; <span class="stringliteral">&quot; at &quot;</span> &lt;&lt; FairRootManager::Instance()-&gt;GetEntryNr();</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;      FairRootManager *ioMan = FairRootManager::Instance();</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;      <span class="keywordflow">for</span> (<span class="keyword">auto</span> name : fOutputBranchs) {</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;         <span class="keyword">auto</span> b = <span class="keyword">dynamic_cast&lt;</span>TClonesArray *<span class="keyword">&gt;</span>(ioMan-&gt;GetObject(name));</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;         <span class="keywordflow">if</span> (fInputEventArray == <span class="keyword">nullptr</span>)</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;            LOG(fatal) &lt;&lt; <span class="stringliteral">&quot;Cannot find branch &quot;</span> &lt;&lt; name &lt;&lt; <span class="stringliteral">&quot;!&quot;</span>;</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; </div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;         <span class="keyword">auto</span> e = <span class="keyword">dynamic_cast&lt;</span><a class="code" href="classAtBaseEvent.html">AtBaseEvent</a> *<span class="keyword">&gt;</span>(b-&gt;At(0));</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;         <span class="keywordflow">if</span> (e == <span class="keyword">nullptr</span>) {</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;            LOG(error) &lt;&lt; <span class="stringliteral">&quot;Not setting &quot;</span> &lt;&lt; name;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;            <span class="keywordflow">continue</span>;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;         }</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;         e-&gt;<a class="code" href="classAtBaseEvent.html#abe75a4a9b689a722e59fb44eec414e3b">SetIsGood</a>(<span class="keyword">false</span>);</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;      }</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;      FairRunAna::Instance()-&gt;MarkFill(<span class="keyword">false</span>);</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;   }</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
-<div class="ttc" id="aAtRawEvent_8h_html"><div class="ttname"><a href="AtRawEvent_8h.html">AtRawEvent.h</a></div></div>
-<div class="ttc" id="aclassAtRawEvent_html"><div class="ttname"><a href="classAtRawEvent.html">AtRawEvent</a></div><div class="ttdef"><b>Definition:</b> <a href="AtRawEvent_8h_source.html#l00035">AtRawEvent.h:35</a></div></div>
+<div class="ttc" id="aAtBaseEvent_8h_html"><div class="ttname"><a href="AtBaseEvent_8h.html">AtBaseEvent.h</a></div></div>
+<div class="ttc" id="aclassAtBaseEvent_html_abe75a4a9b689a722e59fb44eec414e3b"><div class="ttname"><a href="classAtBaseEvent.html#abe75a4a9b689a722e59fb44eec414e3b">AtBaseEvent::SetIsGood</a></div><div class="ttdeci">void SetIsGood(Bool_t value)</div><div class="ttdef"><b>Definition:</b> <a href="AtBaseEvent_8h_source.html#l00061">AtBaseEvent.h:61</a></div></div>
 <div class="ttc" id="aAtDataReductionTask_8h_html"><div class="ttname"><a href="AtDataReductionTask_8h.html">AtDataReductionTask.h</a></div></div>
-<div class="ttc" id="aclassAtDataReductionTask_html_a8b990e5554d799aad584a8b83f0ea8b6"><div class="ttname"><a href="classAtDataReductionTask.html#a8b990e5554d799aad584a8b83f0ea8b6">AtDataReductionTask::Exec</a></div><div class="ttdeci">virtual void Exec(Option_t *opt) override</div><div class="ttdef"><b>Definition:</b> <a href="AtDataReductionTask_8cxx_source.html#l00036">AtDataReductionTask.cxx:36</a></div></div>
-<div class="ttc" id="aclassAtDataReductionTask_html_a726935ed3811a6e87f0e5e63cddd46f3"><div class="ttname"><a href="classAtDataReductionTask.html#a726935ed3811a6e87f0e5e63cddd46f3">AtDataReductionTask::Init</a></div><div class="ttdeci">virtual InitStatus Init() override</div><div class="ttdef"><b>Definition:</b> <a href="AtDataReductionTask_8cxx_source.html#l00019">AtDataReductionTask.cxx:19</a></div></div>
-<div class="ttc" id="aclassAtRawEvent_html_af742a72f09bbe4901a34b2ebb81af947"><div class="ttname"><a href="classAtRawEvent.html#af742a72f09bbe4901a34b2ebb81af947">AtRawEvent::GetEventID</a></div><div class="ttdeci">ULong_t GetEventID() const</div><div class="ttdef"><b>Definition:</b> <a href="AtRawEvent_8h_source.html#l00091">AtRawEvent.h:91</a></div></div>
-<div class="ttc" id="aclassAtRawEvent_html_a8e61f8ee84da0b0d52ba832a2091304a"><div class="ttname"><a href="classAtRawEvent.html#a8e61f8ee84da0b0d52ba832a2091304a">AtRawEvent::SetIsGood</a></div><div class="ttdeci">void SetIsGood(Bool_t value)</div><div class="ttdef"><b>Definition:</b> <a href="AtRawEvent_8h_source.html#l00085">AtRawEvent.h:85</a></div></div>
-<div class="ttc" id="aclassAtRawEvent_html_ac18dff1b17635a8da7ba460e04dc4678"><div class="ttname"><a href="classAtRawEvent.html#ac18dff1b17635a8da7ba460e04dc4678">AtRawEvent::GetNumPads</a></div><div class="ttdeci">Int_t GetNumPads() const</div><div class="ttdef"><b>Definition:</b> <a href="AtRawEvent_8h_source.html#l00092">AtRawEvent.h:92</a></div></div>
-<div class="ttc" id="aclassAtDataReductionTask_html_a530aad964c0d3dc59c3236da37368290"><div class="ttname"><a href="classAtDataReductionTask.html#a530aad964c0d3dc59c3236da37368290">AtDataReductionTask::~AtDataReductionTask</a></div><div class="ttdeci">~AtDataReductionTask()</div></div>
-<div class="ttc" id="aclassAtDataReductionTask_html_ac55833cf2dcd331b2aa091ed5bb02714"><div class="ttname"><a href="classAtDataReductionTask.html#ac55833cf2dcd331b2aa091ed5bb02714">AtDataReductionTask::AtDataReductionTask</a></div><div class="ttdeci">AtDataReductionTask()</div><div class="ttdef"><b>Definition:</b> <a href="AtDataReductionTask_8cxx_source.html#l00015">AtDataReductionTask.cxx:15</a></div></div>
+<div class="ttc" id="aclassAtDataReductionTask_html_a8b990e5554d799aad584a8b83f0ea8b6"><div class="ttname"><a href="classAtDataReductionTask.html#a8b990e5554d799aad584a8b83f0ea8b6">AtDataReductionTask::Exec</a></div><div class="ttdeci">virtual void Exec(Option_t *opt) override</div><div class="ttdef"><b>Definition:</b> <a href="AtDataReductionTask_8cxx_source.html#l00039">AtDataReductionTask.cxx:39</a></div></div>
+<div class="ttc" id="aclassAtDataReductionTask_html"><div class="ttname"><a href="classAtDataReductionTask.html">AtDataReductionTask</a></div><div class="ttdef"><b>Definition:</b> <a href="AtDataReductionTask_8h_source.html#l00027">AtDataReductionTask.h:27</a></div></div>
+<div class="ttc" id="aclassAtDataReductionTask_html_a726935ed3811a6e87f0e5e63cddd46f3"><div class="ttname"><a href="classAtDataReductionTask.html#a726935ed3811a6e87f0e5e63cddd46f3">AtDataReductionTask::Init</a></div><div class="ttdeci">virtual InitStatus Init() override</div><div class="ttdef"><b>Definition:</b> <a href="AtDataReductionTask_8cxx_source.html#l00022">AtDataReductionTask.cxx:22</a></div></div>
+<div class="ttc" id="aclassAtDataReductionTask_html_a8f5e5d224b21347ced90ef67dcebf1d2"><div class="ttname"><a href="classAtDataReductionTask.html#a8f5e5d224b21347ced90ef67dcebf1d2">AtDataReductionTask::SetReductionFunction</a></div><div class="ttdeci">void SetReductionFunction(ReductionFunction func)</div><div class="ttdef"><b>Definition:</b> <a href="AtDataReductionTask_8h_source.html#l00042">AtDataReductionTask.h:42</a></div></div>
+<div class="ttc" id="aclassAtBaseEvent_html"><div class="ttname"><a href="classAtBaseEvent.html">AtBaseEvent</a></div><div class="ttdoc">Base class for all event types in ATTPCROOT.</div><div class="ttdef"><b>Definition:</b> <a href="AtBaseEvent_8h_source.html#l00020">AtBaseEvent.h:20</a></div></div>
+<div class="ttc" id="aAtDataReductionTask_8cxx_html_aa9f383cf6fb3229c3c61357efe70f305"><div class="ttname"><a href="AtDataReductionTask_8cxx.html#aa9f383cf6fb3229c3c61357efe70f305">ClassImp</a></div><div class="ttdeci">ClassImp(AtDataReductionTask)</div></div>
+<div class="ttc" id="aclassAtBaseEvent_html_a8ab430e5c1e4404b055a82052f4c7dd3"><div class="ttname"><a href="classAtBaseEvent.html#a8ab430e5c1e4404b055a82052f4c7dd3">AtBaseEvent::GetEventID</a></div><div class="ttdeci">ULong_t GetEventID() const</div><div class="ttdef"><b>Definition:</b> <a href="AtBaseEvent_8h_source.html#l00067">AtBaseEvent.h:67</a></div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Apr 27 2022 00:47:47 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Oct 20 2023 16:22:59 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.18
 </small></address>

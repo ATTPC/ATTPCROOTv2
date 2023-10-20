@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.18"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>ATTPCROOT: /github/workspace/AtEventDisplay/AtEventManagerS800.cxx Source File</title>
+<title>ATTPCROOT: /github/workspace/AtEventDisplay/Deprecated/AtEventManagerS800.cxx Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">ATTPCROOT
-   &#160;<span id="projectnumber">1.0.0</span>
+   &#160;<span id="projectnumber">0.3.0-alpha</span>
    </div>
    <div id="projectbrief">A ROOT-based framework for analyzing data from active target detectors</div>
   </td>
@@ -63,7 +63,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_93d25abbc6f0ef98b9f9d466bdcb18a2.html">AtEventDisplay</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_93d25abbc6f0ef98b9f9d466bdcb18a2.html">AtEventDisplay</a></li><li class="navelem"><a class="el" href="dir_ade193244e8182e28566ee49794683fa.html">Deprecated</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -495,7 +495,7 @@ $(function() {
 <div class="line"><a name="l00425"></a><span class="lineno">  425</span>&#160;      fRootManager-&gt;ReadEvent(fEntry);</div>
 <div class="line"><a name="l00426"></a><span class="lineno">  426</span>&#160;      cArray = <span class="keyword">dynamic_cast&lt;</span>TClonesArray *<span class="keyword">&gt;</span>(fRootManager-&gt;GetObject(<span class="stringliteral">&quot;AtEventH&quot;</span>));</div>
 <div class="line"><a name="l00427"></a><span class="lineno">  427</span>&#160;      cevent = <span class="keyword">dynamic_cast&lt;</span><a class="code" href="classAtEvent.html">AtEvent</a> *<span class="keyword">&gt;</span>(cArray-&gt;At(0));</div>
-<div class="line"><a name="l00428"></a><span class="lineno">  428</span>&#160;      gated = cevent-&gt;<a class="code" href="classAtEvent.html#ade06238dcb89508371a7ff05d7e108d1">IsInGate</a>();</div>
+<div class="line"><a name="l00428"></a><span class="lineno">  428</span>&#160;      gated = cevent-&gt;<a class="code" href="classAtBaseEvent.html#a02e0c5b1d97bf0553855223a0b27cff7">GetIsExtGate</a>();</div>
 <div class="line"><a name="l00429"></a><span class="lineno">  429</span>&#160;   }</div>
 <div class="line"><a name="l00430"></a><span class="lineno">  430</span>&#160; </div>
 <div class="line"><a name="l00431"></a><span class="lineno">  431</span>&#160;   std::cout &lt;&lt; <span class="stringliteral">&quot; Event number : &quot;</span> &lt;&lt; fEntry &lt;&lt; std::endl;</div>
@@ -518,7 +518,7 @@ $(function() {
 <div class="line"><a name="l00448"></a><span class="lineno">  448</span>&#160;      fRootManager-&gt;ReadEvent(fEntry);</div>
 <div class="line"><a name="l00449"></a><span class="lineno">  449</span>&#160;      cArray = <span class="keyword">dynamic_cast&lt;</span>TClonesArray *<span class="keyword">&gt;</span>(fRootManager-&gt;GetObject(<span class="stringliteral">&quot;AtEventH&quot;</span>));</div>
 <div class="line"><a name="l00450"></a><span class="lineno">  450</span>&#160;      cevent = <span class="keyword">dynamic_cast&lt;</span><a class="code" href="classAtEvent.html">AtEvent</a> *<span class="keyword">&gt;</span>(cArray-&gt;At(0));</div>
-<div class="line"><a name="l00451"></a><span class="lineno">  451</span>&#160;      gated = cevent-&gt;<a class="code" href="classAtEvent.html#ade06238dcb89508371a7ff05d7e108d1">IsInGate</a>();</div>
+<div class="line"><a name="l00451"></a><span class="lineno">  451</span>&#160;      gated = cevent-&gt;<a class="code" href="classAtBaseEvent.html#a02e0c5b1d97bf0553855223a0b27cff7">GetIsExtGate</a>();</div>
 <div class="line"><a name="l00452"></a><span class="lineno">  452</span>&#160;   }</div>
 <div class="line"><a name="l00453"></a><span class="lineno">  453</span>&#160; </div>
 <div class="line"><a name="l00454"></a><span class="lineno">  454</span>&#160;   std::cout &lt;&lt; <span class="stringliteral">&quot; Event number : &quot;</span> &lt;&lt; fEntry &lt;&lt; std::endl;</div>
@@ -911,9 +911,8 @@ $(function() {
 <div class="ttc" id="aclassAtEventManagerS800_html_a1508eb201b52c62d8c209537c950ef1f"><div class="ttname"><a href="classAtEventManagerS800.html#a1508eb201b52c62d8c209537c950ef1f">AtEventManagerS800::FillPIDFull</a></div><div class="ttdeci">virtual void FillPIDFull()</div><div class="ttdef"><b>Definition:</b> <a href="AtEventManagerS800_8cxx_source.html#l00478">AtEventManagerS800.cxx:478</a></div></div>
 <div class="ttc" id="aclassAtEventManagerS800_html_a6d5bb268dfe7dc3fce679bcc1ad1dc6a"><div class="ttname"><a href="classAtEventManagerS800.html#a6d5bb268dfe7dc3fce679bcc1ad1dc6a">AtEventManagerS800::RunEvent</a></div><div class="ttdeci">void RunEvent()</div><div class="ttdef"><b>Definition:</b> <a href="AtEventManagerS800_8cxx_source.html#l00617">AtEventManagerS800.cxx:617</a></div></div>
 <div class="ttc" id="aclassAtEventManagerS800_html_a178525333d3ad611241391773c8d2912"><div class="ttname"><a href="classAtEventManagerS800.html#a178525333d3ad611241391773c8d2912">AtEventManagerS800::PrevEvent</a></div><div class="ttdeci">virtual void PrevEvent()</div><div class="ttdoc">MENU</div><div class="ttdef"><b>Definition:</b> <a href="AtEventManagerS800_8cxx_source.html#l00435">AtEventManagerS800.cxx:435</a></div></div>
-<div class="ttc" id="aclassAtEvent_html"><div class="ttname"><a href="classAtEvent.html">AtEvent</a></div><div class="ttdef"><b>Definition:</b> <a href="AtEvent_8h_source.html#l00030">AtEvent.h:30</a></div></div>
+<div class="ttc" id="aclassAtEvent_html"><div class="ttname"><a href="classAtEvent.html">AtEvent</a></div><div class="ttdef"><b>Definition:</b> <a href="AtEvent_8h_source.html#l00022">AtEvent.h:22</a></div></div>
 <div class="ttc" id="aclassAtEventManagerS800_html_af3dc4af5de7459b8830230b6c264e270"><div class="ttname"><a href="classAtEventManagerS800.html#af3dc4af5de7459b8830230b6c264e270">AtEventManagerS800::ToggleCorrData</a></div><div class="ttdeci">void ToggleCorrData()</div><div class="ttdef"><b>Definition:</b> <a href="AtEventManagerS800_8cxx_source.html#l00808">AtEventManagerS800.cxx:808</a></div></div>
-<div class="ttc" id="aclassAtEvent_html_ade06238dcb89508371a7ff05d7e108d1"><div class="ttname"><a href="classAtEvent.html#ade06238dcb89508371a7ff05d7e108d1">AtEvent::IsInGate</a></div><div class="ttdeci">Bool_t IsInGate() const</div><div class="ttdef"><b>Definition:</b> <a href="AtEvent_8h_source.html#l00109">AtEvent.h:109</a></div></div>
 <div class="ttc" id="aclassAtEventManagerS800_html_a1d59565417a71626ee269359a8f85f97"><div class="ttname"><a href="classAtEventManagerS800.html#a1d59565417a71626ee269359a8f85f97">AtEventManagerS800::SaveASCIIEvent</a></div><div class="ttdeci">void SaveASCIIEvent()</div><div class="ttdef"><b>Definition:</b> <a href="AtEventManagerS800_8cxx_source.html#l00798">AtEventManagerS800.cxx:798</a></div></div>
 <div class="ttc" id="aAtEventManagerS800_8cxx_html_a88438739a7deae383946c1690d812074"><div class="ttname"><a href="AtEventManagerS800_8cxx.html#a88438739a7deae383946c1690d812074">cGREEN</a></div><div class="ttdeci">constexpr auto cGREEN</div><div class="ttdef"><b>Definition:</b> <a href="AtEventManagerS800_8cxx_source.html#l00051">AtEventManagerS800.cxx:51</a></div></div>
 <div class="ttc" id="aclassAtEventManagerS800_html_a88ac032a7eec2111e3db4df466b936d1"><div class="ttname"><a href="classAtEventManagerS800.html#a88ac032a7eec2111e3db4df466b936d1">AtEventManagerS800::Draw3DHist</a></div><div class="ttdeci">void Draw3DHist()</div><div class="ttdef"><b>Definition:</b> <a href="AtEventManagerS800_8cxx_source.html#l00787">AtEventManagerS800.cxx:787</a></div></div>
@@ -933,6 +932,7 @@ $(function() {
 <div class="ttc" id="aAtEventManagerS800_8cxx_html_ab9bd43d3622725a0857782cfd35e6361"><div class="ttname"><a href="AtEventManagerS800_8cxx.html#ab9bd43d3622725a0857782cfd35e6361">cWHITERED</a></div><div class="ttdeci">constexpr auto cWHITERED</div><div class="ttdef"><b>Definition:</b> <a href="AtEventManagerS800_8cxx_source.html#l00053">AtEventManagerS800.cxx:53</a></div></div>
 <div class="ttc" id="aclassAtEventManagerS800_html_a89884f2eed399cc7a47fb30e846ffc00"><div class="ttname"><a href="classAtEventManagerS800.html#a89884f2eed399cc7a47fb30e846ffc00">AtEventManagerS800::GotoEvent</a></div><div class="ttdeci">virtual void GotoEvent(Int_t event)</div><div class="ttdoc">MENU</div><div class="ttdef"><b>Definition:</b> <a href="AtEventManagerS800_8cxx_source.html#l00404">AtEventManagerS800.cxx:404</a></div></div>
 <div class="ttc" id="aclassAtEventManagerS800_html_af26cce1e73f09ed68535b40275fe389d"><div class="ttname"><a href="classAtEventManagerS800.html#af26cce1e73f09ed68535b40275fe389d">AtEventManagerS800::ChangeDrawAllPads</a></div><div class="ttdeci">void ChangeDrawAllPads()</div><div class="ttdef"><b>Definition:</b> <a href="AtEventManagerS800_8cxx_source.html#l00749">AtEventManagerS800.cxx:749</a></div></div>
+<div class="ttc" id="aclassAtBaseEvent_html_a02e0c5b1d97bf0553855223a0b27cff7"><div class="ttname"><a href="classAtBaseEvent.html#a02e0c5b1d97bf0553855223a0b27cff7">AtBaseEvent::GetIsExtGate</a></div><div class="ttdeci">Bool_t GetIsExtGate() const</div><div class="ttdef"><b>Definition:</b> <a href="AtBaseEvent_8h_source.html#l00071">AtBaseEvent.h:71</a></div></div>
 <div class="ttc" id="aAtEventManagerS800_8h_html"><div class="ttname"><a href="AtEventManagerS800_8h.html">AtEventManagerS800.h</a></div></div>
 <div class="ttc" id="aclassIC_html_a61af3ec8b98a08a5a7a4c2647bfd834e"><div class="ttname"><a href="classIC.html#a61af3ec8b98a08a5a7a4c2647bfd834e">IC::GetSum</a></div><div class="ttdeci">Float_t GetSum()</div><div class="ttdef"><b>Definition:</b> <a href="S800Calc_8h_source.html#l00380">S800Calc.h:380</a></div></div>
 <div class="ttc" id="aAtEventManagerS800_8cxx_html_a92070ed71660dccb106b6539dfb7f3ee"><div class="ttname"><a href="AtEventManagerS800_8cxx.html#a92070ed71660dccb106b6539dfb7f3ee">cYELLOW</a></div><div class="ttdeci">constexpr auto cYELLOW</div><div class="ttdef"><b>Definition:</b> <a href="AtEventManagerS800_8cxx_source.html#l00049">AtEventManagerS800.cxx:49</a></div></div>
@@ -941,7 +941,7 @@ $(function() {
 <div class="ttc" id="aclassAtEventManagerS800_html"><div class="ttname"><a href="classAtEventManagerS800.html">AtEventManagerS800</a></div><div class="ttdef"><b>Definition:</b> <a href="AtEventManagerS800_8h_source.html#l00023">AtEventManagerS800.h:23</a></div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Apr 27 2022 00:47:47 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Oct 20 2023 16:22:59 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.18
 </small></address>

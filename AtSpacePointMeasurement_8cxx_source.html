@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">ATTPCROOT
-   &#160;<span id="projectnumber">1.0.0</span>
+   &#160;<span id="projectnumber">0.3.0-alpha</span>
    </div>
    <div id="projectbrief">A ROOT-based framework for analyzing data from active target detectors</div>
   </td>
@@ -121,7 +121,7 @@ $(function() {
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;      : SpacepointMeasurement(), fCharge(detHit-&gt;<a class="code" href="classAtHit.html#a8a8e071c728ffbb2cce875cc1a3171df">GetCharge</a>())</div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;   {</div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;      <span class="keyword">auto</span> pos = detHit-&gt;<a class="code" href="classAtHit.html#adf5331eb3155ec1fcbc209bd43cb5b68">GetPosition</a>();</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;      TMatrixD mat = detHit-&gt;<a class="code" href="classAtHitCluster.html#a34204d669a98623c3ccb08c35a3aa2c8">GetCovMatrix</a>();</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;      TMatrixD mat = detHit-&gt;<a class="code" href="classAtHitCluster.html#ad3c86a5387de5cc9d4da8c9dd4b5985d">GetCovMatrix</a>();</div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;      rawHitCoords_(0) = pos.X() / 10.;</div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;      rawHitCoords_(1) = pos.Y() / 10.;</div>
@@ -160,20 +160,20 @@ $(function() {
 <div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;} <span class="comment">/* End of namespace genfit */</span></div>
 </div><!-- fragment --></div><!-- contents -->
 <div class="ttc" id="aclassgenfit_1_1AtSpacepointMeasurement_html"><div class="ttname"><a href="classgenfit_1_1AtSpacepointMeasurement.html">genfit::AtSpacepointMeasurement</a></div><div class="ttdoc">Class for a spacepoint measurement which can be created from STHitCluster via the MeasurementFactory.</div><div class="ttdef"><b>Definition:</b> <a href="AtSpacePointMeasurement_8h_source.html#l00042">AtSpacePointMeasurement.h:42</a></div></div>
-<div class="ttc" id="aclassAtHitCluster_html"><div class="ttname"><a href="classAtHitCluster.html">AtHitCluster</a></div><div class="ttdef"><b>Definition:</b> <a href="AtHitCluster_8h_source.html#l00014">AtHitCluster.h:14</a></div></div>
+<div class="ttc" id="aclassAtHitCluster_html"><div class="ttname"><a href="classAtHitCluster.html">AtHitCluster</a></div><div class="ttdoc">: Class representing a cluster of hits that arise from the same deposition of charge in space....</div><div class="ttdef"><b>Definition:</b> <a href="AtHitCluster_8h_source.html#l00037">AtHitCluster.h:37</a></div></div>
 <div class="ttc" id="aAtHitCluster_8h_html"><div class="ttname"><a href="AtHitCluster_8h.html">AtHitCluster.h</a></div></div>
-<div class="ttc" id="anamespacegenfit_html"><div class="ttname"><a href="namespacegenfit.html">genfit</a></div><div class="ttdef"><b>Definition:</b> <a href="AtFitter_8h_source.html#l00017">AtFitter.h:17</a></div></div>
+<div class="ttc" id="anamespacegenfit_html"><div class="ttname"><a href="namespacegenfit.html">genfit</a></div><div class="ttdef"><b>Definition:</b> <a href="AtFitter_8h_source.html#l00020">AtFitter.h:20</a></div></div>
 <div class="ttc" id="aclassgenfit_1_1AtSpacepointMeasurement_html_a33110d413980fd0356327c94772232cf"><div class="ttname"><a href="classgenfit_1_1AtSpacepointMeasurement.html#a33110d413980fd0356327c94772232cf">genfit::AtSpacepointMeasurement::clone</a></div><div class="ttdeci">virtual AbsMeasurement * clone() const</div></div>
 <div class="ttc" id="aAtSpacePointMeasurement_8cxx_html_ac111fdbc2e50c29515799abf3a9c4117"><div class="ttname"><a href="AtSpacePointMeasurement_8cxx.html#ac111fdbc2e50c29515799abf3a9c4117">ClassImp</a></div><div class="ttdeci">ClassImp(genfit::AtSpacepointMeasurement) namespace genfit</div><div class="ttdef"><b>Definition:</b> <a href="AtSpacePointMeasurement_8cxx_source.html#l00040">AtSpacePointMeasurement.cxx:40</a></div></div>
-<div class="ttc" id="aclassAtHitCluster_html_a34204d669a98623c3ccb08c35a3aa2c8"><div class="ttname"><a href="classAtHitCluster.html#a34204d669a98623c3ccb08c35a3aa2c8">AtHitCluster::GetCovMatrix</a></div><div class="ttdeci">const TMatrixD &amp; GetCovMatrix() const</div><div class="ttdef"><b>Definition:</b> <a href="AtHitCluster_8h_source.html#l00035">AtHitCluster.h:35</a></div></div>
-<div class="ttc" id="aclassAtHit_html_adf5331eb3155ec1fcbc209bd43cb5b68"><div class="ttname"><a href="classAtHit.html#adf5331eb3155ec1fcbc209bd43cb5b68">AtHit::GetPosition</a></div><div class="ttdeci">const XYZPoint &amp; GetPosition() const</div><div class="ttdef"><b>Definition:</b> <a href="AtHit_8h_source.html#l00089">AtHit.h:89</a></div></div>
+<div class="ttc" id="aclassAtHit_html_adf5331eb3155ec1fcbc209bd43cb5b68"><div class="ttname"><a href="classAtHit.html#adf5331eb3155ec1fcbc209bd43cb5b68">AtHit::GetPosition</a></div><div class="ttdeci">const XYZPoint &amp; GetPosition() const</div><div class="ttdef"><b>Definition:</b> <a href="AtHit_8h_source.html#l00079">AtHit.h:79</a></div></div>
 <div class="ttc" id="aclassgenfit_1_1AtSpacepointMeasurement_html_ae6b08bd1157608095856aeda9363dfc9"><div class="ttname"><a href="classgenfit_1_1AtSpacepointMeasurement.html#ae6b08bd1157608095856aeda9363dfc9">genfit::AtSpacepointMeasurement::AtSpacepointMeasurement</a></div><div class="ttdeci">AtSpacepointMeasurement()</div></div>
 <div class="ttc" id="aAtSpacePointMeasurement_8h_html"><div class="ttname"><a href="AtSpacePointMeasurement_8h.html">AtSpacePointMeasurement.h</a></div></div>
 <div class="ttc" id="aclassgenfit_1_1AtSpacepointMeasurement_html_ae84f4e1a368e157fc7b4897d0ca8748e"><div class="ttname"><a href="classgenfit_1_1AtSpacepointMeasurement.html#ae84f4e1a368e157fc7b4897d0ca8748e">genfit::AtSpacepointMeasurement::GetCharge</a></div><div class="ttdeci">Double_t GetCharge()</div></div>
-<div class="ttc" id="aclassAtHit_html_a8a8e071c728ffbb2cce875cc1a3171df"><div class="ttname"><a href="classAtHit.html#a8a8e071c728ffbb2cce875cc1a3171df">AtHit::GetCharge</a></div><div class="ttdeci">Double_t GetCharge() const</div><div class="ttdef"><b>Definition:</b> <a href="AtHit_8h_source.html#l00092">AtHit.h:92</a></div></div>
+<div class="ttc" id="aclassAtHit_html_a8a8e071c728ffbb2cce875cc1a3171df"><div class="ttname"><a href="classAtHit.html#a8a8e071c728ffbb2cce875cc1a3171df">AtHit::GetCharge</a></div><div class="ttdeci">Double_t GetCharge() const</div><div class="ttdef"><b>Definition:</b> <a href="AtHit_8h_source.html#l00082">AtHit.h:82</a></div></div>
+<div class="ttc" id="aclassAtHitCluster_html_ad3c86a5387de5cc9d4da8c9dd4b5985d"><div class="ttname"><a href="classAtHitCluster.html#ad3c86a5387de5cc9d4da8c9dd4b5985d">AtHitCluster::GetCovMatrix</a></div><div class="ttdeci">const TMatrixDSym &amp; GetCovMatrix() const</div><div class="ttdef"><b>Definition:</b> <a href="AtHitCluster_8h_source.html#l00075">AtHitCluster.h:75</a></div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Apr 27 2022 00:47:47 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Oct 20 2023 16:22:59 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.18
 </small></address>

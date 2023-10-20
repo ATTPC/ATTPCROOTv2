@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">ATTPCROOT
-   &#160;<span id="projectnumber">1.0.0</span>
+   &#160;<span id="projectnumber">0.3.0-alpha</span>
    </div>
    <div id="projectbrief">A ROOT-based framework for analyzing data from active target detectors</div>
   </td>
@@ -155,9 +155,9 @@ $(function() {
 <div class="line"><a name="l00157"></a><span class="lineno"><a class="line" href="classAtStack.html#acf160949ca2fee66a465dbcb2df5fa42">  157</a></span>&#160;   <span class="keywordtype">void</span> <a class="code" href="classAtStack.html#acf160949ca2fee66a465dbcb2df5fa42">SetEnergyCut</a>(Double_t eMin) { fEnergyCut = eMin; }</div>
 <div class="line"><a name="l00158"></a><span class="lineno"><a class="line" href="classAtStack.html#aa2e90dd47caa337e68834cfc282858e3">  158</a></span>&#160;   <span class="keywordtype">void</span> <a class="code" href="classAtStack.html#aa2e90dd47caa337e68834cfc282858e3">StoreMothers</a>(Bool_t choice = kTRUE) { fStoreMothers = choice; }</div>
 <div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160; </div>
-<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;   <span class="keywordtype">void</span> <a class="code" href="classAtStack.html#a6925592d2fcd68203a04c9cf2f600c52">AddPoint</a>(<a class="code" href="AtEventDrawTask_8h.html#a1806da1a0fbae8ab81f7330906f65680">DetectorId</a> iDet);</div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;   <span class="keywordtype">void</span> <a class="code" href="classAtStack.html#a6925592d2fcd68203a04c9cf2f600c52">AddPoint</a>(<a class="code" href="AtDetectorList_8h.html#a1806da1a0fbae8ab81f7330906f65680">DetectorId</a> iDet);</div>
 <div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160; </div>
-<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;   <span class="keywordtype">void</span> <a class="code" href="classAtStack.html#a6925592d2fcd68203a04c9cf2f600c52">AddPoint</a>(<a class="code" href="AtEventDrawTask_8h.html#a1806da1a0fbae8ab81f7330906f65680">DetectorId</a> iDet, Int_t iTrack);</div>
+<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;   <span class="keywordtype">void</span> <a class="code" href="classAtStack.html#a6925592d2fcd68203a04c9cf2f600c52">AddPoint</a>(<a class="code" href="AtDetectorList_8h.html#a1806da1a0fbae8ab81f7330906f65680">DetectorId</a> iDet, Int_t iTrack);</div>
 <div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160; </div>
 <div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;   TParticle *<a class="code" href="classAtStack.html#a8d54b0079f112c49a368b0ff01647480">GetParticle</a>(Int_t trackId) <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00173"></a><span class="lineno"><a class="line" href="classAtStack.html#a5fd02b8ee8343191f1e9ac18dee0c228">  173</a></span>&#160;   TClonesArray *<a class="code" href="classAtStack.html#a5fd02b8ee8343191f1e9ac18dee0c228">GetListOfParticles</a>() { <span class="keywordflow">return</span> fParticles; }</div>
@@ -202,7 +202,6 @@ $(function() {
 </div><!-- fragment --></div><!-- contents -->
 <div class="ttc" id="aclassAtStack_html_ab626254b0006aa6edff878448294abce"><div class="ttname"><a href="classAtStack.html#ab626254b0006aa6edff878448294abce">AtStack::StoreSecondaries</a></div><div class="ttdeci">void StoreSecondaries(Bool_t choice=kTRUE)</div><div class="ttdef"><b>Definition:</b> <a href="AtStack_8h_source.html#l00155">AtStack.h:155</a></div></div>
 <div class="ttc" id="aclassAtStack_html_a7feac1eb3143264f14f356d43b110b89"><div class="ttname"><a href="classAtStack.html#a7feac1eb3143264f14f356d43b110b89">AtStack::Print</a></div><div class="ttdeci">virtual void Print(Int_t iVerbose=0) const</div><div class="ttdef"><b>Definition:</b> <a href="AtStack_8cxx_source.html#l00308">AtStack.cxx:308</a></div></div>
-<div class="ttc" id="aAtEventDrawTask_8h_html_a1806da1a0fbae8ab81f7330906f65680"><div class="ttname"><a href="AtEventDrawTask_8h.html#a1806da1a0fbae8ab81f7330906f65680">DetectorId</a></div><div class="ttdeci">DetectorId</div><div class="ttdef"><b>Definition:</b> <a href="AtEventDrawTask_8h_source.html#l00049">AtEventDrawTask.h:49</a></div></div>
 <div class="ttc" id="aclassAtStack_html_aa2e90dd47caa337e68834cfc282858e3"><div class="ttname"><a href="classAtStack.html#aa2e90dd47caa337e68834cfc282858e3">AtStack::StoreMothers</a></div><div class="ttdeci">void StoreMothers(Bool_t choice=kTRUE)</div><div class="ttdef"><b>Definition:</b> <a href="AtStack_8h_source.html#l00158">AtStack.h:158</a></div></div>
 <div class="ttc" id="aAtDetectorList_8h_html"><div class="ttname"><a href="AtDetectorList_8h.html">AtDetectorList.h</a></div></div>
 <div class="ttc" id="aclassAtStack_html_a8d54b0079f112c49a368b0ff01647480"><div class="ttname"><a href="classAtStack.html#a8d54b0079f112c49a368b0ff01647480">AtStack::GetParticle</a></div><div class="ttdeci">TParticle * GetParticle(Int_t trackId) const</div><div class="ttdef"><b>Definition:</b> <a href="AtStack_8cxx_source.html#l00364">AtStack.cxx:364</a></div></div>
@@ -212,6 +211,7 @@ $(function() {
 <div class="ttc" id="aclassAtStack_html_a0f0b29ffd131a5d807a320eb9328b1ff"><div class="ttname"><a href="classAtStack.html#a0f0b29ffd131a5d807a320eb9328b1ff">AtStack::GetCurrentTrackNumber</a></div><div class="ttdeci">virtual Int_t GetCurrentTrackNumber() const</div><div class="ttdef"><b>Definition:</b> <a href="AtStack_8h_source.html#l00127">AtStack.h:127</a></div></div>
 <div class="ttc" id="aclassAtStack_html_a4b28f349c8e1a7d31428ca7928c7a98f"><div class="ttname"><a href="classAtStack.html#a4b28f349c8e1a7d31428ca7928c7a98f">AtStack::Register</a></div><div class="ttdeci">virtual void Register()</div><div class="ttdef"><b>Definition:</b> <a href="AtStack_8cxx_source.html#l00301">AtStack.cxx:301</a></div></div>
 <div class="ttc" id="aclassAtStack_html_a3461a77e05627e402928012fa9be270b"><div class="ttname"><a href="classAtStack.html#a3461a77e05627e402928012fa9be270b">AtStack::~AtStack</a></div><div class="ttdeci">virtual ~AtStack()</div><div class="ttdef"><b>Definition:</b> <a href="AtStack_8cxx_source.html#l00054">AtStack.cxx:54</a></div></div>
+<div class="ttc" id="aAtDetectorList_8h_html_a1806da1a0fbae8ab81f7330906f65680"><div class="ttname"><a href="AtDetectorList_8h.html#a1806da1a0fbae8ab81f7330906f65680">DetectorId</a></div><div class="ttdeci">DetectorId</div><div class="ttdef"><b>Definition:</b> <a href="AtDetectorList_8h_source.html#l00020">AtDetectorList.h:20</a></div></div>
 <div class="ttc" id="aclassAtStack_html_a87f379e3b52a428b7ae4892b2ca1b63e"><div class="ttname"><a href="classAtStack.html#a87f379e3b52a428b7ae4892b2ca1b63e">AtStack::PopNextTrack</a></div><div class="ttdeci">virtual TParticle * PopNextTrack(Int_t &amp;iTrack)</div><div class="ttdef"><b>Definition:</b> <a href="AtStack_8cxx_source.html#l00111">AtStack.cxx:111</a></div></div>
 <div class="ttc" id="aclassAtStack_html_adbed68b66ab69d6e1a3f128c91db0f32"><div class="ttname"><a href="classAtStack.html#adbed68b66ab69d6e1a3f128c91db0f32">AtStack::SetMinPoints</a></div><div class="ttdeci">void SetMinPoints(Int_t min)</div><div class="ttdef"><b>Definition:</b> <a href="AtStack_8h_source.html#l00156">AtStack.h:156</a></div></div>
 <div class="ttc" id="aclassAtStack_html_aaa184db214c64834140ecd94f5642173"><div class="ttname"><a href="classAtStack.html#aaa184db214c64834140ecd94f5642173">AtStack::Reset</a></div><div class="ttdeci">virtual void Reset()</div><div class="ttdef"><b>Definition:</b> <a href="AtStack_8cxx_source.html#l00286">AtStack.cxx:286</a></div></div>
@@ -229,7 +229,7 @@ $(function() {
 <div class="ttc" id="aclassAtStack_html_a5fd02b8ee8343191f1e9ac18dee0c228"><div class="ttname"><a href="classAtStack.html#a5fd02b8ee8343191f1e9ac18dee0c228">AtStack::GetListOfParticles</a></div><div class="ttdeci">TClonesArray * GetListOfParticles()</div><div class="ttdef"><b>Definition:</b> <a href="AtStack_8h_source.html#l00173">AtStack.h:173</a></div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Apr 27 2022 00:47:48 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Oct 20 2023 16:23:00 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.18
 </small></address>

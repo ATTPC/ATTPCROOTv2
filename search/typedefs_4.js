@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['hitptr_5280',['hitPtr',['../AtEvent_8h.html#a01a97ddc0dfe2a67c55b58c050dce1f0',1,'AtEvent.h']]],
-  ['hitvector_5281',['hitVector',['../AtEvent_8h.html#a7d4eefd40266a92db433dbf1d558d9bb',1,'AtEvent.h']]]
+  ['edistortionmap_7567',['eDistortionMap',['../AtEDistortionModel_8h.html#a210a407d016d8b55c91b4a16b7d099fb',1,'AtEDistortionModel.h']]],
+  ['efieldptr_7568',['EFieldPtr',['../classAtRadialChargeModel.html#a85b1739f15fc7e5d8c1d0bf6af9454f9',1,'AtRadialChargeModel']]]
 ];

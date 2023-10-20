@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">ATTPCROOT
-   &#160;<span id="projectnumber">1.0.0</span>
+   &#160;<span id="projectnumber">0.3.0-alpha</span>
    </div>
    <div id="projectbrief">A ROOT-based framework for analyzing data from active target detectors</div>
   </td>
@@ -75,12 +75,12 @@ $(function() {
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="AtUnpacker_8h_source.html">AtUnpacker.h</a>&quot;</code><br />
 <code>#include &lt;Rtypes.h&gt;</code><br />
+<code>#include &lt;H5Cpp.h&gt;</code><br />
 <code>#include &lt;H5Dpublic.h&gt;</code><br />
 <code>#include &lt;H5Ipublic.h&gt;</code><br />
 <code>#include &lt;H5Lpublic.h&gt;</code><br />
 <code>#include &lt;H5Ppublic.h&gt;</code><br />
 <code>#include &lt;H5Spublic.h&gt;</code><br />
-<code>#include &lt;H5public.h&gt;</code><br />
 <code>#include &lt;stdint.h&gt;</code><br />
 <code>#include &lt;cstddef&gt;</code><br />
 <code>#include &lt;string&gt;</code><br />
@@ -91,20 +91,20 @@ Include dependency graph for AtHDFUnpacker.h:</div>
 <div class="dyncontent">
 <div class="center"><img src="AtHDFUnpacker_8h__incl.png" border="0" usemap="#_2github_2workspace_2AtUnpack_2AtHDFUnpacker_8h" alt=""/></div>
 <map name="_2github_2workspace_2AtUnpack_2AtHDFUnpacker_8h" id="_2github_2workspace_2AtUnpack_2AtHDFUnpacker_8h">
-<area shape="rect" title=" " alt="" coords="658,5,849,47"/>
+<area shape="rect" title=" " alt="" coords="638,5,829,47"/>
 <area shape="rect" href="AtUnpacker_8h.html" title=" " alt="" coords="188,95,289,121"/>
 <area shape="rect" title=" " alt="" coords="5,169,77,196"/>
 <area shape="rect" title=" " alt="" coords="373,169,427,196"/>
-<area shape="rect" title=" " alt="" coords="365,95,457,121"/>
-<area shape="rect" title=" " alt="" coords="481,95,567,121"/>
-<area shape="rect" title=" " alt="" coords="592,95,683,121"/>
-<area shape="rect" title=" " alt="" coords="707,95,799,121"/>
-<area shape="rect" title=" " alt="" coords="823,95,915,121"/>
-<area shape="rect" title=" " alt="" coords="940,95,1023,121"/>
-<area shape="rect" title=" " alt="" coords="1047,95,1111,121"/>
-<area shape="rect" title=" " alt="" coords="1135,95,1201,121"/>
-<area shape="rect" title=" " alt="" coords="1225,95,1276,121"/>
-<area shape="rect" title=" " alt="" coords="1300,95,1359,121"/>
+<area shape="rect" title=" " alt="" coords="364,95,436,121"/>
+<area shape="rect" title=" " alt="" coords="461,95,553,121"/>
+<area shape="rect" title=" " alt="" coords="577,95,663,121"/>
+<area shape="rect" title=" " alt="" coords="688,95,779,121"/>
+<area shape="rect" title=" " alt="" coords="803,95,895,121"/>
+<area shape="rect" title=" " alt="" coords="919,95,1011,121"/>
+<area shape="rect" title=" " alt="" coords="1036,95,1100,121"/>
+<area shape="rect" title=" " alt="" coords="1125,95,1190,121"/>
+<area shape="rect" title=" " alt="" coords="1215,95,1265,121"/>
+<area shape="rect" title=" " alt="" coords="1289,95,1348,121"/>
 <area shape="rect" title=" " alt="" coords="102,169,181,196"/>
 <area shape="rect" title=" " alt="" coords="205,169,273,196"/>
 <area shape="rect" title=" " alt="" coords="297,169,349,196"/>
@@ -115,8 +115,10 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
 <div class="center"><img src="AtHDFUnpacker_8h__dep__incl.png" border="0" usemap="#_2github_2workspace_2AtUnpack_2AtHDFUnpacker_8hdep" alt=""/></div>
 <map name="_2github_2workspace_2AtUnpack_2AtHDFUnpacker_8hdep" id="_2github_2workspace_2AtUnpack_2AtHDFUnpacker_8hdep">
-<area shape="rect" title=" " alt="" coords="5,5,196,47"/>
-<area shape="rect" href="AtHDFUnpacker_8cxx.html" title=" " alt="" coords="5,95,196,136"/>
+<area shape="rect" title=" " alt="" coords="112,5,303,47"/>
+<area shape="rect" href="AtFRIBHDFUnpacker_8h.html" title=" " alt="" coords="5,95,196,136"/>
+<area shape="rect" href="AtHDFUnpacker_8cxx.html" title=" " alt="" coords="220,95,411,136"/>
+<area shape="rect" href="AtFRIBHDFUnpacker_8cxx.html" title=" " alt="" coords="5,184,196,225"/>
 </map>
 </div>
 </div>
@@ -130,7 +132,7 @@ Classes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Apr 27 2022 00:47:49 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Oct 20 2023 16:23:01 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.18
 </small></address>

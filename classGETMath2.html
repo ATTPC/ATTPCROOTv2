@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">ATTPCROOT
-   &#160;<span id="projectnumber">1.0.0</span>
+   &#160;<span id="projectnumber">0.3.0-alpha</span>
    </div>
    <div id="projectbrief">A ROOT-based framework for analyzing data from active target detectors</div>
   </td>
@@ -91,7 +91,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aa412933cd330bee0cd3e09638608f32c"><td class="memItemLeft" align="right" valign="top">Double_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGETMath2.html#aa412933cd330bee0cd3e09638608f32c">GetRMS2</a> ()</td></tr>
 <tr class="memdesc:aa412933cd330bee0cd3e09638608f32c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the calculated <b>RMS squared</b> value.  <a href="classGETMath2.html#aa412933cd330bee0cd3e09638608f32c">More...</a><br /></td></tr>
 <tr class="separator:aa412933cd330bee0cd3e09638608f32c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aafa93bc0515eeee7b6fc3dc551aaf2b5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGETMath2.html#aafa93bc0515eeee7b6fc3dc551aaf2b5">Set</a> (Int_t numValues, Double_t mean, Double_t rms2)</td></tr>
+<tr class="memitem:aafa93bc0515eeee7b6fc3dc551aaf2b5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGETMath2.html#aafa93bc0515eeee7b6fc3dc551aaf2b5">Set</a> (Int_t numValues, Double_t <a class="el" href="triplclust_2src_2cluster_8cxx.html#a7f7f792b708919885e81b7c754de7364">mean</a>, Double_t rms2)</td></tr>
 <tr class="separator:aafa93bc0515eeee7b6fc3dc551aaf2b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -134,8 +134,8 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>With the mean and RMS, calculated before, use the <b>value</b> to calculate new <b>mean</b> and <b>RMS</b> recursively. </p>
 <p>This method uses the formulae below to calculate mean and RMS. <br  />
- <img class="formulaInl" alt="$\text{mean}\Rightarrow \mu_{n+1} = \mu_n + \displaystyle\frac{x_{n+1} - \mu_n}{n + 1},\quad(n\geq0)$" src="form_0.png"/> <br  />
- <img class="formulaInl" alt="$\text{RMS}\Rightarrow\sigma^2_{n+1} = \displaystyle\frac{n}{n + 1}\sigma^2_n + \displaystyle\frac{(x_{n+1} - *\mu_{n+1})^2}{n},\quad(n&gt;0)$" src="form_1.png"/></p>
+ <img class="formulaInl" alt="$\text{mean}\Rightarrow \mu_{n+1} = \mu_n + \displaystyle\frac{x_{n+1} - \mu_n}{n + 1},\quad(n\geq0)$" src="form_1.png"/> <br  />
+ <img class="formulaInl" alt="$\text{RMS}\Rightarrow\sigma^2_{n+1} = \displaystyle\frac{n}{n + 1}\sigma^2_n + \displaystyle\frac{(x_{n+1} - *\mu_{n+1})^2}{n},\quad(n&gt;0)$" src="form_2.png"/></p>
 
 <p class="definition">Definition at line <a class="el" href="GETMath2_8cxx_source.html#l00027">27</a> of file <a class="el" href="GETMath2_8cxx_source.html">GETMath2.cxx</a>.</p>
 
@@ -268,7 +268,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Apr 27 2022 00:47:50 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Oct 20 2023 16:23:02 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.18
 </small></address>

@@ -1,7 +1,10 @@
 <map id="/github/workspace/AtGenerators/AtTPC_Background.h" name="/github/workspace/AtGenerators/AtTPC_Background.h">
-<area shape="rect" id="node1" title=" " alt="" coords="120,5,329,47"/>
+<area shape="rect" id="node1" title=" " alt="" coords="291,5,500,47"/>
 <area shape="rect" id="node2" title=" " alt="" coords="5,95,116,121"/>
 <area shape="rect" id="node3" title=" " alt="" coords="141,95,213,121"/>
-<area shape="rect" id="node4" title=" " alt="" coords="237,95,311,121"/>
-<area shape="rect" id="node5" title=" " alt="" coords="335,95,394,121"/>
+<area shape="rect" id="node4" title=" " alt="" coords="237,95,335,121"/>
+<area shape="rect" id="node5" title=" " alt="" coords="359,95,431,121"/>
+<area shape="rect" id="node6" title=" " alt="" coords="455,95,530,121"/>
+<area shape="rect" id="node7" title=" " alt="" coords="555,95,623,121"/>
+<area shape="rect" id="node8" title=" " alt="" coords="647,95,706,121"/>
 </map>

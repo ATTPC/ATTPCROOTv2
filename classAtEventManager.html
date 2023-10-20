@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">ATTPCROOT
-   &#160;<span id="projectnumber">1.0.0</span>
+   &#160;<span id="projectnumber">0.3.0-alpha</span>
    </div>
    <div id="projectbrief">A ROOT-based framework for analyzing data from active target detectors</div>
   </td>
@@ -66,6 +66,7 @@ $(function() {
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
+<a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="classAtEventManager-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">AtEventManager Class Reference</div>  </div>
@@ -87,8 +88,11 @@ Collaboration diagram for AtEventManager:</div>
 <div class="dyncontent">
 <div class="center"><img src="classAtEventManager__coll__graph.png" border="0" usemap="#AtEventManager_coll__map" alt="Collaboration graph"/></div>
 <map name="AtEventManager_coll__map" id="AtEventManager_coll__map">
-<area shape="rect" title=" " alt="" coords="13,80,132,107"/>
-<area shape="rect" title=" " alt="" coords="5,5,140,32"/>
+<area shape="rect" title=" " alt="" coords="143,200,261,227"/>
+<area shape="rect" title=" " alt="" coords="5,81,140,108"/>
+<area shape="rect" href="classS800Ana.html" title=" " alt="" coords="165,81,239,108"/>
+<area shape="rect" title=" " alt="" coords="168,5,236,32"/>
+<area shape="rect" title=" " alt="" coords="263,81,418,108"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
@@ -115,8 +119,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a36e6c9f52de94a1f529b92d67d5901e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a30eab1636d3d16b9d093e49db99e0843"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventManager.html#a30eab1636d3d16b9d093e49db99e0843">ChangeDrawAllPads</a> ()</td></tr>
 <tr class="separator:a30eab1636d3d16b9d093e49db99e0843"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3ce23ea4d59320a0553500b6cd12a8ca"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventManager.html#a3ce23ea4d59320a0553500b6cd12a8ca">EnableDrawHoughSpace</a> ()</td></tr>
-<tr class="separator:a3ce23ea4d59320a0553500b6cd12a8ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2cc6d0b694f1e08a8e5fdbcf51c580b8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventManager.html#a2cc6d0b694f1e08a8e5fdbcf51c580b8">EnableDrawReconstruction</a> ()</td></tr>
+<tr class="separator:a2cc6d0b694f1e08a8e5fdbcf51c580b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab7a36529b773fb8c8191289c5b08d54b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventManager.html#ab7a36529b773fb8c8191289c5b08d54b">EraseQEvent</a> ()</td></tr>
 <tr class="separator:ab7a36529b773fb8c8191289c5b08d54b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae05e6412103d9dbe332671c37655f47f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventManager.html#ae05e6412103d9dbe332671c37655f47f">Draw3DGeo</a> ()</td></tr>
@@ -125,6 +129,12 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ad8bd6c68838434a81b2e4290e252863d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adb9404c0be20f0633d33a7cdbc123abb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventManager.html#adb9404c0be20f0633d33a7cdbc123abb">ToggleCorrData</a> ()</td></tr>
 <tr class="separator:adb9404c0be20f0633d33a7cdbc123abb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acc937c876bc1d5b12e6c9d6aa347c642"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventManager.html#acc937c876bc1d5b12e6c9d6aa347c642">DrawPIDFull</a> ()</td></tr>
+<tr class="separator:acc937c876bc1d5b12e6c9d6aa347c642"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae88345a41f6261e2577d605021d4dad0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventManager.html#ae88345a41f6261e2577d605021d4dad0">FillPIDFull</a> ()</td></tr>
+<tr class="separator:ae88345a41f6261e2577d605021d4dad0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5dc05968513c6153bb50f79e7d65ad2d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventManager.html#a5dc05968513c6153bb50f79e7d65ad2d">DrawPID2Full</a> ()</td></tr>
+<tr class="separator:a5dc05968513c6153bb50f79e7d65ad2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a77c1debb5a2690e0570357248b71d607"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventManager.html#a77c1debb5a2690e0570357248b71d607">AddTask</a> (FairTask *task)</td></tr>
 <tr class="separator:a77c1debb5a2690e0570357248b71d607"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8a2947fe4d7b703f26f0b8a10c3b247f"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventManager.html#a8a2947fe4d7b703f26f0b8a10c3b247f">Init</a> (Int_t option=1, Int_t level=3, Int_t nNodes=10000)</td></tr>
@@ -167,10 +177,22 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:af3c9ccbecf76661a162315a886ff0e10"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8afa329f6ec18d722fc1af7b03198039"><td class="memItemLeft" align="right" valign="top">TCanvas *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventManager.html#a8afa329f6ec18d722fc1af7b03198039">GetCvsAux</a> ()</td></tr>
 <tr class="separator:a8afa329f6ec18d722fc1af7b03198039"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af11477e6185bf7db912544bb6c6ef592"><td class="memItemLeft" align="right" valign="top">TCanvas *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventManager.html#af11477e6185bf7db912544bb6c6ef592">GetCvsPID</a> ()</td></tr>
+<tr class="separator:af11477e6185bf7db912544bb6c6ef592"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaab79e23f3c561a106bff913f51db283"><td class="memItemLeft" align="right" valign="top">TCanvas *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventManager.html#aaab79e23f3c561a106bff913f51db283">GetCvsPID2</a> ()</td></tr>
+<tr class="separator:aaab79e23f3c561a106bff913f51db283"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae7e91b219b7c1fb2f0f6a2f0cce4ecfb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classS800Ana.html">S800Ana</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventManager.html#ae7e91b219b7c1fb2f0f6a2f0cce4ecfb">GetS800Ana</a> ()</td></tr>
+<tr class="separator:ae7e91b219b7c1fb2f0f6a2f0cce4ecfb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abb6bbb4c9ac5657a1a7d29c95b7e4e5d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventManager.html#abb6bbb4c9ac5657a1a7d29c95b7e4e5d">SetTofObjCorr</a> (std::vector&lt; Double_t &gt; vec)</td></tr>
+<tr class="separator:abb6bbb4c9ac5657a1a7d29c95b7e4e5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab56c874abe378ddf377ab2535e91f3de"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventManager.html#ab56c874abe378ddf377ab2535e91f3de">SetMTDCObjRange</a> (std::vector&lt; Double_t &gt; vec)</td></tr>
+<tr class="separator:ab56c874abe378ddf377ab2535e91f3de"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a58f5f8c267fd63b9d1bd4da66da537cc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventManager.html#a58f5f8c267fd63b9d1bd4da66da537cc">SetMTDCXfRange</a> (std::vector&lt; Double_t &gt; vec)</td></tr>
+<tr class="separator:a58f5f8c267fd63b9d1bd4da66da537cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a08bd06d190953586e246ae4efe0711bc"><td class="memItemLeft" align="right" valign="top">Bool_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventManager.html#a08bd06d190953586e246ae4efe0711bc">GetDrawAllPad</a> ()</td></tr>
 <tr class="separator:a08bd06d190953586e246ae4efe0711bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7fac7b65c667ab134b5f70bcf24ae6fc"><td class="memItemLeft" align="right" valign="top">Bool_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventManager.html#a7fac7b65c667ab134b5f70bcf24ae6fc">GetDrawHoughSpace</a> ()</td></tr>
-<tr class="separator:a7fac7b65c667ab134b5f70bcf24ae6fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aff2ada517367b31ce45f5cea44530e2d"><td class="memItemLeft" align="right" valign="top">Bool_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventManager.html#aff2ada517367b31ce45f5cea44530e2d">GetDrawReconstruction</a> ()</td></tr>
+<tr class="separator:aff2ada517367b31ce45f5cea44530e2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a89744ee88f8d1a290ca980679ea09e8c"><td class="memItemLeft" align="right" valign="top">Bool_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventManager.html#a89744ee88f8d1a290ca980679ea09e8c">GetEraseQEvent</a> ()</td></tr>
 <tr class="separator:a89744ee88f8d1a290ca980679ea09e8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab3e297d15a77b4aa8d67fcf157f203c7"><td class="memItemLeft" align="right" valign="top">Float_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventManager.html#ab3e297d15a77b4aa8d67fcf157f203c7">Get3DThreshold</a> ()</td></tr>
@@ -181,6 +203,12 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a1d37bfbb52cb1e71c953e0de46ece234"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5dbef5d3e8b18719807b71c549f6ba1b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventManager.html#a5dbef5d3e8b18719807b71c549f6ba1b">SaveASCIIEvent</a> ()</td></tr>
 <tr class="separator:a5dbef5d3e8b18719807b71c549f6ba1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a704036bb5b4c147310444bcdf6901329"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventManager.html#a704036bb5b4c147310444bcdf6901329">AtEventManager</a> (const <a class="el" href="classAtEventManager.html">AtEventManager</a> &amp;)</td></tr>
+<tr class="separator:a704036bb5b4c147310444bcdf6901329"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6c3ec03c29e0f1f102fcbbd0635de394"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAtEventManager.html">AtEventManager</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventManager.html#a6c3ec03c29e0f1f102fcbbd0635de394">operator=</a> (const <a class="el" href="classAtEventManager.html">AtEventManager</a> &amp;)</td></tr>
+<tr class="separator:a6c3ec03c29e0f1f102fcbbd0635de394"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa79199cfd3f03e84ddf57451051377aa"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventManager.html#aa79199cfd3f03e84ddf57451051377aa">ClassDef</a> (<a class="el" href="classAtEventManager.html">AtEventManager</a>, 1)</td></tr>
+<tr class="separator:aa79199cfd3f03e84ddf57451051377aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
@@ -188,13 +216,24 @@ Static Public Member Functions</h2></td></tr>
 <tr class="separator:aa8294a2cd1c29969af792145310eb139"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a18258b84624df2c1a99f0092e01cbb25"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventManager.html#a18258b84624df2c1a99f0092e01cbb25">DrawWave</a> ()</td></tr>
 <tr class="separator:a18258b84624df2c1a99f0092e01cbb25"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:ab052785bad9242f93249ac231882a3ce"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classS800Ana.html">S800Ana</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventManager.html#ab052785bad9242f93249ac231882a3ce">fS800Ana</a></td></tr>
+<tr class="separator:ab052785bad9242f93249ac231882a3ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acf5154408afa2b3da4ac1f9e911adb56"><td class="memItemLeft" align="right" valign="top">std::vector&lt; Double_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventManager.html#acf5154408afa2b3da4ac1f9e911adb56">fTofObjCorr</a></td></tr>
+<tr class="separator:acf5154408afa2b3da4ac1f9e911adb56"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a84881cf87ef0e0069e87a85d90f071a1"><td class="memItemLeft" align="right" valign="top">std::vector&lt; Double_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventManager.html#a84881cf87ef0e0069e87a85d90f071a1">fMTDCObjRange</a></td></tr>
+<tr class="separator:a84881cf87ef0e0069e87a85d90f071a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6ef85522076d7a671fe4c3d151220f2f"><td class="memItemLeft" align="right" valign="top">std::vector&lt; Double_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtEventManager.html#a6ef85522076d7a671fe4c3d151220f2f">fMTDCXfRange</a></td></tr>
+<tr class="separator:a6ef85522076d7a671fe4c3d151220f2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="AtEventManager_8h_source.html#l00019">19</a> of file <a class="el" href="AtEventManager_8h_source.html">AtEventManager.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtEventManager_8h_source.html#l00027">27</a> of file <a class="el" href="AtEventManager_8h_source.html">AtEventManager.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="acc3632ad9506ad1caf3aec2527c9d441"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acc3632ad9506ad1caf3aec2527c9d441">&#9670;&nbsp;</a></span>AtEventManager()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#acc3632ad9506ad1caf3aec2527c9d441">&#9670;&nbsp;</a></span>AtEventManager() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -208,7 +247,7 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtEventManager_8cxx_source.html#l00062">62</a> of file <a class="el" href="AtEventManager_8cxx_source.html">AtEventManager.cxx</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtEventManager_8cxx_source.html#l00068">68</a> of file <a class="el" href="AtEventManager_8cxx_source.html">AtEventManager.cxx</a>.</p>
 
 </div>
 </div>
@@ -233,6 +272,24 @@ Static Public Member Functions</h2></td></tr>
 <span class="mlabels"><span class="mlabel">virtual</span><span class="mlabel">default</span></span>  </td>
   </tr>
 </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a704036bb5b4c147310444bcdf6901329"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a704036bb5b4c147310444bcdf6901329">&#9670;&nbsp;</a></span>AtEventManager() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">AtEventManager::AtEventManager </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classAtEventManager.html">AtEventManager</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
 </div><div class="memdoc">
 
 </div>
@@ -262,7 +319,7 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtEventManager_8h_source.html#l00040">40</a> of file <a class="el" href="AtEventManager_8h_source.html">AtEventManager.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtEventManager_8h_source.html#l00107">107</a> of file <a class="el" href="AtEventManager_8h_source.html">AtEventManager.h</a>.</p>
 
 </div>
 </div>
@@ -281,7 +338,35 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtEventManager_8cxx_source.html#l00576">576</a> of file <a class="el" href="AtEventManager_8cxx_source.html">AtEventManager.cxx</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtEventManager_8cxx_source.html#l00716">716</a> of file <a class="el" href="AtEventManager_8cxx_source.html">AtEventManager.cxx</a>.</p>
+
+</div>
+</div>
+<a id="aa79199cfd3f03e84ddf57451051377aa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa79199cfd3f03e84ddf57451051377aa">&#9670;&nbsp;</a></span>ClassDef()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">AtEventManager::ClassDef </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classAtEventManager.html">AtEventManager</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">1&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -300,7 +385,7 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtEventManager_8cxx_source.html#l00609">609</a> of file <a class="el" href="AtEventManager_8cxx_source.html">AtEventManager.cxx</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtEventManager_8cxx_source.html#l00749">749</a> of file <a class="el" href="AtEventManager_8cxx_source.html">AtEventManager.cxx</a>.</p>
 
 </div>
 </div>
@@ -319,7 +404,45 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtEventManager_8cxx_source.html#l00614">614</a> of file <a class="el" href="AtEventManager_8cxx_source.html">AtEventManager.cxx</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtEventManager_8cxx_source.html#l00754">754</a> of file <a class="el" href="AtEventManager_8cxx_source.html">AtEventManager.cxx</a>.</p>
+
+</div>
+</div>
+<a id="a5dc05968513c6153bb50f79e7d65ad2d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5dc05968513c6153bb50f79e7d65ad2d">&#9670;&nbsp;</a></span>DrawPID2Full()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void AtEventManager::DrawPID2Full </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventManager_8cxx_source.html#l00494">494</a> of file <a class="el" href="AtEventManager_8cxx_source.html">AtEventManager.cxx</a>.</p>
+
+</div>
+</div>
+<a id="acc937c876bc1d5b12e6c9d6aa347c642"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acc937c876bc1d5b12e6c9d6aa347c642">&#9670;&nbsp;</a></span>DrawPIDFull()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void AtEventManager::DrawPIDFull </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventManager_8cxx_source.html#l00484">484</a> of file <a class="el" href="AtEventManager_8cxx_source.html">AtEventManager.cxx</a>.</p>
 
 </div>
 </div>
@@ -346,18 +469,18 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtEventManager_8cxx_source.html#l00399">399</a> of file <a class="el" href="AtEventManager_8cxx_source.html">AtEventManager.cxx</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtEventManager_8cxx_source.html#l00539">539</a> of file <a class="el" href="AtEventManager_8cxx_source.html">AtEventManager.cxx</a>.</p>
 
 </div>
 </div>
-<a id="a3ce23ea4d59320a0553500b6cd12a8ca"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3ce23ea4d59320a0553500b6cd12a8ca">&#9670;&nbsp;</a></span>EnableDrawHoughSpace()</h2>
+<a id="a2cc6d0b694f1e08a8e5fdbcf51c580b8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2cc6d0b694f1e08a8e5fdbcf51c580b8">&#9670;&nbsp;</a></span>EnableDrawReconstruction()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void AtEventManager::EnableDrawHoughSpace </td>
+          <td class="memname">void AtEventManager::EnableDrawReconstruction </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -365,7 +488,7 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtEventManager_8cxx_source.html#l00589">589</a> of file <a class="el" href="AtEventManager_8cxx_source.html">AtEventManager.cxx</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtEventManager_8cxx_source.html#l00729">729</a> of file <a class="el" href="AtEventManager_8cxx_source.html">AtEventManager.cxx</a>.</p>
 
 </div>
 </div>
@@ -384,7 +507,26 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtEventManager_8cxx_source.html#l00603">603</a> of file <a class="el" href="AtEventManager_8cxx_source.html">AtEventManager.cxx</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtEventManager_8cxx_source.html#l00743">743</a> of file <a class="el" href="AtEventManager_8cxx_source.html">AtEventManager.cxx</a>.</p>
+
+</div>
+</div>
+<a id="ae88345a41f6261e2577d605021d4dad0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae88345a41f6261e2577d605021d4dad0">&#9670;&nbsp;</a></span>FillPIDFull()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void AtEventManager::FillPIDFull </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventManager_8cxx_source.html#l00504">504</a> of file <a class="el" href="AtEventManager_8cxx_source.html">AtEventManager.cxx</a>.</p>
 
 </div>
 </div>
@@ -411,7 +553,7 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtEventManager_8h_source.html#l00073">73</a> of file <a class="el" href="AtEventManager_8h_source.html">AtEventManager.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtEventManager_8h_source.html#l00153">153</a> of file <a class="el" href="AtEventManager_8h_source.html">AtEventManager.h</a>.</p>
 
 </div>
 </div>
@@ -438,7 +580,7 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtEventManager_8h_source.html#l00044">44</a> of file <a class="el" href="AtEventManager_8h_source.html">AtEventManager.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtEventManager_8h_source.html#l00111">111</a> of file <a class="el" href="AtEventManager_8h_source.html">AtEventManager.h</a>.</p>
 
 </div>
 </div>
@@ -465,7 +607,7 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtEventManager_8h_source.html#l00053">53</a> of file <a class="el" href="AtEventManager_8h_source.html">AtEventManager.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtEventManager_8h_source.html#l00120">120</a> of file <a class="el" href="AtEventManager_8h_source.html">AtEventManager.h</a>.</p>
 
 </div>
 </div>
@@ -492,7 +634,7 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtEventManager_8h_source.html#l00063">63</a> of file <a class="el" href="AtEventManager_8h_source.html">AtEventManager.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtEventManager_8h_source.html#l00130">130</a> of file <a class="el" href="AtEventManager_8h_source.html">AtEventManager.h</a>.</p>
 
 </div>
 </div>
@@ -519,7 +661,7 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtEventManager_8h_source.html#l00050">50</a> of file <a class="el" href="AtEventManager_8h_source.html">AtEventManager.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtEventManager_8h_source.html#l00117">117</a> of file <a class="el" href="AtEventManager_8h_source.html">AtEventManager.h</a>.</p>
 
 </div>
 </div>
@@ -546,7 +688,7 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtEventManager_8h_source.html#l00061">61</a> of file <a class="el" href="AtEventManager_8h_source.html">AtEventManager.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtEventManager_8h_source.html#l00128">128</a> of file <a class="el" href="AtEventManager_8h_source.html">AtEventManager.h</a>.</p>
 
 </div>
 </div>
@@ -573,7 +715,7 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtEventManager_8h_source.html#l00062">62</a> of file <a class="el" href="AtEventManager_8h_source.html">AtEventManager.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtEventManager_8h_source.html#l00129">129</a> of file <a class="el" href="AtEventManager_8h_source.html">AtEventManager.h</a>.</p>
 
 </div>
 </div>
@@ -600,7 +742,7 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtEventManager_8h_source.html#l00052">52</a> of file <a class="el" href="AtEventManager_8h_source.html">AtEventManager.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtEventManager_8h_source.html#l00119">119</a> of file <a class="el" href="AtEventManager_8h_source.html">AtEventManager.h</a>.</p>
 
 </div>
 </div>
@@ -627,7 +769,7 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtEventManager_8h_source.html#l00048">48</a> of file <a class="el" href="AtEventManager_8h_source.html">AtEventManager.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtEventManager_8h_source.html#l00115">115</a> of file <a class="el" href="AtEventManager_8h_source.html">AtEventManager.h</a>.</p>
 
 </div>
 </div>
@@ -654,7 +796,7 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtEventManager_8h_source.html#l00046">46</a> of file <a class="el" href="AtEventManager_8h_source.html">AtEventManager.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtEventManager_8h_source.html#l00113">113</a> of file <a class="el" href="AtEventManager_8h_source.html">AtEventManager.h</a>.</p>
 
 </div>
 </div>
@@ -681,7 +823,7 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtEventManager_8h_source.html#l00047">47</a> of file <a class="el" href="AtEventManager_8h_source.html">AtEventManager.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtEventManager_8h_source.html#l00114">114</a> of file <a class="el" href="AtEventManager_8h_source.html">AtEventManager.h</a>.</p>
 
 </div>
 </div>
@@ -708,7 +850,61 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtEventManager_8h_source.html#l00051">51</a> of file <a class="el" href="AtEventManager_8h_source.html">AtEventManager.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtEventManager_8h_source.html#l00118">118</a> of file <a class="el" href="AtEventManager_8h_source.html">AtEventManager.h</a>.</p>
+
+</div>
+</div>
+<a id="af11477e6185bf7db912544bb6c6ef592"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af11477e6185bf7db912544bb6c6ef592">&#9670;&nbsp;</a></span>GetCvsPID()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TCanvas* AtEventManager::GetCvsPID </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventManager_8h_source.html#l00131">131</a> of file <a class="el" href="AtEventManager_8h_source.html">AtEventManager.h</a>.</p>
+
+</div>
+</div>
+<a id="aaab79e23f3c561a106bff913f51db283"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaab79e23f3c561a106bff913f51db283">&#9670;&nbsp;</a></span>GetCvsPID2()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TCanvas* AtEventManager::GetCvsPID2 </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventManager_8h_source.html#l00132">132</a> of file <a class="el" href="AtEventManager_8h_source.html">AtEventManager.h</a>.</p>
 
 </div>
 </div>
@@ -735,7 +931,7 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtEventManager_8h_source.html#l00049">49</a> of file <a class="el" href="AtEventManager_8h_source.html">AtEventManager.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtEventManager_8h_source.html#l00116">116</a> of file <a class="el" href="AtEventManager_8h_source.html">AtEventManager.h</a>.</p>
 
 </div>
 </div>
@@ -762,7 +958,7 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtEventManager_8h_source.html#l00057">57</a> of file <a class="el" href="AtEventManager_8h_source.html">AtEventManager.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtEventManager_8h_source.html#l00124">124</a> of file <a class="el" href="AtEventManager_8h_source.html">AtEventManager.h</a>.</p>
 
 </div>
 </div>
@@ -789,7 +985,7 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtEventManager_8h_source.html#l00058">58</a> of file <a class="el" href="AtEventManager_8h_source.html">AtEventManager.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtEventManager_8h_source.html#l00125">125</a> of file <a class="el" href="AtEventManager_8h_source.html">AtEventManager.h</a>.</p>
 
 </div>
 </div>
@@ -816,7 +1012,7 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtEventManager_8h_source.html#l00059">59</a> of file <a class="el" href="AtEventManager_8h_source.html">AtEventManager.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtEventManager_8h_source.html#l00126">126</a> of file <a class="el" href="AtEventManager_8h_source.html">AtEventManager.h</a>.</p>
 
 </div>
 </div>
@@ -843,7 +1039,7 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtEventManager_8h_source.html#l00060">60</a> of file <a class="el" href="AtEventManager_8h_source.html">AtEventManager.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtEventManager_8h_source.html#l00127">127</a> of file <a class="el" href="AtEventManager_8h_source.html">AtEventManager.h</a>.</p>
 
 </div>
 </div>
@@ -870,7 +1066,7 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtEventManager_8h_source.html#l00054">54</a> of file <a class="el" href="AtEventManager_8h_source.html">AtEventManager.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtEventManager_8h_source.html#l00121">121</a> of file <a class="el" href="AtEventManager_8h_source.html">AtEventManager.h</a>.</p>
 
 </div>
 </div>
@@ -897,7 +1093,7 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtEventManager_8h_source.html#l00055">55</a> of file <a class="el" href="AtEventManager_8h_source.html">AtEventManager.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtEventManager_8h_source.html#l00122">122</a> of file <a class="el" href="AtEventManager_8h_source.html">AtEventManager.h</a>.</p>
 
 </div>
 </div>
@@ -924,7 +1120,7 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtEventManager_8h_source.html#l00056">56</a> of file <a class="el" href="AtEventManager_8h_source.html">AtEventManager.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtEventManager_8h_source.html#l00123">123</a> of file <a class="el" href="AtEventManager_8h_source.html">AtEventManager.h</a>.</p>
 
 </div>
 </div>
@@ -951,12 +1147,12 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtEventManager_8h_source.html#l00065">65</a> of file <a class="el" href="AtEventManager_8h_source.html">AtEventManager.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtEventManager_8h_source.html#l00145">145</a> of file <a class="el" href="AtEventManager_8h_source.html">AtEventManager.h</a>.</p>
 
 </div>
 </div>
-<a id="a7fac7b65c667ab134b5f70bcf24ae6fc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7fac7b65c667ab134b5f70bcf24ae6fc">&#9670;&nbsp;</a></span>GetDrawHoughSpace()</h2>
+<a id="aff2ada517367b31ce45f5cea44530e2d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aff2ada517367b31ce45f5cea44530e2d">&#9670;&nbsp;</a></span>GetDrawReconstruction()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -965,7 +1161,7 @@ Static Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Bool_t AtEventManager::GetDrawHoughSpace </td>
+          <td class="memname">Bool_t AtEventManager::GetDrawReconstruction </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -978,7 +1174,7 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtEventManager_8h_source.html#l00066">66</a> of file <a class="el" href="AtEventManager_8h_source.html">AtEventManager.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtEventManager_8h_source.html#l00146">146</a> of file <a class="el" href="AtEventManager_8h_source.html">AtEventManager.h</a>.</p>
 
 </div>
 </div>
@@ -1005,7 +1201,34 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtEventManager_8h_source.html#l00067">67</a> of file <a class="el" href="AtEventManager_8h_source.html">AtEventManager.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtEventManager_8h_source.html#l00147">147</a> of file <a class="el" href="AtEventManager_8h_source.html">AtEventManager.h</a>.</p>
+
+</div>
+</div>
+<a id="ae7e91b219b7c1fb2f0f6a2f0cce4ecfb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae7e91b219b7c1fb2f0f6a2f0cce4ecfb">&#9670;&nbsp;</a></span>GetS800Ana()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classS800Ana.html">S800Ana</a> AtEventManager::GetS800Ana </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventManager_8h_source.html#l00134">134</a> of file <a class="el" href="AtEventManager_8h_source.html">AtEventManager.h</a>.</p>
 
 </div>
 </div>
@@ -1032,7 +1255,7 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtEventManager_8h_source.html#l00074">74</a> of file <a class="el" href="AtEventManager_8h_source.html">AtEventManager.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtEventManager_8h_source.html#l00154">154</a> of file <a class="el" href="AtEventManager_8h_source.html">AtEventManager.h</a>.</p>
 
 </div>
 </div>
@@ -1062,7 +1285,7 @@ Static Public Member Functions</h2></td></tr>
 
 <p><em>MENU</em> </p>
 
-<p class="definition">Definition at line <a class="el" href="AtEventManager_8cxx_source.html#l00377">377</a> of file <a class="el" href="AtEventManager_8cxx_source.html">AtEventManager.cxx</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtEventManager_8cxx_source.html#l00428">428</a> of file <a class="el" href="AtEventManager_8cxx_source.html">AtEventManager.cxx</a>.</p>
 
 </div>
 </div>
@@ -1106,7 +1329,7 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtEventManager_8cxx_source.html#l00084">84</a> of file <a class="el" href="AtEventManager_8cxx_source.html">AtEventManager.cxx</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtEventManager_8cxx_source.html#l00092">92</a> of file <a class="el" href="AtEventManager_8cxx_source.html">AtEventManager.cxx</a>.</p>
 
 </div>
 </div>
@@ -1133,7 +1356,7 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtEventManager_8cxx_source.html#l00057">57</a> of file <a class="el" href="AtEventManager_8cxx_source.html">AtEventManager.cxx</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtEventManager_8cxx_source.html#l00063">63</a> of file <a class="el" href="AtEventManager_8cxx_source.html">AtEventManager.cxx</a>.</p>
 
 </div>
 </div>
@@ -1160,7 +1383,7 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtEventManager_8cxx_source.html#l00451">451</a> of file <a class="el" href="AtEventManager_8cxx_source.html">AtEventManager.cxx</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtEventManager_8cxx_source.html#l00591">591</a> of file <a class="el" href="AtEventManager_8cxx_source.html">AtEventManager.cxx</a>.</p>
 
 </div>
 </div>
@@ -1189,7 +1412,25 @@ Static Public Member Functions</h2></td></tr>
 
 <p><em>MENU</em> </p>
 
-<p class="definition">Definition at line <a class="el" href="AtEventManager_8cxx_source.html#l00385">385</a> of file <a class="el" href="AtEventManager_8cxx_source.html">AtEventManager.cxx</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtEventManager_8cxx_source.html#l00436">436</a> of file <a class="el" href="AtEventManager_8cxx_source.html">AtEventManager.cxx</a>.</p>
+
+</div>
+</div>
+<a id="a6c3ec03c29e0f1f102fcbbd0635de394"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6c3ec03c29e0f1f102fcbbd0635de394">&#9670;&nbsp;</a></span>operator=()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classAtEventManager.html">AtEventManager</a>&amp; AtEventManager::operator= </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classAtEventManager.html">AtEventManager</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -1218,7 +1459,7 @@ Static Public Member Functions</h2></td></tr>
 
 <p><em>MENU</em> </p>
 
-<p class="definition">Definition at line <a class="el" href="AtEventManager_8cxx_source.html#l00392">392</a> of file <a class="el" href="AtEventManager_8cxx_source.html">AtEventManager.cxx</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtEventManager_8cxx_source.html#l00460">460</a> of file <a class="el" href="AtEventManager_8cxx_source.html">AtEventManager.cxx</a>.</p>
 
 </div>
 </div>
@@ -1237,7 +1478,7 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtEventManager_8cxx_source.html#l00446">446</a> of file <a class="el" href="AtEventManager_8cxx_source.html">AtEventManager.cxx</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtEventManager_8cxx_source.html#l00586">586</a> of file <a class="el" href="AtEventManager_8cxx_source.html">AtEventManager.cxx</a>.</p>
 
 </div>
 </div>
@@ -1256,7 +1497,7 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtEventManager_8cxx_source.html#l00625">625</a> of file <a class="el" href="AtEventManager_8cxx_source.html">AtEventManager.cxx</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtEventManager_8cxx_source.html#l00765">765</a> of file <a class="el" href="AtEventManager_8cxx_source.html">AtEventManager.cxx</a>.</p>
 
 </div>
 </div>
@@ -1283,7 +1524,7 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtEventManager_8cxx_source.html#l00619">619</a> of file <a class="el" href="AtEventManager_8cxx_source.html">AtEventManager.cxx</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtEventManager_8cxx_source.html#l00759">759</a> of file <a class="el" href="AtEventManager_8cxx_source.html">AtEventManager.cxx</a>.</p>
 
 </div>
 </div>
@@ -1310,7 +1551,91 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtEventManager_8cxx_source.html#l00371">371</a> of file <a class="el" href="AtEventManager_8cxx_source.html">AtEventManager.cxx</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtEventManager_8cxx_source.html#l00422">422</a> of file <a class="el" href="AtEventManager_8cxx_source.html">AtEventManager.cxx</a>.</p>
+
+</div>
+</div>
+<a id="ab56c874abe378ddf377ab2535e91f3de"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab56c874abe378ddf377ab2535e91f3de">&#9670;&nbsp;</a></span>SetMTDCObjRange()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void AtEventManager::SetMTDCObjRange </td>
+          <td>(</td>
+          <td class="paramtype">std::vector&lt; Double_t &gt;&#160;</td>
+          <td class="paramname"><em>vec</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventManager_8h_source.html#l00137">137</a> of file <a class="el" href="AtEventManager_8h_source.html">AtEventManager.h</a>.</p>
+
+</div>
+</div>
+<a id="a58f5f8c267fd63b9d1bd4da66da537cc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a58f5f8c267fd63b9d1bd4da66da537cc">&#9670;&nbsp;</a></span>SetMTDCXfRange()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void AtEventManager::SetMTDCXfRange </td>
+          <td>(</td>
+          <td class="paramtype">std::vector&lt; Double_t &gt;&#160;</td>
+          <td class="paramname"><em>vec</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventManager_8h_source.html#l00138">138</a> of file <a class="el" href="AtEventManager_8h_source.html">AtEventManager.h</a>.</p>
+
+</div>
+</div>
+<a id="abb6bbb4c9ac5657a1a7d29c95b7e4e5d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abb6bbb4c9ac5657a1a7d29c95b7e4e5d">&#9670;&nbsp;</a></span>SetTofObjCorr()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void AtEventManager::SetTofObjCorr </td>
+          <td>(</td>
+          <td class="paramtype">std::vector&lt; Double_t &gt;&#160;</td>
+          <td class="paramname"><em>vec</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventManager_8h_source.html#l00136">136</a> of file <a class="el" href="AtEventManager_8h_source.html">AtEventManager.h</a>.</p>
 
 </div>
 </div>
@@ -1329,18 +1654,83 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtEventManager_8cxx_source.html#l00635">635</a> of file <a class="el" href="AtEventManager_8cxx_source.html">AtEventManager.cxx</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtEventManager_8cxx_source.html#l00775">775</a> of file <a class="el" href="AtEventManager_8cxx_source.html">AtEventManager.cxx</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="a84881cf87ef0e0069e87a85d90f071a1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a84881cf87ef0e0069e87a85d90f071a1">&#9670;&nbsp;</a></span>fMTDCObjRange</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;Double_t&gt; AtEventManager::fMTDCObjRange</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventManager_8h_source.html#l00142">142</a> of file <a class="el" href="AtEventManager_8h_source.html">AtEventManager.h</a>.</p>
+
+</div>
+</div>
+<a id="a6ef85522076d7a671fe4c3d151220f2f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6ef85522076d7a671fe4c3d151220f2f">&#9670;&nbsp;</a></span>fMTDCXfRange</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;Double_t&gt; AtEventManager::fMTDCXfRange</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventManager_8h_source.html#l00143">143</a> of file <a class="el" href="AtEventManager_8h_source.html">AtEventManager.h</a>.</p>
+
+</div>
+</div>
+<a id="ab052785bad9242f93249ac231882a3ce"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab052785bad9242f93249ac231882a3ce">&#9670;&nbsp;</a></span>fS800Ana</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classS800Ana.html">S800Ana</a> AtEventManager::fS800Ana</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventManager_8h_source.html#l00140">140</a> of file <a class="el" href="AtEventManager_8h_source.html">AtEventManager.h</a>.</p>
+
+</div>
+</div>
+<a id="acf5154408afa2b3da4ac1f9e911adb56"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acf5154408afa2b3da4ac1f9e911adb56">&#9670;&nbsp;</a></span>fTofObjCorr</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;Double_t&gt; AtEventManager::fTofObjCorr</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtEventManager_8h_source.html#l00141">141</a> of file <a class="el" href="AtEventManager_8h_source.html">AtEventManager.h</a>.</p>
 
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>/github/workspace/AtEventDisplay/<a class="el" href="AtEventManager_8h_source.html">AtEventManager.h</a></li>
-<li>/github/workspace/AtEventDisplay/<a class="el" href="AtEventManager_8cxx_source.html">AtEventManager.cxx</a></li>
+<li>/github/workspace/AtEventDisplay/Deprecated/<a class="el" href="AtEventManager_8h_source.html">AtEventManager.h</a></li>
+<li>/github/workspace/AtEventDisplay/Deprecated/<a class="el" href="AtEventManager_8cxx_source.html">AtEventManager.cxx</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Apr 27 2022 00:47:49 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Oct 20 2023 16:23:01 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.18
 </small></address>

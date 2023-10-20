@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">ATTPCROOT
-   &#160;<span id="projectnumber">1.0.0</span>
+   &#160;<span id="projectnumber">0.3.0-alpha</span>
    </div>
    <div id="projectbrief">A ROOT-based framework for analyzing data from active target detectors</div>
   </td>
@@ -73,24 +73,33 @@ $(function() {
 <div class="contents">
 <a href="AtAuxPad_8cxx.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="AtAuxPad_8h.html">AtAuxPad.h</a>&quot;</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160; </div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &lt;Rtypes.h&gt;</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="AtPadBase_8h.html">AtPadBase.h</a>&quot;</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160; </div>
-<div class="line"><a name="l00005"></a><span class="lineno"><a class="line" href="classAtAuxPad.html#af38b01dd8ccc1b933efd34cd5a9a6f54">    5</a></span>&#160;<a class="code" href="classAtAuxPad.html#af38b01dd8ccc1b933efd34cd5a9a6f54">AtAuxPad::AtAuxPad</a>(std::string auxName) : <a class="code" href="classAtPad.html">AtPad</a>(-1), fAuxName(std::move(auxName)) {}</div>
-<div class="line"><a name="l00006"></a><span class="lineno"><a class="line" href="classAtAuxPad.html#af0c358bf4b3f2d62d7d72528f4f24b64">    6</a></span>&#160;std::unique_ptr&lt;AtPad&gt; <a class="code" href="classAtAuxPad.html#af0c358bf4b3f2d62d7d72528f4f24b64">AtAuxPad::Clone</a>()</div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;{</div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;   <span class="keywordflow">return</span> std::make_unique&lt;AtAuxPad&gt;(*<span class="keyword">this</span>);</div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;}</div>
-<div class="line"><a name="l00010"></a><span class="lineno"><a class="line" href="AtAuxPad_8cxx.html#add4fe077617fa9ef4b196e8deab9afb3">   10</a></span>&#160;<a class="code" href="AtAuxPad_8cxx.html#add4fe077617fa9ef4b196e8deab9afb3">ClassImp</a>(<a class="code" href="classAtAuxPad.html">AtAuxPad</a>);</div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;Rtypes.h&gt;</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160; </div>
+<div class="line"><a name="l00007"></a><span class="lineno"><a class="line" href="classAtAuxPad.html#af38b01dd8ccc1b933efd34cd5a9a6f54">    7</a></span>&#160;<a class="code" href="classAtAuxPad.html#af38b01dd8ccc1b933efd34cd5a9a6f54">AtAuxPad::AtAuxPad</a>(std::string auxName) : <a class="code" href="classAtPad.html">AtPad</a>(-1), fAuxName(std::move(auxName)) {}</div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160; </div>
+<div class="line"><a name="l00009"></a><span class="lineno"><a class="line" href="classAtAuxPad.html#a0079c91c8a86e1691f7580cba1a1cc7a">    9</a></span>&#160;std::unique_ptr&lt;AtPad&gt; <a class="code" href="classAtAuxPad.html#a0079c91c8a86e1691f7580cba1a1cc7a">AtAuxPad::ClonePad</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;   <span class="keywordflow">return</span> std::make_unique&lt;AtAuxPad&gt;(*<span class="keyword">this</span>);</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;}</div>
+<div class="line"><a name="l00013"></a><span class="lineno"><a class="line" href="classAtAuxPad.html#a220aa1edbc8fafcf21de415ba8d79cc3">   13</a></span>&#160;std::unique_ptr&lt;AtPadBase&gt; <a class="code" href="classAtAuxPad.html#a220aa1edbc8fafcf21de415ba8d79cc3">AtAuxPad::Clone</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;   <span class="keywordflow">return</span> std::make_unique&lt;AtAuxPad&gt;(*<span class="keyword">this</span>);</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;}</div>
+<div class="line"><a name="l00017"></a><span class="lineno"><a class="line" href="AtAuxPad_8cxx.html#add4fe077617fa9ef4b196e8deab9afb3">   17</a></span>&#160;<a class="code" href="AtAuxPad_8cxx.html#add4fe077617fa9ef4b196e8deab9afb3">ClassImp</a>(<a class="code" href="classAtAuxPad.html">AtAuxPad</a>);</div>
 </div><!-- fragment --></div><!-- contents -->
-<div class="ttc" id="aclassAtAuxPad_html_af38b01dd8ccc1b933efd34cd5a9a6f54"><div class="ttname"><a href="classAtAuxPad.html#af38b01dd8ccc1b933efd34cd5a9a6f54">AtAuxPad::AtAuxPad</a></div><div class="ttdeci">AtAuxPad(std::string fAuxName=&quot;noname&quot;)</div><div class="ttdef"><b>Definition:</b> <a href="AtAuxPad_8cxx_source.html#l00005">AtAuxPad.cxx:5</a></div></div>
+<div class="ttc" id="aclassAtAuxPad_html_af38b01dd8ccc1b933efd34cd5a9a6f54"><div class="ttname"><a href="classAtAuxPad.html#af38b01dd8ccc1b933efd34cd5a9a6f54">AtAuxPad::AtAuxPad</a></div><div class="ttdeci">AtAuxPad(std::string fAuxName=&quot;noname&quot;)</div><div class="ttdef"><b>Definition:</b> <a href="AtAuxPad_8cxx_source.html#l00007">AtAuxPad.cxx:7</a></div></div>
 <div class="ttc" id="aAtAuxPad_8h_html"><div class="ttname"><a href="AtAuxPad_8h.html">AtAuxPad.h</a></div></div>
+<div class="ttc" id="aclassAtAuxPad_html_a220aa1edbc8fafcf21de415ba8d79cc3"><div class="ttname"><a href="classAtAuxPad.html#a220aa1edbc8fafcf21de415ba8d79cc3">AtAuxPad::Clone</a></div><div class="ttdeci">virtual std::unique_ptr&lt; AtPadBase &gt; Clone() const override</div><div class="ttdef"><b>Definition:</b> <a href="AtAuxPad_8cxx_source.html#l00013">AtAuxPad.cxx:13</a></div></div>
 <div class="ttc" id="aAtAuxPad_8cxx_html_add4fe077617fa9ef4b196e8deab9afb3"><div class="ttname"><a href="AtAuxPad_8cxx.html#add4fe077617fa9ef4b196e8deab9afb3">ClassImp</a></div><div class="ttdeci">ClassImp(AtAuxPad)</div></div>
-<div class="ttc" id="aclassAtAuxPad_html_af0c358bf4b3f2d62d7d72528f4f24b64"><div class="ttname"><a href="classAtAuxPad.html#af0c358bf4b3f2d62d7d72528f4f24b64">AtAuxPad::Clone</a></div><div class="ttdeci">virtual std::unique_ptr&lt; AtPad &gt; Clone() override</div><div class="ttdef"><b>Definition:</b> <a href="AtAuxPad_8cxx_source.html#l00006">AtAuxPad.cxx:6</a></div></div>
-<div class="ttc" id="aclassAtPad_html"><div class="ttname"><a href="classAtPad.html">AtPad</a></div><div class="ttdef"><b>Definition:</b> <a href="AtPad_8h_source.html#l00025">AtPad.h:25</a></div></div>
-<div class="ttc" id="aclassAtAuxPad_html"><div class="ttname"><a href="classAtAuxPad.html">AtAuxPad</a></div><div class="ttdef"><b>Definition:</b> <a href="AtAuxPad_8h_source.html#l00024">AtAuxPad.h:24</a></div></div>
+<div class="ttc" id="aclassAtAuxPad_html_a0079c91c8a86e1691f7580cba1a1cc7a"><div class="ttname"><a href="classAtAuxPad.html#a0079c91c8a86e1691f7580cba1a1cc7a">AtAuxPad::ClonePad</a></div><div class="ttdeci">virtual std::unique_ptr&lt; AtPad &gt; ClonePad() const override</div><div class="ttdoc">Clone this pad (including augments).</div><div class="ttdef"><b>Definition:</b> <a href="AtAuxPad_8cxx_source.html#l00009">AtAuxPad.cxx:9</a></div></div>
+<div class="ttc" id="aclassAtPad_html"><div class="ttname"><a href="classAtPad.html">AtPad</a></div><div class="ttdoc">Container class for AtPadBase objects.</div><div class="ttdef"><b>Definition:</b> <a href="AtPad_8h_source.html#l00038">AtPad.h:38</a></div></div>
+<div class="ttc" id="aAtPadBase_8h_html"><div class="ttname"><a href="AtPadBase_8h.html">AtPadBase.h</a></div></div>
+<div class="ttc" id="aclassAtAuxPad_html"><div class="ttname"><a href="classAtAuxPad.html">AtAuxPad</a></div><div class="ttdef"><b>Definition:</b> <a href="AtAuxPad_8h_source.html#l00025">AtAuxPad.h:25</a></div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Apr 27 2022 00:47:46 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Oct 20 2023 16:22:58 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.18
 </small></address>

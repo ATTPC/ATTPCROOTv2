@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">ATTPCROOT
-   &#160;<span id="projectnumber">1.0.0</span>
+   &#160;<span id="projectnumber">0.3.0-alpha</span>
    </div>
    <div id="projectbrief">A ROOT-based framework for analyzing data from active target detectors</div>
   </td>
@@ -67,57 +67,84 @@ $(function() {
 </div>
 </div><!-- top -->
 <div class="header">
+  <div class="summary">
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">AtDataReductionTask.cxx File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="AtDataReductionTask_8h_source.html">AtDataReductionTask.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="AtRawEvent_8h_source.html">AtRawEvent.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="AtBaseEvent_8h_source.html">AtBaseEvent.h</a>&quot;</code><br />
 <code>#include &lt;FairLogger.h&gt;</code><br />
 <code>#include &lt;FairRootManager.h&gt;</code><br />
 <code>#include &lt;FairRunAna.h&gt;</code><br />
 <code>#include &lt;FairTask.h&gt;</code><br />
 <code>#include &lt;TClonesArray.h&gt;</code><br />
 <code>#include &lt;TObject.h&gt;</code><br />
-<code>#include &lt;memory&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for AtDataReductionTask.cxx:</div>
 <div class="dyncontent">
 <div class="center"><img src="AtDataReductionTask_8cxx__incl.png" border="0" usemap="#_2github_2workspace_2AtReconstruction_2AtDataReductionTask_8cxx" alt=""/></div>
 <map name="_2github_2workspace_2AtReconstruction_2AtDataReductionTask_8cxx" id="_2github_2workspace_2AtReconstruction_2AtDataReductionTask_8cxx">
-<area shape="rect" title=" " alt="" coords="1083,5,1315,47"/>
-<area shape="rect" href="AtDataReductionTask_8h.html" title=" " alt="" coords="173,95,331,121"/>
+<area shape="rect" title=" " alt="" coords="1513,5,1745,47"/>
+<area shape="rect" href="AtDataReductionTask_8h.html" title=" " alt="" coords="274,95,433,121"/>
 <area shape="rect" title=" " alt="" coords="5,169,88,196"/>
-<area shape="rect" href="AtRawEvent_8h.html" title=" " alt="" coords="736,95,840,121"/>
-<area shape="rect" title=" " alt="" coords="1158,319,1237,345"/>
-<area shape="rect" title=" " alt="" coords="1062,319,1130,345"/>
-<area shape="rect" title=" " alt="" coords="1237,95,1331,121"/>
-<area shape="rect" title=" " alt="" coords="1356,95,1487,121"/>
-<area shape="rect" title=" " alt="" coords="1510,95,1610,121"/>
-<area shape="rect" title=" " alt="" coords="1634,95,1745,121"/>
-<area shape="rect" title=" " alt="" coords="525,319,597,345"/>
-<area shape="rect" title=" " alt="" coords="112,169,187,196"/>
-<area shape="rect" title=" " alt="" coords="211,169,293,196"/>
-<area shape="rect" href="AtAuxPad_8h.html" title=" " alt="" coords="919,169,1009,196"/>
-<area shape="rect" title=" " alt="" coords="1005,244,1059,271"/>
-<area shape="rect" title=" " alt="" coords="642,244,694,271"/>
-<area shape="rect" title=" " alt="" coords="368,169,451,196"/>
-<area shape="rect" title=" " alt="" coords="525,169,600,196"/>
-<area shape="rect" title=" " alt="" coords="675,169,741,196"/>
-<area shape="rect" title=" " alt="" coords="765,169,811,196"/>
-<area shape="rect" title=" " alt="" coords="836,169,895,196"/>
-<area shape="rect" href="AtPad_8h.html" title=" " alt="" coords="861,244,929,271"/>
-<area shape="rect" title=" " alt="" coords="694,319,805,345"/>
-<area shape="rect" title=" " alt="" coords="829,319,961,345"/>
-<area shape="rect" title=" " alt="" coords="985,319,1036,345"/>
+<area shape="rect" href="AtBaseEvent_8h.html" title=" " alt="" coords="658,95,766,121"/>
+<area shape="rect" title=" " alt="" coords="1505,393,1583,420"/>
+<area shape="rect" title=" " alt="" coords="1625,95,1719,121"/>
+<area shape="rect" title=" " alt="" coords="1744,95,1875,121"/>
+<area shape="rect" title=" " alt="" coords="1898,95,1998,121"/>
+<area shape="rect" title=" " alt="" coords="2022,95,2133,121"/>
+<area shape="rect" title=" " alt="" coords="671,393,743,420"/>
+<area shape="rect" title=" " alt="" coords="216,169,291,196"/>
+<area shape="rect" title=" " alt="" coords="499,169,573,196"/>
+<area shape="rect" title=" " alt="" coords="113,169,191,196"/>
+<area shape="rect" title=" " alt="" coords="622,244,674,271"/>
+<area shape="rect" title=" " alt="" coords="416,169,475,196"/>
+<area shape="rect" href="AtAuxPad_8h.html" title=" " alt="" coords="917,169,1008,196"/>
+<area shape="rect" title=" " alt="" coords="622,319,669,345"/>
+<area shape="rect" title=" " alt="" coords="1443,319,1498,345"/>
+<area shape="rect" title=" " alt="" coords="749,169,832,196"/>
+<area shape="rect" href="AtPad_8h.html" title=" " alt="" coords="989,244,1057,271"/>
+<area shape="rect" title=" " alt="" coords="1371,393,1439,420"/>
+<area shape="rect" href="AtPadBase_8h.html" title=" " alt="" coords="1269,319,1368,345"/>
+<area shape="rect" title=" " alt="" coords="1134,319,1245,345"/>
+<area shape="rect" title=" " alt="" coords="745,319,877,345"/>
+<area shape="rect" title=" " alt="" coords="952,319,1003,345"/>
+<area shape="rect" title=" " alt="" coords="1027,319,1109,345"/>
 </map>
 </div>
 </div>
 <p><a href="AtDataReductionTask_8cxx_source.html">Go to the source code of this file.</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:aa9f383cf6fb3229c3c61357efe70f305"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AtDataReductionTask_8cxx.html#aa9f383cf6fb3229c3c61357efe70f305">ClassImp</a> (<a class="el" href="classAtDataReductionTask.html">AtDataReductionTask</a>)</td></tr>
+<tr class="separator:aa9f383cf6fb3229c3c61357efe70f305"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="aa9f383cf6fb3229c3c61357efe70f305"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa9f383cf6fb3229c3c61357efe70f305">&#9670;&nbsp;</a></span>ClassImp()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">ClassImp </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classAtDataReductionTask.html">AtDataReductionTask</a>&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Apr 27 2022 00:47:48 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Oct 20 2023 16:23:01 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.18
 </small></address>

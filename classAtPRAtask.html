@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">ATTPCROOT
-   &#160;<span id="projectnumber">1.0.0</span>
+   &#160;<span id="projectnumber">0.3.0-alpha</span>
    </div>
    <div id="projectbrief">A ROOT-based framework for analyzing data from active target detectors</div>
   </td>
@@ -71,13 +71,16 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
+<p>Task for finding patterns in hit clouds.  
+ <a href="classAtPRAtask.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="AtPRAtask_8h_source.html">AtPRAtask.h</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for AtPRAtask:</div>
 <div class="dyncontent">
 <div class="center"><img src="classAtPRAtask__inherit__graph.png" border="0" usemap="#AtPRAtask_inherit__map" alt="Inheritance graph"/></div>
 <map name="AtPRAtask_inherit__map" id="AtPRAtask_inherit__map">
-<area shape="rect" title=" " alt="" coords="5,80,92,107"/>
+<area shape="rect" title="Task for finding patterns in hit clouds." alt="" coords="5,80,92,107"/>
 <area shape="rect" title=" " alt="" coords="12,5,85,32"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
@@ -86,7 +89,7 @@ Collaboration diagram for AtPRAtask:</div>
 <div class="dyncontent">
 <div class="center"><img src="classAtPRAtask__coll__graph.png" border="0" usemap="#AtPRAtask_coll__map" alt="Collaboration graph"/></div>
 <map name="AtPRAtask_coll__map" id="AtPRAtask_coll__map">
-<area shape="rect" title=" " alt="" coords="5,80,92,107"/>
+<area shape="rect" title="Task for finding patterns in hit clouds." alt="" coords="5,80,92,107"/>
 <area shape="rect" title=" " alt="" coords="12,5,85,32"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
@@ -105,6 +108,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a71a726e047f6a7562ba00abfba39577e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a26d1154724797ecc10b6aa11cbf1b9ee"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtPRAtask.html#a26d1154724797ecc10b6aa11cbf1b9ee">Finish</a> ()</td></tr>
 <tr class="separator:a26d1154724797ecc10b6aa11cbf1b9ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab7f2660b481396609e1a93dbc0eeda70"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtPRAtask.html#ab7f2660b481396609e1a93dbc0eeda70">SetInputBranch</a> (TString branchName)</td></tr>
+<tr class="separator:ab7f2660b481396609e1a93dbc0eeda70"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a736a4bf68c7ccd60a97acc8c3cbe57ad"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtPRAtask.html#a736a4bf68c7ccd60a97acc8c3cbe57ad">SetOutputBranch</a> (TString branchName)</td></tr>
+<tr class="separator:a736a4bf68c7ccd60a97acc8c3cbe57ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1b343e48afb93a998a9332d2f133f1e4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtPRAtask.html#a1b343e48afb93a998a9332d2f133f1e4">SetPersistence</a> (Bool_t value=kTRUE)</td></tr>
 <tr class="separator:a1b343e48afb93a998a9332d2f133f1e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5e97eabb61dbe3bf567545d40c165ddf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtPRAtask.html#a5e97eabb61dbe3bf567545d40c165ddf">SetPRAlgorithm</a> (Int_t value=0)</td></tr>
@@ -137,12 +144,18 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a7000e4875a1364ba7c79914019c65d4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6659170ace82e390f5c0c1cc0895d6c9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtPRAtask.html#a6659170ace82e390f5c0c1cc0895d6c9">SetkNNDist</a> (Double_t dist)</td></tr>
 <tr class="separator:a6659170ace82e390f5c0c1cc0895d6c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6e01429cd07ade9fc32cd0e1b6972434"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtPRAtask.html#a6e01429cd07ade9fc32cd0e1b6972434">SetClusterRadius</a> (Double_t clusterRadius)</td></tr>
+<tr class="separator:a6e01429cd07ade9fc32cd0e1b6972434"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5e290a24fa3aa001b0310834b7ce41ff"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtPRAtask.html#a5e290a24fa3aa001b0310834b7ce41ff">SetClusterDistance</a> (Double_t clusterDistance)</td></tr>
+<tr class="separator:a5e290a24fa3aa001b0310834b7ce41ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a517e569e8812a984a6093975ca632dea"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtPRAtask.html#a517e569e8812a984a6093975ca632dea">ClassDef</a> (<a class="el" href="classAtPRAtask.html">AtPRAtask</a>, 1)</td></tr>
 <tr class="separator:a517e569e8812a984a6093975ca632dea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock">
-<p class="definition">Definition at line <a class="el" href="AtPRAtask_8h_source.html#l00019">19</a> of file <a class="el" href="AtPRAtask_8h_source.html">AtPRAtask.h</a>.</p>
+<div class="textblock"><p>Task for finding patterns in hit clouds. </p>
+<p>Logic is in class AtPRA and derived types. </p>
+
+<p class="definition">Definition at line <a class="el" href="AtPRAtask_8h_source.html#l00026">26</a> of file <a class="el" href="AtPRAtask_8h_source.html">AtPRAtask.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a0134e4fe28173810ab9b73e501e547b0"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a0134e4fe28173810ab9b73e501e547b0">&#9670;&nbsp;</a></span>AtPRAtask()</h2>
@@ -178,7 +191,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtPRAtask_8cxx_source.html#l00048">48</a> of file <a class="el" href="AtPRAtask_8cxx_source.html">AtPRAtask.cxx</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtPRAtask_8cxx_source.html#l00049">49</a> of file <a class="el" href="AtPRAtask_8cxx_source.html">AtPRAtask.cxx</a>.</p>
 
 </div>
 </div>
@@ -235,7 +248,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtPRAtask_8cxx_source.html#l00144">144</a> of file <a class="el" href="AtPRAtask_8cxx_source.html">AtPRAtask.cxx</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtPRAtask_8cxx_source.html#l00153">153</a> of file <a class="el" href="AtPRAtask_8cxx_source.html">AtPRAtask.cxx</a>.</p>
 
 </div>
 </div>
@@ -262,7 +275,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtPRAtask_8cxx_source.html#l00173">173</a> of file <a class="el" href="AtPRAtask_8cxx_source.html">AtPRAtask.cxx</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtPRAtask_8cxx_source.html#l00181">181</a> of file <a class="el" href="AtPRAtask_8cxx_source.html">AtPRAtask.cxx</a>.</p>
 
 </div>
 </div>
@@ -289,7 +302,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtPRAtask_8cxx_source.html#l00079">79</a> of file <a class="el" href="AtPRAtask_8cxx_source.html">AtPRAtask.cxx</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtPRAtask_8cxx_source.html#l00080">80</a> of file <a class="el" href="AtPRAtask_8cxx_source.html">AtPRAtask.cxx</a>.</p>
 
 </div>
 </div>
@@ -317,7 +330,91 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtPRAtask_8h_source.html#l00069">69</a> of file <a class="el" href="AtPRAtask_8h_source.html">AtPRAtask.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtPRAtask_8h_source.html#l00085">85</a> of file <a class="el" href="AtPRAtask_8h_source.html">AtPRAtask.h</a>.</p>
+
+</div>
+</div>
+<a id="a5e290a24fa3aa001b0310834b7ce41ff"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5e290a24fa3aa001b0310834b7ce41ff">&#9670;&nbsp;</a></span>SetClusterDistance()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void AtPRAtask::SetClusterDistance </td>
+          <td>(</td>
+          <td class="paramtype">Double_t&#160;</td>
+          <td class="paramname"><em>clusterDistance</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtPRAtask_8h_source.html#l00098">98</a> of file <a class="el" href="AtPRAtask_8h_source.html">AtPRAtask.h</a>.</p>
+
+</div>
+</div>
+<a id="a6e01429cd07ade9fc32cd0e1b6972434"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6e01429cd07ade9fc32cd0e1b6972434">&#9670;&nbsp;</a></span>SetClusterRadius()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void AtPRAtask::SetClusterRadius </td>
+          <td>(</td>
+          <td class="paramtype">Double_t&#160;</td>
+          <td class="paramname"><em>clusterRadius</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtPRAtask_8h_source.html#l00097">97</a> of file <a class="el" href="AtPRAtask_8h_source.html">AtPRAtask.h</a>.</p>
+
+</div>
+</div>
+<a id="ab7f2660b481396609e1a93dbc0eeda70"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab7f2660b481396609e1a93dbc0eeda70">&#9670;&nbsp;</a></span>SetInputBranch()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void AtPRAtask::SetInputBranch </td>
+          <td>(</td>
+          <td class="paramtype">TString&#160;</td>
+          <td class="paramname"><em>branchName</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtPRAtask_8h_source.html#l00074">74</a> of file <a class="el" href="AtPRAtask_8h_source.html">AtPRAtask.h</a>.</p>
 
 </div>
 </div>
@@ -345,7 +442,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtPRAtask_8h_source.html#l00077">77</a> of file <a class="el" href="AtPRAtask_8h_source.html">AtPRAtask.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtPRAtask_8h_source.html#l00093">93</a> of file <a class="el" href="AtPRAtask_8h_source.html">AtPRAtask.h</a>.</p>
 
 </div>
 </div>
@@ -373,7 +470,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtPRAtask_8h_source.html#l00079">79</a> of file <a class="el" href="AtPRAtask_8h_source.html">AtPRAtask.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtPRAtask_8h_source.html#l00095">95</a> of file <a class="el" href="AtPRAtask_8h_source.html">AtPRAtask.h</a>.</p>
 
 </div>
 </div>
@@ -401,7 +498,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtPRAtask_8h_source.html#l00065">65</a> of file <a class="el" href="AtPRAtask_8h_source.html">AtPRAtask.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtPRAtask_8h_source.html#l00081">81</a> of file <a class="el" href="AtPRAtask_8h_source.html">AtPRAtask.h</a>.</p>
 
 </div>
 </div>
@@ -429,7 +526,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtPRAtask_8h_source.html#l00073">73</a> of file <a class="el" href="AtPRAtask_8h_source.html">AtPRAtask.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtPRAtask_8h_source.html#l00089">89</a> of file <a class="el" href="AtPRAtask_8h_source.html">AtPRAtask.h</a>.</p>
 
 </div>
 </div>
@@ -457,7 +554,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtPRAtask_8h_source.html#l00067">67</a> of file <a class="el" href="AtPRAtask_8h_source.html">AtPRAtask.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtPRAtask_8h_source.html#l00083">83</a> of file <a class="el" href="AtPRAtask_8h_source.html">AtPRAtask.h</a>.</p>
 
 </div>
 </div>
@@ -485,7 +582,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtPRAtask_8h_source.html#l00074">74</a> of file <a class="el" href="AtPRAtask_8h_source.html">AtPRAtask.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtPRAtask_8h_source.html#l00090">90</a> of file <a class="el" href="AtPRAtask_8h_source.html">AtPRAtask.h</a>.</p>
 
 </div>
 </div>
@@ -513,7 +610,35 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtPRAtask_8h_source.html#l00066">66</a> of file <a class="el" href="AtPRAtask_8h_source.html">AtPRAtask.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtPRAtask_8h_source.html#l00082">82</a> of file <a class="el" href="AtPRAtask_8h_source.html">AtPRAtask.h</a>.</p>
+
+</div>
+</div>
+<a id="a736a4bf68c7ccd60a97acc8c3cbe57ad"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a736a4bf68c7ccd60a97acc8c3cbe57ad">&#9670;&nbsp;</a></span>SetOutputBranch()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void AtPRAtask::SetOutputBranch </td>
+          <td>(</td>
+          <td class="paramtype">TString&#160;</td>
+          <td class="paramname"><em>branchName</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtPRAtask_8h_source.html#l00075">75</a> of file <a class="el" href="AtPRAtask_8h_source.html">AtPRAtask.h</a>.</p>
 
 </div>
 </div>
@@ -541,7 +666,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtPRAtask_8h_source.html#l00071">71</a> of file <a class="el" href="AtPRAtask_8h_source.html">AtPRAtask.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtPRAtask_8h_source.html#l00087">87</a> of file <a class="el" href="AtPRAtask_8h_source.html">AtPRAtask.h</a>.</p>
 
 </div>
 </div>
@@ -568,7 +693,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtPRAtask_8cxx_source.html#l00062">62</a> of file <a class="el" href="AtPRAtask_8cxx_source.html">AtPRAtask.cxx</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtPRAtask_8cxx_source.html#l00063">63</a> of file <a class="el" href="AtPRAtask_8cxx_source.html">AtPRAtask.cxx</a>.</p>
 
 </div>
 </div>
@@ -588,7 +713,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtPRAtask_8cxx_source.html#l00053">53</a> of file <a class="el" href="AtPRAtask_8cxx_source.html">AtPRAtask.cxx</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtPRAtask_8cxx_source.html#l00054">54</a> of file <a class="el" href="AtPRAtask_8cxx_source.html">AtPRAtask.cxx</a>.</p>
 
 </div>
 </div>
@@ -608,7 +733,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtPRAtask_8cxx_source.html#l00057">57</a> of file <a class="el" href="AtPRAtask_8cxx_source.html">AtPRAtask.cxx</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtPRAtask_8cxx_source.html#l00058">58</a> of file <a class="el" href="AtPRAtask_8cxx_source.html">AtPRAtask.cxx</a>.</p>
 
 </div>
 </div>
@@ -635,7 +760,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtPRAtask_8h_source.html#l00076">76</a> of file <a class="el" href="AtPRAtask_8h_source.html">AtPRAtask.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtPRAtask_8h_source.html#l00092">92</a> of file <a class="el" href="AtPRAtask_8h_source.html">AtPRAtask.h</a>.</p>
 
 </div>
 </div>
@@ -663,7 +788,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtPRAtask_8h_source.html#l00068">68</a> of file <a class="el" href="AtPRAtask_8h_source.html">AtPRAtask.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtPRAtask_8h_source.html#l00084">84</a> of file <a class="el" href="AtPRAtask_8h_source.html">AtPRAtask.h</a>.</p>
 
 </div>
 </div>
@@ -691,7 +816,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtPRAtask_8h_source.html#l00064">64</a> of file <a class="el" href="AtPRAtask_8h_source.html">AtPRAtask.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtPRAtask_8h_source.html#l00080">80</a> of file <a class="el" href="AtPRAtask_8h_source.html">AtPRAtask.h</a>.</p>
 
 </div>
 </div>
@@ -719,7 +844,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtPRAtask_8h_source.html#l00078">78</a> of file <a class="el" href="AtPRAtask_8h_source.html">AtPRAtask.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtPRAtask_8h_source.html#l00094">94</a> of file <a class="el" href="AtPRAtask_8h_source.html">AtPRAtask.h</a>.</p>
 
 </div>
 </div>
@@ -747,7 +872,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtPRAtask_8h_source.html#l00070">70</a> of file <a class="el" href="AtPRAtask_8h_source.html">AtPRAtask.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtPRAtask_8h_source.html#l00086">86</a> of file <a class="el" href="AtPRAtask_8h_source.html">AtPRAtask.h</a>.</p>
 
 </div>
 </div>
@@ -758,7 +883,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Apr 27 2022 00:47:49 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Oct 20 2023 16:23:02 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.18
 </small></address>

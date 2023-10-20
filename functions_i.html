@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">ATTPCROOT
-   &#160;<span id="projectnumber">1.0.0</span>
+   &#160;<span id="projectnumber">0.3.0-alpha</span>
    </div>
    <div id="projectbrief">A ROOT-based framework for analyzing data from active target detectors</div>
   </td>
@@ -78,6 +78,9 @@ $(function() {
 <li>ICSum()
 : <a class="el" href="classS800Calibration.html#abb34587e39b3e2d7f0bb3fa9bc692205">S800Calibration</a>
 </li>
+<li>id
+: <a class="el" href="structPoint.html#a3ccd2080027d6845744bd044280da9e7">Point</a>
+</li>
 <li>ImplementTrigger()
 : <a class="el" href="classAtTrigger.html#ae576f21cd8d9529c8348e2a764bc9988">AtTrigger</a>
 </li>
@@ -90,20 +93,23 @@ $(function() {
 <li>IncGlobalEvtCnt()
 : <a class="el" href="classAtVertexPropagator.html#addf15e2f6e36b2ab8603464a8d5c002f">AtVertexPropagator</a>
 </li>
+<li>index
+: <a class="el" href="classAtMap.html#a24764a4cd0d0cf2919642c287711a9f9">AtMap</a>
+</li>
 <li>info
 : <a class="el" href="structlm__status__struct.html#a6283e66a35e6338ae718a82f5df4122f">lm_status_struct</a>
 </li>
-<li>inhibitPad
-: <a class="el" href="classAtMap.html#ada5046dffdf12604ade1ff31caaf01e1">AtMap</a>
+<li>InhibitPad()
+: <a class="el" href="classAtMap.html#ad9fa125de87b8446c3cacdf7d4255aa0">AtMap</a>
 </li>
 <li>InhibitType
-: <a class="el" href="classAtMap.html#aef2e09c3313f3051a753491752985a82">AtMap</a>
+: <a class="el" href="classAtMap.html#a60dda23eb1d67e0eae848a1ec117c2f0">AtMap</a>
 </li>
 <li>Init()
 : <a class="el" href="classAtApolloDigitizer.html#a40dbd32fb4d2ee3054a8c6ff872ce71e">AtApolloDigitizer</a>
 , <a class="el" href="classAtAuxFilterTask.html#aee320a5f9ac46efc540a605d830960d6">AtAuxFilterTask</a>
-, <a class="el" href="classAtClusterizeLineTask.html#a7be929a92adced3e5d01a185699f9154">AtClusterizeLineTask</a>
 , <a class="el" href="classAtClusterizeTask.html#a9091369dae66455e1b9bdd92e8380a93">AtClusterizeTask</a>
+, <a class="el" href="classAtCopyTreeTask.html#a30d700d62d880c156cfb35fe02c488b1">AtCopyTreeTask</a>
 , <a class="el" href="classAtDataReductionTask.html#a726935ed3811a6e87f0e5e63cddd46f3">AtDataReductionTask</a>
 , <a class="el" href="classAtDecoder2Task.html#a2a7c7a2b401c8e3e692e35e179892f2f">AtDecoder2Task</a>
 , <a class="el" href="classAtDecoderSpecMATTask.html#a4ad74511c3fd480cfd503d7e4361dd89">AtDecoderSpecMATTask</a>
@@ -119,56 +125,88 @@ $(function() {
 , <a class="el" href="classAtFilterFFT.html#a736e3b275027945bc3807c565a69278e">AtFilterFFT</a>
 , <a class="el" href="classAtFilterSubtraction.html#ad59dc104c7fbbefec57d4fe9d6404fa9">AtFilterSubtraction</a>
 , <a class="el" href="classAtFilterTask.html#aca366592f990e81426b32b3dab0b0cb0">AtFilterTask</a>
+, <a class="el" href="classAtFilterZero.html#a69af575eeca72a8c3ba776279182b859">AtFilterZero</a>
+, <a class="el" href="classAtFissionTask.html#a1ae35e857c70d092e0c109ee1324f0e3">AtFissionTask</a>
 , <a class="el" href="classAtFITTER_1_1AtFitter.html#a0436744fb20662aff1349332ef5f06b9">AtFITTER::AtFitter</a>
 , <a class="el" href="classAtFITTER_1_1AtGenfit.html#aac0e48d596d19d520d3759a97ed12a31">AtFITTER::AtGenfit</a>
 , <a class="el" href="classAtFitterTask.html#af3008ad6b2ffb45cee66f6f8216bcaa9">AtFitterTask</a>
+, <a class="el" href="classAtFRIBHDFUnpacker.html#a2b4c59f4f9d7bb3904e0920b910cd85d">AtFRIBHDFUnpacker</a>
 , <a class="el" href="classAtGRAWUnpacker.html#a873c7a87faa8c81879ad2c8f522c2b3c">AtGRAWUnpacker</a>
+, <a class="el" href="classAtHDF5ReadTask.html#af0416bcfc2fbbf713229e6a33d90cc14">AtHDF5ReadTask</a>
+, <a class="el" href="classAtHDF5WriteTask.html#abbda0fae552883542f6b1088c5062eec">AtHDF5WriteTask</a>
 , <a class="el" href="classAtHDFUnpacker.html#a1244391861fd512b9d8b8753dfdfc6fb">AtHDFUnpacker</a>
 , <a class="el" href="classAtLinkDAQTask.html#a2ac2d388954a07d65f2f9fcdff0a287e">AtLinkDAQTask</a>
-, <a class="el" href="classAtLmedsMod.html#a7a6dbdfeaad739cf8dfe75cdabc6a70d">AtLmedsMod</a>
+, <a class="el" href="classAtMCFitterTask.html#a1d686b8e65a967b3a5e608386e7725a4">AtMCFitterTask</a>
 , <a class="el" href="classAtMergeTask.html#a0906cd193854d937482c031e3a1d195c">AtMergeTask</a>
-, <a class="el" href="classAtMlesacMod.html#a69e3a8bde7014b179821555073f169df">AtMlesacMod</a>
 , <a class="el" href="classAtPRAtask.html#ace5fc4e21eb515bffa7a75b17487003d">AtPRAtask</a>
 , <a class="el" href="classAtPSA.html#a373c282fd639827cad58d3c8d09c3b86">AtPSA</a>
+, <a class="el" href="classAtPSAComposite.html#adb3d9e617171fb07281563b3aa47112d">AtPSAComposite</a>
+, <a class="el" href="classAtPSADeconvFit.html#a50788665e687b3737d3a92f799f9ac75">AtPSADeconvFit</a>
 , <a class="el" href="classAtPSAtask.html#a5c4f8322b56560219893377cb4ee2566">AtPSAtask</a>
 , <a class="el" href="classAtPulseTask.html#a021c425a9312f909b49f4bd6ca1aaaa5">AtPulseTask</a>
-, <a class="el" href="classAtRansacMod.html#a5a01870b6019d94a408b2b67a8abc7af">AtRansacMod</a>
 , <a class="el" href="classAtRansacTask.html#a2760140fa6a7f1597fc916c59261c0d9">AtRansacTask</a>
+, <a class="el" href="classAtRemovePulser.html#ac01d2c1f543ed4fee4629e3a388f4100">AtRemovePulser</a>
 , <a class="el" href="classAtROOTUnpacker.html#aba824ac4ce844e0f7cc63cdfc257fb50">AtROOTUnpacker</a>
 , <a class="el" href="classAtS800Task.html#a7648fc72a0125049f03d1cb5bffb70ea">AtS800Task</a>
+, <a class="el" href="classAtSampleConsensusTask.html#a4354e6ddb67a7cfd223c1ef3e7d7edda">AtSampleConsensusTask</a>
+, <a class="el" href="classAtSCACorrect.html#a2e06ab4165590278601a8a481a45d4ab">AtSCACorrect</a>
+, <a class="el" href="classAtSeGADigitizer.html#a6207c5e05522035854053de7a37a4f5d">AtSeGADigitizer</a>
 , <a class="el" href="classAtSpaceChargeCorrectionTask.html#a421d1f3a409b4a59ad058f0d3d3f399d">AtSpaceChargeCorrectionTask</a>
 , <a class="el" href="classAtSpaceChargeTask.html#ae97bbbbdcfbd928b680fe5ae3637307b">AtSpaceChargeTask</a>
+, <a class="el" href="classAtTabBase.html#aca327fdaefa9bc8c07e09dbb5fc0069e">AtTabBase</a>
+, <a class="el" href="classAtTestSimulation.html#ae032a99aa0e229908aef041127b4445a">AtTestSimulation</a>
 , <a class="el" href="classAtTPC20MgDecay.html#af12e1a176eba6ee5ea40b3ed3c457892">AtTPC20MgDecay</a>
 , <a class="el" href="classAtTPCGammaDummyGenerator.html#a9fe4d0599301a8c5ec3747db295425e9">AtTPCGammaDummyGenerator</a>
-, <a class="el" href="classAtTrackFinderHCTask.html#a78eb23029f283c153a54d028e77d03cf">AtTrackFinderHCTask</a>
 , <a class="el" href="classAtTrapezoidFilter.html#af650d465f08390af9b1e1f34e6635fe8">AtTrapezoidFilter</a>
 , <a class="el" href="classAtTriggerTask.html#a97e729616c189a60913c317a7b6bc454">AtTriggerTask</a>
 , <a class="el" href="classAtUnpacker.html#a2d572db79a7290d5c805830a38b24b53">AtUnpacker</a>
 , <a class="el" href="classAtUnpackTask.html#ab71e98e435cffaf98ea8f8358419da51">AtUnpackTask</a>
+, <a class="el" href="classAtViewerManager.html#a48bf6568ae341a603770ed90189fad41">AtViewerManager</a>
 </li>
 <li>init()
-: <a class="el" href="classauto__array__ptr.html#a5c7a39aa17f6373b4dfc8e31f2594f70">auto_array_ptr&lt; type &gt;</a>
+: <a class="el" href="classauto__array__ptr.html#ac63e1d468dbd5bafb942f295acb8ec29">auto_array_ptr&lt; type &gt;</a>
 </li>
 <li>Init()
-: <a class="el" href="classPythia8Generator.html#a025542692d7eb0a1957dfd239ab97bcd">Pythia8Generator</a>
+: <a class="el" href="classMCFitter_1_1AtMCFitter.html#af4796e1d438e8449c4bb506182c2bbcf">MCFitter::AtMCFitter</a>
+, <a class="el" href="classPythia8Generator.html#a025542692d7eb0a1957dfd239ab97bcd">Pythia8Generator</a>
 </li>
 <li>InitEvent()
 : <a class="el" href="classAtFilter.html#aa0bcfc2d3d54a0a22cec29d754ebef67">AtFilter</a>
 , <a class="el" href="classAtFilterCalibrate.html#ae87d1e41bfb9242f67b4905af5725855">AtFilterCalibrate</a>
 , <a class="el" href="classAtFilterDivide.html#ae69291b1073300993eae97b1abea8ae4">AtFilterDivide</a>
 , <a class="el" href="classAtFilterFFT.html#a2471c371eff791830e69ae77b4018be8">AtFilterFFT</a>
+, <a class="el" href="classAtFilterFPN.html#aa9357028c43afa1d0d3be76f0a08163f">AtFilterFPN</a>
 , <a class="el" href="classAtFilterSubtraction.html#a8596286493cb66467463b0bba9d482ff">AtFilterSubtraction</a>
+, <a class="el" href="classAtFilterZero.html#ab247307a394aacbaa8f6e95cb13c7e18">AtFilterZero</a>
+, <a class="el" href="classAtRemovePulser.html#a8537d8b1f3e7bb35e648a9dea88ce780">AtRemovePulser</a>
+, <a class="el" href="classAtSCACorrect.html#a86103f963aace9649d6be38c4ea808a7">AtSCACorrect</a>
 , <a class="el" href="classAtTrapezoidFilter.html#a4b38f42d5401ccddba91986b2da45c75">AtTrapezoidFilter</a>
+</li>
+<li>initFFTs()
+: <a class="el" href="classAtPSADeconv.html#ab9a6b87daf8858b13006b66ade1a1040">AtPSADeconv</a>
+</li>
+<li>initFilter()
+: <a class="el" href="classAtPSADeconv.html#a0d90b85f9ce762b996bfd74b06c30760">AtPSADeconv</a>
 </li>
 <li>Initialize()
 : <a class="el" href="classAtApollo.html#a36f637a522c0cb573228fb1dedc3b62b">AtApollo</a>
 , <a class="el" href="classAtCore2.html#a96c104aa93cdd535a9a6f6cc33fee237">AtCore2</a>
 , <a class="el" href="classAtCoreSpecMAT.html#acabbd908a78ac9147f5eae742b8ef9f8">AtCoreSpecMAT</a>
+, <a class="el" href="classAtSeGA.html#a399e457a016cc4b84243b0545c815859">AtSeGA</a>
 , <a class="el" href="classAtSiArray.html#a447fffd5c7baf50b6526dc0ae0109982">AtSiArray</a>
 , <a class="el" href="classAtTpc.html#af515e5cb60166b4821fe227ab68669ec">AtTpc</a>
 </li>
 <li>InitializeLookupTables()
 : <a class="el" href="classAtTools_1_1AtELossManager.html#a5ea6a141051934b835ba84372e541eaa">AtTools::AtELossManager</a>
+</li>
+<li>InitTab()
+: <a class="el" href="classAtTabBase.html#a3bfe0a7d7c524e476525f2e687807ba6">AtTabBase</a>
+, <a class="el" href="classAtTabEnergyLoss.html#a3a252ffccec49f20a3d1882dd34de719">AtTabEnergyLoss</a>
+, <a class="el" href="classAtTabFF.html#a175913ba6b44e29ee64544bb95cb25f6">AtTabFF</a>
+, <a class="el" href="classAtTabFission.html#aa6f53f7925b12218cfd18713bdcbb6f9">AtTabFission</a>
+, <a class="el" href="classAtTabMacro.html#a073110ec6bb88dfbd1533df3ddab7fa7">AtTabMacro</a>
+, <a class="el" href="classAtTabMain.html#ada5eff39ca35495b6562f800cef38d12">AtTabMain</a>
+, <a class="el" href="classAtTabPad.html#a527c57dafea8897ea868ff0b14beb61e">AtTabPad</a>
 </li>
 <li>InputFile()
 : <a class="el" href="classS800Settings.html#aa3c7d29b6c3a8af14fad270edd7ec5f3">S800Settings</a>
@@ -179,13 +217,34 @@ $(function() {
 , <a class="el" href="classAtEventManagerS800.html#a0b7e30bac6382e7fdc93fcb4fc30faf6">AtEventManagerS800</a>
 , <a class="el" href="classAtTPCXSManager.html#acadfce35b09341eb7ef7559ce89c6d4f">AtTPCXSManager</a>
 , <a class="el" href="classAtVertexPropagator.html#a641795fbb95d61aaa44670bb6c651d93">AtVertexPropagator</a>
+, <a class="el" href="classAtViewerManager.html#a2ec1a7140d7831ad175a66d3d2307e7c">AtViewerManager</a>
+</li>
+<li>integrate()
+: <a class="el" href="classtk_1_1spline.html#a583dbc2dd3d1a075dad0eba3213d37db">tk::spline</a>
+</li>
+<li>integrateTimebuckets()
+: <a class="el" href="classAtPulseLine.html#a285803fc20662c3c019bd0dc10af70d6">AtPulseLine</a>
+</li>
+<li>IO_MODE
+: <a class="el" href="classAtHDFUnpacker.html#ae1b6b87af436c82713f0341c31c81e80">AtHDFUnpacker</a>
+</li>
+<li>is2d()
+: <a class="el" href="classPointCloud.html#acf403f289d956d50fee8e02b79543931">PointCloud</a>
+</li>
+<li>is_dmax()
+: <a class="el" href="classOpt.html#ae17ee60c78a6d21dd772a65416d7de5c">Opt</a>
+</li>
+<li>is_gnuplot()
+: <a class="el" href="classOpt.html#a6345c2c81b838df655a96aa4413e68ee">Opt</a>
 </li>
 <li>is_inactive()
 : <a class="el" href="classdoubly__linked__list.html#ac4f1087ad4b8aad65a22617abf4d0483">doubly_linked_list</a>
 </li>
+<li>is_tauto()
+: <a class="el" href="classOpt.html#aabb55e3bbeca3a8a32c36ef54147e7d8">Opt</a>
+</li>
 <li>IsAux()
 : <a class="el" href="classAtAuxPad.html#a616568fdd13e978a1853a1470de9ed71">AtAuxPad</a>
-, <a class="el" href="classAtHit.html#a4417995a24d3ba8f668d8c49716de3b1">AtHit</a>
 </li>
 <li>IsAuxPad()
 : <a class="el" href="classAtMap.html#aba9df4b58591263cb47709d8734aea71">AtMap</a>
@@ -199,12 +258,17 @@ $(function() {
 <li>IsFill()
 : <a class="el" href="classGETFrameInfo.html#a1c43d2c44c5a85a8fe4224e86cb6d2c0">GETFrameInfo</a>
 </li>
+<li>IsForwardTrack()
+: <a class="el" href="classAtFITTER_1_1AtGenfit.html#ad494f525154039fba6048afd2edd122c">AtFITTER::AtGenfit</a>
+</li>
+<li>IsFPNchannel()
+: <a class="el" href="classAtMap.html#afd069fc7c06782cac7e23d67b56189f6">AtMap</a>
+</li>
 <li>IsGainFile()
 : <a class="el" href="classAtCalibration.html#a663741b979687b9d88cb46fc7acb70e8">AtCalibration</a>
 </li>
 <li>IsGood()
-: <a class="el" href="classAtEvent.html#ac56290bf4dde5166ff3f8338280b7f7f">AtEvent</a>
-, <a class="el" href="classAtRawEvent.html#a43d7a15c12a1bca9c36cbc2caa5bb5f6">AtRawEvent</a>
+: <a class="el" href="classAtBaseEvent.html#a58b3d143224d45a5fcf9722bfaecbbac">AtBaseEvent</a>
 </li>
 <li>IsGoodEvent()
 : <a class="el" href="classAtFilter.html#a3e829564ee802ca80cf84eaab6ef253c">AtFilter</a>
@@ -212,19 +276,26 @@ $(function() {
 , <a class="el" href="classAtFilterDivide.html#a8f3cbb5c8db2f146cb5528b92665e951">AtFilterDivide</a>
 , <a class="el" href="classAtFilterFFT.html#aba8f0c529123e06b428f5f3262708a2d">AtFilterFFT</a>
 , <a class="el" href="classAtFilterSubtraction.html#a227714b67f09151ce29042aea7fa2cf9">AtFilterSubtraction</a>
+, <a class="el" href="classAtFilterZero.html#affa34e159c576459c663a580dc951d15">AtFilterZero</a>
+, <a class="el" href="classAtRemovePulser.html#a312d1bb257cc021e54dc9572789d0592">AtRemovePulser</a>
+, <a class="el" href="classAtSCACorrect.html#a9fa074386e5dfd29272fc506743231f6">AtSCACorrect</a>
 , <a class="el" href="classAtTrapezoidFilter.html#ad2786f4c0d9895150d1f04203f5c2442">AtTrapezoidFilter</a>
-</li>
-<li>IsInGate()
-: <a class="el" href="classAtEvent.html#ade06238dcb89508371a7ff05d7e108d1">AtEvent</a>
 </li>
 <li>isInGlom()
 : <a class="el" href="classAtMergeTask.html#a62ed46edf683377c3093b5a670b2f28e">AtMergeTask</a>
 </li>
 <li>IsInhibited()
-: <a class="el" href="classAtMap.html#a38edd1454606ac402d33b8c726cfee87">AtMap</a>
+: <a class="el" href="classAtMap.html#adbceaa9a2c9e60235ff0cd4fc92c6f28">AtMap</a>
 </li>
 <li>isInPID()
 : <a class="el" href="classAtMergeTask.html#a0269e28bf45a905680e648eb47933806">AtMergeTask</a>
+, <a class="el" href="classS800Ana.html#aa1c97635631c322b255a6d2f9cdebc56">S800Ana</a>
+</li>
+<li>isInVector()
+: <a class="el" href="classRandomSample_1_1AtSample.html#ab2596897cf78040d997ba5cab2090234">RandomSample::AtSample</a>
+</li>
+<li>IsInVolume()
+: <a class="el" href="classAtSimpleSimulation.html#acf87ec778d06276ca3dc00e6e3853bab">AtSimpleSimulation</a>
 </li>
 <li>IsJitterFile()
 : <a class="el" href="classAtCalibration.html#af7cef6abfac38996a5dac623d44cb660">AtCalibration</a>
@@ -241,11 +312,15 @@ $(function() {
 <li>IsPedestalSubtracted()
 : <a class="el" href="classAtPad.html#a209eb8e1eb9243078bef8fd6132c64ac">AtPad</a>
 </li>
+<li>isValidPad()
+: <a class="el" href="classAtFilterFPN.html#a38aa25d91e293beb94da1a09d432f90d">AtFilterFPN</a>
+, <a class="el" href="classAtFilterSubtraction.html#adcaee3601d20b7e59a891eb95485539e">AtFilterSubtraction</a>
+</li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Apr 27 2022 00:47:50 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Oct 20 2023 16:23:03 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.18
 </small></address>

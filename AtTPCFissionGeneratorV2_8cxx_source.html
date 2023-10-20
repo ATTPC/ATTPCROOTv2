@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">ATTPCROOT
-   &#160;<span id="projectnumber">1.0.0</span>
+   &#160;<span id="projectnumber">0.3.0-alpha</span>
    </div>
    <div id="projectbrief">A ROOT-based framework for analyzing data from active target detectors</div>
   </td>
@@ -145,7 +145,7 @@ $(function() {
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;      sprintf(buffer, <span class="stringliteral">&quot;Ion_%d_%d&quot;</span>, A, Z);</div>
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;      TString ionName(buffer);</div>
 <div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160; </div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;      <span class="keyword">auto</span> *ion = <span class="keyword">new</span> FairIon(ionName, Z, A, qq);</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;      <span class="keyword">auto</span> *ion = <span class="keyword">new</span> FairIon(ionName, Z, A, qq); <span class="comment">// NOLINT (I think the run takes ownership of this memory?)</span></div>
 <div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;      fIonMap[ionName] = ion;</div>
 <div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;      nIons++;</div>
 <div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160; </div>
@@ -192,7 +192,7 @@ $(function() {
 <div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;{</div>
 <div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160; </div>
 <div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;   fVx = 0., fVy = 0., fVz = 0.;</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;   Double_t uma = 931.494028, mp = 938.272013, c = 29.972458;</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;   Double_t uma = 931.494028, mp = 938.272013, <a class="code" href="AtRadialChargeModel_8cxx.html#a4fa597cdd9a67fc4cef7c8beebd1baa8">c</a> = 29.972458;</div>
 <div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;   Double_t px, py, pz;</div>
 <div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160; </div>
 <div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;   TDatabasePDG *fPDG = TDatabasePDG::Instance();</div>
@@ -279,11 +279,12 @@ $(function() {
 <div class="ttc" id="aclassAtVertexPropagator_html_a641795fbb95d61aaa44670bb6c651d93"><div class="ttname"><a href="classAtVertexPropagator.html#a641795fbb95d61aaa44670bb6c651d93">AtVertexPropagator::Instance</a></div><div class="ttdeci">static AtVertexPropagator * Instance()</div><div class="ttdef"><b>Definition:</b> <a href="AtVertexPropagator_8cxx_source.html#l00018">AtVertexPropagator.cxx:18</a></div></div>
 <div class="ttc" id="aAtTPCFissionGeneratorV2_8h_html"><div class="ttname"><a href="AtTPCFissionGeneratorV2_8h.html">AtTPCFissionGeneratorV2.h</a></div></div>
 <div class="ttc" id="aAtTPCFissionGeneratorV2_8cxx_html_a589c19906f4a04433cbba459fd2e2d71"><div class="ttname"><a href="AtTPCFissionGeneratorV2_8cxx.html#a589c19906f4a04433cbba459fd2e2d71">cNORMAL</a></div><div class="ttdeci">constexpr auto cNORMAL</div><div class="ttdef"><b>Definition:</b> <a href="AtTPCFissionGeneratorV2_8cxx_source.html#l00024">AtTPCFissionGeneratorV2.cxx:24</a></div></div>
-<div class="ttc" id="aclassAtVertexPropagator_html_a6d93aa66a85a3d2548137b8e5d5c864a"><div class="ttname"><a href="classAtVertexPropagator.html#a6d93aa66a85a3d2548137b8e5d5c864a">AtVertexPropagator::IncDecayEvtCnt</a></div><div class="ttdeci">void IncDecayEvtCnt()</div><div class="ttdef"><b>Definition:</b> <a href="AtVertexPropagator_8cxx_source.html#l00313">AtVertexPropagator.cxx:313</a></div></div>
+<div class="ttc" id="aclassAtVertexPropagator_html_a6d93aa66a85a3d2548137b8e5d5c864a"><div class="ttname"><a href="classAtVertexPropagator.html#a6d93aa66a85a3d2548137b8e5d5c864a">AtVertexPropagator::IncDecayEvtCnt</a></div><div class="ttdeci">void IncDecayEvtCnt()</div><div class="ttdef"><b>Definition:</b> <a href="AtVertexPropagator_8cxx_source.html#l00321">AtVertexPropagator.cxx:321</a></div></div>
+<div class="ttc" id="aAtRadialChargeModel_8cxx_html_a4fa597cdd9a67fc4cef7c8beebd1baa8"><div class="ttname"><a href="AtRadialChargeModel_8cxx.html#a4fa597cdd9a67fc4cef7c8beebd1baa8">c</a></div><div class="ttdeci">constexpr auto c</div><div class="ttdef"><b>Definition:</b> <a href="AtRadialChargeModel_8cxx_source.html#l00020">AtRadialChargeModel.cxx:20</a></div></div>
 <div class="ttc" id="aclassAtTPCFissionGeneratorV2_html_a67994da26be32dfa9a96eac2609a9a64"><div class="ttname"><a href="classAtTPCFissionGeneratorV2.html#a67994da26be32dfa9a96eac2609a9a64">AtTPCFissionGeneratorV2::AtTPCFissionGeneratorV2</a></div><div class="ttdeci">AtTPCFissionGeneratorV2()</div><div class="ttdef"><b>Definition:</b> <a href="AtTPCFissionGeneratorV2_8cxx_source.html#l00029">AtTPCFissionGeneratorV2.cxx:29</a></div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Apr 27 2022 00:47:47 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Oct 20 2023 16:22:59 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.18
 </small></address>

@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">ATTPCROOT
-   &#160;<span id="projectnumber">1.0.0</span>
+   &#160;<span id="projectnumber">0.3.0-alpha</span>
    </div>
    <div id="projectbrief">A ROOT-based framework for analyzing data from active target detectors</div>
   </td>
@@ -66,14 +66,8 @@ $(function() {
 &#160;
 
 <h3><a id="index_c"></a>- c -</h3><ul>
-<li>CalcLmedsMod()
-: <a class="el" href="classAtLmedsMod.html#af6b7a93a4c2651d9f1659b0135b02fee">AtLmedsMod</a>
-</li>
-<li>CalcLorentzVector()
-: <a class="el" href="classAtPSA.html#a59f49bf20e8eef72650ae62282bec555">AtPSA</a>
-</li>
-<li>CalcMlesacMod()
-: <a class="el" href="classAtMlesacMod.html#a365b0cc1b6fbd389e2948348ca0abd98">AtMlesacMod</a>
+<li>Calc()
+: <a class="el" href="classS800Ana.html#af2cb39657b325afee9b2b8ebb2ee4091">S800Ana</a>
 </li>
 <li>CalcPadCenter()
 : <a class="el" href="classAtGadgetIIMap.html#ade0d9e6b546be441a984394fab452848">AtGadgetIIMap</a>
@@ -82,32 +76,11 @@ $(function() {
 , <a class="el" href="classAtTpcMap.html#a5caf38df5bf1438e602b85092be322f9">AtTpcMap</a>
 , <a class="el" href="classAtTpcProtoMap.html#a1d2efc3a1784b2441ced6398b2c1213e">AtTpcProtoMap</a>
 </li>
-<li>CalcRANSAC()
-: <a class="el" href="classAtRANSACN_1_1AtRansac.html#a57dcf82ddb27baf918c7a80d8cbf00ce">AtRANSACN::AtRansac</a>
-</li>
-<li>CalcRANSACFull()
-: <a class="el" href="classAtRANSACN_1_1AtRansac.html#a7f7b6f5f0894300e7b443aa883082d6e">AtRANSACN::AtRansac</a>
-</li>
-<li>CalcRANSACMod()
-: <a class="el" href="classAtRansacMod.html#a0bc42a29107f98d467826ec8292c1781">AtRansacMod</a>
-</li>
-<li>CalculateX()
-: <a class="el" href="classAtPSA.html#afd11576263330610264340211f781e23">AtPSA</a>
-</li>
-<li>CalculateXCorr()
-: <a class="el" href="classAtPSA.html#ae59176bfdebace400b62615198a2fcf5">AtPSA</a>
-</li>
-<li>CalculateY()
-: <a class="el" href="classAtPSA.html#a030dec837b348c1d245ae6ed49dd2b9f">AtPSA</a>
-</li>
-<li>CalculateYCorr()
-: <a class="el" href="classAtPSA.html#af29edf32fdd61404f38ad0833f6aaf63">AtPSA</a>
+<li>calcTbCorrection()
+: <a class="el" href="classAtPSASpectrum.html#a15636cb73dec8371de817a2f9ce45a6d">AtPSASpectrum</a>
 </li>
 <li>CalculateZ()
 : <a class="el" href="classAtPSA.html#a6d5b873d6afb6a68bfa16c074e674cf5">AtPSA</a>
-</li>
-<li>CalculateZCorr()
-: <a class="el" href="classAtPSA.html#a5bf48ab0bf68bc79c4d4e7b655c44205">AtPSA</a>
 </li>
 <li>CalculateZGeo()
 : <a class="el" href="classAtPSA.html#a0dd3cd6167d66c9e5d0c3c4d5922a77a">AtPSA</a>
@@ -134,45 +107,43 @@ $(function() {
 : <a class="el" href="classAtEventManager.html#a30eab1636d3d16b9d093e49db99e0843">AtEventManager</a>
 , <a class="el" href="classAtEventManagerS800.html#af26cce1e73f09ed68535b40275fe389d">AtEventManagerS800</a>
 </li>
+<li>chargeToHits()
+: <a class="el" href="classAtPSADeconv.html#a22214b7b610582258ba00f6a2ab2d6a8">AtPSADeconv</a>
+</li>
 <li>CheckEndOfData()
 : <a class="el" href="classGETDecoder2.html#aae48db1056d1d204a22620f8696ff870">GETDecoder2</a>
+</li>
+<li>checkExclusivity()
+: <a class="el" href="classAtFindVertex.html#a9864b14c82b83a8c5f69ecf7dca90ebe">AtFindVertex</a>
 </li>
 <li>CheckFile()
 : <a class="el" href="classGETFileChecker.html#a98b1c833b401c8d6d3889575310929f9">GETFileChecker</a>
 </li>
 <li>CheckIfSensitive()
 : <a class="el" href="classAtApollo.html#af34701f23c9e9c7ba02facb0a96bec62">AtApollo</a>
+, <a class="el" href="classAtSeGA.html#a85c599cb69d8c7e061f3385933d7ae7d">AtSeGA</a>
 , <a class="el" href="classAtSiArray.html#a7ef374be06f9e7d5efabd8efb74a8d2d">AtSiArray</a>
 , <a class="el" href="classAtTpc.html#a7c663c1eaa6ba4899c84257b073c39da">AtTpc</a>
 </li>
-<li>CheckTrackID()
-: <a class="el" href="classAtRANSACN_1_1AtRansac.html#a6a50e4fc37771f4e789956fa387c0f91">AtRANSACN::AtRansac</a>
-</li>
 <li>ClassDef()
-: <a class="el" href="classAtCalibration.html#a0fc1abbd54aecc897e07cf0072ca5270">AtCalibration</a>
-, <a class="el" href="classAtCore2.html#a9ff8d21ccc4eeff398af8ef7fdc52c03">AtCore2</a>
+: <a class="el" href="classAtCore2.html#a9ff8d21ccc4eeff398af8ef7fdc52c03">AtCore2</a>
 , <a class="el" href="classAtCoreSpecMAT.html#af5823432221b12b416370836cfe6dbd1">AtCoreSpecMAT</a>
 , <a class="el" href="classAtDecoder2Task.html#a8cd482fdbfa8cf2adb58ee6dfd599f5a">AtDecoder2Task</a>
 , <a class="el" href="classAtDecoderSpecMATTask.html#af5f180ad5121a0c27e0ef307b42097cc">AtDecoderSpecMATTask</a>
 , <a class="el" href="classAtEventDrawTaskProto.html#aede7a7961a5085eae303cc799fef23ad">AtEventDrawTaskProto</a>
 , <a class="el" href="classAtEventDrawTaskS800.html#a44e3816d62cf9dee90dde83f1c2a38b3">AtEventDrawTaskS800</a>
+, <a class="el" href="classAtEventManager.html#aa79199cfd3f03e84ddf57451051377aa">AtEventManager</a>
 , <a class="el" href="classAtFieldCreator.html#a2a88a08e0871fe45177c827b33f30615">AtFieldCreator</a>
 , <a class="el" href="classAtFITTER_1_1AtFitter.html#ab85a01ffc4df9a1f76870c62f1bc6b27">AtFITTER::AtFitter</a>
-, <a class="el" href="classAtHit.html#a6fbc55a1902bc9eee813caf12889da1b">AtHit</a>
-, <a class="el" href="classAtHitCluster.html#a921324b5e4fca0f400223ce4226f6641">AtHitCluster</a>
-, <a class="el" href="classAtLmedsMod.html#ade005ba9c6dcbab7bc2791059d35e22b">AtLmedsMod</a>
-, <a class="el" href="classAtMlesacMod.html#ad106a19b45e63e4716648304c78ef329">AtMlesacMod</a>
-, <a class="el" href="classAtPad.html#a63d3d7931e036cb35b114a5bdefd931a">AtPad</a>
+, <a class="el" href="classAtHit.html#a361ddde68662ba50ea7ae45f5df92607">AtHit</a>
+, <a class="el" href="classAtMacroTask.html#ae05a3f24478e505a3b74811953d44e22">AtMacroTask</a>
 , <a class="el" href="classAtPRAtask.html#a517e569e8812a984a6093975ca632dea">AtPRAtask</a>
 , <a class="el" href="classAtProtoEvent.html#a62e9526f78ac432ebbbace4e325be70e">AtProtoEvent</a>
 , <a class="el" href="classAtProtoQuadrant.html#a5f432309b9a5fd2ecbe84c678aab4dd2">AtProtoQuadrant</a>
 , <a class="el" href="classAtPSAtask.html#aab050621a129e9e32847c261b8e7d87d">AtPSAtask</a>
-, <a class="el" href="classAtRansacMod.html#a22d78838ce973cbb10f284f65a2db791">AtRansacMod</a>
-, <a class="el" href="classAtRANSACN_1_1AtRansac.html#a6f9ea52d6f0f58f93c5700f213d62037">AtRANSACN::AtRansac</a>
 , <a class="el" href="classAtSimulatedElectron.html#a44f51aa107e10b145b933767a6b5e6f6">AtSimulatedElectron</a>
 , <a class="el" href="classAtSimulatedPoint.html#a80d96792fa1c4479c4de21f8ac66c4f3">AtSimulatedPoint</a>
-, <a class="el" href="classAtSpaceChargeModel.html#adc888dd97da19173263f45e929db9e9a">AtSpaceChargeModel</a>
-, <a class="el" href="classAtTrack.html#ab6a00b871a46382493e26a7f965952b4">AtTrack</a>
+, <a class="el" href="classAtTrack.html#a374e64644b9d8423760fa4996a8346a8">AtTrack</a>
 , <a class="el" href="classAtTrigger.html#a1c9e07b1278164e70b68526a2924d574">AtTrigger</a>
 , <a class="el" href="classCRDC.html#a19bee9039c98b5e19f87a96d42b42cce">CRDC</a>
 , <a class="el" href="classGCrdc.html#a693d0e5cad8ab570608a838ec2b8ff2c">GCrdc</a>
@@ -197,30 +168,57 @@ $(function() {
 </li>
 <li>ClassDefOverride()
 : <a class="el" href="classAtAuxPad.html#adc416a9089e6521771c57a2c6660c6de">AtAuxPad</a>
-, <a class="el" href="classAtClusterizeLineTask.html#a2ce0ed356f92718206abfd67cb1298d3">AtClusterizeLineTask</a>
-, <a class="el" href="classAtClusterizeTask.html#a3487791f51682188d02296add2b483b0">AtClusterizeTask</a>
-, <a class="el" href="classAtEvent.html#a1fd4ab148bdc0c9b15cbfe10aba95cf2">AtEvent</a>
+, <a class="el" href="classAtClusterizeTask.html#a382932ccf97344bdf418c0adef6234b7">AtClusterizeTask</a>
+, <a class="el" href="classAtDigiPar.html#a685917bf64644deb42ebcecd74d4fcd2">AtDigiPar</a>
+, <a class="el" href="classAtElectronicReference.html#ac5b921972429b49cdc738e360ab0517c">AtElectronicReference</a>
+, <a class="el" href="classAtEvent.html#aa00d6e126d673f61f3ef03ffd1e70f9c">AtEvent</a>
+, <a class="el" href="classAtFissionEvent.html#a3d2cf23b3edf2bef3f410a293e94f20a">AtFissionEvent</a>
 , <a class="el" href="classAtFITTER_1_1AtGenfit.html#a6c396d3f6a4b5837ffba19ae5b71ffed">AtFITTER::AtGenfit</a>
-, <a class="el" href="classAtLineChargeModel.html#a81ec09e062f93a0c461e3e716ce170b2">AtLineChargeModel</a>
+, <a class="el" href="classAtFRIBHDFUnpacker.html#a0a9d9982e91b0cd0397d6d70fcdcc4d4">AtFRIBHDFUnpacker</a>
+, <a class="el" href="classAtGenericTrace.html#a68a48c6bbb3f2f3391dd42281acafc45">AtGenericTrace</a>
+, <a class="el" href="classAtHDF5ReadTask.html#a3917cd53d6897a6df56d3830e304c62d">AtHDF5ReadTask</a>
+, <a class="el" href="classAtHDF5WriteTask.html#a8d80124183200d4bf896e05f42085163">AtHDF5WriteTask</a>
+, <a class="el" href="classAtHitCluster.html#a791b0eb317583c6acf20102455a31c39">AtHitCluster</a>
+, <a class="el" href="classAtHitClusterFull.html#aaa98007e7b2ac1dd2b1087f94fd63ffc">AtHitClusterFull</a>
 , <a class="el" href="classAtMap.html#aea7dc454410ea96e28964a8c5fe2ac3e">AtMap</a>
+, <a class="el" href="classAtPad.html#a65e20dcc09856d4382bcc53ab0a5df06">AtPad</a>
+, <a class="el" href="classAtPadArray.html#a717be63c56cc1ab98836e2ad7aa210ce">AtPadArray</a>
+, <a class="el" href="classAtPadBase.html#a069205c9eb642d14d6bf849c7f4933d5">AtPadBase</a>
 , <a class="el" href="classAtPadFFT.html#aeafb40eaf6c8f31532dbd66daacc1747">AtPadFFT</a>
-, <a class="el" href="classAtPSASimple.html#a7d7874942122e837c9225e9e0c924f1f">AtPSASimple</a>
+, <a class="el" href="classAtPadValue.html#a8c25365dcba8c856f32eac99deed981a">AtPadValue</a>
+, <a class="el" href="classAtPatternEvent.html#a44ff3d59f7c2d0724017b378671576a2">AtPatternEvent</a>
 , <a class="el" href="classAtPulseLineTask.html#a0ebba860515ab857994a36fcf9875673">AtPulseLineTask</a>
-, <a class="el" href="classAtPulseTask.html#ad68ddabd8f2638cff7da5ee7b08bee0d">AtPulseTask</a>
+, <a class="el" href="classAtPulseTask.html#ab5b748e7161cd51db2eeec16e9692153">AtPulseTask</a>
 , <a class="el" href="classAtRansacTask.html#aee130b6fd19ac9196fd8a01b7e7e3ca8">AtRansacTask</a>
-, <a class="el" href="classAtRawEvent.html#a072395da7569ebfa753f324e95f8e822">AtRawEvent</a>
+, <a class="el" href="classAtRawEvent.html#a9aea5ac0ddcdea332d049780548a1a4b">AtRawEvent</a>
 , <a class="el" href="classAtROOTUnpacker.html#ae9ae1890513c75b55ea5e44b56925fe0">AtROOTUnpacker</a>
 , <a class="el" href="classAtRunAna.html#a02b49a97976a5515bf6fe8e4f7130ad6">AtRunAna</a>
+, <a class="el" href="classAtSampleConsensusTask.html#ad1da55411e1aac3a49c25a5df636b811">AtSampleConsensusTask</a>
+, <a class="el" href="classAtSidebarAddon.html#a4fc40540c676d3b4670f836e1e0270c2">AtSidebarAddon</a>
+, <a class="el" href="classAtSidebarInfoMacro.html#ab3ec468ae41c46e14b5c08016acab006">AtSidebarInfoMacro</a>
+, <a class="el" href="classAtSidebarPSA.html#a9402bf3d7e69b1cf5bed9c83f7ab8db0">AtSidebarPSA</a>
+, <a class="el" href="classAtSidebarPSADeconv.html#ad87c0e5b2d444b84af669dc59271500c">AtSidebarPSADeconv</a>
+, <a class="el" href="classAtSidebarPSAIterDeconv.html#ad81f8d9e8df6371db1d371aed1836669">AtSidebarPSAIterDeconv</a>
+, <a class="el" href="classAtSidebarPSATBAvg.html#a5caca7ea7ddd0e283dd1824ec2b34706">AtSidebarPSATBAvg</a>
 , <a class="el" href="classAtSimulatedLine.html#a8d63bf9c750cec1eb23102d798b0a44f">AtSimulatedLine</a>
 , <a class="el" href="classAtSpaceChargeCorrectionTask.html#a97523e489645df1db054117c0695e0c3">AtSpaceChargeCorrectionTask</a>
 , <a class="el" href="classAtSpaceChargeTask.html#affed2ce256c9308943c894171ac00f58">AtSpaceChargeTask</a>
 , <a class="el" href="classAtSpecMATMap.html#a79cd040cda2d0e23917989ea1d14d6d7">AtSpecMATMap</a>
+, <a class="el" href="classAtTabFF.html#a3eb9c37dbee092638090c005cd5d4d77">AtTabFF</a>
+, <a class="el" href="classAtTestSimulation.html#a65d30a80c84af91aa39f59743925990f">AtTestSimulation</a>
+, <a class="el" href="classAtTPCIonGeneratorGaussian.html#a434b5dfed177182ea4c177f855f014a6">AtTPCIonGeneratorGaussian</a>
+, <a class="el" href="classAtTPCIonGeneratorS800.html#ac008e0e617d5847d5d88a63c6bff3244">AtTPCIonGeneratorS800</a>
 , <a class="el" href="classAtTpcMap.html#a6418bbc7bb964304e316f1b8f0128f22">AtTpcMap</a>
 , <a class="el" href="classAtTpcProtoMap.html#ae303a91c8033adf1e5b4e0e7d0b8517e">AtTpcProtoMap</a>
 , <a class="el" href="classAtUnpackTask.html#a16ddaceb89034389451ec5571b5618c2">AtUnpackTask</a>
+, <a class="el" href="classMCFitter_1_1AtMCResult.html#ad36dd3dae1883e132768391ee478f7b0">MCFitter::AtMCResult</a>
 </li>
 <li>Clear()
-: <a class="el" href="classAtEvent.html#a6e794eab0edd5c989af6a43da750e1e0">AtEvent</a>
+: <a class="el" href="classAtBaseEvent.html#a3ec88c6c23c1816dd94c51e7c40febbc">AtBaseEvent</a>
+, <a class="el" href="classAtEvent.html#a6e794eab0edd5c989af6a43da750e1e0">AtEvent</a>
+, <a class="el" href="classAtFilterSubtraction.html#abe39cf4689543b3354c06bdf4378e757">AtFilterSubtraction</a>
+, <a class="el" href="classAtMCPoint.html#a36845c47961088d59ae1a4f47d4bb97b">AtMCPoint</a>
+, <a class="el" href="classAtPatternEvent.html#a02d10551ab172956b912b0cb1a030ed1">AtPatternEvent</a>
 , <a class="el" href="classAtRawEvent.html#ac5a7c3fe0493548a8e53f0ae3400462f">AtRawEvent</a>
 </li>
 <li>clear()
@@ -257,18 +255,70 @@ $(function() {
 , <a class="el" href="classTOF.html#aadb851b8f4c5e1d3e2fc0710da6e762f">TOF</a>
 , <a class="el" href="classTrigger.html#ab8d51e3175e109aaab6f3168a1838b58">Trigger</a>
 </li>
+<li>ClearHits()
+: <a class="el" href="classAtEvent.html#aee325398d0f48c0a7f586473482ecefe">AtEvent</a>
+</li>
 <li>Clone()
-: <a class="el" href="classAtAuxPad.html#af0c358bf4b3f2d62d7d72528f4f24b64">AtAuxPad</a>
-, <a class="el" href="classAtPad.html#a40cf79695b32cac4a0c5d0c24b85b48e">AtPad</a>
-, <a class="el" href="classAtPadFFT.html#a02f7dfec7920802e93cb63b666d6b1d8">AtPadFFT</a>
+: <a class="el" href="classAtAuxPad.html#a220aa1edbc8fafcf21de415ba8d79cc3">AtAuxPad</a>
+, <a class="el" href="classAtClusterize.html#a72c62c43eccbcaac9d8be896dccff5f5">AtClusterize</a>
+, <a class="el" href="classAtClusterizeLine.html#afd4c62dc846855ef08b4098e50cba0e6">AtClusterizeLine</a>
+, <a class="el" href="classAtElectronicReference.html#a79e8ab4919316a88295720f7ef7dc43f">AtElectronicReference</a>
+, <a class="el" href="classAtGenericTrace.html#aa70c4471634b744c9bab254006cb1dd7">AtGenericTrace</a>
+, <a class="el" href="classAtHit.html#afd13c3f92151e8226236e361e59308cf">AtHit</a>
+, <a class="el" href="classAtHitCluster.html#ac1553459b49c5d49d1c64b60a6a8bd06">AtHitCluster</a>
+, <a class="el" href="classAtHitClusterFull.html#a46974679e30ab73c39594f2ab393640a">AtHitClusterFull</a>
+, <a class="el" href="classAtPad.html#a4ce5e8b15affe1e93d2db75ed998112b">AtPad</a>
+, <a class="el" href="classAtPadArray.html#a06fda2d886d08d53866d9c5cfd5e19ff">AtPadArray</a>
+, <a class="el" href="classAtPadBase.html#a20ced43aede84f4e0143f6d866fabb4a">AtPadBase</a>
+, <a class="el" href="classAtPadFFT.html#a0ee216b3cdf54089aaeb680a82f4499e">AtPadFFT</a>
+, <a class="el" href="classAtPadValue.html#aef717fb2b9ee44b611f7d915ab6d3713">AtPadValue</a>
+, <a class="el" href="classAtPatterns_1_1AtPattern.html#a725971eeaa11b09ce0cd68c7bc96ecbe">AtPatterns::AtPattern</a>
+, <a class="el" href="classAtPatterns_1_1AtPatternCircle2D.html#a1698c27068dc65a5ed1ec24c45ff4422">AtPatterns::AtPatternCircle2D</a>
+, <a class="el" href="classAtPatterns_1_1AtPatternLine.html#a6060a3c533410b127332e46ebe675dec">AtPatterns::AtPatternLine</a>
+, <a class="el" href="classAtPatterns_1_1AtPatternRay.html#afd4a2f293f55de82822ad3477b6317d9">AtPatterns::AtPatternRay</a>
+, <a class="el" href="classAtPatterns_1_1AtPatternY.html#aa0042eb34fee100c0a26330d257562a5">AtPatterns::AtPatternY</a>
+, <a class="el" href="classAtPSA.html#a93a9f8ef473fa959b36def403d19bb21">AtPSA</a>
+, <a class="el" href="classAtPSAComposite.html#a45acf86da2c60ff3e23b88e884709cd8">AtPSAComposite</a>
+, <a class="el" href="classAtPSADeconv.html#a3722cf4a8c5e56ebc6d7210a8f412c5e">AtPSADeconv</a>
+, <a class="el" href="classAtPSADeconvFit.html#ae58475e5cd4f96a90315eba0f439bca2">AtPSADeconvFit</a>
+, <a class="el" href="classAtPSAFull.html#aea2ed8c6a4a31c96b220ff78796d988b">AtPSAFull</a>
+, <a class="el" href="classAtPSAHitPerTB.html#a440747766f86ff7a7eb11549c716a3dc">AtPSAHitPerTB</a>
+, <a class="el" href="classAtPSAMax.html#a6cb3f528a494d57669a81e010b60d676">AtPSAMax</a>
+, <a class="el" href="classAtPSASimple2.html#a347eb5d054f84c75487d1dd7e854668c">AtPSASimple2</a>
+, <a class="el" href="classAtPSASpectrum.html#af2a5fcdd24d4b14718af2a10959291c6">AtPSASpectrum</a>
+, <a class="el" href="classAtPSATBAvg.html#a6e1a0aa555cb9962e0a287c0d7d57230">AtPSATBAvg</a>
+, <a class="el" href="classAtPulse.html#aa43ba4f5aa7960e114a71ba5de817ebb">AtPulse</a>
+, <a class="el" href="classAtPulseLine.html#a72bd90d6ee15484d952bb7f16967466f">AtPulseLine</a>
+, <a class="el" href="classAtPulserInfo.html#a63e260f42870b43f474a7cd15c42d6b5">AtPulserInfo</a>
 </li>
 <li>clone()
 : <a class="el" href="classgenfit_1_1AtSpacepointMeasurement.html#a33110d413980fd0356327c94772232cf">genfit::AtSpacepointMeasurement</a>
 </li>
+<li>ClonePad()
+: <a class="el" href="classAtAuxPad.html#a0079c91c8a86e1691f7580cba1a1cc7a">AtAuxPad</a>
+, <a class="el" href="classAtPad.html#a582e65f437fd31328595b240a37f1721">AtPad</a>
+</li>
+<li>close_dataset()
+: <a class="el" href="classAtHDFUnpacker.html#aa63a137599351df428f245c1b74dbd46">AtHDFUnpacker</a>
+</li>
+<li>close_file()
+: <a class="el" href="classAtHDFUnpacker.html#a253d00584cbdfd822d53bed65368a3cc">AtHDFUnpacker</a>
+</li>
+<li>close_group()
+: <a class="el" href="classAtHDFUnpacker.html#a84db67989885008a06cbc4131c64d5f2">AtHDFUnpacker</a>
+</li>
 <li>ClosestPoint2Lines()
-: <a class="el" href="classAtLmedsMod.html#ae381485c6e95511054f162ce922557ed">AtLmedsMod</a>
-, <a class="el" href="classAtMlesacMod.html#a9c2bb45d08fe98f3054f769d30a633e7">AtMlesacMod</a>
-, <a class="el" href="classAtRansacMod.html#af618182a023eb6cce4b3e04e8c3d42f3">AtRansacMod</a>
+: <a class="el" href="classAtFindVertex.html#a3177418007b526b5e61022f1c906600b">AtFindVertex</a>
+</li>
+<li>ClosestPointOnPattern()
+: <a class="el" href="classAtPatterns_1_1AtPattern.html#ab314389afe24280260f64c9efef6ee72">AtPatterns::AtPattern</a>
+, <a class="el" href="classAtPatterns_1_1AtPatternCircle2D.html#a87bb5304f877347fea4eece646d38189">AtPatterns::AtPatternCircle2D</a>
+, <a class="el" href="classAtPatterns_1_1AtPatternLine.html#a1a3996105aaf1d2cf3d8cf8f3708b3f2">AtPatterns::AtPatternLine</a>
+, <a class="el" href="classAtPatterns_1_1AtPatternRay.html#ab4f9aa47f8839fac449a9c2068b9a6b5">AtPatterns::AtPatternRay</a>
+, <a class="el" href="classAtPatterns_1_1AtPatternY.html#a3baee05dfbf70b36db037037e1e628e0">AtPatterns::AtPatternY</a>
+</li>
+<li>ClosestPointProjOnLines()
+: <a class="el" href="classAtFindVertex.html#a2d85ece9a79b9ed961c17e348bf9f422">AtFindVertex</a>
 </li>
 <li>Cluster()
 : <a class="el" href="classCluster.html#aae950ea2a827a1ad83cb3471a70ef16a">Cluster</a>
@@ -276,50 +326,52 @@ $(function() {
 <li>cluster_result()
 : <a class="el" href="classcluster__result.html#a1b66eef325f4c5fd7ea9a75f26c8c3d4">cluster_result</a>
 </li>
-<li>Clusterize()
-: <a class="el" href="classAtPATTERN_1_1AtPRA.html#a70e4ac5e128c66be94a456b713b6d4f9">AtPATTERN::AtPRA</a>
-</li>
-<li>Clusterize3D()
-: <a class="el" href="classAtPATTERN_1_1AtPRA.html#ab29f3199ce8f8b7f61a3e7c4771844f7">AtPATTERN::AtPRA</a>
-</li>
 <li>ClusterizeSmooth3D()
-: <a class="el" href="classAtPATTERN_1_1AtPRA.html#a52a38df4a2079ac5dbe3cc037959335f">AtPATTERN::AtPRA</a>
+: <a class="el" href="classAtTools_1_1AtTrackTransformer.html#a5ef7c7f14fcdb17ddd704a22829190e8">AtTools::AtTrackTransformer</a>
 </li>
-<li>Clusters2Tracks()
-: <a class="el" href="classAtLmedsMod.html#aaa5a11c6f64497fb59330b01de068030">AtLmedsMod</a>
-, <a class="el" href="classAtMlesacMod.html#ab1672883ad89f90d4ef54a2134969ecd">AtMlesacMod</a>
-, <a class="el" href="classAtRansacMod.html#a550ce9132331ed3fc9a3ea31e6961e81">AtRansacMod</a>
+<li>CoGVtx()
+: <a class="el" href="classAtFindVertex.html#a54bb4cc5ab0e4d02235b95e3297988af">AtFindVertex</a>
+</li>
+<li>CoGVtxSingleTrack()
+: <a class="el" href="classAtFindVertex.html#a7a65f218428fc6c982695844190a08dc">AtFindVertex</a>
+</li>
+<li>compare_dimension()
+: <a class="el" href="classKdtree_1_1compare__dimension.html#a87b752ac5b66dfce937e0c4813be05e8">Kdtree::compare_dimension</a>
 </li>
 <li>ConstructGeometry()
 : <a class="el" href="classAtApollo.html#aacc7b46416d63152c08f1c415af281dc">AtApollo</a>
 , <a class="el" href="classAtCave.html#a8d118f9ee17150eac0014d4d2b2c69f8">AtCave</a>
 , <a class="el" href="classAtMagnet.html#a7479427096c270d7669d5ad0a6cd7731">AtMagnet</a>
 , <a class="el" href="classAtPipe.html#ab2a79726469623d616339914402f8d2a">AtPipe</a>
+, <a class="el" href="classAtSeGA.html#ab1d0b054ad0f1a9f06c8ae26aaf72a57">AtSeGA</a>
 , <a class="el" href="classAtSiArray.html#ac5eae559bb51b0bf6b12da2d934d98b8">AtSiArray</a>
 , <a class="el" href="classAtTpc.html#a66e3ca16c224aa25520f27f00cda7b0a">AtTpc</a>
 </li>
 <li>ConstructOutputEvent()
 : <a class="el" href="classAtFilter.html#a4127c2a19c1049e0b247ddb410c191be">AtFilter</a>
 </li>
+<li>coordinate_distance()
+: <a class="el" href="classKdtree_1_1DistanceL0.html#add967feaa1d5ef4b3869ac2c3497f4dc">Kdtree::DistanceL0</a>
+, <a class="el" href="classKdtree_1_1DistanceL1.html#a72d0b49df9ab321c46311b7aa96ea2e2">Kdtree::DistanceL1</a>
+, <a class="el" href="classKdtree_1_1DistanceL2.html#a8ab00c09915a66c4b8628d0a0b497620">Kdtree::DistanceL2</a>
+, <a class="el" href="classKdtree_1_1DistanceMeasure.html#aede8678ba71984e746069f0ae5e052bd">Kdtree::DistanceMeasure</a>
+</li>
 <li>Copy()
 : <a class="el" href="classGETFrameInfo.html#acc95be883beb53ce2b055d8b933bf699">GETFrameInfo</a>
 </li>
-<li>CopyAllButData()
-: <a class="el" href="classAtRawEvent.html#aa96f374f65bdcfa4a645a34b1de62ca7">AtRawEvent</a>
-</li>
 <li>CopyClones()
 : <a class="el" href="classAtApollo.html#a828818d4e6c623005d810c378d4087df">AtApollo</a>
+, <a class="el" href="classAtSeGA.html#ae23f35235379b3c804221fdae1bc5b82">AtSeGA</a>
 , <a class="el" href="classAtSiArray.html#a890a7bb6436745aaf47e08a4289f0a6c">AtSiArray</a>
-</li>
-<li>CopyFrom()
-: <a class="el" href="classAtEvent.html#a9c7269a388507abf0c8268c56c9f7442">AtEvent</a>
 </li>
 <li>CorrectEndianness()
 : <a class="el" href="classGETHeaderBase.html#a5d83267f47a1527fcf8ad50e46faaa44">GETHeaderBase</a>
 </li>
 <li>CorrectSpaceCharge()
-: <a class="el" href="classAtLineChargeModel.html#ad097a0c2fd334014336cc4de0499388e">AtLineChargeModel</a>
-, <a class="el" href="classAtSpaceChargeModel.html#a411d186875ea2681f31c91c983282615">AtSpaceChargeModel</a>
+: <a class="el" href="classAtEDistortionModel.html#a011817b75f479b61c6e3695af5598ecb">AtEDistortionModel</a>
+, <a class="el" href="classAtLineChargeModel.html#ad097a0c2fd334014336cc4de0499388e">AtLineChargeModel</a>
+, <a class="el" href="classAtRadialChargeModel.html#aaf5002268854707f5ca6861323ea5346">AtRadialChargeModel</a>
+, <a class="el" href="classAtSpaceChargeModel.html#ae6fb1dabf2232aba6b06c3e8bf0cbca8">AtSpaceChargeModel</a>
 </li>
 <li>CRDC()
 : <a class="el" href="classCRDC.html#af8d6661ce99c861494afabcd0eddc303">CRDC</a>
@@ -331,11 +383,25 @@ $(function() {
 : <a class="el" href="classAtApolloContFact.html#a974496eb40f3aef561813ab582729963">AtApolloContFact</a>
 , <a class="el" href="classAtContFact.html#a681ead31c0eb9022972f4e7bb73d4bb2">AtContFact</a>
 , <a class="el" href="classAtPassiveContFact.html#a8fb6e2e7b1665c7674f60d803527c328">AtPassiveContFact</a>
+, <a class="el" href="classAtSeGAContFact.html#a2839d61d7af735f6dc4ec384f5890b36">AtSeGAContFact</a>
 , <a class="el" href="classAtSiArrayContFact.html#a63c54ff65a8fc71151c6c7a1cf6392bd">AtSiArrayContFact</a>
 , <a class="el" href="classAtTpcContFact.html#a8512a6de2feb3db47f1d9998360bd313">AtTpcContFact</a>
 </li>
 <li>createFairField()
 : <a class="el" href="classAtFieldCreator.html#a93d4d254b628739a5d320bce6ad55fad">AtFieldCreator</a>
+</li>
+<li>CreateFromFFT()
+: <a class="el" href="classAtPadFFT.html#aa78e723d0cf8c0444fafd2f2fcde3510">AtPadFFT</a>
+</li>
+<li>CreateMap()
+: <a class="el" href="classE12014.html#a9b97553157a747d2ee4e0ac851648838">E12014</a>
+</li>
+<li>CreateParamDistros()
+: <a class="el" href="classMCFitter_1_1AtMCFission.html#acc646e93b1c932469f9c3a1f9b590ad5">MCFitter::AtMCFission</a>
+, <a class="el" href="classMCFitter_1_1AtMCFitter.html#a1d64deade42faa6a158de5293adbe634">MCFitter::AtMCFitter</a>
+</li>
+<li>createResponsePad()
+: <a class="el" href="classAtPSADeconv.html#ae9b38d0ef2517f45a41294589afb6034">AtPSADeconv</a>
 </li>
 <li>CreateXterm()
 : <a class="el" href="classAtTools_1_1AtVirtualTerminal.html#a99d4c64c375cdfb91fc320b5a095eba8">AtTools::AtVirtualTerminal</a>
@@ -350,7 +416,7 @@ $(function() {
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Apr 27 2022 00:47:50 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Oct 20 2023 16:23:03 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.18
 </small></address>

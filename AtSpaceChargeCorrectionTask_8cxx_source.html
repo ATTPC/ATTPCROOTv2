@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">ATTPCROOT
-   &#160;<span id="projectnumber">1.0.0</span>
+   &#160;<span id="projectnumber">0.3.0-alpha</span>
    </div>
    <div id="projectbrief">A ROOT-based framework for analyzing data from active target detectors</div>
   </td>
@@ -72,90 +72,105 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 <a href="AtSpaceChargeCorrectionTask_8cxx.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="AtSpaceChargeCorrectionTask_8h.html">AtSpaceChargeCorrectionTask.h</a>&quot;</span></div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160; </div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">// IWYU pragma: no_include &lt;ext/alloc_traits.h&gt;</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="AtEvent_8h.html">AtEvent.h</a>&quot;</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="AtHit_8h.html">AtHit.h</a>&quot;</span></div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="AtSpaceChargeModel_8h.html">AtSpaceChargeModel.h</a>&quot;</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160; </div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &lt;FairLogger.h&gt;</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &lt;FairRootManager.h&gt;</span></div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &lt;FairTask.h&gt;</span></div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160; </div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &lt;Math/Point3D.h&gt;</span></div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#include &lt;Math/Point3Dfwd.h&gt;</span></div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor">#include &lt;TClonesArray.h&gt;</span></div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="preprocessor">#include &lt;TObject.h&gt;</span></div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160; </div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">#include &lt;utility&gt;</span></div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="preprocessor">#include &lt;vector&gt;</span></div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160; </div>
-<div class="line"><a name="l00019"></a><span class="lineno"><a class="line" href="AtSpaceChargeCorrectionTask_8cxx.html#acdbe604dea12970b4e97a316f9046ae7">   19</a></span>&#160;<span class="keyword">using</span> <a class="code" href="AtHit_8h.html#acdbe604dea12970b4e97a316f9046ae7">XYZPoint</a> = <a class="code" href="AtSpaceChargeCorrectionTask_8cxx.html#acdbe604dea12970b4e97a316f9046ae7">ROOT::Math::XYZPoint</a>;</div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &lt;FairRun.h&gt;</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &lt;FairRuntimeDb.h&gt;</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &lt;FairTask.h&gt;</span></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160; </div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor">#include &lt;Math/Point3D.h&gt;</span></div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="preprocessor">#include &lt;Math/Point3Dfwd.h&gt;</span></div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#include &lt;TClonesArray.h&gt;</span></div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">#include &lt;TObject.h&gt;</span></div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#include &lt;utility&gt;</span></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">#include &lt;vector&gt;</span></div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
-<div class="line"><a name="l00021"></a><span class="lineno"><a class="line" href="AtSpaceChargeCorrectionTask_8cxx.html#a7e3d7614da51572a4927c2afb1c5f88c">   21</a></span>&#160;<a class="code" href="AtSpaceChargeCorrectionTask_8cxx.html#a7e3d7614da51572a4927c2afb1c5f88c">ClassImp</a>(<a class="code" href="classAtSpaceChargeCorrectionTask.html">AtSpaceChargeCorrectionTask</a>);</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160; </div>
-<div class="line"><a name="l00023"></a><span class="lineno"><a class="line" href="classAtSpaceChargeCorrectionTask.html#ace7b79e3ebab4cd2150a4e3873099dfd">   23</a></span>&#160;<a class="code" href="classAtSpaceChargeCorrectionTask.html#ace7b79e3ebab4cd2150a4e3873099dfd">AtSpaceChargeCorrectionTask::AtSpaceChargeCorrectionTask</a>(<a class="code" href="AtSpaceChargeCorrectionTask_8h.html#a42cd06d3a21ebd1809ddb4ab6da13b5c">SCModelPtr</a> &amp;&amp;SCModel)</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;   : fSCModel(std::move(SCModel)), fOutputEventArray(TClonesArray(<span class="stringliteral">&quot;AtEvent&quot;</span>, 1)), fInputEventArray(nullptr)</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;{</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;}</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
-<div class="line"><a name="l00028"></a><span class="lineno"><a class="line" href="classAtSpaceChargeCorrectionTask.html#a421d1f3a409b4a59ad058f0d3d3f399d">   28</a></span>&#160;InitStatus <a class="code" href="classAtSpaceChargeCorrectionTask.html#a421d1f3a409b4a59ad058f0d3d3f399d">AtSpaceChargeCorrectionTask::Init</a>()</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;{</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;   <span class="keywordflow">if</span> (FairRootManager::Instance() == <span class="keyword">nullptr</span>) {</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;      LOG(fatal) &lt;&lt; <span class="stringliteral">&quot;Cannot find RootManager!&quot;</span>;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;      <span class="keywordflow">return</span> kFATAL;</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;   }</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;   fInputEventArray = <span class="keyword">dynamic_cast&lt;</span>TClonesArray *<span class="keyword">&gt;</span>(FairRootManager::Instance()-&gt;GetObject(fInputBranchName.data()));</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;   <span class="keywordflow">if</span> (fInputEventArray == <span class="keyword">nullptr</span>) {</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;      LOG(fatal) &lt;&lt; <span class="stringliteral">&quot;SpaceChargeTask: Cannot find AtEvent array!&quot;</span>;</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;      <span class="keywordflow">return</span> kFATAL;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;   }</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160; </div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;   FairRootManager::Instance()-&gt;Register(fOuputBranchName.data(), <span class="stringliteral">&quot;AtTpc&quot;</span>, &amp;fOutputEventArray, fIsPersistent);</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;   <span class="keywordflow">return</span> kSUCCESS;</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;}</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="keyword">class </span><a class="code" href="classAtDigiPar.html">AtDigiPar</a>;</div>
+<div class="line"><a name="l00022"></a><span class="lineno"><a class="line" href="AtSpaceChargeCorrectionTask_8cxx.html#acdbe604dea12970b4e97a316f9046ae7">   22</a></span>&#160;<span class="keyword">using</span> <a class="code" href="AtPatternCircle2D_8h.html#acdbe604dea12970b4e97a316f9046ae7">XYZPoint</a> = <a class="code" href="AtSpaceChargeCorrectionTask_8cxx.html#acdbe604dea12970b4e97a316f9046ae7">ROOT::Math::XYZPoint</a>;</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
+<div class="line"><a name="l00024"></a><span class="lineno"><a class="line" href="AtSpaceChargeCorrectionTask_8cxx.html#a7e3d7614da51572a4927c2afb1c5f88c">   24</a></span>&#160;<a class="code" href="AtSpaceChargeCorrectionTask_8cxx.html#a7e3d7614da51572a4927c2afb1c5f88c">ClassImp</a>(<a class="code" href="classAtSpaceChargeCorrectionTask.html">AtSpaceChargeCorrectionTask</a>);</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
+<div class="line"><a name="l00026"></a><span class="lineno"><a class="line" href="classAtSpaceChargeCorrectionTask.html#ace7b79e3ebab4cd2150a4e3873099dfd">   26</a></span>&#160;<a class="code" href="classAtSpaceChargeCorrectionTask.html#ace7b79e3ebab4cd2150a4e3873099dfd">AtSpaceChargeCorrectionTask::AtSpaceChargeCorrectionTask</a>(<a class="code" href="AtSpaceChargeCorrectionTask_8h.html#a42cd06d3a21ebd1809ddb4ab6da13b5c">SCModelPtr</a> &amp;&amp;SCModel)</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;   : fSCModel(std::move(SCModel)), fOutputEventArray(TClonesArray(<span class="stringliteral">&quot;AtEvent&quot;</span>, 1)), fInputEventArray(nullptr)</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;{</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;}</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
+<div class="line"><a name="l00031"></a><span class="lineno"><a class="line" href="classAtSpaceChargeCorrectionTask.html#a421d1f3a409b4a59ad058f0d3d3f399d">   31</a></span>&#160;InitStatus <a class="code" href="classAtSpaceChargeCorrectionTask.html#a421d1f3a409b4a59ad058f0d3d3f399d">AtSpaceChargeCorrectionTask::Init</a>()</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;{</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;   <span class="keywordflow">if</span> (FairRootManager::Instance() == <span class="keyword">nullptr</span>) {</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;      LOG(fatal) &lt;&lt; <span class="stringliteral">&quot;Cannot find RootManager!&quot;</span>;</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;      <span class="keywordflow">return</span> kFATAL;</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;   }</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;   fInputEventArray = <span class="keyword">dynamic_cast&lt;</span>TClonesArray *<span class="keyword">&gt;</span>(FairRootManager::Instance()-&gt;GetObject(fInputBranchName.data()));</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;   <span class="keywordflow">if</span> (fInputEventArray == <span class="keyword">nullptr</span>) {</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;      LOG(fatal) &lt;&lt; <span class="stringliteral">&quot;SpaceChargeTask: Cannot find AtEvent array!&quot;</span>;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;      <span class="keywordflow">return</span> kFATAL;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;   }</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160; </div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;   FairRootManager::Instance()-&gt;Register(fOuputBranchName.data(), <span class="stringliteral">&quot;AtTpc&quot;</span>, &amp;fOutputEventArray, fIsPersistent);</div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
-<div class="line"><a name="l00046"></a><span class="lineno"><a class="line" href="classAtSpaceChargeCorrectionTask.html#ae50e7c736b206bf706d77751eb31c48e">   46</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classAtSpaceChargeCorrectionTask.html#ae50e7c736b206bf706d77751eb31c48e">AtSpaceChargeCorrectionTask::SetParContainers</a>() {}</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160; </div>
-<div class="line"><a name="l00048"></a><span class="lineno"><a class="line" href="classAtSpaceChargeCorrectionTask.html#a991674493c505d49f87ad8724f43daad">   48</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classAtSpaceChargeCorrectionTask.html#a991674493c505d49f87ad8724f43daad">AtSpaceChargeCorrectionTask::Exec</a>(Option_t *opt)</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;{</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;   fOutputEventArray.Clear(<span class="stringliteral">&quot;C&quot;</span>);</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;   <span class="keywordflow">if</span> (fInputEventArray-&gt;GetEntriesFast() == 0)</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;      <span class="keywordflow">return</span>;</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160; </div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;   <span class="keyword">auto</span> inputEvent = <span class="keyword">dynamic_cast&lt;</span><a class="code" href="classAtEvent.html">AtEvent</a> *<span class="keyword">&gt;</span>(fInputEventArray-&gt;At(0));</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;   <span class="keyword">auto</span> outputEvent = <span class="keyword">dynamic_cast&lt;</span><a class="code" href="classAtEvent.html">AtEvent</a> *<span class="keyword">&gt;</span>(fOutputEventArray.ConstructedAt(0));</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;   outputEvent-&gt;<a class="code" href="classAtEvent.html#a9c7269a388507abf0c8268c56c9f7442">CopyFrom</a>(*inputEvent);</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;   FairRun *run = FairRun::Instance();</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;   <span class="keywordflow">if</span> (!run)</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;      LOG(FATAL) &lt;&lt; <span class="stringliteral">&quot;No analysis run!&quot;</span>;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160; </div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;   FairRuntimeDb *db = run-&gt;GetRuntimeDb(); <span class="comment">// NOLINT</span></div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;   <span class="keywordflow">if</span> (!db)</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;      LOG(FATAL) &lt;&lt; <span class="stringliteral">&quot;No runtime database!&quot;</span>;</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160; </div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;   <span class="keyword">auto</span> fPar = (<a class="code" href="classAtDigiPar.html">AtDigiPar</a> *)db-&gt;getContainer(<span class="stringliteral">&quot;AtDigiPar&quot;</span>); <span class="comment">// NOLINT</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;   fSCModel-&gt;LoadParameters(fPar);</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;   <span class="keywordflow">return</span> kSUCCESS;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;}</div>
 <div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; </div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;   <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;inHit : inputEvent-&gt;GetHitArray()) {</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;      <a class="code" href="AtHit_8h.html#acdbe604dea12970b4e97a316f9046ae7">XYZPoint</a> newPosition;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;      newPosition = fSCModel-&gt;CorrectSpaceCharge(inHit.GetPosition());</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;      <span class="keyword">auto</span> &amp;newHit = outputEvent-&gt;AddHit(inHit);</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;      newHit.SetPosition(newPosition);</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;      LOG(debug) &lt;&lt; inHit.GetPosition() &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; outputEvent-&gt;GetHitArray().back().GetPosition();</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;   }</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;}</div>
+<div class="line"><a name="l00059"></a><span class="lineno"><a class="line" href="classAtSpaceChargeCorrectionTask.html#ae50e7c736b206bf706d77751eb31c48e">   59</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classAtSpaceChargeCorrectionTask.html#ae50e7c736b206bf706d77751eb31c48e">AtSpaceChargeCorrectionTask::SetParContainers</a>() {}</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160; </div>
+<div class="line"><a name="l00061"></a><span class="lineno"><a class="line" href="classAtSpaceChargeCorrectionTask.html#a991674493c505d49f87ad8724f43daad">   61</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classAtSpaceChargeCorrectionTask.html#a991674493c505d49f87ad8724f43daad">AtSpaceChargeCorrectionTask::Exec</a>(Option_t *opt)</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;{</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;   fOutputEventArray.Clear(<span class="stringliteral">&quot;C&quot;</span>);</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;   <span class="keywordflow">if</span> (fInputEventArray-&gt;GetEntriesFast() == 0)</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;      <span class="keywordflow">return</span>;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160; </div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;   <span class="keyword">auto</span> inputEvent = <span class="keyword">dynamic_cast&lt;</span><a class="code" href="classAtEvent.html">AtEvent</a> *<span class="keyword">&gt;</span>(fInputEventArray-&gt;At(0));</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;   <span class="keyword">auto</span> outputEvent = <span class="keyword">dynamic_cast&lt;</span><a class="code" href="classAtEvent.html">AtEvent</a> *<span class="keyword">&gt;</span>(fOutputEventArray.ConstructedAt(0));</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;   *outputEvent = *inputEvent;</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;   outputEvent-&gt;<a class="code" href="classAtEvent.html#aee325398d0f48c0a7f586473482ecefe">ClearHits</a>();</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160; </div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;   <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;inHit : inputEvent-&gt;GetHits()) {</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;      <a class="code" href="AtPatternCircle2D_8h.html#acdbe604dea12970b4e97a316f9046ae7">XYZPoint</a> newPosition;</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;      newPosition = fSCModel-&gt;CorrectSpaceCharge(inHit-&gt;GetPosition());</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;      <span class="keyword">auto</span> &amp;newHit = outputEvent-&gt;AddHit(inHit-&gt;Clone());</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;      newHit.SetPosition(newPosition);</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;      LOG(debug) &lt;&lt; inHit-&gt;GetPosition() &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; outputEvent-&gt;GetHits().back()-&gt;GetPosition();</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;   }</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
-<div class="ttc" id="aAtSpaceChargeCorrectionTask_8cxx_html_acdbe604dea12970b4e97a316f9046ae7"><div class="ttname"><a href="AtSpaceChargeCorrectionTask_8cxx.html#acdbe604dea12970b4e97a316f9046ae7">XYZPoint</a></div><div class="ttdeci">ROOT::Math::XYZPoint XYZPoint</div><div class="ttdef"><b>Definition:</b> <a href="AtSpaceChargeCorrectionTask_8cxx_source.html#l00019">AtSpaceChargeCorrectionTask.cxx:19</a></div></div>
-<div class="ttc" id="aclassAtSpaceChargeCorrectionTask_html_a421d1f3a409b4a59ad058f0d3d3f399d"><div class="ttname"><a href="classAtSpaceChargeCorrectionTask.html#a421d1f3a409b4a59ad058f0d3d3f399d">AtSpaceChargeCorrectionTask::Init</a></div><div class="ttdeci">virtual InitStatus Init() override</div><div class="ttdef"><b>Definition:</b> <a href="AtSpaceChargeCorrectionTask_8cxx_source.html#l00028">AtSpaceChargeCorrectionTask.cxx:28</a></div></div>
+<div class="ttc" id="aAtSpaceChargeCorrectionTask_8cxx_html_acdbe604dea12970b4e97a316f9046ae7"><div class="ttname"><a href="AtSpaceChargeCorrectionTask_8cxx.html#acdbe604dea12970b4e97a316f9046ae7">XYZPoint</a></div><div class="ttdeci">ROOT::Math::XYZPoint XYZPoint</div><div class="ttdef"><b>Definition:</b> <a href="AtSpaceChargeCorrectionTask_8cxx_source.html#l00022">AtSpaceChargeCorrectionTask.cxx:22</a></div></div>
+<div class="ttc" id="aclassAtSpaceChargeCorrectionTask_html_a421d1f3a409b4a59ad058f0d3d3f399d"><div class="ttname"><a href="classAtSpaceChargeCorrectionTask.html#a421d1f3a409b4a59ad058f0d3d3f399d">AtSpaceChargeCorrectionTask::Init</a></div><div class="ttdeci">virtual InitStatus Init() override</div><div class="ttdef"><b>Definition:</b> <a href="AtSpaceChargeCorrectionTask_8cxx_source.html#l00031">AtSpaceChargeCorrectionTask.cxx:31</a></div></div>
 <div class="ttc" id="aAtEvent_8h_html"><div class="ttname"><a href="AtEvent_8h.html">AtEvent.h</a></div></div>
 <div class="ttc" id="aclassAtSpaceChargeCorrectionTask_html"><div class="ttname"><a href="classAtSpaceChargeCorrectionTask.html">AtSpaceChargeCorrectionTask</a></div><div class="ttdef"><b>Definition:</b> <a href="AtSpaceChargeCorrectionTask_8h_source.html#l00025">AtSpaceChargeCorrectionTask.h:25</a></div></div>
-<div class="ttc" id="aclassAtSpaceChargeCorrectionTask_html_ace7b79e3ebab4cd2150a4e3873099dfd"><div class="ttname"><a href="classAtSpaceChargeCorrectionTask.html#ace7b79e3ebab4cd2150a4e3873099dfd">AtSpaceChargeCorrectionTask::AtSpaceChargeCorrectionTask</a></div><div class="ttdeci">AtSpaceChargeCorrectionTask(SCModelPtr &amp;&amp;model)</div><div class="ttdef"><b>Definition:</b> <a href="AtSpaceChargeCorrectionTask_8cxx_source.html#l00023">AtSpaceChargeCorrectionTask.cxx:23</a></div></div>
-<div class="ttc" id="aclassAtSpaceChargeCorrectionTask_html_a991674493c505d49f87ad8724f43daad"><div class="ttname"><a href="classAtSpaceChargeCorrectionTask.html#a991674493c505d49f87ad8724f43daad">AtSpaceChargeCorrectionTask::Exec</a></div><div class="ttdeci">virtual void Exec(Option_t *opt) override</div><div class="ttdef"><b>Definition:</b> <a href="AtSpaceChargeCorrectionTask_8cxx_source.html#l00048">AtSpaceChargeCorrectionTask.cxx:48</a></div></div>
-<div class="ttc" id="aclassAtEvent_html"><div class="ttname"><a href="classAtEvent.html">AtEvent</a></div><div class="ttdef"><b>Definition:</b> <a href="AtEvent_8h_source.html#l00030">AtEvent.h:30</a></div></div>
-<div class="ttc" id="aclassAtEvent_html_a9c7269a388507abf0c8268c56c9f7442"><div class="ttname"><a href="classAtEvent.html#a9c7269a388507abf0c8268c56c9f7442">AtEvent::CopyFrom</a></div><div class="ttdeci">void CopyFrom(const AtEvent &amp;event)</div><div class="ttdef"><b>Definition:</b> <a href="AtEvent_8cxx_source.html#l00039">AtEvent.cxx:39</a></div></div>
+<div class="ttc" id="aclassAtSpaceChargeCorrectionTask_html_ace7b79e3ebab4cd2150a4e3873099dfd"><div class="ttname"><a href="classAtSpaceChargeCorrectionTask.html#ace7b79e3ebab4cd2150a4e3873099dfd">AtSpaceChargeCorrectionTask::AtSpaceChargeCorrectionTask</a></div><div class="ttdeci">AtSpaceChargeCorrectionTask(SCModelPtr &amp;&amp;model)</div><div class="ttdef"><b>Definition:</b> <a href="AtSpaceChargeCorrectionTask_8cxx_source.html#l00026">AtSpaceChargeCorrectionTask.cxx:26</a></div></div>
+<div class="ttc" id="aclassAtSpaceChargeCorrectionTask_html_a991674493c505d49f87ad8724f43daad"><div class="ttname"><a href="classAtSpaceChargeCorrectionTask.html#a991674493c505d49f87ad8724f43daad">AtSpaceChargeCorrectionTask::Exec</a></div><div class="ttdeci">virtual void Exec(Option_t *opt) override</div><div class="ttdef"><b>Definition:</b> <a href="AtSpaceChargeCorrectionTask_8cxx_source.html#l00061">AtSpaceChargeCorrectionTask.cxx:61</a></div></div>
+<div class="ttc" id="aclassAtEvent_html"><div class="ttname"><a href="classAtEvent.html">AtEvent</a></div><div class="ttdef"><b>Definition:</b> <a href="AtEvent_8h_source.html#l00022">AtEvent.h:22</a></div></div>
+<div class="ttc" id="aAtPatternCircle2D_8h_html_acdbe604dea12970b4e97a316f9046ae7"><div class="ttname"><a href="AtPatternCircle2D_8h.html#acdbe604dea12970b4e97a316f9046ae7">XYZPoint</a></div><div class="ttdeci">ROOT::Math::XYZPoint XYZPoint</div><div class="ttdef"><b>Definition:</b> <a href="AtPatternCircle2D_8h_source.html#l00018">AtPatternCircle2D.h:18</a></div></div>
 <div class="ttc" id="aAtSpaceChargeModel_8h_html"><div class="ttname"><a href="AtSpaceChargeModel_8h.html">AtSpaceChargeModel.h</a></div></div>
 <div class="ttc" id="aAtSpaceChargeCorrectionTask_8h_html_a42cd06d3a21ebd1809ddb4ab6da13b5c"><div class="ttname"><a href="AtSpaceChargeCorrectionTask_8h.html#a42cd06d3a21ebd1809ddb4ab6da13b5c">SCModelPtr</a></div><div class="ttdeci">std::unique_ptr&lt; AtSpaceChargeModel &gt; SCModelPtr</div><div class="ttdef"><b>Definition:</b> <a href="AtSpaceChargeCorrectionTask_8h_source.html#l00023">AtSpaceChargeCorrectionTask.h:23</a></div></div>
 <div class="ttc" id="aAtHit_8h_html"><div class="ttname"><a href="AtHit_8h.html">AtHit.h</a></div></div>
-<div class="ttc" id="aAtHit_8h_html_acdbe604dea12970b4e97a316f9046ae7"><div class="ttname"><a href="AtHit_8h.html#acdbe604dea12970b4e97a316f9046ae7">XYZPoint</a></div><div class="ttdeci">ROOT::Math::XYZPoint XYZPoint</div><div class="ttdef"><b>Definition:</b> <a href="AtHit_8h_source.html#l00018">AtHit.h:18</a></div></div>
+<div class="ttc" id="aclassAtDigiPar_html"><div class="ttname"><a href="classAtDigiPar.html">AtDigiPar</a></div><div class="ttdef"><b>Definition:</b> <a href="AtDigiPar_8h_source.html#l00014">AtDigiPar.h:14</a></div></div>
 <div class="ttc" id="aAtSpaceChargeCorrectionTask_8cxx_html_a7e3d7614da51572a4927c2afb1c5f88c"><div class="ttname"><a href="AtSpaceChargeCorrectionTask_8cxx.html#a7e3d7614da51572a4927c2afb1c5f88c">ClassImp</a></div><div class="ttdeci">ClassImp(AtSpaceChargeCorrectionTask)</div></div>
-<div class="ttc" id="aclassAtSpaceChargeCorrectionTask_html_ae50e7c736b206bf706d77751eb31c48e"><div class="ttname"><a href="classAtSpaceChargeCorrectionTask.html#ae50e7c736b206bf706d77751eb31c48e">AtSpaceChargeCorrectionTask::SetParContainers</a></div><div class="ttdeci">virtual void SetParContainers() override</div><div class="ttdef"><b>Definition:</b> <a href="AtSpaceChargeCorrectionTask_8cxx_source.html#l00046">AtSpaceChargeCorrectionTask.cxx:46</a></div></div>
+<div class="ttc" id="aclassAtSpaceChargeCorrectionTask_html_ae50e7c736b206bf706d77751eb31c48e"><div class="ttname"><a href="classAtSpaceChargeCorrectionTask.html#ae50e7c736b206bf706d77751eb31c48e">AtSpaceChargeCorrectionTask::SetParContainers</a></div><div class="ttdeci">virtual void SetParContainers() override</div><div class="ttdef"><b>Definition:</b> <a href="AtSpaceChargeCorrectionTask_8cxx_source.html#l00059">AtSpaceChargeCorrectionTask.cxx:59</a></div></div>
+<div class="ttc" id="aclassAtEvent_html_aee325398d0f48c0a7f586473482ecefe"><div class="ttname"><a href="classAtEvent.html#aee325398d0f48c0a7f586473482ecefe">AtEvent::ClearHits</a></div><div class="ttdeci">void ClearHits()</div><div class="ttdef"><b>Definition:</b> <a href="AtEvent_8h_source.html#l00117">AtEvent.h:117</a></div></div>
 <div class="ttc" id="aAtSpaceChargeCorrectionTask_8h_html"><div class="ttname"><a href="AtSpaceChargeCorrectionTask_8h.html">AtSpaceChargeCorrectionTask.h</a></div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Apr 27 2022 00:47:48 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Oct 20 2023 16:23:00 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.18
 </small></address>

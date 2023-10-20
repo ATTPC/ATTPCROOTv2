@@ -1,12 +1,7 @@
 var searchData=
 [
-  ['x_2472',['x',['../structPoint.html#a05dfe2dfbde813ad234b514f30e662f1',1,'Point']]],
-  ['xfit_2473',['XFit',['../classS800Settings.html#abb5bdf52f2458a54c4b167afa0fb2f9b',1,'S800Settings']]],
-  ['xfitfunc_2474',['XFitFunc',['../classS800Settings.html#a4d73c61945f3b378098b7cb51c565765',1,'S800Settings']]],
-  ['xoffset_2475',['XOffset',['../classS800Settings.html#a3ecd7b2dfcd29c4274934bf1e09631cd',1,'S800Settings']]],
-  ['xslope_2476',['XSlope',['../classS800Settings.html#ab8ed5e98bb5b00ac9572e5c11ba239a9',1,'S800Settings']]],
-  ['xtol_2477',['xtol',['../structlm__control__struct.html#a51294ab068d30ba084ef0c17c9766744',1,'lm_control_struct']]],
-  ['xypoint_2478',['XYPoint',['../classAtPad.html#a9b5f4bfcc4525bf453eba2d4893f2aaa',1,'AtPad::XYPoint()'],['../AtGadgetIIMap_8cxx.html#aa22c237a573cf8be8b06fce090a73290',1,'XYPoint():&#160;AtGadgetIIMap.cxx'],['../AtSpecMATMap_8cxx.html#aa22c237a573cf8be8b06fce090a73290',1,'XYPoint():&#160;AtSpecMATMap.cxx'],['../AtTpcMap_8cxx.html#aa22c237a573cf8be8b06fce090a73290',1,'XYPoint():&#160;AtTpcMap.cxx'],['../AtTpcProtoMap_8cxx.html#aa22c237a573cf8be8b06fce090a73290',1,'XYPoint():&#160;AtTpcProtoMap.cxx']]],
-  ['xyzpoint_2479',['XYZPoint',['../AtHit_8h.html#acdbe604dea12970b4e97a316f9046ae7',1,'XYZPoint():&#160;AtHit.h'],['../AtTrack_8h.html#acdbe604dea12970b4e97a316f9046ae7',1,'XYZPoint():&#160;AtTrack.h'],['../AtSpaceChargeCorrectionTask_8cxx.html#acdbe604dea12970b4e97a316f9046ae7',1,'XYZPoint():&#160;AtSpaceChargeCorrectionTask.cxx'],['../AtLineChargeModel_8cxx.html#acdbe604dea12970b4e97a316f9046ae7',1,'XYZPoint():&#160;AtLineChargeModel.cxx'],['../AtLineChargeModel_8h.html#acdbe604dea12970b4e97a316f9046ae7',1,'XYZPoint():&#160;AtLineChargeModel.h'],['../AtSpaceChargeModel_8h.html#acdbe604dea12970b4e97a316f9046ae7',1,'XYZPoint():&#160;AtSpaceChargeModel.h']]],
-  ['xyzvector_2480',['XYZVector',['../AtHit_8h.html#a26aee3b2de2720f24802d48feab0c40a',1,'XYZVector():&#160;AtHit.h'],['../AtClusterizeTask_8cxx.html#a26aee3b2de2720f24802d48feab0c40a',1,'XYZVector():&#160;AtClusterizeTask.cxx'],['../AtSimulatedLine_8cxx.html#a26aee3b2de2720f24802d48feab0c40a',1,'XYZVector():&#160;AtSimulatedLine.cxx'],['../AtSimulatedPoint_8cxx.html#a26aee3b2de2720f24802d48feab0c40a',1,'XYZVector():&#160;AtSimulatedPoint.cxx']]]
+  ['weight_3556',['weight',['../structEdge.html#a6d0148402e635354c03a151c77fcbdd8',1,'Edge']]],
+  ['write_3557',['WRITE',['../classAtHDFUnpacker.html#ae1b6b87af436c82713f0341c31c81e80ad4b9e47f65b6e79b010582f15785867e',1,'AtHDFUnpacker::WRITE()'],['../classAtGeoCave.html#a497ede1c518d07861f68e66aebf7fe4d',1,'AtGeoCave::write()']]],
+  ['writedata_3558',['WriteData',['../classAtCore2.html#a68c797d1d766f3777896f1694d1ed39f',1,'AtCore2::WriteData()'],['../classAtCoreSpecMAT.html#a653cf8778f5e3c954f3875b667c600c8',1,'AtCoreSpecMAT::WriteData()']]],
+  ['writeframe_3559',['WriteFrame',['../classGETDecoder2.html#a451386bbae13df921da02de97579389c',1,'GETDecoder2']]]
 ];

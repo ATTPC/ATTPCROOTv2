@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">ATTPCROOT
-   &#160;<span id="projectnumber">1.0.0</span>
+   &#160;<span id="projectnumber">0.3.0-alpha</span>
    </div>
    <div id="projectbrief">A ROOT-based framework for analyzing data from active target detectors</div>
   </td>
@@ -77,32 +77,69 @@ Inheritance diagram for AtFilter:</div>
 <div class="dyncontent">
 <div class="center"><img src="classAtFilter__inherit__graph.png" border="0" usemap="#AtFilter_inherit__map" alt="Inheritance graph"/></div>
 <map name="AtFilter_inherit__map" id="AtFilter_inherit__map">
-<area shape="rect" title=" " alt="" coords="281,5,345,32"/>
-<area shape="rect" href="classAtFilterCalibrate.html" title=" " alt="" coords="5,80,120,107"/>
-<area shape="rect" href="classAtFilterDivide.html" title=" " alt="" coords="145,80,245,107"/>
-<area shape="rect" href="classAtFilterFFT.html" title=" " alt="" coords="269,80,357,107"/>
-<area shape="rect" href="classAtFilterSubtraction.html" title=" " alt="" coords="381,80,512,107"/>
-<area shape="rect" href="classAtTrapezoidFilter.html" title=" " alt="" coords="536,80,656,107"/>
+<area shape="rect" title=" " alt="" coords="5,183,69,209"/>
+<area shape="rect" href="classAtFilterCalibrate.html" title=" " alt="" coords="125,5,240,32"/>
+<area shape="rect" href="classAtFilterDivide.html" title=" " alt="" coords="133,56,233,83"/>
+<area shape="rect" href="classAtFilterFFT.html" title=" " alt="" coords="139,107,227,133"/>
+<area shape="rect" href="classAtFilterSubtraction.html" title=" " alt="" coords="117,157,248,184"/>
+<area shape="rect" href="classAtFilterZero.html" title=" " alt="" coords="137,208,228,235"/>
+<area shape="rect" href="classAtRemovePulser.html" title=" " alt="" coords="123,259,243,285"/>
+<area shape="rect" href="classAtSCACorrect.html" title=" " alt="" coords="131,309,235,336"/>
+<area shape="rect" href="classAtTrapezoidFilter.html" title=" " alt="" coords="123,360,243,387"/>
+<area shape="rect" href="classAtFilterFPN.html" title=" " alt="" coords="296,157,387,184"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:ae7feac4acab59a6788c66f9368d34c97"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtFilter.html#ae7feac4acab59a6788c66f9368d34c97">~AtFilter</a> ()=default</td></tr>
+<tr class="separator:ae7feac4acab59a6788c66f9368d34c97"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a10b9c7088be2ccd5e6a9df5c6002955a"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtFilter.html#a10b9c7088be2ccd5e6a9df5c6002955a">Init</a> ()=0</td></tr>
+<tr class="memdesc:a10b9c7088be2ccd5e6a9df5c6002955a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called at the init stage of the <a class="el" href="classAtFilterTask.html">AtFilterTask</a>.  <a href="classAtFilter.html#a10b9c7088be2ccd5e6a9df5c6002955a">More...</a><br /></td></tr>
 <tr class="separator:a10b9c7088be2ccd5e6a9df5c6002955a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4127c2a19c1049e0b247ddb410c191be"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classAtRawEvent.html">AtRawEvent</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtFilter.html#a4127c2a19c1049e0b247ddb410c191be">ConstructOutputEvent</a> (TClonesArray *outputEventArray, <a class="el" href="classAtRawEvent.html">AtRawEvent</a> *inputEvent)</td></tr>
+<tr class="memdesc:a4127c2a19c1049e0b247ddb410c191be"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct output event from input event array.  <a href="classAtFilter.html#a4127c2a19c1049e0b247ddb410c191be">More...</a><br /></td></tr>
 <tr class="separator:a4127c2a19c1049e0b247ddb410c191be"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa0bcfc2d3d54a0a22cec29d754ebef67"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtFilter.html#aa0bcfc2d3d54a0a22cec29d754ebef67">InitEvent</a> (<a class="el" href="classAtRawEvent.html">AtRawEvent</a> *inputEvent)=0</td></tr>
+<tr class="memdesc:aa0bcfc2d3d54a0a22cec29d754ebef67"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called once for each event at the start of the Exec phase.  <a href="classAtFilter.html#aa0bcfc2d3d54a0a22cec29d754ebef67">More...</a><br /></td></tr>
 <tr class="separator:aa0bcfc2d3d54a0a22cec29d754ebef67"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad0499f1b4860cd8d504d69514e4d8005"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtFilter.html#ad0499f1b4860cd8d504d69514e4d8005">Filter</a> (<a class="el" href="classAtPad.html">AtPad</a> *pad)=0</td></tr>
-<tr class="separator:ad0499f1b4860cd8d504d69514e4d8005"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a24a3245f1e11e52a34ef24e6d09bd108"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtFilter.html#a24a3245f1e11e52a34ef24e6d09bd108">Filter</a> (<a class="el" href="classAtPad.html">AtPad</a> *pad, <a class="el" href="structAtPadReference.html">AtPadReference</a> *padReference=nullptr)=0</td></tr>
+<tr class="memdesc:a24a3245f1e11e52a34ef24e6d09bd108"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called to filter each pad.  <a href="classAtFilter.html#a24a3245f1e11e52a34ef24e6d09bd108">More...</a><br /></td></tr>
+<tr class="separator:a24a3245f1e11e52a34ef24e6d09bd108"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3e829564ee802ca80cf84eaab6ef253c"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtFilter.html#a3e829564ee802ca80cf84eaab6ef253c">IsGoodEvent</a> ()=0</td></tr>
+<tr class="memdesc:a3e829564ee802ca80cf84eaab6ef253c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called at the end of an event. Returns if filtering was successful.  <a href="classAtFilter.html#a3e829564ee802ca80cf84eaab6ef253c">More...</a><br /></td></tr>
 <tr class="separator:a3e829564ee802ca80cf84eaab6ef253c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="AtFilter_8h_source.html#l00009">9</a> of file <a class="el" href="AtFilter_8h_source.html">AtFilter.h</a>.</p>
-</div><h2 class="groupheader">Member Function Documentation</h2>
+<p class="definition">Definition at line <a class="el" href="AtFilter_8h_source.html#l00013">13</a> of file <a class="el" href="AtFilter_8h_source.html">AtFilter.h</a>.</p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="ae7feac4acab59a6788c66f9368d34c97"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae7feac4acab59a6788c66f9368d34c97">&#9670;&nbsp;</a></span>~AtFilter()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual AtFilter::~AtFilter </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span><span class="mlabel">default</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
 <a id="a4127c2a19c1049e0b247ddb410c191be"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a4127c2a19c1049e0b247ddb410c191be">&#9670;&nbsp;</a></span>ConstructOutputEvent()</h2>
 
@@ -137,12 +174,15 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Construct output event from input event array. </p>
+<p>Called to construct and return the output event in the array from the input event This only needs to be overriden if you are doing something unusual and cannot just copy the input event </p>
+
 <p class="definition">Definition at line <a class="el" href="AtFilter_8cxx_source.html#l00007">7</a> of file <a class="el" href="AtFilter_8cxx_source.html">AtFilter.cxx</a>.</p>
 
 </div>
 </div>
-<a id="ad0499f1b4860cd8d504d69514e4d8005"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad0499f1b4860cd8d504d69514e4d8005">&#9670;&nbsp;</a></span>Filter()</h2>
+<a id="a24a3245f1e11e52a34ef24e6d09bd108"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a24a3245f1e11e52a34ef24e6d09bd108">&#9670;&nbsp;</a></span>Filter()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -154,8 +194,18 @@ Public Member Functions</h2></td></tr>
           <td class="memname">virtual void AtFilter::Filter </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classAtPad.html">AtPad</a> *&#160;</td>
-          <td class="paramname"><em>pad</em></td><td>)</td>
+          <td class="paramname"><em>pad</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype"><a class="el" href="structAtPadReference.html">AtPadReference</a> *&#160;</td>
+          <td class="paramname"><em>padReference</em> = <code>nullptr</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -165,7 +215,17 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classAtFilterFFT.html#acc750f0d5613f341536e7685e92a90c3">AtFilterFFT</a>, <a class="el" href="classAtFilterSubtraction.html#abbc13fa2282ada213d1d97906d59744d">AtFilterSubtraction</a>, <a class="el" href="classAtTrapezoidFilter.html#a9431b583c663d39163f9e770f85b9563">AtTrapezoidFilter</a>, <a class="el" href="classAtFilterCalibrate.html#a25b273c45750a2f72dd18bee0168b2d0">AtFilterCalibrate</a>, and <a class="el" href="classAtFilterDivide.html#ae96e48f8bf85631afa70f0b5de6b4dc3">AtFilterDivide</a>.</p>
+<p>Called to filter each pad. </p>
+<p>Optional padRef currently only used by SCA filter (10/20/22).</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">pad</td><td>Pad to filter. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">[in[</td><td>padRefernece optional parameter only needed when when filtering FPN channels. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Implemented in <a class="el" href="classAtFilterFFT.html#a781c0e3c6bc3541c304b989709ee100b">AtFilterFFT</a>, <a class="el" href="classAtFilterSubtraction.html#abc369036735813395bc1c59178bf2a96">AtFilterSubtraction</a>, <a class="el" href="classAtSCACorrect.html#a7dbf491b304025d3a530c8fd5e2896f9">AtSCACorrect</a>, <a class="el" href="classAtTrapezoidFilter.html#a997114f1a18ad41417b8e6b6ab0b23a4">AtTrapezoidFilter</a>, <a class="el" href="classAtFilterCalibrate.html#aab43f4b8762513970f3527997b0b9403">AtFilterCalibrate</a>, <a class="el" href="classAtFilterZero.html#a314e98af33c59bf56e6f99c6b0842159">AtFilterZero</a>, <a class="el" href="classAtFilterDivide.html#a760bbb6d244337fa8a08fe7eac8d85fd">AtFilterDivide</a>, and <a class="el" href="classAtRemovePulser.html#ada6129c7252004a9efab2c4302293dc6">AtRemovePulser</a>.</p>
 
 </div>
 </div>
@@ -192,7 +252,9 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classAtFilterFFT.html#a736e3b275027945bc3807c565a69278e">AtFilterFFT</a>, <a class="el" href="classAtFilterSubtraction.html#ad59dc104c7fbbefec57d4fe9d6404fa9">AtFilterSubtraction</a>, <a class="el" href="classAtTrapezoidFilter.html#af650d465f08390af9b1e1f34e6635fe8">AtTrapezoidFilter</a>, <a class="el" href="classAtFilterCalibrate.html#ad24deda2fcfb98ffa51799946cf67a66">AtFilterCalibrate</a>, and <a class="el" href="classAtFilterDivide.html#a5be797fdd62370a66129310e5c7331bd">AtFilterDivide</a>.</p>
+<p>Called at the init stage of the <a class="el" href="classAtFilterTask.html">AtFilterTask</a>. </p>
+
+<p>Implemented in <a class="el" href="classAtFilterFFT.html#a736e3b275027945bc3807c565a69278e">AtFilterFFT</a>, <a class="el" href="classAtFilterSubtraction.html#ad59dc104c7fbbefec57d4fe9d6404fa9">AtFilterSubtraction</a>, <a class="el" href="classAtSCACorrect.html#a2e06ab4165590278601a8a481a45d4ab">AtSCACorrect</a>, <a class="el" href="classAtTrapezoidFilter.html#af650d465f08390af9b1e1f34e6635fe8">AtTrapezoidFilter</a>, <a class="el" href="classAtFilterCalibrate.html#ad24deda2fcfb98ffa51799946cf67a66">AtFilterCalibrate</a>, <a class="el" href="classAtFilterZero.html#a69af575eeca72a8c3ba776279182b859">AtFilterZero</a>, <a class="el" href="classAtFilterDivide.html#a5be797fdd62370a66129310e5c7331bd">AtFilterDivide</a>, and <a class="el" href="classAtRemovePulser.html#ac01d2c1f543ed4fee4629e3a388f4100">AtRemovePulser</a>.</p>
 
 </div>
 </div>
@@ -220,7 +282,9 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classAtFilterFFT.html#a2471c371eff791830e69ae77b4018be8">AtFilterFFT</a>, <a class="el" href="classAtFilterSubtraction.html#a8596286493cb66467463b0bba9d482ff">AtFilterSubtraction</a>, <a class="el" href="classAtTrapezoidFilter.html#a4b38f42d5401ccddba91986b2da45c75">AtTrapezoidFilter</a>, <a class="el" href="classAtFilterCalibrate.html#ae87d1e41bfb9242f67b4905af5725855">AtFilterCalibrate</a>, and <a class="el" href="classAtFilterDivide.html#ae69291b1073300993eae97b1abea8ae4">AtFilterDivide</a>.</p>
+<p>Called once for each event at the start of the Exec phase. </p>
+
+<p>Implemented in <a class="el" href="classAtFilterFFT.html#a2471c371eff791830e69ae77b4018be8">AtFilterFFT</a>, <a class="el" href="classAtFilterSubtraction.html#a8596286493cb66467463b0bba9d482ff">AtFilterSubtraction</a>, <a class="el" href="classAtTrapezoidFilter.html#a4b38f42d5401ccddba91986b2da45c75">AtTrapezoidFilter</a>, <a class="el" href="classAtFilterCalibrate.html#ae87d1e41bfb9242f67b4905af5725855">AtFilterCalibrate</a>, <a class="el" href="classAtFilterDivide.html#ae69291b1073300993eae97b1abea8ae4">AtFilterDivide</a>, <a class="el" href="classAtFilterFPN.html#aa9357028c43afa1d0d3be76f0a08163f">AtFilterFPN</a>, <a class="el" href="classAtSCACorrect.html#a86103f963aace9649d6be38c4ea808a7">AtSCACorrect</a>, <a class="el" href="classAtFilterZero.html#ab247307a394aacbaa8f6e95cb13c7e18">AtFilterZero</a>, and <a class="el" href="classAtRemovePulser.html#a8537d8b1f3e7bb35e648a9dea88ce780">AtRemovePulser</a>.</p>
 
 </div>
 </div>
@@ -247,7 +311,9 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classAtFilterFFT.html#aba8f0c529123e06b428f5f3262708a2d">AtFilterFFT</a>, <a class="el" href="classAtFilterSubtraction.html#a227714b67f09151ce29042aea7fa2cf9">AtFilterSubtraction</a>, <a class="el" href="classAtTrapezoidFilter.html#ad2786f4c0d9895150d1f04203f5c2442">AtTrapezoidFilter</a>, <a class="el" href="classAtFilterCalibrate.html#a04f45509072a1fc827ebacf428d3f91a">AtFilterCalibrate</a>, and <a class="el" href="classAtFilterDivide.html#a8f3cbb5c8db2f146cb5528b92665e951">AtFilterDivide</a>.</p>
+<p>Called at the end of an event. Returns if filtering was successful. </p>
+
+<p>Implemented in <a class="el" href="classAtFilterFFT.html#aba8f0c529123e06b428f5f3262708a2d">AtFilterFFT</a>, <a class="el" href="classAtFilterSubtraction.html#a227714b67f09151ce29042aea7fa2cf9">AtFilterSubtraction</a>, <a class="el" href="classAtSCACorrect.html#a9fa074386e5dfd29272fc506743231f6">AtSCACorrect</a>, <a class="el" href="classAtTrapezoidFilter.html#ad2786f4c0d9895150d1f04203f5c2442">AtTrapezoidFilter</a>, <a class="el" href="classAtFilterCalibrate.html#a04f45509072a1fc827ebacf428d3f91a">AtFilterCalibrate</a>, <a class="el" href="classAtFilterZero.html#affa34e159c576459c663a580dc951d15">AtFilterZero</a>, <a class="el" href="classAtFilterDivide.html#a8f3cbb5c8db2f146cb5528b92665e951">AtFilterDivide</a>, and <a class="el" href="classAtRemovePulser.html#a312d1bb257cc021e54dc9572789d0592">AtRemovePulser</a>.</p>
 
 </div>
 </div>
@@ -258,7 +324,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Apr 27 2022 00:47:49 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Oct 20 2023 16:23:01 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.18
 </small></address>

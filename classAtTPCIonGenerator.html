@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">ATTPCROOT
-   &#160;<span id="projectnumber">1.0.0</span>
+   &#160;<span id="projectnumber">0.3.0-alpha</span>
    </div>
    <div id="projectbrief">A ROOT-based framework for analyzing data from active target detectors</div>
   </td>
@@ -65,6 +65,9 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pro-methods">Protected Member Functions</a> &#124;
+<a href="#pro-attribs">Protected Attributes</a> &#124;
+<a href="#pro-static-attribs">Static Protected Attributes</a> &#124;
 <a href="classAtTPCIonGenerator-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">AtTPCIonGenerator Class Reference</div>  </div>
@@ -77,8 +80,10 @@ Inheritance diagram for AtTPCIonGenerator:</div>
 <div class="dyncontent">
 <div class="center"><img src="classAtTPCIonGenerator__inherit__graph.png" border="0" usemap="#AtTPCIonGenerator_inherit__map" alt="Inheritance graph"/></div>
 <map name="AtTPCIonGenerator_inherit__map" id="AtTPCIonGenerator_inherit__map">
-<area shape="rect" title=" " alt="" coords="5,80,141,107"/>
-<area shape="rect" title=" " alt="" coords="23,5,124,32"/>
+<area shape="rect" title=" " alt="" coords="134,80,270,107"/>
+<area shape="rect" href="classAtTPCIonGeneratorGaussian.html" title=" " alt="" coords="5,155,196,181"/>
+<area shape="rect" href="classAtTPCIonGeneratorS800.html" title=" " alt="" coords="220,155,387,181"/>
+<area shape="rect" title=" " alt="" coords="151,5,253,32"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <div class="dynheader">
@@ -99,10 +104,6 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a6fa640fa87906373a2037861ff542d08"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a395d6b16a997d2ff7f0fa47f66e210da"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtTPCIonGenerator.html#a395d6b16a997d2ff7f0fa47f66e210da">AtTPCIonGenerator</a> (const char *name, Int_t z, Int_t a, Int_t q, Int_t mult, Double_t px, Double_t py, Double_t pz, Double_t Ex, Double_t m, Double_t ener, Double_t eLoss=-1)</td></tr>
 <tr class="separator:a395d6b16a997d2ff7f0fa47f66e210da"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae59ba3152462e974acbaf02944c81b49"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtTPCIonGenerator.html#ae59ba3152462e974acbaf02944c81b49">AtTPCIonGenerator</a> (const <a class="el" href="classAtTPCIonGenerator.html">AtTPCIonGenerator</a> &amp;)</td></tr>
-<tr class="separator:ae59ba3152462e974acbaf02944c81b49"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1db9ef27855a0d0fcef641718226a30b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAtTPCIonGenerator.html">AtTPCIonGenerator</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtTPCIonGenerator.html#a1db9ef27855a0d0fcef641718226a30b">operator=</a> (const <a class="el" href="classAtTPCIonGenerator.html">AtTPCIonGenerator</a> &amp;)</td></tr>
-<tr class="separator:a1db9ef27855a0d0fcef641718226a30b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af44a1dd6b0a2ef3c6db0578af6109c89"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtTPCIonGenerator.html#af44a1dd6b0a2ef3c6db0578af6109c89">~AtTPCIonGenerator</a> ()=default</td></tr>
 <tr class="separator:af44a1dd6b0a2ef3c6db0578af6109c89"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abe44ab5274e45ff26bb1b9c064cbaffe"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtTPCIonGenerator.html#abe44ab5274e45ff26bb1b9c064cbaffe">SetCharge</a> (Int_t charge)</td></tr>
@@ -111,19 +112,66 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a1b1e36c464619e4ad090032633947752"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8c02c07160b6120af7ea27024f702ba4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtTPCIonGenerator.html#a8c02c07160b6120af7ea27024f702ba4">SetMass</a> (Double_t mass)</td></tr>
 <tr class="separator:a8c02c07160b6120af7ea27024f702ba4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a24fe1b2645571f1e1a12a8e21ac41654"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtTPCIonGenerator.html#a24fe1b2645571f1e1a12a8e21ac41654">SetSpotRadius</a> (Double32_t r=0, Double32_t z=0, Double32_t off=0)</td></tr>
-<tr class="separator:a24fe1b2645571f1e1a12a8e21ac41654"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a59c2893371b1cb9fcf18ef2f7ce40dd4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtTPCIonGenerator.html#a59c2893371b1cb9fcf18ef2f7ce40dd4">SetBeamEmittance</a> (Double32_t val1=0, Double32_t val2=0, Double32_t val3=0, Double32_t val4=0)</td></tr>
-<tr class="separator:a59c2893371b1cb9fcf18ef2f7ce40dd4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae0c3df9aa2a623045d4caca41cad659e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtTPCIonGenerator.html#ae0c3df9aa2a623045d4caca41cad659e">SetSpotRadius</a> (Double32_t r=0, Double32_t z=0, Double32_t offx=0, Double32_t offy=0)</td></tr>
+<tr class="separator:ae0c3df9aa2a623045d4caca41cad659e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6e9e678b5303467104fa40b3175f54a8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtTPCIonGenerator.html#a6e9e678b5303467104fa40b3175f54a8">SetDoReaction</a> (Bool_t doReact)</td></tr>
+<tr class="separator:a6e9e678b5303467104fa40b3175f54a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4dc1cfe185190b34bb64cb7776b4b763"><td class="memItemLeft" align="right" valign="top">virtual Bool_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtTPCIonGenerator.html#a4dc1cfe185190b34bb64cb7776b4b763">ReadEvent</a> (FairPrimaryGenerator *primGen)</td></tr>
 <tr class="separator:a4dc1cfe185190b34bb64cb7776b4b763"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
+Protected Member Functions</h2></td></tr>
+<tr class="memitem:a9997e3006f73f1ec74544af1067e7148"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtTPCIonGenerator.html#a9997e3006f73f1ec74544af1067e7148">SetVertexCoordinates</a> ()</td></tr>
+<tr class="memdesc:a9997e3006f73f1ec74544af1067e7148"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets fVx, fVy, fVz depending on the type of ion generator.  <a href="classAtTPCIonGenerator.html#a9997e3006f73f1ec74544af1067e7148">More...</a><br /></td></tr>
+<tr class="separator:a9997e3006f73f1ec74544af1067e7148"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
+Protected Attributes</h2></td></tr>
+<tr class="memitem:aa9980e5bab05d5743a7d2cb5a113b200"><td class="memItemLeft" align="right" valign="top">Int_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtTPCIonGenerator.html#aa9980e5bab05d5743a7d2cb5a113b200">fMult</a></td></tr>
+<tr class="memdesc:aa9980e5bab05d5743a7d2cb5a113b200"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of the instance of this class.  <a href="classAtTPCIonGenerator.html#aa9980e5bab05d5743a7d2cb5a113b200">More...</a><br /></td></tr>
+<tr class="separator:aa9980e5bab05d5743a7d2cb5a113b200"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab792fee921246f26ec357cae4687118d"><td class="memItemLeft" align="right" valign="top">Double_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtTPCIonGenerator.html#ab792fee921246f26ec357cae4687118d">fPx</a></td></tr>
+<tr class="separator:ab792fee921246f26ec357cae4687118d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3b89c5f01cd44e4099ebfb1b465823c1"><td class="memItemLeft" align="right" valign="top">Double_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtTPCIonGenerator.html#a3b89c5f01cd44e4099ebfb1b465823c1">fPy</a></td></tr>
+<tr class="separator:a3b89c5f01cd44e4099ebfb1b465823c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7599a0e9c4a3bdd16ed8645a4d4c4f8d"><td class="memItemLeft" align="right" valign="top">Double_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtTPCIonGenerator.html#a7599a0e9c4a3bdd16ed8645a4d4c4f8d">fPz</a></td></tr>
+<tr class="separator:a7599a0e9c4a3bdd16ed8645a4d4c4f8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a15889c69c0fe23768a3605d6ae1d55b8"><td class="memItemLeft" align="right" valign="top">Double32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtTPCIonGenerator.html#a15889c69c0fe23768a3605d6ae1d55b8">fR</a></td></tr>
+<tr class="separator:a15889c69c0fe23768a3605d6ae1d55b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeb9f263e6b67018d20e0296a2259a8aa"><td class="memItemLeft" align="right" valign="top">Double32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtTPCIonGenerator.html#aeb9f263e6b67018d20e0296a2259a8aa">fz</a></td></tr>
+<tr class="separator:aeb9f263e6b67018d20e0296a2259a8aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a35757895207f7ced00f97d6f78e39824"><td class="memItemLeft" align="right" valign="top">Double32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtTPCIonGenerator.html#a35757895207f7ced00f97d6f78e39824">fOffsetX</a></td></tr>
+<tr class="separator:a35757895207f7ced00f97d6f78e39824"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abc4ea960abb9201054e780abd6453966"><td class="memItemLeft" align="right" valign="top">Double32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtTPCIonGenerator.html#abc4ea960abb9201054e780abd6453966">fOffsetY</a></td></tr>
+<tr class="separator:abc4ea960abb9201054e780abd6453966"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5171526bb1e296b0ca150916d89284e8"><td class="memItemLeft" align="right" valign="top">Double_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtTPCIonGenerator.html#a5171526bb1e296b0ca150916d89284e8">fVx</a></td></tr>
+<tr class="separator:a5171526bb1e296b0ca150916d89284e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6100dec472ceb6711690bada39243691"><td class="memItemLeft" align="right" valign="top">Double_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtTPCIonGenerator.html#a6100dec472ceb6711690bada39243691">fVy</a></td></tr>
+<tr class="separator:a6100dec472ceb6711690bada39243691"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a743f2e0d065ea31f006fcbce25bc7b92"><td class="memItemLeft" align="right" valign="top">Double_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtTPCIonGenerator.html#a743f2e0d065ea31f006fcbce25bc7b92">fVz</a></td></tr>
+<tr class="separator:a743f2e0d065ea31f006fcbce25bc7b92"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a260a9cff893943419c6c622469708fc2"><td class="memItemLeft" align="right" valign="top">FairIon *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtTPCIonGenerator.html#a260a9cff893943419c6c622469708fc2">fIon</a></td></tr>
+<tr class="separator:a260a9cff893943419c6c622469708fc2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae8b726fafbe81b0febd194c6beeb09ac"><td class="memItemLeft" align="right" valign="top">Int_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtTPCIonGenerator.html#ae8b726fafbe81b0febd194c6beeb09ac">fQ</a></td></tr>
+<tr class="separator:ae8b726fafbe81b0febd194c6beeb09ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4d046a2c2df441fc14c536c11c51044c"><td class="memItemLeft" align="right" valign="top">Int_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtTPCIonGenerator.html#a4d046a2c2df441fc14c536c11c51044c">fNomEner</a> {}</td></tr>
+<tr class="separator:a4d046a2c2df441fc14c536c11c51044c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2115892e7870aac7d122bb6a0557696b"><td class="memItemLeft" align="right" valign="top">Double_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtTPCIonGenerator.html#a2115892e7870aac7d122bb6a0557696b">fMaxEnLoss</a> {}</td></tr>
+<tr class="separator:a2115892e7870aac7d122bb6a0557696b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aad36fcd999794488256f1cca4360f3cf"><td class="memItemLeft" align="right" valign="top">Bool_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtTPCIonGenerator.html#aad36fcd999794488256f1cca4360f3cf">fDoReact</a> {true}</td></tr>
+<tr class="separator:aad36fcd999794488256f1cca4360f3cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-static-attribs"></a>
+Static Protected Attributes</h2></td></tr>
+<tr class="memitem:a1a9ffd86c1d7cc64bb5e8b142b35dd96"><td class="memItemLeft" align="right" valign="top">static Int_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtTPCIonGenerator.html#a1a9ffd86c1d7cc64bb5e8b142b35dd96">fgNIon</a> = 0</td></tr>
+<tr class="separator:a1a9ffd86c1d7cc64bb5e8b142b35dd96"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
 <p class="definition">Definition at line <a class="el" href="AtTPCIonGenerator_8h_source.html#l00022">22</a> of file <a class="el" href="AtTPCIonGenerator_8h_source.html">AtTPCIonGenerator.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a16d9a46f3e2db42055e626ded7d3b1c5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a16d9a46f3e2db42055e626ded7d3b1c5">&#9670;&nbsp;</a></span>AtTPCIonGenerator() <span class="overload">[1/4]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a16d9a46f3e2db42055e626ded7d3b1c5">&#9670;&nbsp;</a></span>AtTPCIonGenerator() <span class="overload">[1/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -138,12 +186,12 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>Default constructor </p>
 
-<p class="definition">Definition at line <a class="el" href="AtTPCIonGenerator_8cxx_source.html#l00040">40</a> of file <a class="el" href="AtTPCIonGenerator_8cxx_source.html">AtTPCIonGenerator.cxx</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtTPCIonGenerator_8cxx_source.html#l00041">41</a> of file <a class="el" href="AtTPCIonGenerator_8cxx_source.html">AtTPCIonGenerator.cxx</a>.</p>
 
 </div>
 </div>
 <a id="a6fa640fa87906373a2037861ff542d08"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6fa640fa87906373a2037861ff542d08">&#9670;&nbsp;</a></span>AtTPCIonGenerator() <span class="overload">[2/4]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a6fa640fa87906373a2037861ff542d08">&#9670;&nbsp;</a></span>AtTPCIonGenerator() <span class="overload">[2/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -195,12 +243,12 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="AtTPCIonGenerator_8cxx_source.html#l00049">49</a> of file <a class="el" href="AtTPCIonGenerator_8cxx_source.html">AtTPCIonGenerator.cxx</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtTPCIonGenerator_8cxx_source.html#l00051">51</a> of file <a class="el" href="AtTPCIonGenerator_8cxx_source.html">AtTPCIonGenerator.cxx</a>.</p>
 
 </div>
 </div>
 <a id="a395d6b16a997d2ff7f0fa47f66e210da"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a395d6b16a997d2ff7f0fa47f66e210da">&#9670;&nbsp;</a></span>AtTPCIonGenerator() <span class="overload">[3/4]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a395d6b16a997d2ff7f0fa47f66e210da">&#9670;&nbsp;</a></span>AtTPCIonGenerator() <span class="overload">[3/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -302,26 +350,6 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ae59ba3152462e974acbaf02944c81b49"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae59ba3152462e974acbaf02944c81b49">&#9670;&nbsp;</a></span>AtTPCIonGenerator() <span class="overload">[4/4]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">AtTPCIonGenerator::AtTPCIonGenerator </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="classAtTPCIonGenerator.html">AtTPCIonGenerator</a> &amp;&#160;</td>
-          <td class="paramname"><em>right</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="AtTPCIonGenerator_8cxx_source.html#l00115">115</a> of file <a class="el" href="AtTPCIonGenerator_8cxx_source.html">AtTPCIonGenerator.cxx</a>.</p>
-
-</div>
-</div>
 <a id="af44a1dd6b0a2ef3c6db0578af6109c89"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af44a1dd6b0a2ef3c6db0578af6109c89">&#9670;&nbsp;</a></span>~AtTPCIonGenerator()</h2>
 
@@ -349,34 +377,6 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a1db9ef27855a0d0fcef641718226a30b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1db9ef27855a0d0fcef641718226a30b">&#9670;&nbsp;</a></span>operator=()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classAtTPCIonGenerator.html">AtTPCIonGenerator</a>&amp; AtTPCIonGenerator::operator= </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="classAtTPCIonGenerator.html">AtTPCIonGenerator</a> &amp;&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="AtTPCIonGenerator_8h_source.html#l00058">58</a> of file <a class="el" href="AtTPCIonGenerator_8h_source.html">AtTPCIonGenerator.h</a>.</p>
-
-</div>
-</div>
 <a id="a4dc1cfe185190b34bb64cb7776b4b763"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a4dc1cfe185190b34bb64cb7776b4b763">&#9670;&nbsp;</a></span>ReadEvent()</h2>
 
@@ -402,57 +402,7 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>Method ReadEvent Generates &lt;mult&gt; of the specified ions and hands hem to the FairPrimaryGenerator. </p>
 
-<p class="definition">Definition at line <a class="el" href="AtTPCIonGenerator_8cxx_source.html#l00173">173</a> of file <a class="el" href="AtTPCIonGenerator_8cxx_source.html">AtTPCIonGenerator.cxx</a>.</p>
-
-</div>
-</div>
-<a id="a59c2893371b1cb9fcf18ef2f7ce40dd4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a59c2893371b1cb9fcf18ef2f7ce40dd4">&#9670;&nbsp;</a></span>SetBeamEmittance()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void AtTPCIonGenerator::SetBeamEmittance </td>
-          <td>(</td>
-          <td class="paramtype">Double32_t&#160;</td>
-          <td class="paramname"><em>val1</em> = <code>0</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">Double32_t&#160;</td>
-          <td class="paramname"><em>val2</em> = <code>0</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">Double32_t&#160;</td>
-          <td class="paramname"><em>val3</em> = <code>0</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">Double32_t&#160;</td>
-          <td class="paramname"><em>val4</em> = <code>0</code>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="AtTPCIonGenerator_8h_source.html#l00076">76</a> of file <a class="el" href="AtTPCIonGenerator_8h_source.html">AtTPCIonGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtTPCIonGenerator_8cxx_source.html#l00139">139</a> of file <a class="el" href="AtTPCIonGenerator_8cxx_source.html">AtTPCIonGenerator.cxx</a>.</p>
 
 </div>
 </div>
@@ -481,7 +431,35 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>Modifiers </p>
 
-<p class="definition">Definition at line <a class="el" href="AtTPCIonGenerator_8h_source.html#l00064">64</a> of file <a class="el" href="AtTPCIonGenerator_8h_source.html">AtTPCIonGenerator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtTPCIonGenerator_8h_source.html#l00077">77</a> of file <a class="el" href="AtTPCIonGenerator_8h_source.html">AtTPCIonGenerator.h</a>.</p>
+
+</div>
+</div>
+<a id="a6e9e678b5303467104fa40b3175f54a8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6e9e678b5303467104fa40b3175f54a8">&#9670;&nbsp;</a></span>SetDoReaction()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void AtTPCIonGenerator::SetDoReaction </td>
+          <td>(</td>
+          <td class="paramtype">Bool_t&#160;</td>
+          <td class="paramname"><em>doReact</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtTPCIonGenerator_8h_source.html#l00083">83</a> of file <a class="el" href="AtTPCIonGenerator_8h_source.html">AtTPCIonGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -501,7 +479,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtTPCIonGenerator_8cxx_source.html#l00124">124</a> of file <a class="el" href="AtTPCIonGenerator_8cxx_source.html">AtTPCIonGenerator.cxx</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtTPCIonGenerator_8cxx_source.html#l00113">113</a> of file <a class="el" href="AtTPCIonGenerator_8cxx_source.html">AtTPCIonGenerator.cxx</a>.</p>
 
 </div>
 </div>
@@ -521,18 +499,15 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtTPCIonGenerator_8cxx_source.html#l00131">131</a> of file <a class="el" href="AtTPCIonGenerator_8cxx_source.html">AtTPCIonGenerator.cxx</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AtTPCIonGenerator_8cxx_source.html#l00117">117</a> of file <a class="el" href="AtTPCIonGenerator_8cxx_source.html">AtTPCIonGenerator.cxx</a>.</p>
 
 </div>
 </div>
-<a id="a24fe1b2645571f1e1a12a8e21ac41654"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a24fe1b2645571f1e1a12a8e21ac41654">&#9670;&nbsp;</a></span>SetSpotRadius()</h2>
+<a id="ae0c3df9aa2a623045d4caca41cad659e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae0c3df9aa2a623045d4caca41cad659e">&#9670;&nbsp;</a></span>SetSpotRadius()</h2>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void AtTPCIonGenerator::SetSpotRadius </td>
@@ -550,7 +525,13 @@ Public Member Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">Double32_t&#160;</td>
-          <td class="paramname"><em>off</em> = <code>0</code>&#160;</td>
+          <td class="paramname"><em>offx</em> = <code>0</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Double32_t&#160;</td>
+          <td class="paramname"><em>offy</em> = <code>0</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -558,14 +539,451 @@ Public Member Functions</h2></td></tr>
           <td></td><td></td>
         </tr>
       </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtTPCIonGenerator_8cxx_source.html#l00121">121</a> of file <a class="el" href="AtTPCIonGenerator_8cxx_source.html">AtTPCIonGenerator.cxx</a>.</p>
+
+</div>
+</div>
+<a id="a9997e3006f73f1ec74544af1067e7148"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9997e3006f73f1ec74544af1067e7148">&#9670;&nbsp;</a></span>SetVertexCoordinates()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void AtTPCIonGenerator::SetVertexCoordinates </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AtTPCIonGenerator_8h_source.html#l00068">68</a> of file <a class="el" href="AtTPCIonGenerator_8h_source.html">AtTPCIonGenerator.h</a>.</p>
+<p>Sets fVx, fVy, fVz depending on the type of ion generator. </p>
+
+<p>Reimplemented in <a class="el" href="classAtTPCIonGeneratorS800.html#a853d14f36f578d4c010cef2bd6f39d4d">AtTPCIonGeneratorS800</a>, and <a class="el" href="classAtTPCIonGeneratorGaussian.html#a951a61117c7df75ba020a234f2b0aa34">AtTPCIonGeneratorGaussian</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="AtTPCIonGenerator_8cxx_source.html#l00129">129</a> of file <a class="el" href="AtTPCIonGenerator_8cxx_source.html">AtTPCIonGenerator.cxx</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="aad36fcd999794488256f1cca4360f3cf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aad36fcd999794488256f1cca4360f3cf">&#9670;&nbsp;</a></span>fDoReact</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Bool_t AtTPCIonGenerator::fDoReact {true}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtTPCIonGenerator_8h_source.html#l00036">36</a> of file <a class="el" href="AtTPCIonGenerator_8h_source.html">AtTPCIonGenerator.h</a>.</p>
+
+</div>
+</div>
+<a id="a1a9ffd86c1d7cc64bb5e8b142b35dd96"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1a9ffd86c1d7cc64bb5e8b142b35dd96">&#9670;&nbsp;</a></span>fgNIon</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Int_t AtTPCIonGenerator::fgNIon = 0</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtTPCIonGenerator_8h_source.html#l00024">24</a> of file <a class="el" href="AtTPCIonGenerator_8h_source.html">AtTPCIonGenerator.h</a>.</p>
+
+</div>
+</div>
+<a id="a260a9cff893943419c6c622469708fc2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a260a9cff893943419c6c622469708fc2">&#9670;&nbsp;</a></span>fIon</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">FairIon* AtTPCIonGenerator::fIon</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtTPCIonGenerator_8h_source.html#l00031">31</a> of file <a class="el" href="AtTPCIonGenerator_8h_source.html">AtTPCIonGenerator.h</a>.</p>
+
+</div>
+</div>
+<a id="a2115892e7870aac7d122bb6a0557696b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2115892e7870aac7d122bb6a0557696b">&#9670;&nbsp;</a></span>fMaxEnLoss</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Double_t AtTPCIonGenerator::fMaxEnLoss {}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtTPCIonGenerator_8h_source.html#l00034">34</a> of file <a class="el" href="AtTPCIonGenerator_8h_source.html">AtTPCIonGenerator.h</a>.</p>
+
+</div>
+</div>
+<a id="aa9980e5bab05d5743a7d2cb5a113b200"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa9980e5bab05d5743a7d2cb5a113b200">&#9670;&nbsp;</a></span>fMult</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Int_t AtTPCIonGenerator::fMult</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Number of the instance of this class. </p>
+
+<p class="definition">Definition at line <a class="el" href="AtTPCIonGenerator_8h_source.html#l00025">25</a> of file <a class="el" href="AtTPCIonGenerator_8h_source.html">AtTPCIonGenerator.h</a>.</p>
+
+</div>
+</div>
+<a id="a4d046a2c2df441fc14c536c11c51044c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4d046a2c2df441fc14c536c11c51044c">&#9670;&nbsp;</a></span>fNomEner</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Int_t AtTPCIonGenerator::fNomEner {}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtTPCIonGenerator_8h_source.html#l00033">33</a> of file <a class="el" href="AtTPCIonGenerator_8h_source.html">AtTPCIonGenerator.h</a>.</p>
+
+</div>
+</div>
+<a id="a35757895207f7ced00f97d6f78e39824"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a35757895207f7ced00f97d6f78e39824">&#9670;&nbsp;</a></span>fOffsetX</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Double32_t AtTPCIonGenerator::fOffsetX</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtTPCIonGenerator_8h_source.html#l00028">28</a> of file <a class="el" href="AtTPCIonGenerator_8h_source.html">AtTPCIonGenerator.h</a>.</p>
+
+</div>
+</div>
+<a id="abc4ea960abb9201054e780abd6453966"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abc4ea960abb9201054e780abd6453966">&#9670;&nbsp;</a></span>fOffsetY</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Double32_t AtTPCIonGenerator::fOffsetY</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtTPCIonGenerator_8h_source.html#l00028">28</a> of file <a class="el" href="AtTPCIonGenerator_8h_source.html">AtTPCIonGenerator.h</a>.</p>
+
+</div>
+</div>
+<a id="ab792fee921246f26ec357cae4687118d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab792fee921246f26ec357cae4687118d">&#9670;&nbsp;</a></span>fPx</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Double_t AtTPCIonGenerator::fPx</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtTPCIonGenerator_8h_source.html#l00026">26</a> of file <a class="el" href="AtTPCIonGenerator_8h_source.html">AtTPCIonGenerator.h</a>.</p>
+
+</div>
+</div>
+<a id="a3b89c5f01cd44e4099ebfb1b465823c1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3b89c5f01cd44e4099ebfb1b465823c1">&#9670;&nbsp;</a></span>fPy</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Double_t AtTPCIonGenerator::fPy</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtTPCIonGenerator_8h_source.html#l00026">26</a> of file <a class="el" href="AtTPCIonGenerator_8h_source.html">AtTPCIonGenerator.h</a>.</p>
+
+</div>
+</div>
+<a id="a7599a0e9c4a3bdd16ed8645a4d4c4f8d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7599a0e9c4a3bdd16ed8645a4d4c4f8d">&#9670;&nbsp;</a></span>fPz</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Double_t AtTPCIonGenerator::fPz</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtTPCIonGenerator_8h_source.html#l00026">26</a> of file <a class="el" href="AtTPCIonGenerator_8h_source.html">AtTPCIonGenerator.h</a>.</p>
+
+</div>
+</div>
+<a id="ae8b726fafbe81b0febd194c6beeb09ac"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae8b726fafbe81b0febd194c6beeb09ac">&#9670;&nbsp;</a></span>fQ</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Int_t AtTPCIonGenerator::fQ</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtTPCIonGenerator_8h_source.html#l00032">32</a> of file <a class="el" href="AtTPCIonGenerator_8h_source.html">AtTPCIonGenerator.h</a>.</p>
+
+</div>
+</div>
+<a id="a15889c69c0fe23768a3605d6ae1d55b8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a15889c69c0fe23768a3605d6ae1d55b8">&#9670;&nbsp;</a></span>fR</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Double32_t AtTPCIonGenerator::fR</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtTPCIonGenerator_8h_source.html#l00028">28</a> of file <a class="el" href="AtTPCIonGenerator_8h_source.html">AtTPCIonGenerator.h</a>.</p>
+
+</div>
+</div>
+<a id="a5171526bb1e296b0ca150916d89284e8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5171526bb1e296b0ca150916d89284e8">&#9670;&nbsp;</a></span>fVx</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Double_t AtTPCIonGenerator::fVx</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtTPCIonGenerator_8h_source.html#l00029">29</a> of file <a class="el" href="AtTPCIonGenerator_8h_source.html">AtTPCIonGenerator.h</a>.</p>
+
+</div>
+</div>
+<a id="a6100dec472ceb6711690bada39243691"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6100dec472ceb6711690bada39243691">&#9670;&nbsp;</a></span>fVy</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Double_t AtTPCIonGenerator::fVy</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtTPCIonGenerator_8h_source.html#l00029">29</a> of file <a class="el" href="AtTPCIonGenerator_8h_source.html">AtTPCIonGenerator.h</a>.</p>
+
+</div>
+</div>
+<a id="a743f2e0d065ea31f006fcbce25bc7b92"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a743f2e0d065ea31f006fcbce25bc7b92">&#9670;&nbsp;</a></span>fVz</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Double_t AtTPCIonGenerator::fVz</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtTPCIonGenerator_8h_source.html#l00029">29</a> of file <a class="el" href="AtTPCIonGenerator_8h_source.html">AtTPCIonGenerator.h</a>.</p>
+
+</div>
+</div>
+<a id="aeb9f263e6b67018d20e0296a2259a8aa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aeb9f263e6b67018d20e0296a2259a8aa">&#9670;&nbsp;</a></span>fz</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Double32_t AtTPCIonGenerator::fz</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="AtTPCIonGenerator_8h_source.html#l00028">28</a> of file <a class="el" href="AtTPCIonGenerator_8h_source.html">AtTPCIonGenerator.h</a>.</p>
 
 </div>
 </div>
@@ -576,7 +994,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Apr 27 2022 00:47:49 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Oct 20 2023 16:23:02 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.18
 </small></address>

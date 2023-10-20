@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">ATTPCROOT
-   &#160;<span id="projectnumber">1.0.0</span>
+   &#160;<span id="projectnumber">0.3.0-alpha</span>
    </div>
    <div id="projectbrief">A ROOT-based framework for analyzing data from active target detectors</div>
   </td>
@@ -130,69 +130,70 @@ $(function() {
 <div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;   std::vector&lt;Double_t&gt; fExEnergy;     <span class="comment">// Excitation energies of the products</span></div>
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;   std::vector&lt;Double_t&gt; fWm;           <span class="comment">// Total mass</span></div>
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;   Int_t fN{};</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;   Double_t K1{};</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;   Double_t m1{}, m2{}, m3{}, m4{}, m7{}, m8{};</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;   Double_t Ex_ejectile{}, Ex_2he{};</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;   Double_t test_var{};</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160; </div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;   Double_t beta_cm{};</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;   Double_t gamma_cm{};</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;   Double_t beta4{}, gamma4{};</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;   Double_t S{}, S_78{};</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;   Double_t Pcm{}, Pc78{};</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;   Double_t normP4L{};</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;   Double_t E1L{};</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;   Double_t E3C{}, E4C{}, E3L{}, E4L{};</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;   Double_t E7rest{}, E8rest{};</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;   Double_t E7L{}, E8L{};</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;   Double_t p1L[3]{}, p3L[3]{}, p4L[3]{};</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;   Double_t p3C[3]{}, p4C[3]{};</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;   Double_t p7rest[3]{}, p8rest[3]{};</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;   Double_t p7L[3]{}, p8L[3]{};</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;   <span class="comment">// Double_t theta78, phi78;</span></div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;   Double_t ran1{}, ran2{}, ranX{};</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;   Int_t ran_theta{};</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;   std::vector&lt;Double_t&gt; fvfrom, fvto, fvin, fvout;</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;   std::vector&lt;Double_t&gt; inp1, inp2, inp3;</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;   Double_t theta_cm{}, phi_cm{}, epsilon{};</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;   Double_t theta78{}, phi78{};</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160; </div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;   std::vector&lt;Int_t&gt; fQ; <span class="comment">// Electric charge [e]</span></div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160; </div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;   Double_t fBeamEnergy{}; <span class="comment">// Residual beam energy for phase calculation</span></div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;   <span class="comment">// Int_t fZBeam;</span></div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;   <span class="comment">// Int_t fABeam;</span></div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;   Double_t fPxBeam{};</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;   Double_t fPyBeam{};</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;   Double_t fPzBeam{};</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160; </div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;   Double_t random_z{};</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;   Double_t random_r{};</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;   Double_t random_phi{};</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160; </div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;   <span class="comment">// Double_t fBeamMass;</span></div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;   <span class="comment">// Double_t fTargetMass;</span></div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160; </div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;   ClassDef(<a class="code" href="classAtTPC__d2He.html">AtTPC_d2He</a>, 2)</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;};</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160; </div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;   Double_t fCStot{};</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160; </div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;   Double_t K1{};</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;   Double_t m1{}, m2{}, m3{}, m4{}, m7{}, m8{};</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;   Double_t Ex_ejectile{}, Ex_2he{};</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;   Double_t test_var{};</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160; </div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;   Double_t beta_cm{};</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;   Double_t gamma_cm{};</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;   Double_t beta4{}, gamma4{};</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;   Double_t S{}, S_78{};</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;   Double_t Pcm{}, Pc78{};</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;   Double_t normP4L{};</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;   Double_t E1L{};</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;   Double_t E3C{}, E4C{}, E3L{}, E4L{};</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;   Double_t E7rest{}, E8rest{};</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;   Double_t E7L{}, E8L{};</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;   Double_t p1L[3]{}, p3L[3]{}, p4L[3]{};</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;   Double_t p3C[3]{}, p4C[3]{};</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;   Double_t p7rest[3]{}, p8rest[3]{};</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;   Double_t p7L[3]{}, p8L[3]{};</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;   <span class="comment">// Double_t theta78, phi78;</span></div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;   Double_t ran1{}, ran2{}, ranX{};</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;   Int_t ran_theta{};</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;   std::vector&lt;Double_t&gt; fvfrom, fvto, fvin, fvout;</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;   std::vector&lt;Double_t&gt; inp1, inp2, inp3;</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;   Double_t theta_cm{}, phi_cm{}, epsilon{};</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;   Double_t theta78{}, phi78{};</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160; </div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;   std::vector&lt;Int_t&gt; fQ; <span class="comment">// Electric charge [e]</span></div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160; </div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;   Double_t fBeamEnergy{}; <span class="comment">// Residual beam energy for phase calculation</span></div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;   <span class="comment">// Int_t fZBeam;</span></div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;   <span class="comment">// Int_t fABeam;</span></div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;   Double_t fPxBeam{};</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;   Double_t fPyBeam{};</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;   Double_t fPzBeam{};</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160; </div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;   Double_t random_z{};</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;   Double_t random_r{};</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;   Double_t random_phi{};</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160; </div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;   <span class="comment">// Double_t fBeamMass;</span></div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;   <span class="comment">// Double_t fTargetMass;</span></div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160; </div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;   ClassDef(<a class="code" href="classAtTPC__d2He.html">AtTPC_d2He</a>, 2)</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;};</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160; </div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;<span class="preprocessor">#endif</span></div>
 </div><!-- fragment --></div><!-- contents -->
 <div class="ttc" id="aclassAtTPC__d2He_html"><div class="ttname"><a href="classAtTPC__d2He.html">AtTPC_d2He</a></div><div class="ttdef"><b>Definition:</b> <a href="AtTPC__d2He_8h_source.html#l00024">AtTPC_d2He.h:24</a></div></div>
 <div class="ttc" id="aclassAtTPC__d2He_html_a1d1c2c39b0dae07516265d2547b014df"><div class="ttname"><a href="classAtTPC__d2He.html#a1d1c2c39b0dae07516265d2547b014df">AtTPC_d2He::goodEvts</a></div><div class="ttdeci">Int_t goodEvts</div><div class="ttdef"><b>Definition:</b> <a href="AtTPC__d2He_8h_source.html#l00043">AtTPC_d2He.h:43</a></div></div>
-<div class="ttc" id="aclassAtTPC__d2He_html_a6fa7a1a084d22fd6d824c38e7302b255"><div class="ttname"><a href="classAtTPC__d2He.html#a6fa7a1a084d22fd6d824c38e7302b255">AtTPC_d2He::TRANSF</a></div><div class="ttdeci">virtual std::vector&lt; Double_t &gt; TRANSF(std::vector&lt; Double_t &gt; *from, std::vector&lt; Double_t &gt; *to, std::vector&lt; Double_t &gt; *vin)</div><div class="ttdef"><b>Definition:</b> <a href="AtTPC__d2He_8cxx_source.html#l00144">AtTPC_d2He.cxx:144</a></div></div>
+<div class="ttc" id="aclassAtTPC__d2He_html_a6fa7a1a084d22fd6d824c38e7302b255"><div class="ttname"><a href="classAtTPC__d2He.html#a6fa7a1a084d22fd6d824c38e7302b255">AtTPC_d2He::TRANSF</a></div><div class="ttdeci">virtual std::vector&lt; Double_t &gt; TRANSF(std::vector&lt; Double_t &gt; *from, std::vector&lt; Double_t &gt; *to, std::vector&lt; Double_t &gt; *vin)</div><div class="ttdef"><b>Definition:</b> <a href="AtTPC__d2He_8cxx_source.html#l00153">AtTPC_d2He.cxx:153</a></div></div>
 <div class="ttc" id="aclassAtTPC__d2He_html_accd1d8cb7f2dd03c0f72957199179a33"><div class="ttname"><a href="classAtTPC__d2He.html#accd1d8cb7f2dd03c0f72957199179a33">AtTPC_d2He::AtTPC_d2He</a></div><div class="ttdeci">AtTPC_d2He(const AtTPC_d2He &amp;)</div></div>
-<div class="ttc" id="aclassAtTPC__d2He_html_aa75210d17de4726b1ecb94d21930afef"><div class="ttname"><a href="classAtTPC__d2He.html#aa75210d17de4726b1ecb94d21930afef">AtTPC_d2He::omega</a></div><div class="ttdeci">virtual Double_t omega(Double_t x, Double_t y, Double_t z)</div><div class="ttdef"><b>Definition:</b> <a href="AtTPC__d2He_8cxx_source.html#l00190">AtTPC_d2He.cxx:190</a></div></div>
-<div class="ttc" id="aclassAtTPC__d2He_html_a6b63cc0849929b9a1a941e12cb1ae081"><div class="ttname"><a href="classAtTPC__d2He.html#a6b63cc0849929b9a1a941e12cb1ae081">AtTPC_d2He::ReadEvent</a></div><div class="ttdeci">virtual Bool_t ReadEvent(FairPrimaryGenerator *primGen)</div><div class="ttdef"><b>Definition:</b> <a href="AtTPC__d2He_8cxx_source.html#l00196">AtTPC_d2He.cxx:196</a></div></div>
+<div class="ttc" id="aclassAtTPC__d2He_html_aa75210d17de4726b1ecb94d21930afef"><div class="ttname"><a href="classAtTPC__d2He.html#aa75210d17de4726b1ecb94d21930afef">AtTPC_d2He::omega</a></div><div class="ttdeci">virtual Double_t omega(Double_t x, Double_t y, Double_t z)</div><div class="ttdef"><b>Definition:</b> <a href="AtTPC__d2He_8cxx_source.html#l00199">AtTPC_d2He.cxx:199</a></div></div>
+<div class="ttc" id="aclassAtTPC__d2He_html_a6b63cc0849929b9a1a941e12cb1ae081"><div class="ttname"><a href="classAtTPC__d2He.html#a6b63cc0849929b9a1a941e12cb1ae081">AtTPC_d2He::ReadEvent</a></div><div class="ttdeci">virtual Bool_t ReadEvent(FairPrimaryGenerator *primGen)</div><div class="ttdef"><b>Definition:</b> <a href="AtTPC__d2He_8cxx_source.html#l00205">AtTPC_d2He.cxx:205</a></div></div>
 <div class="ttc" id="almcurve_8cxx_html_ac41520b3fdae6af3fa0d9dbbf3211471"><div class="ttname"><a href="lmcurve_8cxx.html#ac41520b3fdae6af3fa0d9dbbf3211471">y</a></div><div class="ttdeci">const double * y</div><div class="ttdef"><b>Definition:</b> <a href="lmcurve_8cxx_source.html#l00020">lmcurve.cxx:20</a></div></div>
 <div class="ttc" id="aclassAtTPC__d2He_html_a6e1c68b56c6eb8d1d1eb55b3eb7f0364"><div class="ttname"><a href="classAtTPC__d2He.html#a6e1c68b56c6eb8d1d1eb55b3eb7f0364">AtTPC_d2He::~AtTPC_d2He</a></div><div class="ttdeci">virtual ~AtTPC_d2He()=default</div></div>
-<div class="ttc" id="aclassAtTPC__d2He_html_ae64e2256cea756399e3d7392847ae725"><div class="ttname"><a href="classAtTPC__d2He.html#ae64e2256cea756399e3d7392847ae725">AtTPC_d2He::AtTPC_d2He</a></div><div class="ttdeci">AtTPC_d2He()</div><div class="ttdef"><b>Definition:</b> <a href="AtTPC__d2He_8cxx_source.html#l00027">AtTPC_d2He.cxx:27</a></div></div>
+<div class="ttc" id="aclassAtTPC__d2He_html_ae64e2256cea756399e3d7392847ae725"><div class="ttname"><a href="classAtTPC__d2He.html#ae64e2256cea756399e3d7392847ae725">AtTPC_d2He::AtTPC_d2He</a></div><div class="ttdeci">AtTPC_d2He()</div><div class="ttdef"><b>Definition:</b> <a href="AtTPC__d2He_8cxx_source.html#l00033">AtTPC_d2He.cxx:33</a></div></div>
 <div class="ttc" id="aclassAtTPC__d2He_html_a604b49d4ba5865ec2c88dc9ef3bf31a5"><div class="ttname"><a href="classAtTPC__d2He.html#a604b49d4ba5865ec2c88dc9ef3bf31a5">AtTPC_d2He::operator=</a></div><div class="ttdeci">AtTPC_d2He &amp; operator=(const AtTPC_d2He &amp;)</div><div class="ttdef"><b>Definition:</b> <a href="AtTPC__d2He_8h_source.html#l00037">AtTPC_d2He.h:37</a></div></div>
 <div class="ttc" id="aclassAtTPC__d2He_html_aeab5443e2470de2e6fededf7e3380dda"><div class="ttname"><a href="classAtTPC__d2He.html#aeab5443e2470de2e6fededf7e3380dda">AtTPC_d2He::badEvts</a></div><div class="ttdeci">Int_t badEvts</div><div class="ttdef"><b>Definition:</b> <a href="AtTPC__d2He_8h_source.html#l00044">AtTPC_d2He.h:44</a></div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Apr 27 2022 00:47:47 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Oct 20 2023 16:22:59 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.18
 </small></address>

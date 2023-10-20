@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">ATTPCROOT
-   &#160;<span id="projectnumber">1.0.0</span>
+   &#160;<span id="projectnumber">0.3.0-alpha</span>
    </div>
    <div id="projectbrief">A ROOT-based framework for analyzing data from active target detectors</div>
   </td>
@@ -80,55 +80,108 @@ $(function() {
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160; </div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#ifndef ATKINEMATICS_H</span></div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#define ATKINEMATICS_H</span></div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160; </div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &lt;Rtypes.h&gt;</span> <span class="comment">// for Double_t, THashConsistencyHolder, Int_t, ClassDef</span></div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160; </div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor">#include &quot;TObject.h&quot;</span> <span class="comment">// for TObject</span></div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160; </div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#include &lt;tuple&gt;</span> <span class="comment">// for tuple</span></div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="keyword">class </span>TBuffer;</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="keyword">class </span>TClass;</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="keyword">class </span>TMemberInspector;</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160; </div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespaceAtTools.html">AtTools</a> {</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
-<div class="line"><a name="l00022"></a><span class="lineno"><a class="line" href="classAtTools_1_1AtKinematics.html">   22</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAtTools_1_1AtKinematics.html">AtKinematics</a> : <span class="keyword">public</span> TObject {</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;   <a class="code" href="classAtTools_1_1AtKinematics.html#ac5ca90c918555042dc5e348fedf83e21">AtKinematics</a>();</div>
-<div class="line"><a name="l00026"></a><span class="lineno"><a class="line" href="classAtTools_1_1AtKinematics.html#a33afc28a232fea8b33922da564aa11cc">   26</a></span>&#160;   <a class="code" href="classAtTools_1_1AtKinematics.html#a33afc28a232fea8b33922da564aa11cc">~AtKinematics</a>() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
-<div class="line"><a name="l00028"></a><span class="lineno"><a class="line" href="classAtTools_1_1AtKinematics.html#ad5939e5827af9d57a435e8512bc7e3f4">   28</a></span>&#160;   <span class="keywordtype">void</span> <a class="code" href="classAtTools_1_1AtKinematics.html#ad5939e5827af9d57a435e8512bc7e3f4">SetVerbosity</a>(Int_t verbosity) { fVerbosity = verbosity; }</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;   std::tuple&lt;Double_t, Double_t&gt;</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;   <a class="code" href="classAtTools_1_1AtKinematics.html#abf90b6568fd4017dc96f40ce4b20ab76">GetMomFromBrho</a>(Double_t A, Double_t Z,</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;                  Double_t brho); </div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;   Double_t</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;   <a class="code" href="classAtTools_1_1AtKinematics.html#ab0be929ae13860ebefc8fc6a8697f479">TwoBodyEx</a>(Double_t m1, Double_t m2, Double_t m3, Double_t m4, Double_t K_proj, Double_t thetalab, Double_t K_eject);</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;   Double_t <a class="code" href="classAtTools_1_1AtKinematics.html#a68e50376360319ec975e1a72ebf31998">omega</a>(Double_t x, Double_t <a class="code" href="lmcurve_8cxx.html#ac41520b3fdae6af3fa0d9dbbf3211471">y</a>, Double_t z);</div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &lt;Math/Vector4D.h&gt;</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &lt;Math/Vector4Dfwd.h&gt;</span> <span class="comment">// for PxPyPzEVector</span></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#include &lt;Rtypes.h&gt;</span>           <span class="comment">// for Double_t, THashConsistencyHolder, Int_t, ClassDef</span></div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor">#include &lt;TMatrixDfwd.h&gt;</span>      <span class="comment">// for TMatrixD</span></div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="preprocessor">#include &lt;TMatrixT.h&gt;</span>         <span class="comment">// for TMatrixT</span></div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#include &lt;TObject.h&gt;</span>          <span class="comment">// for TObject</span></div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160; </div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="preprocessor">#include &lt;cmath&gt;</span>  <span class="comment">// for sqrt</span></div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#include &lt;memory&gt;</span> <span class="comment">// for unique_ptr</span></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">#include &lt;tuple&gt;</span>  <span class="comment">// for tuple</span></div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">#include &lt;vector&gt;</span> <span class="comment">// for vector</span></div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="keyword">class </span>TBuffer;</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="keyword">class </span>TClass;</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="keyword">class </span>TMemberInspector;</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespaceAtTools.html">AtTools</a> {</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
+<div class="line"><a name="l00027"></a><span class="lineno"><a class="line" href="classAtTools_1_1AtKinematics.html">   27</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAtTools_1_1AtKinematics.html">AtKinematics</a> : <span class="keyword">public</span> TObject {</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;   Int_t fVerbosity;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;   Int_t fNumParticles{3};              <span class="comment">//</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;   Int_t fNumIterations{100};           </div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;   Double_t fWeigth{0.05};              </div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;   Double_t fTargetMass{2.01410177812}; </div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;   Int_t fVerbosity;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;   ClassDef(<a class="code" href="classAtTools_1_1AtKinematics.html">AtKinematics</a>, 1);</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;};</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;} <span class="comment">// namespace AtTools</span></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160; </div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;   std::vector&lt;std::unique_ptr&lt;TMatrixD&gt;&gt; fAlphaP; </div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;   <span class="keywordtype">void</span> ResetMatrices();</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;   <span class="keywordtype">void</span> PrintMatrices();</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;   TMatrixD CalculateCovariance();</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;   TMatrixD CalculateD(TMatrixD *alpha);</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;   TMatrixD Calculated(TMatrixD *alpha);</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160; </div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;   ClassDef(<a class="code" href="classAtTools_1_1AtKinematics.html">AtKinematics</a>, 1);</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;   <a class="code" href="classAtTools_1_1AtKinematics.html#ac5ca90c918555042dc5e348fedf83e21">AtKinematics</a>();</div>
+<div class="line"><a name="l00048"></a><span class="lineno"><a class="line" href="classAtTools_1_1AtKinematics.html#a33afc28a232fea8b33922da564aa11cc">   48</a></span>&#160;   <a class="code" href="classAtTools_1_1AtKinematics.html#a33afc28a232fea8b33922da564aa11cc">~AtKinematics</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160; </div>
+<div class="line"><a name="l00050"></a><span class="lineno"><a class="line" href="classAtTools_1_1AtKinematics.html#ad5939e5827af9d57a435e8512bc7e3f4">   50</a></span>&#160;   <span class="keywordtype">void</span> <a class="code" href="classAtTools_1_1AtKinematics.html#ad5939e5827af9d57a435e8512bc7e3f4">SetVerbosity</a>(Int_t verbosity) { fVerbosity = verbosity; }</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;   std::tuple&lt;Double_t, Double_t&gt;</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;   <a class="code" href="classAtTools_1_1AtKinematics.html#abf90b6568fd4017dc96f40ce4b20ab76">GetMomFromBrho</a>(Double_t A, Double_t Z,</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;                  Double_t brho); </div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;   Double_t</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;   <a class="code" href="classAtTools_1_1AtKinematics.html#ab0be929ae13860ebefc8fc6a8697f479">TwoBodyEx</a>(Double_t m1, Double_t m2, Double_t m3, Double_t m4, Double_t K_proj, Double_t thetalab, Double_t K_eject);</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;   Double_t <a class="code" href="classAtTools_1_1AtKinematics.html#a68e50376360319ec975e1a72ebf31998">omega</a>(Double_t x, Double_t <a class="code" href="lmcurve_8cxx.html#ac41520b3fdae6af3fa0d9dbbf3211471">y</a>, Double_t z);</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; </div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;   std::vector&lt;double&gt; <a class="code" href="classAtTools_1_1AtKinematics.html#a597068435ba9ea7fd9c2ebb57499b5e6">KinematicalFit</a>(std::vector&lt;double&gt; &amp;parameters);</div>
+<div class="line"><a name="l00060"></a><span class="lineno"><a class="line" href="classAtTools_1_1AtKinematics.html#a77835b42780a609e94164a740a4a248c">   60</a></span>&#160;   <span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code" href="classAtTools_1_1AtKinematics.html#a77835b42780a609e94164a740a4a248c">SetKFIterations</a>(Int_t iter) { fNumIterations = iter; }</div>
+<div class="line"><a name="l00061"></a><span class="lineno"><a class="line" href="classAtTools_1_1AtKinematics.html#abc007108380b51790fa77a4a06d4aff7">   61</a></span>&#160;   <span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code" href="classAtTools_1_1AtKinematics.html#abc007108380b51790fa77a4a06d4aff7">SetKFWeighting</a>(Double_t weight) { fWeigth = weight; }</div>
+<div class="line"><a name="l00062"></a><span class="lineno"><a class="line" href="classAtTools_1_1AtKinematics.html#a466a48d416a3f4e0bbe83e42d55e314c">   62</a></span>&#160;   <span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code" href="classAtTools_1_1AtKinematics.html#a466a48d416a3f4e0bbe83e42d55e314c">SetKFTargetMass</a>(Double_t mass) { fTargetMass = mass; }</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;};</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="keyword">namespace </span>Kinematics {</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160; </div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="keywordtype">double</span> <a class="code" href="namespaceAtTools_1_1Kinematics.html#a02f299820b6c71895b62c5efaf64facf">GetGamma</a>(<span class="keywordtype">double</span> KE, <span class="keywordtype">double</span> m1, <span class="keywordtype">double</span> m2);</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="keywordtype">double</span> <a class="code" href="namespaceAtTools_1_1Kinematics.html#a02f299820b6c71895b62c5efaf64facf">GetGamma</a>(<span class="keywordtype">double</span> beta);</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="keywordtype">double</span> <a class="code" href="namespaceAtTools_1_1Kinematics.html#a40c60f99b87fc856389f5196ade636e0">GetVelocity</a>(<span class="keywordtype">double</span> gamma);</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="keywordtype">double</span> <a class="code" href="namespaceAtTools_1_1Kinematics.html#acd7eb54f61c1f9fb6cc3dac4d7e5951d">GetBeta</a>(<span class="keywordtype">double</span> gamma);</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="keywordtype">double</span> <a class="code" href="namespaceAtTools_1_1Kinematics.html#acd7eb54f61c1f9fb6cc3dac4d7e5951d">GetBeta</a>(<span class="keywordtype">double</span> p, <span class="keywordtype">int</span> A);</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="keywordtype">double</span> <a class="code" href="namespaceAtTools_1_1Kinematics.html#acd7eb54f61c1f9fb6cc3dac4d7e5951d">GetBeta</a>(<span class="keywordtype">double</span> p, <span class="keywordtype">double</span> mass);</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="keywordtype">double</span> <a class="code" href="namespaceAtTools_1_1Kinematics.html#ad1ff1e6d1864e9cd1fab830fe867ada7">GetRelMom</a>(<span class="keywordtype">double</span> gamma, <span class="keywordtype">double</span> mass);</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="keywordtype">double</span> <a class="code" href="namespaceAtTools_1_1Kinematics.html#a94e4d6285998d9973c4010bbaa8969aa">AtoE</a>(<span class="keywordtype">double</span> Amu);</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="keywordtype">double</span> <a class="code" href="namespaceAtTools_1_1Kinematics.html#a03f22039b6ab822fbc22afcff05fb883">EtoA</a>(<span class="keywordtype">double</span> mass);</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160; </div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> Vector&gt;</div>
+<div class="line"><a name="l00078"></a><span class="lineno"><a class="line" href="namespaceAtTools_1_1Kinematics.html#ada31e4cb425ed301c080a5f4582fc410">   78</a></span>&#160;<a class="code" href="AtMCFission_8cxx.html#a1b97cf0faba85fd6ff7e20e9e5839ec3">ROOT::Math::PxPyPzEVector</a> <a class="code" href="namespaceAtTools_1_1Kinematics.html#ada31e4cb425ed301c080a5f4582fc410">Get4Vector</a>(Vector mom, <span class="keywordtype">double</span> m)</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;{</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;   <span class="keywordflow">return</span> {mom.X(), mom.Y(), mom.Z(), std::sqrt(mom.Mag2() + m * m)};</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;}</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160; </div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;} <span class="comment">// namespace Kinematics</span></div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;} <span class="comment">// namespace AtTools</span></div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160; </div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="preprocessor">#endif</span></div>
 </div><!-- fragment --></div><!-- contents -->
-<div class="ttc" id="aclassAtTools_1_1AtKinematics_html"><div class="ttname"><a href="classAtTools_1_1AtKinematics.html">AtTools::AtKinematics</a></div><div class="ttdef"><b>Definition:</b> <a href="AtKinematics_8h_source.html#l00022">AtKinematics.h:22</a></div></div>
-<div class="ttc" id="aclassAtTools_1_1AtKinematics_html_ac5ca90c918555042dc5e348fedf83e21"><div class="ttname"><a href="classAtTools_1_1AtKinematics.html#ac5ca90c918555042dc5e348fedf83e21">AtTools::AtKinematics::AtKinematics</a></div><div class="ttdeci">AtKinematics()</div><div class="ttdef"><b>Definition:</b> <a href="AtKinematics_8cxx_source.html#l00012">AtKinematics.cxx:12</a></div></div>
-<div class="ttc" id="aclassAtTools_1_1AtKinematics_html_a68e50376360319ec975e1a72ebf31998"><div class="ttname"><a href="classAtTools_1_1AtKinematics.html#a68e50376360319ec975e1a72ebf31998">AtTools::AtKinematics::omega</a></div><div class="ttdeci">Double_t omega(Double_t x, Double_t y, Double_t z)</div><div class="ttdef"><b>Definition:</b> <a href="AtKinematics_8cxx_source.html#l00058">AtKinematics.cxx:58</a></div></div>
+<div class="ttc" id="anamespaceAtTools_1_1Kinematics_html_a03f22039b6ab822fbc22afcff05fb883"><div class="ttname"><a href="namespaceAtTools_1_1Kinematics.html#a03f22039b6ab822fbc22afcff05fb883">AtTools::Kinematics::EtoA</a></div><div class="ttdeci">double EtoA(double mass)</div><div class="ttdef"><b>Definition:</b> <a href="AtKinematics_8cxx_source.html#l00304">AtKinematics.cxx:304</a></div></div>
+<div class="ttc" id="anamespaceAtTools_1_1Kinematics_html_a94e4d6285998d9973c4010bbaa8969aa"><div class="ttname"><a href="namespaceAtTools_1_1Kinematics.html#a94e4d6285998d9973c4010bbaa8969aa">AtTools::Kinematics::AtoE</a></div><div class="ttdeci">double AtoE(double Amu)</div><div class="ttdef"><b>Definition:</b> <a href="AtKinematics_8cxx_source.html#l00300">AtKinematics.cxx:300</a></div></div>
+<div class="ttc" id="aclassAtTools_1_1AtKinematics_html"><div class="ttname"><a href="classAtTools_1_1AtKinematics.html">AtTools::AtKinematics</a></div><div class="ttdef"><b>Definition:</b> <a href="AtKinematics_8h_source.html#l00027">AtKinematics.h:27</a></div></div>
+<div class="ttc" id="aclassAtTools_1_1AtKinematics_html_ac5ca90c918555042dc5e348fedf83e21"><div class="ttname"><a href="classAtTools_1_1AtKinematics.html#ac5ca90c918555042dc5e348fedf83e21">AtTools::AtKinematics::AtKinematics</a></div><div class="ttdeci">AtKinematics()</div><div class="ttdef"><b>Definition:</b> <a href="AtKinematics_8cxx_source.html#l00016">AtKinematics.cxx:16</a></div></div>
+<div class="ttc" id="anamespaceAtTools_1_1Kinematics_html_a02f299820b6c71895b62c5efaf64facf"><div class="ttname"><a href="namespaceAtTools_1_1Kinematics.html#a02f299820b6c71895b62c5efaf64facf">AtTools::Kinematics::GetGamma</a></div><div class="ttdeci">double GetGamma(double KE, double m1, double m2)</div><div class="ttdef"><b>Definition:</b> <a href="AtKinematics_8cxx_source.html#l00249">AtKinematics.cxx:249</a></div></div>
+<div class="ttc" id="aclassAtTools_1_1AtKinematics_html_a466a48d416a3f4e0bbe83e42d55e314c"><div class="ttname"><a href="classAtTools_1_1AtKinematics.html#a466a48d416a3f4e0bbe83e42d55e314c">AtTools::AtKinematics::SetKFTargetMass</a></div><div class="ttdeci">void SetKFTargetMass(Double_t mass)</div><div class="ttdef"><b>Definition:</b> <a href="AtKinematics_8h_source.html#l00062">AtKinematics.h:62</a></div></div>
+<div class="ttc" id="aclassAtTools_1_1AtKinematics_html_abc007108380b51790fa77a4a06d4aff7"><div class="ttname"><a href="classAtTools_1_1AtKinematics.html#abc007108380b51790fa77a4a06d4aff7">AtTools::AtKinematics::SetKFWeighting</a></div><div class="ttdeci">void SetKFWeighting(Double_t weight)</div><div class="ttdef"><b>Definition:</b> <a href="AtKinematics_8h_source.html#l00061">AtKinematics.h:61</a></div></div>
+<div class="ttc" id="anamespaceAtTools_1_1Kinematics_html_ad1ff1e6d1864e9cd1fab830fe867ada7"><div class="ttname"><a href="namespaceAtTools_1_1Kinematics.html#ad1ff1e6d1864e9cd1fab830fe867ada7">AtTools::Kinematics::GetRelMom</a></div><div class="ttdeci">double GetRelMom(double gamma, double mass)</div><div class="ttdef"><b>Definition:</b> <a href="AtKinematics_8cxx_source.html#l00292">AtKinematics.cxx:292</a></div></div>
+<div class="ttc" id="aclassAtTools_1_1AtKinematics_html_a597068435ba9ea7fd9c2ebb57499b5e6"><div class="ttname"><a href="classAtTools_1_1AtKinematics.html#a597068435ba9ea7fd9c2ebb57499b5e6">AtTools::AtKinematics::KinematicalFit</a></div><div class="ttdeci">std::vector&lt; double &gt; KinematicalFit(std::vector&lt; double &gt; &amp;parameters)</div><div class="ttdef"><b>Definition:</b> <a href="AtKinematics_8cxx_source.html#l00080">AtKinematics.cxx:80</a></div></div>
+<div class="ttc" id="aclassAtTools_1_1AtKinematics_html_a68e50376360319ec975e1a72ebf31998"><div class="ttname"><a href="classAtTools_1_1AtKinematics.html#a68e50376360319ec975e1a72ebf31998">AtTools::AtKinematics::omega</a></div><div class="ttdeci">Double_t omega(Double_t x, Double_t y, Double_t z)</div><div class="ttdef"><b>Definition:</b> <a href="AtKinematics_8cxx_source.html#l00075">AtKinematics.cxx:75</a></div></div>
+<div class="ttc" id="aclassAtTools_1_1AtKinematics_html_a77835b42780a609e94164a740a4a248c"><div class="ttname"><a href="classAtTools_1_1AtKinematics.html#a77835b42780a609e94164a740a4a248c">AtTools::AtKinematics::SetKFIterations</a></div><div class="ttdeci">void SetKFIterations(Int_t iter)</div><div class="ttdef"><b>Definition:</b> <a href="AtKinematics_8h_source.html#l00060">AtKinematics.h:60</a></div></div>
+<div class="ttc" id="anamespaceAtTools_1_1Kinematics_html_ada31e4cb425ed301c080a5f4582fc410"><div class="ttname"><a href="namespaceAtTools_1_1Kinematics.html#ada31e4cb425ed301c080a5f4582fc410">AtTools::Kinematics::Get4Vector</a></div><div class="ttdeci">ROOT::Math::PxPyPzEVector Get4Vector(Vector mom, double m)</div><div class="ttdef"><b>Definition:</b> <a href="AtKinematics_8h_source.html#l00078">AtKinematics.h:78</a></div></div>
+<div class="ttc" id="aAtMCFission_8cxx_html_a1b97cf0faba85fd6ff7e20e9e5839ec3"><div class="ttname"><a href="AtMCFission_8cxx.html#a1b97cf0faba85fd6ff7e20e9e5839ec3">PxPyPzEVector</a></div><div class="ttdeci">ROOT::Math::PxPyPzEVector PxPyPzEVector</div><div class="ttdef"><b>Definition:</b> <a href="AtMCFission_8cxx_source.html#l00048">AtMCFission.cxx:48</a></div></div>
 <div class="ttc" id="almcurve_8cxx_html_ac41520b3fdae6af3fa0d9dbbf3211471"><div class="ttname"><a href="lmcurve_8cxx.html#ac41520b3fdae6af3fa0d9dbbf3211471">y</a></div><div class="ttdeci">const double * y</div><div class="ttdef"><b>Definition:</b> <a href="lmcurve_8cxx_source.html#l00020">lmcurve.cxx:20</a></div></div>
-<div class="ttc" id="anamespaceAtTools_html"><div class="ttname"><a href="namespaceAtTools.html">AtTools</a></div><div class="ttdef"><b>Definition:</b> <a href="AtELossManager_8h_source.html#l00022">AtELossManager.h:22</a></div></div>
-<div class="ttc" id="aclassAtTools_1_1AtKinematics_html_ad5939e5827af9d57a435e8512bc7e3f4"><div class="ttname"><a href="classAtTools_1_1AtKinematics.html#ad5939e5827af9d57a435e8512bc7e3f4">AtTools::AtKinematics::SetVerbosity</a></div><div class="ttdeci">void SetVerbosity(Int_t verbosity)</div><div class="ttdef"><b>Definition:</b> <a href="AtKinematics_8h_source.html#l00028">AtKinematics.h:28</a></div></div>
-<div class="ttc" id="aclassAtTools_1_1AtKinematics_html_abf90b6568fd4017dc96f40ce4b20ab76"><div class="ttname"><a href="classAtTools_1_1AtKinematics.html#abf90b6568fd4017dc96f40ce4b20ab76">AtTools::AtKinematics::GetMomFromBrho</a></div><div class="ttdeci">std::tuple&lt; Double_t, Double_t &gt; GetMomFromBrho(Double_t A, Double_t Z, Double_t brho)</div><div class="ttdoc">Returns momentum (in GeV) from Brho assuming M (amu) and Z;.</div><div class="ttdef"><b>Definition:</b> <a href="AtKinematics_8cxx_source.html#l00014">AtKinematics.cxx:14</a></div></div>
-<div class="ttc" id="aclassAtTools_1_1AtKinematics_html_ab0be929ae13860ebefc8fc6a8697f479"><div class="ttname"><a href="classAtTools_1_1AtKinematics.html#ab0be929ae13860ebefc8fc6a8697f479">AtTools::AtKinematics::TwoBodyEx</a></div><div class="ttdeci">Double_t TwoBodyEx(Double_t m1, Double_t m2, Double_t m3, Double_t m4, Double_t K_proj, Double_t thetalab, Double_t K_eject)</div><div class="ttdef"><b>Definition:</b> <a href="AtKinematics_8cxx_source.html#l00025">AtKinematics.cxx:25</a></div></div>
+<div class="ttc" id="anamespaceAtTools_html"><div class="ttname"><a href="namespaceAtTools.html">AtTools</a></div><div class="ttdef"><b>Definition:</b> <a href="AtSimpleSimulation_8h_source.html#l00019">AtSimpleSimulation.h:19</a></div></div>
+<div class="ttc" id="aclassAtTools_1_1AtKinematics_html_ad5939e5827af9d57a435e8512bc7e3f4"><div class="ttname"><a href="classAtTools_1_1AtKinematics.html#ad5939e5827af9d57a435e8512bc7e3f4">AtTools::AtKinematics::SetVerbosity</a></div><div class="ttdeci">void SetVerbosity(Int_t verbosity)</div><div class="ttdef"><b>Definition:</b> <a href="AtKinematics_8h_source.html#l00050">AtKinematics.h:50</a></div></div>
+<div class="ttc" id="aclassAtTools_1_1AtKinematics_html_abf90b6568fd4017dc96f40ce4b20ab76"><div class="ttname"><a href="classAtTools_1_1AtKinematics.html#abf90b6568fd4017dc96f40ce4b20ab76">AtTools::AtKinematics::GetMomFromBrho</a></div><div class="ttdeci">std::tuple&lt; Double_t, Double_t &gt; GetMomFromBrho(Double_t A, Double_t Z, Double_t brho)</div><div class="ttdoc">Returns momentum (in GeV) from Brho assuming M (amu) and Z;.</div><div class="ttdef"><b>Definition:</b> <a href="AtKinematics_8cxx_source.html#l00031">AtKinematics.cxx:31</a></div></div>
+<div class="ttc" id="anamespaceAtTools_1_1Kinematics_html_acd7eb54f61c1f9fb6cc3dac4d7e5951d"><div class="ttname"><a href="namespaceAtTools_1_1Kinematics.html#acd7eb54f61c1f9fb6cc3dac4d7e5951d">AtTools::Kinematics::GetBeta</a></div><div class="ttdeci">double GetBeta(double gamma)</div><div class="ttdef"><b>Definition:</b> <a href="AtKinematics_8cxx_source.html#l00267">AtKinematics.cxx:267</a></div></div>
+<div class="ttc" id="anamespaceAtTools_1_1Kinematics_html_a40c60f99b87fc856389f5196ade636e0"><div class="ttname"><a href="namespaceAtTools_1_1Kinematics.html#a40c60f99b87fc856389f5196ade636e0">AtTools::Kinematics::GetVelocity</a></div><div class="ttdeci">double GetVelocity(double gamma)</div><div class="ttdef"><b>Definition:</b> <a href="AtKinematics_8cxx_source.html#l00259">AtKinematics.cxx:259</a></div></div>
+<div class="ttc" id="aclassAtTools_1_1AtKinematics_html_ab0be929ae13860ebefc8fc6a8697f479"><div class="ttname"><a href="classAtTools_1_1AtKinematics.html#ab0be929ae13860ebefc8fc6a8697f479">AtTools::AtKinematics::TwoBodyEx</a></div><div class="ttdeci">Double_t TwoBodyEx(Double_t m1, Double_t m2, Double_t m3, Double_t m4, Double_t K_proj, Double_t thetalab, Double_t K_eject)</div><div class="ttdef"><b>Definition:</b> <a href="AtKinematics_8cxx_source.html#l00042">AtKinematics.cxx:42</a></div></div>
 <div class="ttc" id="aclassAtTools_1_1AtKinematics_html_a33afc28a232fea8b33922da564aa11cc"><div class="ttname"><a href="classAtTools_1_1AtKinematics.html#a33afc28a232fea8b33922da564aa11cc">AtTools::AtKinematics::~AtKinematics</a></div><div class="ttdeci">~AtKinematics()=default</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Apr 27 2022 00:47:48 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Oct 20 2023 16:23:00 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.18
 </small></address>
