@@ -22,6 +22,7 @@ int main(int argc, char *argv[])
    std::size_t lastEvt = 0;
    bool fInteractiveMode = 1;
    TString inputFileName = "";
+   TString inputAuxFileName = "";
    bool fitDirection = 0; // 0: Forward (d,d) - 1: Backwards (d,p)
    bool simulationConv = 0;
    bool enableMerging = 1;
@@ -29,8 +30,8 @@ int main(int argc, char *argv[])
    bool enableReclustering = 1;//For benchmarking purposes
    Double_t clusterRadius = 7.5;//mm
    Double_t clusterDistance   = 15.0;//mm
-   Exp exp = a1954;
-
+   bool externalTimeStamp = 0;       // Enables Timestamp merging from FRIB DAQ file
+   Exp exp = e20009;
 
    // Physics parameters
    Float_t magneticField = 3.0;       // T
@@ -69,6 +70,29 @@ int main(int argc, char *argv[])
    switch(exp)
       {
 
+   case a1975:
+      gasMediumDensity = 0.083147;
+      magneticField = 2.85;
+
+      if (simulationConv) {
+         filePath = dir + "/macro/Simulation/ATTPC/16C_pp/data/";
+         simFile = "_sim_";
+      } else {
+         filePath = dir + "/macro/Unpack_HDF5/a1975/";
+         simFile = "";
+      }
+
+      geoManFile = dir + "/geometry/ATTPC_H1bar_geomanager.root";
+      ionList = dirCstr + "/resources/ionFitLists/e20009_ionList.xml";
+
+      std::cout << " Analysis of experiment a1975. Gas density : " << gasMediumDensity << " mg/cm3"
+                << "\n";
+      std::cout << " File path : " << filePath << "\n";
+      std::cout << " Geomtry file : " << geoManFile << "\n";
+      std::cout << " Ion list file : " << ionList << "\n";
+
+      break;
+
    case a1954:
       gasMediumDensity = 0.083147;
       magneticField = 2.85;
@@ -84,11 +108,38 @@ int main(int argc, char *argv[])
       geoManFile = dir + "/geometry/ATTPC_H1bar_geomanager.root";
       ionList = dirCstr + "/resources/ionFitLists/e20009_ionList.xml";
 
-      std::cout << " Analysis of experiment a1954. Gas density : " << gasMediumDensity << " mg/cm3"
+      std::cout << " Analysis of experiment a1954 (14C beam on proton). Gas density : " << gasMediumDensity << " mg/cm3"
                 << "\n";
       std::cout << " File path : " << filePath << "\n";
       std::cout << " Geomtry file : " << geoManFile << "\n";
       std::cout << " Ion list file : " << ionList << "\n";
+
+      break;
+
+   case a1954b:
+      gasMediumDensity = 0.083147;
+      magneticField = 2.85;
+
+      if (simulationConv) {
+         filePath = dir + "/macro/Simulation/ATTPC/14C_pp/data/";
+         simFile = "_sim_";
+      } else {
+         filePath = dir + "/macro/Unpack_HDF5/a1954_Be12/";
+         simFile = "";
+      }
+
+      geoManFile = dir + "/geometry/ATTPC_H1bar_geomanager.root";
+      ionList = dirCstr + "/resources/ionFitLists/e20009_ionList.xml";
+
+      externalTimeStamp = 1;
+
+      std::cout << " Analysis of experiment a1954b (12Be beam on proton). Gas density : " << gasMediumDensity
+                << " mg/cm3"
+                << "\n";
+      std::cout << " File path : " << filePath << "\n";
+      std::cout << " Geomtry file : " << geoManFile << "\n";
+      std::cout << " Ion list file : " << ionList << "\n";
+      std::cout << " External timestamp: " << externalTimeStamp << "\n";
 
       break;
 
@@ -143,11 +194,13 @@ int main(int argc, char *argv[])
    outputFileName = "fit_analysis_" + simFile + inputFileName;
    outputFileName += "_" + std::to_string(firstEvt) + "_" + std::to_string(lastEvt) + ".root";
 
+   inputAuxFileName = filePath + inputFileName + "_FRIB_sorted.root";
    inputFileName = filePath + inputFileName + ".root";
 
    std::cout << " Input file name : " << inputFileName << "\n";
+   std::cout << " Input auxiliary file name : " << inputAuxFileName << "\n";
 
-   ////FitManagerfita becomes owner
+   ////FitManager becomes owner
    std::shared_ptr<FitManager> fitManager;
 
    try {
@@ -161,6 +214,10 @@ int main(int argc, char *argv[])
 
    fitManager->SetGeometry(geoManFile, magneticField, gasMediumDensity);
    fitManager->SetInputFile(inputFileName, firstEvt, lastEvt);
+
+   if (externalTimeStamp)
+      fitManager->SetAuxInputFile(inputAuxFileName, firstEvt, lastEvt);
+
    fitManager->SetOutputFile(outputFileName);
    fitManager->SetFitters(simulationConv);
    fitManager->SetFitDirection(fitDirection);
@@ -180,6 +237,7 @@ int main(int argc, char *argv[])
    std::shared_ptr<AtTools::AtKinematics> kine = std::make_shared<AtTools::AtKinematics>();
 
    auto reader = fitManager->GetReader();
+   auto readerAux = fitManager->GetAuxReader();
 
    // Event loop
    for (auto i = firstEvt; i < lastEvt; i++) {
@@ -188,9 +246,16 @@ int main(int argc, char *argv[])
       fitManager->ClearTree();
 
       reader->Next();
+      if (externalTimeStamp)
+         readerAux->Next();
 
       AtPatternEvent *patternEvent = fitManager->GetPatternEve();
       AtEvent *event = fitManager->GetEve();
+
+      if (externalTimeStamp) {
+         fitManager->SetICMult(*fitManager->GetICMult());
+         fitManager->SetIC(*fitManager->GetIC());
+      }
 
       if (patternEvent) {
 
@@ -200,7 +265,13 @@ int main(int argc, char *argv[])
          std::vector<AtTrack> &patternTrackCand = patternEvent->GetTrackCand();
          std::cout << cGREEN << "   >>>> Number of pattern tracks " << patternTrackCand.size() << cNORMAL << "\n";
 
-         // fitManager->GetAuxiliaryChannels(auxPadArray);
+         auto &noiseHits = patternEvent->GetNoiseHits();
+         std::cout << cGREEN << "   >>>> Number of noise hits " << noiseHits.size() << cNORMAL << "\n";
+
+         auto &hits = event->GetHits();
+         std::cout << cGREEN << "   >>>> Number of hits " << hits.size() << cNORMAL << "\n";
+
+         fitManager->GetAuxiliaryChannels(auxPadArray);
 
          fitManager->FitTracks(patternTrackCand);
 
@@ -519,6 +590,9 @@ Bool_t FitManager::FitTracks(std::vector<AtTrack> &tracks)
          case e20020: pdgCandFit.push_back(1000020040); break;
          case e20009: pdgCandFit.push_back(1000010020); break;
          case a1954: pdgCandFit.push_back(2212); break;
+         case a1954b: pdgCandFit.push_back(2212); break;
+         // case a1954b: pdgCandFit.push_back(1000010020); break;
+         case a1975: pdgCandFit.push_back(2212); break;
          }
 
       } else if (thetaConv < 10) {
@@ -907,6 +981,28 @@ Bool_t FitManager::SetInputFile(TString &file, std::size_t firstEve, std::size_t
    fPatternEveArray = std::make_shared<TTreeReaderValue<TClonesArray>>(*fReader, "AtPatternEvent");
    fEveArray = std::make_shared<TTreeReaderValue<TClonesArray>>(*fReader, "AtEventH");
    fReader->SetEntriesRange(firstEve, lastEve);
+
+   return true;
+}
+
+Bool_t FitManager::SetAuxInputFile(TString &file, std::size_t firstEve, std::size_t lastEve)
+{
+   Int_t nEvents = lastEve - firstEve;
+   std::cout << " Opening Auxiliary File (FRIB DAQ) : " << file.Data() << "\n";
+   std::cout << " Number of events : " << nEvents << std::endl;
+
+   fAuxInputFile = std::make_shared<TFile>(file.Data(), "READ");
+   fAuxReader = std::make_shared<TTreeReader>("FRIB_output_tree", fAuxInputFile.get());
+   if (fAuxInputFile.get()->IsZombie()) {
+      std::cerr << " File not found ! " << file.Data() << "\n";
+      std::exit(0);
+   }
+   fTs = std::make_shared<TTreeReaderValue<ULong64_t>>(*fAuxReader, "timestamp");
+   fEnergyIC = std::make_shared<TTreeReaderValue<std::vector<Float_t>>>(*fAuxReader, "energy");
+   fTimeIC = std::make_shared<TTreeReaderValue<std::vector<Float_t>>>(*fAuxReader, "time");
+   fMultIC = std::make_shared<TTreeReaderValue<UInt_t>>(*fAuxReader, "mult");
+   fFribEvName = std::make_shared<TTreeReaderValue<std::string>>(*fAuxReader, "eventName");
+   fAuxReader->SetEntriesRange(firstEve, lastEve);
 
    return true;
 }

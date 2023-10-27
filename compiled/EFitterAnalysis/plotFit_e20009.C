@@ -34,7 +34,7 @@ std::tuple<double,double> kine_2b(Double_t m1, Double_t m2, Double_t m3, Double_
    return std::make_tuple(Ex,theta_cm);
 }
 
-void plotFit_e20009(std::string fileFolder = "merged_Be10dd_corr/")
+void plotFit_e20009(std::string fileFolder = "data_344_367/")
 {
 
    std::ofstream outputFileEvents("list_of_events.txt");
@@ -335,12 +335,12 @@ void plotFit_e20009(std::string fileFolder = "merged_Be10dd_corr/")
    //Differential cross sections
    Double_t sigmaLab0[360]={0.0};
    Double_t sigmaCM0[360]={0.0};
-   TGraphErrors *gsigmaLab0 = new TGraphErrors();
-   gsigmaLab0->SetMarkerStyle(20);
-   gsigmaLab0->SetMarkerSize(1.5);
-   TGraphErrors *gsigmaCM0 = new TGraphErrors();
-   gsigmaCM0->SetMarkerStyle(20);
-   gsigmaCM0->SetMarkerSize(1.5);
+   /* TGraphErrors *gsigmaLab0 = new TGraphErrors();
+    gsigmaLab0->SetMarkerStyle(20);
+    gsigmaLab0->SetMarkerSize(1.5);
+    TGraphErrors *gsigmaCM0 = new TGraphErrors();
+    gsigmaCM0->SetMarkerStyle(20);
+    gsigmaCM0->SetMarkerSize(1.5);*/
 
    Double_t sigmaCM0Corr[360];
    std::fill_n(sigmaCM0Corr, 360, 1.0);
@@ -569,8 +569,8 @@ void plotFit_e20009(std::string fileFolder = "merged_Be10dd_corr/")
                }
                //}
 
-              if (ICA < 500 || ICA > 900)
-	            continue;
+               if (ICA < 500 || ICA > 900)
+                  continue;
 
                for (ICIndex = 0; ICIndex < ICVec->size(); ++ICIndex) {
 
@@ -630,7 +630,7 @@ void plotFit_e20009(std::string fileFolder = "merged_Be10dd_corr/")
                // if((*eLossADC)[index]<1000)
                // continue;
 
-               if ((*AFitVec)[index] < 10 || (*AFitVec)[index] > 170)
+               if ((*AFitVec)[index] < 30 || (*AFitVec)[index] > 170)
                   continue;
 
                // Particle ID
@@ -655,8 +655,16 @@ void plotFit_e20009(std::string fileFolder = "merged_Be10dd_corr/")
                //if ((*dEdxADC)[index] < 3000) // particleID
 		 //continue;
 
-               if ((*trackLengthVec)[index] < 25.0)
-                  continue;
+               // NB: Uncomment for calibration
+               /* if ((*trackLengthVec)[index] < 16.0 || (*trackLengthVec)[index] > 22.0)
+                   continue;
+
+                if ((*EFitVec)[index] < 0 || (*EFitVec)[index] > 20)
+                   continue;*/
+               // NB: Uncomment for calibration
+
+               // if ((*trackLengthVec)[index] < 22.0 || (*trackLengthVec)[index] > 100.0)
+               // continue;
 
                //if ((*fitConvergedVec)[index] == 0)
                  // continue;
@@ -670,14 +678,11 @@ void plotFit_e20009(std::string fileFolder = "merged_Be10dd_corr/")
                // if ((*POCAXtrVec)[index] > 2000.0)
                // continue;
 
-               if ((*ziniFitVec)[index] < 0.0 || (*ziniFitVec)[index] > 80.0)
+               if ((*ziniFitVec)[index] < 10.0 || (*ziniFitVec)[index] > 75.0)
                   continue;
 
                // if((*AFitVec)[index]<50 || (*AFitVec)[index]>70)
                // continue;
-
-	       //if ((*EFitVec)[index] < 2 || (*EFitVec)[index] > 6)
-	       //continue;
 
                /*     if ((*fChi2Vec)[index] / (*fNdfVec)[index] < 0.000)
                       continue;
@@ -709,7 +714,7 @@ void plotFit_e20009(std::string fileFolder = "merged_Be10dd_corr/")
 
                // Excitation energy correction
                Double_t p0 = 0.0;//-3.048;
-               Double_t p1 = 0.003;//0.0513295;
+               Double_t p1 = 0.0025; // 0.0513295;
                Double_t mFactor = 1.00;
                Double_t offSet = 0.0;
                Double_t QcorrZ = 0.0;
@@ -938,38 +943,44 @@ void plotFit_e20009(std::string fileFolder = "merged_Be10dd_corr/")
 
    //Diff xs graph
    Double_t beamIntensity = 59855710.0;
-   Double_t scale0 = 1.0 * (2.0 * TMath::Pi()) / (beamIntensity * 3.16E21 * 1E-27);
+   Double_t scale0 = 1.5 * (2.0 * TMath::Pi()) / (beamIntensity * 3.16E21 * 1E-27);
    Double_t scale1 = 2.0 * 1.0 * (2.0 * TMath::Pi()) / (beamIntensity * 3.16E21 * 1E-27);
    Double_t scale2 = 0.2;
    Double_t scale3 = 0.1;
 
+   TGraphErrors *gsigmaLab0 = new TGraphErrors();
+   gsigmaLab0->SetMarkerStyle(20);
+   gsigmaLab0->SetMarkerSize(1.5);
+   TGraphErrors *gsigmaCM0 = new TGraphErrors();
+   gsigmaCM0->SetMarkerStyle(20);
+   gsigmaCM0->SetMarkerSize(1.5);
+
    for (auto ig = 1; ig < 360; ++ig)
 
    {
-
-      gsigmaLab0->SetPoint(ig, ig, sigmaLab0[ig]);
-      gsigmaLab0->SetPointError(ig, 0, TMath::Sqrt(sigmaLab0[ig]));
+      // gsigmaLab0->SetPoint(ig, ig, sigmaLab0[ig]);
+      // gsigmaLab0->SetPointError(ig, 0, TMath::Sqrt(sigmaLab0[ig]));
       gsigmaCM0->SetPoint(ig, ig, sigmaCM0[ig] * scale0 / TMath::Sin(TMath::DegToRad() * ig) / fcorr0->Eval(ig));
       gsigmaCM0->SetPointError(ig, 0, TMath::Sqrt(sigmaCM0[ig]) * scale0 / TMath::Sin(TMath::DegToRad() * ig));
 
-      gsigmaLab1->SetPoint(ig, ig, sigmaLab1[ig]);
-      gsigmaLab1->SetPointError(ig, 0, TMath::Sqrt(sigmaLab1[ig]));
-      gsigmaCM1->SetPoint(ig, ig, sigmaCM1[ig] * scale1 / TMath::Sin(TMath::DegToRad() * ig) / fcorr1->Eval(ig));
-      gsigmaCM1->SetPointError(ig, 0, TMath::Sqrt(sigmaCM1[ig]) * scale1 / TMath::Sin(TMath::DegToRad() * ig));
+      /*  gsigmaLab1->SetPoint(ig, ig, sigmaLab1[ig]);
+        gsigmaLab1->SetPointError(ig, 0, TMath::Sqrt(sigmaLab1[ig]));
+        gsigmaCM1->SetPoint(ig, ig, sigmaCM1[ig] * scale1 / TMath::Sin(TMath::DegToRad() * ig) / fcorr1->Eval(ig));
+        gsigmaCM1->SetPointError(ig, 0, TMath::Sqrt(sigmaCM1[ig]) * scale1 / TMath::Sin(TMath::DegToRad() * ig));
 
-      gsigmaLab2->SetPoint(ig, ig, sigmaLab2[ig]);
-      gsigmaLab2->SetPointError(ig, 0, TMath::Sqrt(sigmaLab2[ig]));
-      gsigmaCM2->SetPoint(ig, ig, sigmaCM2[ig] * scale2 / TMath::Sin(TMath::DegToRad() * ig));
-      gsigmaCM2->SetPointError(ig, 0, TMath::Sqrt(sigmaCM2[ig]) * scale2 / TMath::Sin(TMath::DegToRad() * ig));
+        gsigmaLab2->SetPoint(ig, ig, sigmaLab2[ig]);
+        gsigmaLab2->SetPointError(ig, 0, TMath::Sqrt(sigmaLab2[ig]));
+        gsigmaCM2->SetPoint(ig, ig, sigmaCM2[ig] * scale2 / TMath::Sin(TMath::DegToRad() * ig));
+        gsigmaCM2->SetPointError(ig, 0, TMath::Sqrt(sigmaCM2[ig]) * scale2 / TMath::Sin(TMath::DegToRad() * ig));
 
-      gsigmaLab3->SetPoint(ig, ig, sigmaLab3[ig]);
-      gsigmaLab3->SetPointError(ig, 0, TMath::Sqrt(sigmaLab3[ig]));
-      gsigmaCM3->SetPoint(ig, ig, sigmaCM3[ig] * scale3 / TMath::Sin(TMath::DegToRad() * ig));
-      gsigmaCM3->SetPointError(ig, 0, TMath::Sqrt(sigmaCM3[ig]) * scale3 / TMath::Sin(TMath::DegToRad() * ig));
+        gsigmaLab3->SetPoint(ig, ig, sigmaLab3[ig]);
+        gsigmaLab3->SetPointError(ig, 0, TMath::Sqrt(sigmaLab3[ig]));
+        gsigmaCM3->SetPoint(ig, ig, sigmaCM3[ig] * scale3 / TMath::Sin(TMath::DegToRad() * ig));
+        gsigmaCM3->SetPointError(ig, 0, TMath::Sqrt(sigmaCM3[ig]) * scale3 / TMath::Sin(TMath::DegToRad() * ig));
 
-      outputXSFile << ig << " " << sigmaCM0[ig] << " " << sigmaCM1[ig] << "  " << sigmaCM2[ig] << " " << sigmaCM3[ig]
-                   << " " << sigmaCM0[ig] * scale0 / TMath::Sin(TMath::DegToRad() * ig) / fcorr0->Eval(ig) << " "
-                   << "\n";
+        outputXSFile << ig << " " << sigmaCM0[ig] << " " << sigmaCM1[ig] << "  " << sigmaCM2[ig] << " " << sigmaCM3[ig]
+                     << " " << sigmaCM0[ig] * scale0 / TMath::Sin(TMath::DegToRad() * ig) / fcorr0->Eval(ig) << " "
+                     << "\n";*/
    }
 
    // Merging
@@ -1070,6 +1081,7 @@ void plotFit_e20009(std::string fileFolder = "merged_Be10dd_corr/")
    Ang_Ener->GetYaxis()->SetTitle("Energy (MeV)");
    Kine_AngRec_EnerRec->SetLineWidth(2);
    Kine_AngRec_EnerRec->SetLineColor(kRed);
+   Kine_AngRec_EnerRec->SetLineStyle(9);
    Kine_AngRec_EnerRec->Draw("SAME");
    Kine_AngRec_EnerRec_in->SetLineWidth(2);
    Kine_AngRec_EnerRec_in->SetLineColor(kBlue + 3);
@@ -1245,7 +1257,7 @@ void plotFit_e20009(std::string fileFolder = "merged_Be10dd_corr/")
 
    /*TCanvas *c8 = new TCanvas();
    QvsEb->Draw("zcol");
-   QvsMult->Draw("zcol");
+   QvsMult->Draw("zcol");*/
 
    auto leg = new TLegend(0.1,0.1,0.2,0.2);
    leg->AddEntry(gsigmaCM0, "O_1+","lp");
@@ -1259,12 +1271,12 @@ void plotFit_e20009(std::string fileFolder = "merged_Be10dd_corr/")
    gsigmaCM3->Draw("LP");
    leg->Draw();
 
-   TCanvas *cgs = new TCanvas();
+   TCanvas *cgs = new TCanvas("gs", "gs", 700, 700);
    gsigmaCM0->Draw("ALP");
    gDWBA0->Draw("L");
-   gAltAnalysis->Draw("LP");
+   // gAltAnalysis->Draw("LP");
 
-   TCanvas *ce1 = new TCanvas();
+   /*TCanvas *ce1 = new TCanvas();
    gsigmaCM1->Draw("ALP");
    gDWBA1->Draw("L");
    gDWBA2->Draw("L");
@@ -1314,6 +1326,70 @@ void plotFit_e20009(std::string fileFolder = "merged_Be10dd_corr/")
    HQvalPRA->GetXaxis()->SetTitle("Excitation Energy (MeV)");
    HQvalPRA->GetYaxis()->SetTitle("Counts");*/
 
+   // Fitting
+   /* creating gaussian curves */
+   TF1 *g1 = new TF1("m1", "gaus", 5.5, 6.5);
+   TF1 *g2 = new TF1("m2", "gaus", 6.5, 7.6);
+   TF1 *g3 = new TF1("m3", "gaus", 2.5, 4.5);
+   TF1 *g4 = new TF1("m4", "gaus", -2.0, 2.0);
+
+   TF1 *total_gaus = new TF1("total_gaus", "gaus(0)+gaus(3)+gaus(6)+gaus(9)", -2.0, 10.0); /* define combined function*/
+
+   /* Fitting each gaus fn and adding them to the existing list of functions */
+   /* the + sign adds the newly fitted fn to the existing fn. */
+   /*HQval-> Fit (g1,"R");
+   HQval-> Fit (g2,"R+");
+   HQval-> Fit (g3,"R+");
+   HQval-> Fit (g4,"R+");*/
+   HQCorr->Fit(g1, "R");
+   HQCorr->Fit(g2, "R+");
+   HQCorr->Fit(g3, "R+");
+   HQCorr->Fit(g4, "R+");
+
+   Double_t par[12]; /* parameter array */
+
+   /* get parameters from the fit, it first fits & takes the parameter from there */
+   g1->GetParameters(&par[0]);
+   g2->GetParameters(&par[3]);
+   g3->GetParameters(&par[6]);
+   g4->GetParameters(&par[9]);
+
+   total_gaus->SetParameters(par);
+   // HQval->Fit("total_gaus","","",-2.0,9.0); /*fitting gaussian curve on the histogram */
+   HQCorr->Fit("total_gaus", "", "", -2.0, 9.0);
+   total_gaus->GetParameters(&par[0]);
+
+   auto gfit1 = new TF1("gfit1", "gaus(0)", 4.0, 10.0);
+   gfit1->SetParameter(0, par[0]);
+   gfit1->SetParameter(1, par[1]);
+   gfit1->SetParameter(2, par[2]);
+   gfit1->SetLineColor(kBlue);
+   auto gfit2 = new TF1("gfit2", "gaus(0)", 4.0, 10.0);
+   gfit2->SetParameter(0, par[3]);
+   gfit2->SetParameter(1, par[4]);
+   gfit2->SetParameter(2, par[5]);
+   gfit2->SetLineColor(kBlue);
+   auto gfit3 = new TF1("gfit3", "gaus(0)", 2.5, 6.0);
+   gfit3->SetParameter(0, par[6]);
+   gfit3->SetParameter(1, par[7]);
+   gfit3->SetParameter(2, par[8]);
+   gfit3->SetLineColor(kBlue);
+   auto gfit4 = new TF1("gfit4", "gaus(0)", -2.0, 2.0);
+   gfit4->SetParameter(0, par[9]);
+   gfit4->SetParameter(1, par[10]);
+   gfit4->SetParameter(2, par[11]);
+   gfit4->SetLineColor(kBlue);
+
+   TCanvas *cKineLines = new TCanvas("cKineLines", "cKineLines", 700, 700);
+   Ang_Ener->Draw("col");
+   Ang_Ener->GetXaxis()->SetTitle("Angle (deg)");
+   Ang_Ener->GetYaxis()->SetTitle("Energy (MeV)");
+   Kine_AngRec_EnerRec->Draw("SAME");
+   Kine_AngRec_EnerRec->Kine_AngRec_EnerRec_9AMeV->Draw("SAME");
+   Kine_AngRec_EnerRec_in->Draw("ZCOL SAME");
+   Kine_AngRec_EnerRec_dp->Draw("ZCOL SAME");
+   // Kine_AngRec_EnerRec_dp_first->Draw("ZCOL SAME");
+
    // TCanvas *cKineFit = new TCanvas("cKineFit", "cKineFit", 1800, 900);
    TCanvas *cKineFit = new TCanvas("cKineFit", "cKineFit", 700, 700);
    // cKineFit->Divide(2, 1);
@@ -1329,9 +1405,17 @@ void plotFit_e20009(std::string fileFolder = "merged_Be10dd_corr/")
    Kine_AngRec_EnerRec_dp_first->Draw("ZCOL SAME");*/
 
    // cKineFit->cd(2);
-   HQval->GetXaxis()->SetTitle("Excitation Energy (MeV)");
+   /*HQval->GetXaxis()->SetTitle("Excitation Energy (MeV)");
    HQval->GetYaxis()->SetTitle("Counts");
-   HQval->Draw();
+   HQval->Draw();*/
+   HQCorr->GetXaxis()->SetTitle("Excitation Energy (MeV)");
+   HQCorr->GetYaxis()->SetTitle("Counts");
+   HQCorr->Draw();
+   gfit1->Draw("same l");
+   gfit2->Draw("same l");
+   gfit3->Draw("same l");
+   gfit4->Draw("same l");
+   total_gaus->Draw("same l");
 
    TCanvas *cTrackLength = new TCanvas("cTrackLength", "cTrackLength", 700, 700);
    QvsTrackLengthH->Draw();

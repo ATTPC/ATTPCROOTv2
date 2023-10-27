@@ -5,6 +5,9 @@
 gphysi.dat
 core_dump*
 build
+lib
+include
+bin
 !*/build
 data
 .vscode

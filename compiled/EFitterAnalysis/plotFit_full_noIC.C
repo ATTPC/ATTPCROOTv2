@@ -36,7 +36,7 @@ std::tuple<double,double> kine_2b(Double_t m1, Double_t m2, Double_t m3, Double_
    return std::make_tuple(Ex,theta_cm);
 }
 
-void plotFit_full_noIC(std::string fileFolder = "data_sim_3_3/")
+void plotFit_full_noIC(std::string fileFolder = "data_sim_0_0/")
 {
 
    std::ofstream outputFileEvents("list_of_events.txt");
@@ -48,7 +48,7 @@ void plotFit_full_noIC(std::string fileFolder = "data_sim_3_3/")
 
    TH1F *AngCM = new TH1F("AngCM", "AngCM", 180, 0, 180);
    TH1F *AngLab = new TH1F("AngLab", "AngLab", 180, 0, 180);
-   // TH1F *AngCM = new TH1F("AngCM", "AngCM", 100, 0, 1);
+   TH1F *AngCMNorm = new TH1F("AngCMNorm", "AngCMNorm", 180, 0, 180);
 
    TH1F *AngCMDiff = new TH1F("AngCMDiff", "AngCMDiff", 100, -10, 10);
 
@@ -59,7 +59,7 @@ void plotFit_full_noIC(std::string fileFolder = "data_sim_3_3/")
 
    TH1F *AngLabSim = new TH1F("AngLabSim", "AngLabSim", 180, 0, 180);
    TH1F *AngCMSim = new TH1F("AngCMSim", "AngCMSim", 180, 0, 180);
-   // TH1F *AngCMSim = new TH1F("AngCMSim", "AngCMSim", 100, 0, 1);
+   TH1F *AngCMSimNorm = new TH1F("AngCMSimNorm", "AngCMSimNorm", 180, 0, 180);
 
    TH2F *Ang_Ener_Xtr = new TH2F("Ang_Ener_Xtr", "Ang_Ener_Xtr", 720, 0, 179, 1000, 0, 100.0);
    TH1F *HQval_Xtr = new TH1F("HQval_Xtr", "HQval_Xtr", 600, -5, 55);
@@ -530,8 +530,8 @@ void plotFit_full_noIC(std::string fileFolder = "data_sim_3_3/")
                // if((*eLossADC)[index]>50)
                // continue;
 
-               // if((*AFitVec)[index]>82 || (*AFitVec)[index]<70)
-		  // continue;
+               if ((*AFitVec)[index] < 20 || (*AFitVec)[index] > 90)
+                  continue;
 
                // Particle ID
                ELossvsBrho->Fill((*eLossADC)[index], (*brhoVec)[index]);
@@ -550,8 +550,8 @@ void plotFit_full_noIC(std::string fileFolder = "data_sim_3_3/")
                //if ((*dEdxADC)[index] < 3000) // particleID
 		 //continue;
 
-	       //if ((*trackLengthVec)[index] < 14.0 || (*trackLengthVec)[index] > 28.0)
-	       //continue;
+               // if ((*trackLengthVec)[index] < 35.0 || (*trackLengthVec)[index] > 100.0)
+               //   continue;
 
                // if ((*fitConvergedVec)[index] == 0)
                //  continue;
@@ -666,7 +666,9 @@ void plotFit_full_noIC(std::string fileFolder = "data_sim_3_3/")
                   kine_2b(m_Be10, m_d, m_b, m_B, Ebeam_buff, angle * TMath::DegToRad(), (*EFitXtrVec)[index]);
 
               // AngCM->Fill(TMath::Cos(theta_cm*TMath::DegToRad()));
+
               AngCM->Fill(theta_cm);
+
               AngLab->Fill(angle);
 
               AngCMDiff->Fill(180.0 - (*APRAVec)[index] - angle);
@@ -684,8 +686,8 @@ void plotFit_full_noIC(std::string fileFolder = "data_sim_3_3/")
               HQval_Xtr_recalc->Fill(ex_energy_exp);
 
               // Excitation energy correction
-              Double_t p0 = -3.048;
-              Double_t p1 = 0.0513295;
+              Double_t p0 = 0.0;
+              Double_t p1 = 0.0063295;
               Double_t mFactor = 1.00;
               Double_t offSet = 0.0;
               Double_t QcorrZ = 0.0;
@@ -790,7 +792,7 @@ void plotFit_full_noIC(std::string fileFolder = "data_sim_3_3/")
    //Check simulation acceptance
    TClonesArray *pointArray = 0;
    TString dir = getenv("VMCWORKDIR");
-   TString filePath = dir + "/macro/Simulation/ATTPC/10Be_dp/data/run_sim_3_3/";
+   TString filePath = dir + "/macro/Simulation/ATTPC/10Be_dp/data/";
    TString inputFileName = "attpcsim";
    inputFileName = filePath + inputFileName + ".root";
 
@@ -844,18 +846,42 @@ void plotFit_full_noIC(std::string fileFolder = "data_sim_3_3/")
 
    // Tracking efficiency
 
+   Double_t modUp = 1.0;
+   Double_t modDown = 1.0;
+
+   auto gEff = new TGraph();
+
    for (auto ibin = 1; ibin < AngCMSim->GetNbinsX(); ++ibin) {
+
+      if (ibin < 26)
+         if (ibin == 25)
+            modDown = 0.7;
+         else
+            modDown = 0.5;
+
+      else if (ibin > 30 && ibin < 37)
+         if (ibin == 35)
+            modDown = 2.4;
+         else
+            modDown = 1.6;
+
+      else
+         modDown = 1.1;
+
       Double_t simAng = AngCMSim->GetBinContent(ibin);
-      Double_t expAng = AngCM->GetBinContent(ibin);
+      Double_t expAng = AngCM->GetBinContent(ibin) * modDown;
       Double_t simLabAng = AngLabSim->GetBinContent(ibin);
       Double_t expLabAng = AngLab->GetBinContent(ibin);
       Double_t ratio = expAng / simAng;
       Double_t ratioLab = expLabAng / simLabAng;
 
+      AngCMNorm->SetBinContent(ibin, expAng);
+
       std::cout << ibin << " - " << ratioLab << "\n";
 
       if (!std::isnan(ratio) && !std::isinf(ratio)) {
          AngCorr->SetBinContent(ibin, ratio);
+         gEff->SetPoint(gEff->GetN(), ibin, ratio);
       }
 
       if (!std::isnan(ratioLab) && !std::isinf(ratioLab)) {
@@ -992,6 +1018,19 @@ void plotFit_full_noIC(std::string fileFolder = "data_sim_3_3/")
    c1->Modified();
    c1->cd(4);
    HQval_Xtr->Draw();
+
+   TCanvas *cKineLines = new TCanvas("cKineLines", "cKineLines", 700, 700);
+   Ang_Ener->Draw("col");
+   Ang_Ener->GetXaxis()->SetTitle("Angle (deg)");
+   Ang_Ener->GetYaxis()->SetTitle("Energy (MeV)");
+
+   TCanvas *cKineFit = new TCanvas("cKineFit", "cKineFit", 700, 700);
+   // cKineFit->Divide(2, 1);
+   cKineFit->Draw();
+   cKineFit->cd(1);
+   HQCorr->GetXaxis()->SetTitle("Excitation Energy (MeV)");
+   HQCorr->GetYaxis()->SetTitle("Counts");
+   HQCorr->Draw();
 
    TCanvas *c2 = new TCanvas();
    c2->Divide(2, 2);
@@ -1163,6 +1202,12 @@ void plotFit_full_noIC(std::string fileFolder = "data_sim_3_3/")
    AngCorr->Draw();
    c10->cd(3);
    AngLabCorr->Draw();
+   c10->cd(4);
+   AngCMSim->Draw();
+   AngCMNorm->Draw("SAME");
+
+   TCanvas *ceff = new TCanvas();
+   gEff->Draw("Ap");
 
    /*TCanvas *c2 = new TCanvas();
    c2->Divide(2, 3);

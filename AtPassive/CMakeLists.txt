@@ -16,7 +16,7 @@ Set(DEPENDENCIES
   FairRoot::Base
   FairRoot::GeoBase
   FairRoot::ParBase
-
+  FairLogger::FairLogger
   ROOT::Geom
   ROOT::Core
   )

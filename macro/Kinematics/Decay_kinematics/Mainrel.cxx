@@ -40,7 +40,7 @@ int Mainrel()
 
    // cout<<El1<<endl;
 
-   int A2 = 2.; // mass0 of the target
+   int A2 = 1.; // mass0 of the target
    int Z2 = 1.; // charge of the target
    char *El2 = new char[2];
 
@@ -56,7 +56,7 @@ int Mainrel()
 
    // cout<<El3<<endl;
 
-   int A4 = 2; // mass0 of the recoil
+   int A4 = 1; // mass0 of the recoil
    int Z4 = 1; // charge of the recoil
    char *El4 = new char[2];
 
@@ -74,10 +74,10 @@ int Mainrel()
 
    double ex1 = 0;     // excitation energy of the incident particle
    double ex2 = 0;     // excitation energy of the target
-   double ex3 = 15.0;  // excitation energy of the scattered particle
+   double ex3 = 3.027; // excitation energy of the scattered particle
    double ex4 = 0.0;   // excitation energy of the recoil
 
-   double tbt = 11.5; // incident energy (total Lab energy in MeV)
+   double tbt = 12.0; // incident energy (total Lab energy in MeV)
 
    double Energyrdec, Anglerdec;
 

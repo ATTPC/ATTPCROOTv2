@@ -14,7 +14,8 @@ AtFieldPar.cxx
 Set(DEPENDENCIES
   FairRoot::Base 
   ROOT::Core
-  )
+  FairLogger::FairLogger
+)
 
 
 generate_target_and_root_library(${target}
