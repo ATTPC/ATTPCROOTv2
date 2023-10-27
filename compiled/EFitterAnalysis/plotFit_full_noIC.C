@@ -48,7 +48,7 @@ void plotFit_full_noIC(std::string fileFolder = "data_sim_0_0/")
 
    TH1F *AngCM = new TH1F("AngCM", "AngCM", 180, 0, 180);
    TH1F *AngLab = new TH1F("AngLab", "AngLab", 180, 0, 180);
-   // TH1F *AngCM = new TH1F("AngCM", "AngCM", 100, 0, 1);
+   TH1F *AngCMNorm = new TH1F("AngCMNorm", "AngCMNorm", 180, 0, 180);
 
    TH1F *AngCMDiff = new TH1F("AngCMDiff", "AngCMDiff", 100, -10, 10);
 
@@ -59,7 +59,7 @@ void plotFit_full_noIC(std::string fileFolder = "data_sim_0_0/")
 
    TH1F *AngLabSim = new TH1F("AngLabSim", "AngLabSim", 180, 0, 180);
    TH1F *AngCMSim = new TH1F("AngCMSim", "AngCMSim", 180, 0, 180);
-   // TH1F *AngCMSim = new TH1F("AngCMSim", "AngCMSim", 100, 0, 1);
+   TH1F *AngCMSimNorm = new TH1F("AngCMSimNorm", "AngCMSimNorm", 180, 0, 180);
 
    TH2F *Ang_Ener_Xtr = new TH2F("Ang_Ener_Xtr", "Ang_Ener_Xtr", 720, 0, 179, 1000, 0, 100.0);
    TH1F *HQval_Xtr = new TH1F("HQval_Xtr", "HQval_Xtr", 600, -5, 55);
@@ -666,7 +666,9 @@ void plotFit_full_noIC(std::string fileFolder = "data_sim_0_0/")
                   kine_2b(m_Be10, m_d, m_b, m_B, Ebeam_buff, angle * TMath::DegToRad(), (*EFitXtrVec)[index]);
 
               // AngCM->Fill(TMath::Cos(theta_cm*TMath::DegToRad()));
+
               AngCM->Fill(theta_cm);
+
               AngLab->Fill(angle);
 
               AngCMDiff->Fill(180.0 - (*APRAVec)[index] - angle);
@@ -790,7 +792,7 @@ void plotFit_full_noIC(std::string fileFolder = "data_sim_0_0/")
    //Check simulation acceptance
    TClonesArray *pointArray = 0;
    TString dir = getenv("VMCWORKDIR");
-   TString filePath = dir + "/macro/Simulation/ATTPC/10Be_dp/data/run_sim_3_3/";
+   TString filePath = dir + "/macro/Simulation/ATTPC/10Be_dp/data/";
    TString inputFileName = "attpcsim";
    inputFileName = filePath + inputFileName + ".root";
 
@@ -844,18 +846,42 @@ void plotFit_full_noIC(std::string fileFolder = "data_sim_0_0/")
 
    // Tracking efficiency
 
+   Double_t modUp = 1.0;
+   Double_t modDown = 1.0;
+
+   auto gEff = new TGraph();
+
    for (auto ibin = 1; ibin < AngCMSim->GetNbinsX(); ++ibin) {
+
+      if (ibin < 26)
+         if (ibin == 25)
+            modDown = 0.7;
+         else
+            modDown = 0.5;
+
+      else if (ibin > 30 && ibin < 37)
+         if (ibin == 35)
+            modDown = 2.4;
+         else
+            modDown = 1.6;
+
+      else
+         modDown = 1.1;
+
       Double_t simAng = AngCMSim->GetBinContent(ibin);
-      Double_t expAng = AngCM->GetBinContent(ibin);
+      Double_t expAng = AngCM->GetBinContent(ibin) * modDown;
       Double_t simLabAng = AngLabSim->GetBinContent(ibin);
       Double_t expLabAng = AngLab->GetBinContent(ibin);
       Double_t ratio = expAng / simAng;
       Double_t ratioLab = expLabAng / simLabAng;
 
+      AngCMNorm->SetBinContent(ibin, expAng);
+
       std::cout << ibin << " - " << ratioLab << "\n";
 
       if (!std::isnan(ratio) && !std::isinf(ratio)) {
          AngCorr->SetBinContent(ibin, ratio);
+         gEff->SetPoint(gEff->GetN(), ibin, ratio);
       }
 
       if (!std::isnan(ratioLab) && !std::isinf(ratioLab)) {
@@ -1176,6 +1202,12 @@ void plotFit_full_noIC(std::string fileFolder = "data_sim_0_0/")
    AngCorr->Draw();
    c10->cd(3);
    AngLabCorr->Draw();
+   c10->cd(4);
+   AngCMSim->Draw();
+   AngCMNorm->Draw("SAME");
+
+   TCanvas *ceff = new TCanvas();
+   gEff->Draw("Ap");
 
    /*TCanvas *c2 = new TCanvas();
    c2->Divide(2, 3);

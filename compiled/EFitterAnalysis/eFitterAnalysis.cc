@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
    Double_t clusterRadius = 7.5;//mm
    Double_t clusterDistance   = 15.0;//mm
    bool externalTimeStamp = 0;       // Enables Timestamp merging from FRIB DAQ file
-   Exp exp = a1954b;
+   Exp exp = e20009;
 
    // Physics parameters
    Float_t magneticField = 3.0;       // T
@@ -246,7 +246,8 @@ int main(int argc, char *argv[])
       fitManager->ClearTree();
 
       reader->Next();
-      readerAux->Next();
+      if (externalTimeStamp)
+         readerAux->Next();
 
       AtPatternEvent *patternEvent = fitManager->GetPatternEve();
       AtEvent *event = fitManager->GetEve();

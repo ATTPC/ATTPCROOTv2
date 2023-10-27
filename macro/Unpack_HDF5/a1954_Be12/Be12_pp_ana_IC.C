@@ -258,7 +258,7 @@ void Be12_pp_ana_IC()
    filepairs.push_back(std::make_pair("run_0211.root", "run_0211_FRIB_sorted.root"));
    // filepairs.push_back(std::make_pair("run_0212.root", "run_0212_FRIB_sorted.root"));
    filepairs.push_back(std::make_pair("run_0213.root", "run_0213_FRIB_sorted.root"));
-   filepairs.push_back(std::make_pair("run_0214.root", "run_0214_FRIB_sorted.root"));
+   // filepairs.push_back(std::make_pair("run_0214.root", "run_0214_FRIB_sorted.root"));
    filepairs.push_back(std::make_pair("run_0215.root", "run_0215_FRIB_sorted.root"));
 
    // Final merging
