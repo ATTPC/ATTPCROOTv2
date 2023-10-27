@@ -15,7 +15,7 @@ std::vector<int> runNumbers = {14, 15, 16, 17, 18, 19,
                                32, 33, 34, 35, 36, 37, 38, 39, 40, 42, 43, 44, 49, 50, 51, 52, 53, 54, 55, 56,
                                // 57,
                                58, 59, 60, 61, 62, 63, 64, 65, 98, 99};
-                               // 115
+// 115
 
 Double_t m_p = 1.007825 * 931.49401;
 Double_t m_d = 2.0135532 * 931.49401;
@@ -46,7 +46,7 @@ void a2091_merge(int runNum);
 void a2091_merge_all()
 {
    for (auto i : runNumbers) {
-        //std::cout << "Unpacking " << i << std::endl;
+      // std::cout << "Unpacking " << i << std::endl;
       a2091_merge(i);
    }
 }
@@ -65,7 +65,6 @@ void a2091_merge(std::string GETfile, std::string FRIBfile)
 
    // Data to fill in tree
    int eventID;
-   
    int trackID;
    float theta;
    float bro;
@@ -140,7 +139,8 @@ void a2091_merge(std::string GETfile, std::string FRIBfile)
 
       if (i == 0) {
          fribDTS = 0;
-         getDTS = 0;}else{
+         getDTS = 0;
+      } else {
 
          fribDTS = *ts - fribTSRef;
          getDTS = getTS - getTSRef;
@@ -169,7 +169,7 @@ void a2091_merge(std::string GETfile, std::string FRIBfile)
 
       // Find track with largets angle
       auto itMax = std::max_element(patternTrackCand.begin(), patternTrackCand.end(),
-                            [](const auto &a, const auto &b) { return b.GetGeoTheta() > a.GetGeoTheta(); });
+                                    [](const auto &a, const auto &b) { return b.GetGeoTheta() > a.GetGeoTheta(); });
 
       if (itMax == patternTrackCand.end())
          continue;
@@ -193,8 +193,8 @@ void a2091_merge(std::string GETfile, std::string FRIBfile)
       GetEnergy(Am, 1.0, bro, ener);
 
       len = 0;
-        eloss = 0;
-        dedx = 0;
+      eloss = 0;
+      dedx = 0;
 
       // Get dE/dx and total energy loss
       auto hitClusterArray = track.GetHitClusterArray();

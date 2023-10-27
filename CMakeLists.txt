@@ -120,7 +120,7 @@ find_package2(PUBLIC CUDA)
 find_package2(PUBLIC HiRAEVT CONFIG)
 find_package2(PUBLIC GENFIT2)
 
-find_package2(PUBLIC Eigen3 3.3 REQUIRED NO_MODULE)
+#find_package2(PUBLIC Eigen3 3.3 REQUIRED NO_MODULE)
 
 if(TARGET Eigen3::Eigen)
   message("Found Eigen, grabbing OpenKF")

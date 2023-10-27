@@ -5,7 +5,6 @@ void C15_dp_sim(Int_t nEvents = 5000, TString mcEngine = "TGeant4")
    UInt_t seed = (float)rand() / RAND_MAX * 100000;
    gRandom->SetSeed(seed);
 
-
    TString dir = getenv("VMCWORKDIR");
 
    // Output file name
@@ -54,7 +53,7 @@ void C15_dp_sim(Int_t nEvents = 5000, TString mcEngine = "TGeant4")
    // -----   Magnetic field   -------------------------------------------
    // Constant Field
    AtConstField *fMagField = new AtConstField();
-   fMagField->SetField(0., 0., 28.5);                      // values are in kG
+   fMagField->SetField(0., 0., 28.5);                     // values are in kG
    fMagField->SetFieldRegion(-50, 50, -50, 50, -10, 230); // values are in cm
                                                           //  (xmin,xmax,ymin,ymax,zmin,zmax)
    run->SetField(fMagField);
@@ -125,14 +124,14 @@ void C15_dp_sim(Int_t nEvents = 5000, TString mcEngine = "TGeant4")
    ExE.push_back(0.0);            // In MeV
 
    //--- Scattered -----
-   Zp.push_back(6);  // 
+   Zp.push_back(6);  //
    Ap.push_back(16); //
    Qp.push_back(0);
    Pxp.push_back(0.0);
    Pyp.push_back(0.0);
    Pzp.push_back(0.0);
    Mass.push_back(16.0147); // uma
-   ExE.push_back(0.0);         // 
+   ExE.push_back(0.0);      //
 
    // ---- Recoil -----
    Zp.push_back(1); // p  TRACKID=2
@@ -142,7 +141,7 @@ void C15_dp_sim(Int_t nEvents = 5000, TString mcEngine = "TGeant4")
    Pyp.push_back(0.0);
    Pzp.push_back(0.0);
    Mass.push_back(1.00727646); // uma
-   ExE.push_back(0.0);            // In MeV
+   ExE.push_back(0.0);         // In MeV
 
    Double_t ThetaMinCMS = 10.0;
    Double_t ThetaMaxCMS = 80.0;

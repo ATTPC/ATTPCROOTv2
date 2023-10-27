@@ -3,7 +3,7 @@
 void run_eve(int runNum = 14, TString OutputDataFile = "./data/output.reco_display.root")
 {
 
-  auto verbSpec =
+   auto verbSpec =
       fair::VerbositySpec::Make(fair::VerbositySpec::Info::severity, fair::VerbositySpec::Info::file_line_function);
    fair::Logger::DefineVerbosity("user1", verbSpec);
    // fair::Logger::SetVerbosity("user1");
@@ -52,15 +52,14 @@ void run_eve(int runNum = 14, TString OutputDataFile = "./data/output.reco_displ
    sidePSA->SetPSA(psa);
    eveMan->GetSidebar()->AddSidebarFrame(sidePSA);
    eveMan->AddTask(psaTask);
-   
    auto tabPad = std::make_unique<AtTabPad>(2, 1);
    tabPad->DrawRawADC(0, 0);
    tabPad->DrawADC(0, 1);
 
    eveMan->AddTab(std::move(tabMain));
    eveMan->AddTab(std::move(tabPad));
-   
+
    eveMan->Init();
-   
+
    std::cout << "Finished init" << std::endl;
 }

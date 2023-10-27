@@ -29,10 +29,10 @@ void unpack_a2091(TString fileName = "run_0037", bool eCorr = true)
    TString geomDir = dir + "/geometry/";
    gSystem->Setenv("GEOMPATH", geomDir.Data());
    TString outputFile;
-   if(eCorr)
-   outputFile = fileName + ".root";
+   if (eCorr)
+      outputFile = fileName + ".root";
    else
-   outputFile = fileName + "NoCorr.root";
+      outputFile = fileName + "NoCorr.root";
    TString loggerFile = dataDir + "ATTPCLog.log";
    TString digiParFile = dir + "/parameters/" + parameterFile;
    TString geoManFile = dir + "/geometry/ATTPC_H1bar.root";
@@ -95,8 +95,8 @@ void unpack_a2091(TString fileName = "run_0037", bool eCorr = true)
    SCTask->SetInputBranch("AtEventH");
 
    AtPRAtask *praTask = new AtPRAtask();
-   if(eCorr)
-   praTask->SetInputBranch("AtEventCorrected");
+   if (eCorr)
+      praTask->SetInputBranch("AtEventCorrected");
    praTask->SetOutputBranch("AtPatternEvent");
    praTask->SetPersistence(kTRUE);
    praTask->SetTcluster(8);
@@ -106,8 +106,8 @@ void unpack_a2091(TString fileName = "run_0037", bool eCorr = true)
    run->AddTask(unpackTask);
    // run->AddTask(filterTask);
    run->AddTask(psaTask);
-   if(eCorr)
-   run->AddTask(SCTask);
+   if (eCorr)
+      run->AddTask(SCTask);
    run->AddTask(praTask);
 
    std::cout << "***** Starting Init ******" << std::endl;
@@ -118,7 +118,7 @@ void unpack_a2091(TString fileName = "run_0037", bool eCorr = true)
    auto numEvents = unpackTask->GetNumEvents();
    std::cout << "Unpacking " << numEvents << " events. " << std::endl;
 
-   //numEvents = 10000;
+   // numEvents = 10000;
    run->Run(0, numEvents);
 
    std::cout << std::endl << std::endl;

@@ -57,35 +57,35 @@ void C15_dd_ana()
    cutg->SetVarY("");
    cutg->SetTitle("Graph");
    cutg->SetFillStyle(1000);
-   cutg->SetPoint(0,372.8158,1.048105);
-   cutg->SetPoint(1,859.0976,0.6636297);
-   cutg->SetPoint(2,1285.66,0.5470116);
-   cutg->SetPoint(3,2394.724,0.4486151);
-   cutg->SetPoint(4,3418.475,0.4012391);
-   cutg->SetPoint(5,5338.008,0.2937318);
-   cutg->SetPoint(6,6856.572,0.2536443);
-   cutg->SetPoint(7,8972.325,0.2445335);
-   cutg->SetPoint(8,10072.86,0.2336006);
-   cutg->SetPoint(9,11284.3,0.2244898);
-   cutg->SetPoint(10,12896.7,0.2099125);
-   cutg->SetPoint(11,13928.99,0.204446);
-   cutg->SetPoint(12,14654.14,0.2099125);
-   cutg->SetPoint(13,14747.99,0.1443148);
-   cutg->SetPoint(14,12461.61,0.1169825);
-   cutg->SetPoint(15,10106.98,0.1060495);
-   cutg->SetPoint(16,7564.667,0.1024052);
-   cutg->SetPoint(17,5679.259,0.1133382);
-   cutg->SetPoint(18,3589.1,0.111516);
-   cutg->SetPoint(19,2343.537,0.1534256);
-   cutg->SetPoint(20,1217.41,0.1953353);
-   cutg->SetPoint(21,594.6285,0.2226676);
-   cutg->SetPoint(22,253.3782,0.3010204);
-   cutg->SetPoint(23,253.3782,0.4941691);
-   cutg->SetPoint(24,219.2532,0.6982507);
-   cutg->SetPoint(25,219.2532,0.9879738);
-   cutg->SetPoint(26,270.4407,1.069971);
-   cutg->SetPoint(27,372.8158,1.049927);
-   cutg->SetPoint(28,372.8158,1.048105);
+   cutg->SetPoint(0, 372.8158, 1.048105);
+   cutg->SetPoint(1, 859.0976, 0.6636297);
+   cutg->SetPoint(2, 1285.66, 0.5470116);
+   cutg->SetPoint(3, 2394.724, 0.4486151);
+   cutg->SetPoint(4, 3418.475, 0.4012391);
+   cutg->SetPoint(5, 5338.008, 0.2937318);
+   cutg->SetPoint(6, 6856.572, 0.2536443);
+   cutg->SetPoint(7, 8972.325, 0.2445335);
+   cutg->SetPoint(8, 10072.86, 0.2336006);
+   cutg->SetPoint(9, 11284.3, 0.2244898);
+   cutg->SetPoint(10, 12896.7, 0.2099125);
+   cutg->SetPoint(11, 13928.99, 0.204446);
+   cutg->SetPoint(12, 14654.14, 0.2099125);
+   cutg->SetPoint(13, 14747.99, 0.1443148);
+   cutg->SetPoint(14, 12461.61, 0.1169825);
+   cutg->SetPoint(15, 10106.98, 0.1060495);
+   cutg->SetPoint(16, 7564.667, 0.1024052);
+   cutg->SetPoint(17, 5679.259, 0.1133382);
+   cutg->SetPoint(18, 3589.1, 0.111516);
+   cutg->SetPoint(19, 2343.537, 0.1534256);
+   cutg->SetPoint(20, 1217.41, 0.1953353);
+   cutg->SetPoint(21, 594.6285, 0.2226676);
+   cutg->SetPoint(22, 253.3782, 0.3010204);
+   cutg->SetPoint(23, 253.3782, 0.4941691);
+   cutg->SetPoint(24, 219.2532, 0.6982507);
+   cutg->SetPoint(25, 219.2532, 0.9879738);
+   cutg->SetPoint(26, 270.4407, 1.069971);
+   cutg->SetPoint(27, 372.8158, 1.049927);
+   cutg->SetPoint(28, 372.8158, 1.048105);
 
    // NB: Not used
    // Q-value calculation
@@ -120,9 +120,9 @@ void C15_dd_ana()
 
    TString dir = "/home/yassid/fair_install/data/a1954/";
 
-   std::vector<TString> files{"run_0014.root", "run_0015.root", "run_0016.root","run_0017.root"};
-   //files = {"run_0014NoCorr.root"};
-   //files = {"run_0014.root"};
+   std::vector<TString> files{"run_0014.root", "run_0015.root", "run_0016.root", "run_0017.root"};
+   // files = {"run_0014NoCorr.root"};
+   // files = {"run_0014.root"};
 
    for (auto iFile : files) {
 
@@ -160,7 +160,6 @@ void C15_dd_ana()
 
                /*if (index != maxAIndex)
                   continue;*/
-               
                auto track = patternTrackCand.at(index);
 
                Double_t theta = track.GetGeoTheta();
@@ -193,7 +192,7 @@ void C15_dd_ana()
                Double_t eloss = 0;
                Double_t dedx = 0;
 
-              // Energy loss from ADC
+               // Energy loss from ADC
                auto hitClusterArray = track.GetHitClusterArray();
                std::size_t cnt = 0;
                Double_t zpos = 0;
@@ -242,40 +241,33 @@ void C15_dd_ana()
                          << " - Energy :" << ener * Am << " - dE     :" << eloss << "\n";*/
 
                // Selection of events
-	       /*
-               if (zpos < 500.0 || zpos > 950)
-                  continue;
+               /*
+                    if (zpos < 500.0 || zpos > 950)
+                       continue;
 
-            if (theta * TMath::RadToDeg() < 60.0)
-                  continue;*/
-	       
+                 if (theta * TMath::RadToDeg() < 60.0)
+                       continue;*/
 
-            
-	       
-              // if (cutg->IsInside(eloss, bro)) { // Selection of protons
+               // if (cutg->IsInside(eloss, bro)) { // Selection of protons
 
-                  angle_vs_energy->Fill(theta * TMath::RadToDeg(), ener * Am);
-                  auto [ex_energy_exp, theta_cm] = kine_2b(m_C15, m_d, m_b, m_B, Ebeam_buff, theta, ener * Am);
+               angle_vs_energy->Fill(theta * TMath::RadToDeg(), ener * Am);
+               auto [ex_energy_exp, theta_cm] = kine_2b(m_C15, m_d, m_b, m_B, Ebeam_buff, theta, ener * Am);
 
-                  HQval->Fill(ex_energy_exp);
+               HQval->Fill(ex_energy_exp);
 
-                  // Excitation energy vs Beam energy
-                  for (auto iEb = 0; iEb < 300; ++iEb) {
-                     auto [Qdep, theta_cm_qdep] = kine_2b(m_C15, m_d, m_b, m_B, iEb, theta, ener * Am);
-                     QvsEb->Fill(Qdep, iEb);
-                  }
+               // Excitation energy vs Beam energy
+               for (auto iEb = 0; iEb < 300; ++iEb) {
+                  auto [Qdep, theta_cm_qdep] = kine_2b(m_C15, m_d, m_b, m_B, iEb, theta, ener * Am);
+                  QvsEb->Fill(Qdep, iEb);
+               }
 
-                  // Rough vertex
-                  QvsZpos->Fill(ex_energy_exp, zpos / 10.0);
-
-                
+               // Rough vertex
+               QvsZpos->Fill(ex_energy_exp, zpos / 10.0);
 
                //} // protons
 
                bro_vs_eloss->Fill(eloss, bro);
                bro_vs_dedx->Fill(dedx, bro);
-
-               
 
                angle_vs_energy_lr->Fill(theta * TMath::RadToDeg(), ener * Am);
             }

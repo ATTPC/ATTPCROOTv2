@@ -68,7 +68,7 @@ void C15_dd_ana_IC(bool accumulateRuns = false)
 {
    FairRunAna *run = new FairRunAna(); // Forcing a dummy run
 
-   TFile * histFile;
+   TFile *histFile;
    TH2F *bro_vs_eloss;
    TH2F *bro_vs_eloss_uncut;
    TH2F *bro_vs_dedx;
@@ -77,7 +77,7 @@ void C15_dd_ana_IC(bool accumulateRuns = false)
    TH2F *angle_vs_energy_t;
    TH2F *angle_vs_momentum;
 
-   TH1F *HQval ;
+   TH1F *HQval;
    TH1F *HQvalp;
    TH2F *QvsEb;
    TH2F *QvsZpos;
@@ -86,53 +86,49 @@ void C15_dd_ana_IC(bool accumulateRuns = false)
    TH1F *henergyIC;
    std::vector<TString> *processedFiles;
 
-   if(!accumulateRuns)
-   {
-   histFile = new TFile("C15_dd_ana_hist.root", "RECREATE");
+   if (!accumulateRuns) {
+      histFile = new TFile("C15_dd_ana_hist.root", "RECREATE");
 
-   bro_vs_eloss = new TH2F("bro_vs_eloss", "bro_vs_eloss", 4000, 0, 25000.0, 1000, 0, 3);
-   bro_vs_eloss_uncut = new TH2F("bro_vs_eloss", "bro_vs_eloss", 4000, 0, 25000.0, 1000, 0, 3);
-   bro_vs_dedx = new TH2F("bro_vs_dedx", "bro_vs_dedx", 4000, 0, 4000.0, 1000, 0, 3);
-   angle_vs_energy = new TH2F("angle_vs_energy", "angle_vs_energy", 720, 0, 179, 500, 0, 80.0);
-   angle_vs_energy_lr = new TH2F("angle_vs_energy_lr", "angle_vs_energy_lr", 720, 0, 179, 500, 0, 100.0);
-   angle_vs_energy_t = new TH2F("angle_vs_energy_t", "angle_vs_energy_t", 720, 0, 179, 500, 0, 80.0);
-   angle_vs_momentum = new TH2F("angle_vs_momentum", "angle_vs_momentum", 720, 0, 179, 1000, 0, 2.0);
+      bro_vs_eloss = new TH2F("bro_vs_eloss", "bro_vs_eloss", 4000, 0, 25000.0, 1000, 0, 3);
+      bro_vs_eloss_uncut = new TH2F("bro_vs_eloss", "bro_vs_eloss", 4000, 0, 25000.0, 1000, 0, 3);
+      bro_vs_dedx = new TH2F("bro_vs_dedx", "bro_vs_dedx", 4000, 0, 4000.0, 1000, 0, 3);
+      angle_vs_energy = new TH2F("angle_vs_energy", "angle_vs_energy", 720, 0, 179, 500, 0, 80.0);
+      angle_vs_energy_lr = new TH2F("angle_vs_energy_lr", "angle_vs_energy_lr", 720, 0, 179, 500, 0, 100.0);
+      angle_vs_energy_t = new TH2F("angle_vs_energy_t", "angle_vs_energy_t", 720, 0, 179, 500, 0, 80.0);
+      angle_vs_momentum = new TH2F("angle_vs_momentum", "angle_vs_momentum", 720, 0, 179, 1000, 0, 2.0);
 
-   vx_vs_vy = new TH2F("vx_vs_vy","vx_vs_vy",1000,0,10,1000,0,10);
+      vx_vs_vy = new TH2F("vx_vs_vy", "vx_vs_vy", 1000, 0, 10, 1000, 0, 10);
 
-   HQval = new TH1F("HQval", "HQval", 600, -5, 55);
-   HQvalp = new TH1F("HQvalp", "HQvalp", 600, -5, 55);
-   QvsEb = new TH2F("QvsEb", "QvsEb", 1000, -5, 15, 300, 0, 300);
-   QvsZpos = new TH2F("QvsZpos", "QvsZpos", 1000, -10, 50, 200, -100, 100);
+      HQval = new TH1F("HQval", "HQval", 600, -5, 55);
+      HQvalp = new TH1F("HQvalp", "HQvalp", 600, -5, 55);
+      QvsEb = new TH2F("QvsEb", "QvsEb", 1000, -5, 15, 300, 0, 300);
+      QvsZpos = new TH2F("QvsZpos", "QvsZpos", 1000, -10, 50, 200, -100, 100);
 
-   henergyIC = new TH1F("henergyIC", "henergyIC", 2048, 0, 2047);
+      henergyIC = new TH1F("henergyIC", "henergyIC", 2048, 0, 2047);
 
-   processedFiles = new std::vector<TString>();
+      processedFiles = new std::vector<TString>();
+   } else {
+      histFile = new TFile("C15_dd_ana_hist.root", "UPDATE");
+
+      bro_vs_eloss = dynamic_cast<TH2F *>(histFile->Get("bro_vs_eloss"));
+      bro_vs_eloss_uncut = dynamic_cast<TH2F *>(histFile->Get("bro_vs_eloss_uncut"));
+      bro_vs_dedx = dynamic_cast<TH2F *>(histFile->Get("bro_vs_dedx"));
+      angle_vs_energy = dynamic_cast<TH2F *>(histFile->Get("angle_vs_energy"));
+      angle_vs_energy_lr = dynamic_cast<TH2F *>(histFile->Get("angle_vs_energy_lr"));
+      angle_vs_energy_t = dynamic_cast<TH2F *>(histFile->Get("angle_vs_energy_t"));
+      angle_vs_momentum = dynamic_cast<TH2F *>(histFile->Get("angle_vs_momentum"));
+
+      HQval = dynamic_cast<TH1F *>(histFile->Get("HQval"));
+      HQvalp = dynamic_cast<TH1F *>(histFile->Get("HQvalp"));
+      QvsEb = dynamic_cast<TH2F *>(histFile->Get("QvsEb"));
+      QvsZpos = dynamic_cast<TH2F *>(histFile->Get("QvsZpos"));
+
+      henergyIC = dynamic_cast<TH1F *>(histFile->Get("henergyIC"));
+
+      histFile->GetObject("ProcessedFiles", processedFiles);
+      if (processedFiles == nullptr)
+         std::cerr << "Failed to load good events" << std::endl;
    }
-   else
-   {
-   histFile = new TFile("C15_dd_ana_hist.root", "UPDATE");
-
-   bro_vs_eloss = dynamic_cast<TH2F*>(histFile->Get("bro_vs_eloss"));
-   bro_vs_eloss_uncut = dynamic_cast<TH2F*>(histFile->Get("bro_vs_eloss_uncut"));
-   bro_vs_dedx = dynamic_cast<TH2F*>(histFile->Get("bro_vs_dedx"));
-   angle_vs_energy = dynamic_cast<TH2F*>(histFile->Get("angle_vs_energy"));
-   angle_vs_energy_lr = dynamic_cast<TH2F*>(histFile->Get("angle_vs_energy_lr"));
-   angle_vs_energy_t = dynamic_cast<TH2F*>(histFile->Get("angle_vs_energy_t"));
-   angle_vs_momentum = dynamic_cast<TH2F*>(histFile->Get("angle_vs_momentum"));
-
-   HQval = dynamic_cast<TH1F*>(histFile->Get("HQval"));
-   HQvalp = dynamic_cast<TH1F*>(histFile->Get("HQvalp"));
-   QvsEb = dynamic_cast<TH2F*>(histFile->Get("QvsEb"));
-   QvsZpos = dynamic_cast<TH2F*>(histFile->Get("QvsZpos"));
-
-   henergyIC = dynamic_cast<TH1F*>(histFile->Get("henergyIC"));
-
-   histFile->GetObject("ProcessedFiles", processedFiles);
-   if(processedFiles == nullptr)
-      std::cerr << "Failed to load good events" << std::endl;
-   }
-
 
    // Proton
    TCutG *cutg = new TCutG("CUTG", 30);
@@ -162,9 +158,9 @@ void C15_dd_ana_IC(bool accumulateRuns = false)
    cutg->SetPoint(19, 90.86913, 0.9143004);
    cutg->SetPoint(20, 106.4023, 0.9184422);
 
-   //Deuteron
-   
-   TCutG *cutd = new TCutG("CUTD",31);
+   // Deuteron
+
+   TCutG *cutd = new TCutG("CUTD", 31);
    cutd->SetVarX("bro_vs_eloss");
    cutd->SetVarY("");
    cutd->SetTitle("Graph");
@@ -192,84 +188,83 @@ void C15_dd_ana_IC(bool accumulateRuns = false)
    cutd->SetPoint(20,758.859,2.91582);
    cutd->SetPoint(21,734.432,1.56195);
    cutd->SetPoint(22,718.147,1.56742);*/
-   cutd->SetPoint(0,57.15925,2.926749);
-   cutd->SetPoint(1,168.0656,1.108236);
-   cutd->SetPoint(2,406.9409,0.8513119);
-   cutd->SetPoint(3,748.1912,0.5524781);
-   cutd->SetPoint(4,1345.379,0.4103498);
-   cutd->SetPoint(5,2420.318,0.2609329);
-   cutd->SetPoint(6,3375.819,0.180758);
-   cutd->SetPoint(7,4382.507,0.1151603);
-   cutd->SetPoint(8,5312.415,0.1169825);
-   cutd->SetPoint(9,7888.855,0.1206268);
-   cutd->SetPoint(10,9518.325,0.1151603);
-   cutd->SetPoint(11,10081.39,0.1479592);
-   cutd->SetPoint(12,10141.11,0.2080904);
-   cutd->SetPoint(13,9467.138,0.2226676);
-   cutd->SetPoint(14,7598.792,0.2372449);
-   cutd->SetPoint(15,6097.29,0.2463557);
-   cutd->SetPoint(16,5363.602,0.2955539);
-   cutd->SetPoint(17,3990.069,0.3629737);
-   cutd->SetPoint(18,2795.693,0.4540816);
-   cutd->SetPoint(19,1516.004,0.6526968);
-   cutd->SetPoint(20,842.035,1.066327);
-   cutd->SetPoint(21,611.6911,1.308673);
-   cutd->SetPoint(22,577.566,1.731414);
-   cutd->SetPoint(23,483.7222,2.135933);
-   cutd->SetPoint(24,517.8472,2.389213);
-   cutd->SetPoint(25,466.6597,2.63156);
-   cutd->SetPoint(26,415.4721,2.883018);
-   cutd->SetPoint(27,313.097,2.91035);
-   cutd->SetPoint(28,91.28428,2.919461);
-   cutd->SetPoint(29,57.15925,2.926749);
+   cutd->SetPoint(0, 57.15925, 2.926749);
+   cutd->SetPoint(1, 168.0656, 1.108236);
+   cutd->SetPoint(2, 406.9409, 0.8513119);
+   cutd->SetPoint(3, 748.1912, 0.5524781);
+   cutd->SetPoint(4, 1345.379, 0.4103498);
+   cutd->SetPoint(5, 2420.318, 0.2609329);
+   cutd->SetPoint(6, 3375.819, 0.180758);
+   cutd->SetPoint(7, 4382.507, 0.1151603);
+   cutd->SetPoint(8, 5312.415, 0.1169825);
+   cutd->SetPoint(9, 7888.855, 0.1206268);
+   cutd->SetPoint(10, 9518.325, 0.1151603);
+   cutd->SetPoint(11, 10081.39, 0.1479592);
+   cutd->SetPoint(12, 10141.11, 0.2080904);
+   cutd->SetPoint(13, 9467.138, 0.2226676);
+   cutd->SetPoint(14, 7598.792, 0.2372449);
+   cutd->SetPoint(15, 6097.29, 0.2463557);
+   cutd->SetPoint(16, 5363.602, 0.2955539);
+   cutd->SetPoint(17, 3990.069, 0.3629737);
+   cutd->SetPoint(18, 2795.693, 0.4540816);
+   cutd->SetPoint(19, 1516.004, 0.6526968);
+   cutd->SetPoint(20, 842.035, 1.066327);
+   cutd->SetPoint(21, 611.6911, 1.308673);
+   cutd->SetPoint(22, 577.566, 1.731414);
+   cutd->SetPoint(23, 483.7222, 2.135933);
+   cutd->SetPoint(24, 517.8472, 2.389213);
+   cutd->SetPoint(25, 466.6597, 2.63156);
+   cutd->SetPoint(26, 415.4721, 2.883018);
+   cutd->SetPoint(27, 313.097, 2.91035);
+   cutd->SetPoint(28, 91.28428, 2.919461);
+   cutd->SetPoint(29, 57.15925, 2.926749);
 
-   //Deuteron gate on dedx
-   TCutG *cutd2 = new TCutG("CUTG",19);
+   // Deuteron gate on dedx
+   TCutG *cutd2 = new TCutG("CUTG", 19);
    cutd2->SetVarX("PID (p/d)");
    cutd2->SetVarY("");
    cutd2->SetTitle("Graph");
    cutd2->SetFillStyle(1000);
-   cutd2->SetPoint(0,42.5536,1.00769);
-   cutd2->SetPoint(1,54.9278,0.861278);
-   cutd2->SetPoint(2,111.987,0.642867);
-   cutd2->SetPoint(3,155.297,0.51806);
-   cutd2->SetPoint(4,247.416,0.458057);
-   cutd2->SetPoint(5,430.279,0.438856);
-   cutd2->SetPoint(6,542.335,0.414855);
-   cutd2->SetPoint(7,672.264,0.410055);
-   cutd2->SetPoint(8,595.269,0.50126);
-   cutd2->SetPoint(9,458.465,0.618866);
-   cutd2->SetPoint(10,291.413,0.801275);
-   cutd2->SetPoint(11,192.419,1.04849);
-   cutd2->SetPoint(12,122.299,1.39651);
-   cutd2->SetPoint(13,83.801,1.78533);
-   cutd2->SetPoint(14,65.2397,2.16695);
-   cutd2->SetPoint(15,54.2403,2.39016);
-   cutd2->SetPoint(16,12.3055,2.38056);
-   cutd2->SetPoint(17,35.679,1.09409);
-   cutd2->SetPoint(18,42.5536,1.00769);
+   cutd2->SetPoint(0, 42.5536, 1.00769);
+   cutd2->SetPoint(1, 54.9278, 0.861278);
+   cutd2->SetPoint(2, 111.987, 0.642867);
+   cutd2->SetPoint(3, 155.297, 0.51806);
+   cutd2->SetPoint(4, 247.416, 0.458057);
+   cutd2->SetPoint(5, 430.279, 0.438856);
+   cutd2->SetPoint(6, 542.335, 0.414855);
+   cutd2->SetPoint(7, 672.264, 0.410055);
+   cutd2->SetPoint(8, 595.269, 0.50126);
+   cutd2->SetPoint(9, 458.465, 0.618866);
+   cutd2->SetPoint(10, 291.413, 0.801275);
+   cutd2->SetPoint(11, 192.419, 1.04849);
+   cutd2->SetPoint(12, 122.299, 1.39651);
+   cutd2->SetPoint(13, 83.801, 1.78533);
+   cutd2->SetPoint(14, 65.2397, 2.16695);
+   cutd2->SetPoint(15, 54.2403, 2.39016);
+   cutd2->SetPoint(16, 12.3055, 2.38056);
+   cutd2->SetPoint(17, 35.679, 1.09409);
+   cutd2->SetPoint(18, 42.5536, 1.00769);
 
-   //triton
-   TCutG *cutt = new TCutG("CUTT",34);
+   // triton
+   TCutG *cutt = new TCutG("CUTT", 34);
    cutt->SetVarX("bro_vs_eloss");
    cutt->SetVarY("");
    cutt->SetTitle("Graph");
    cutt->SetFillStyle(1000);
-   cutt->SetPoint(0,214.5209,2.468662);
-   cutt->SetPoint(1,500.8176,2.405282);
-   cutt->SetPoint(2,912.1172,1.114437);
-   cutt->SetPoint(3,1702.457,0.7362676);
-   cutt->SetPoint(4,2021.013,0.6285211);
-   cutt->SetPoint(5,2077.466,0.4954225);
-   cutt->SetPoint(6,1710.522,0.4489436);
-   cutt->SetPoint(7,1202.446,0.4933098);
-   cutt->SetPoint(8,476.6235,0.8038732);
-   cutt->SetPoint(9,113.7122,1.357394);
-   cutt->SetPoint(10,117.7445,1.790493);
-   cutt->SetPoint(11,117.7445,2.29331);
-   cutt->SetPoint(12,206.4562,2.468662);
-   cutt->SetPoint(13,214.5209,2.468662);
-
+   cutt->SetPoint(0, 214.5209, 2.468662);
+   cutt->SetPoint(1, 500.8176, 2.405282);
+   cutt->SetPoint(2, 912.1172, 1.114437);
+   cutt->SetPoint(3, 1702.457, 0.7362676);
+   cutt->SetPoint(4, 2021.013, 0.6285211);
+   cutt->SetPoint(5, 2077.466, 0.4954225);
+   cutt->SetPoint(6, 1710.522, 0.4489436);
+   cutt->SetPoint(7, 1202.446, 0.4933098);
+   cutt->SetPoint(8, 476.6235, 0.8038732);
+   cutt->SetPoint(9, 113.7122, 1.357394);
+   cutt->SetPoint(10, 117.7445, 1.790493);
+   cutt->SetPoint(11, 117.7445, 2.29331);
+   cutt->SetPoint(12, 206.4562, 2.468662);
+   cutt->SetPoint(13, 214.5209, 2.468662);
 
    // NB: Not used
    // Q-value calculation
@@ -293,7 +288,7 @@ void C15_dd_ana_IC(bool accumulateRuns = false)
    Double_t m_a = 4.00260325415 * 931.49401;
    Double_t m_O16 = 15.99491461956 * 931.49401;
 
-   Double_t Ebeam_buff = 192.0; 
+   Double_t Ebeam_buff = 192.0;
    Double_t m_b;
    Double_t m_B;
 
@@ -301,7 +296,8 @@ void C15_dd_ana_IC(bool accumulateRuns = false)
    m_B = m_C15;
 
    TString FileName = "run_0006.root";
-   // std::cout << " Opening File : " << FileName.Data() << std::endl; = dynamic_cast<std::vector<TString>*>(histFile->Get("ProceesedFiles"));
+   // std::cout << " Opening File : " << FileName.Data() << std::endl; =
+   // dynamic_cast<std::vector<TString>*>(histFile->Get("ProceesedFiles"));
 
    TString dir = "/home/yassid/fair_install/data/a1954/";
 
@@ -318,7 +314,8 @@ void C15_dd_ana_IC(bool accumulateRuns = false)
    filepairs.push_back(std::make_pair("run_0022.root", "run_0022_FRIB_sorted.root"));
    filepairs.push_back(std::make_pair("run_0023.root", "run_0023_FRIB_sorted.root"));
    filepairs.push_back(std::make_pair("run_0024.root", "run_0024_FRIB_sorted.root"));
-   //filepairs.push_back(std::make_pair("run_0026.root", "run_0026_FRIB_sorted.root")); // files 25 and 26 it seems like GET and NSCL run numbers got messed up? same with 30 and 31
+   //filepairs.push_back(std::make_pair("run_0026.root", "run_0026_FRIB_sorted.root")); // files 25 and 26 it seems like
+  GET and NSCL run numbers got messed up? same with 30 and 31
    //filepairs.push_back(std::make_pair("run_0027.root", "run_0027_FRIB_sorted.root"));
    //filepairs.push_back(std::make_pair("run_0028.root", "run_0028_FRIB_sorted.root"));
   // filepairs.push_back(std::make_pair("run_0029.root", "run_0029_FRIB_sorted.root"));
@@ -366,11 +363,10 @@ void C15_dd_ana_IC(bool accumulateRuns = false)
       Int_t nEvents = tree->GetEntries();
       std::cout << " Processing file : " << iFile.first.Data() << "\n";
       std::cout << " Number of events : " << nEvents << std::endl;
-      if(std::find(processedFiles->begin(), processedFiles->end(), iFile.first) != processedFiles->end() && accumulateRuns)
-      {
+      if (std::find(processedFiles->begin(), processedFiles->end(), iFile.first) != processedFiles->end() &&
+          accumulateRuns) {
          std::cout << "Skipping file: " << iFile.first.Data() << "\n";
          continue;
-
       }
       processedFiles->push_back(iFile.first);
 
@@ -423,7 +419,7 @@ void C15_dd_ana_IC(bool accumulateRuns = false)
          if (patternEvent && event) {
             std::vector<AtTrack> &patternTrackCand = patternEvent->GetTrackCand();
             auto eventName = event->GetEventName();
-            auto getTS = event->GetTimestamp(1);//NB New merger only has the internal timestamp
+            auto getTS = event->GetTimestamp(1); // NB New merger only has the internal timestamp
 
             if (i == 0) {
                fribDTS = 0;
@@ -434,11 +430,12 @@ void C15_dd_ana_IC(bool accumulateRuns = false)
                getDTS = getTS - getTSRef;
             }
 
-            if ((fribDTS > (getDTS + 5) || fribDTS < (getDTS - 5)) && i!=0) {
-               std::cout<<" -------------------------------- "<<"\n";
+            if ((fribDTS > (getDTS + 5) || fribDTS < (getDTS - 5)) && i != 0) {
+               std::cout << " -------------------------------- "
+                         << "\n";
                std::cerr << i << "  " << fribDTS << "  " << getDTS << "\n";
                std::cerr << i << "  " << *ts << "  " << getTS << "\n";
-               //std::exit(0);
+               // std::exit(0);
             }
 
             getTSRef = getTS;
@@ -453,10 +450,10 @@ void C15_dd_ana_IC(bool accumulateRuns = false)
                }
             }
             if (!goodBeam)
-                continue;
+               continue;
 
-            if(*multIC!=1)
-               continue;    
+            if (*multIC != 1)
+               continue;
 
             /*std::string str2 = "evt2_data";
 
@@ -568,39 +565,39 @@ void C15_dd_ana_IC(bool accumulateRuns = false)
                          << " - Energy :" << ener * Am << " - dE     :" << eloss << "\n";*/
 
                // Selection of events
-               //if (zpos < 200.0 || zpos > 900)
-                  //continue;
+               // if (zpos < 200.0 || zpos > 900)
+               // continue;
 
-                if(theta * TMath::RadToDeg()>90.0)
-                 continue;
+               if (theta * TMath::RadToDeg() > 90.0)
+                  continue;
 
-                //if(bro<1.2)
-                 //continue;
+               // if(bro<1.2)
+               // continue;
 
-                //if(eloss>1000)
-                //continue; 
+               // if(eloss>1000)
+               // continue;
 
-                Double_t vx = TMath::Sin(theta)*TMath::Sqrt(ener*Am);
-                Double_t vy = TMath::Cos(theta)*TMath::Sqrt(ener*Am);
+               Double_t vx = TMath::Sin(theta) * TMath::Sqrt(ener * Am);
+               Double_t vy = TMath::Cos(theta) * TMath::Sqrt(ener * Am);
 
-                vx_vs_vy->Fill(vx,vy);
+               vx_vs_vy->Fill(vx, vy);
 
                // if (cutp->IsInside(eloss, bro)) {
-               //if (theta * TMath::RadToDeg() > 100.0) {
-                  angle_vs_energy_t->Fill(theta * TMath::RadToDeg(), ener * Am);
-                  auto [ex_energy_exp, theta_cm] = kine_2b(m_C15, m_d, m_b, m_B, Ebeam_buff, theta, ener * Am);
-                  HQvalp->Fill(ex_energy_exp);
+               // if (theta * TMath::RadToDeg() > 100.0) {
+               angle_vs_energy_t->Fill(theta * TMath::RadToDeg(), ener * Am);
+               auto [ex_energy_exp, theta_cm] = kine_2b(m_C15, m_d, m_b, m_B, Ebeam_buff, theta, ener * Am);
+               HQvalp->Fill(ex_energy_exp);
                //}
                //}
                bro_vs_eloss_uncut->Fill(eloss, bro);
-               //if (cutd->IsInside(eloss, bro) && cutd2->IsInside(dedx, bro)) { // Selection of d
-               //if(cutd->IsInside(eloss, bro)){
-                  if(true){
+               // if (cutd->IsInside(eloss, bro) && cutd2->IsInside(dedx, bro)) { // Selection of d
+               // if(cutd->IsInside(eloss, bro)){
+               if (true) {
 
                   angle_vs_energy->Fill(theta * TMath::RadToDeg(), ener * Am);
                   auto [ex_energy_exp, theta_cm] = kine_2b(m_C15, m_d, m_b, m_B, Ebeam_buff, theta, ener * Am);
 
-                  HQval->Fill(ex_energy_exp);   
+                  HQval->Fill(ex_energy_exp);
 
                   // Excitation energy vs Beam energy
                   for (auto iEb = 0; iEb < 300; ++iEb) {
@@ -650,9 +647,6 @@ void C15_dd_ana_IC(bool accumulateRuns = false)
    QvsEb  ->Write();
    QvsZpos->Write();
    */
-   
-   
-   
 
    Double_t *ThetaCMS = new Double_t[20000];
    Double_t *ThetaLabRec = new Double_t[20000];
@@ -781,7 +775,7 @@ void C15_dd_ana_IC(bool accumulateRuns = false)
    TCanvas *c_IC = new TCanvas();
    henergyIC->Draw();
 
-   //histFile->Close();
+   // histFile->Close();
 }
 
 void GetEnergy(Double_t M, Double_t IZ, Double_t BRO, Double_t &E)

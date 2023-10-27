@@ -55,9 +55,9 @@ void create_cuts()
       cuthe = new TCutG(*dynamic_cast<TCutG *>(filep.Get("CUTG")));
    }
    {
-         TFile filep("cut/t_eloss.root", "read");
-         cutt = new TCutG(*dynamic_cast<TCutG *>(filep.Get("CUTG")));
-      }
+      TFile filep("cut/t_eloss.root", "read");
+      cutt = new TCutG(*dynamic_cast<TCutG *>(filep.Get("CUTG")));
+   }
 
    {
       TFile filep("cut/p_dedx.root", "read");
@@ -181,7 +181,7 @@ void C15_dd_ana_merged()
          continue;
 
       float Am = 2;
-      *ener = (*ener)*3/2.;
+      *ener = (*ener) * 3 / 2.;
       Double_t vx = TMath::Sin(*theta) * TMath::Sqrt((*ener) * Am);
       Double_t vy = TMath::Cos(*theta) * TMath::Sqrt((*ener) * Am);
 
@@ -196,17 +196,17 @@ void C15_dd_ana_merged()
       track_len->Fill(*len);
       bro_vs_eloss_uncut->Fill(*eloss, *bro);
 
-      //if (*dedx < 100)
-         //continue;
+      // if (*dedx < 100)
+      // continue;
       // if (cutd->IsInside(*eloss, *bro) && ( true || cutd2->IsInside(*dedx, *bro))) //d
       // if (cutd->IsInside(*eloss, *bro) && cutd2->IsInside(*dedx, *bro))
       if (cutt->IsInside(*eloss, *bro)) {
          vx_vs_vy->Fill(vx, vy);
-         //if (true || (cut0vv->IsInside(vx, vy) || cut1vv->IsInside(vx, vy) || cut2vv->IsInside(vx, vy))) {
-            bro_vs_eloss->Fill(*eloss, *bro);
-            bro_vs_dedx->Fill(*dedx, *bro);
-            angle_vs_energy->Fill((*theta) * TMath::RadToDeg(), (*ener) * Am);
-            HQval->Fill(*Qval);
+         // if (true || (cut0vv->IsInside(vx, vy) || cut1vv->IsInside(vx, vy) || cut2vv->IsInside(vx, vy))) {
+         bro_vs_eloss->Fill(*eloss, *bro);
+         bro_vs_dedx->Fill(*dedx, *bro);
+         angle_vs_energy->Fill((*theta) * TMath::RadToDeg(), (*ener) * Am);
+         HQval->Fill(*Qval);
          //}
       }
 
@@ -225,8 +225,8 @@ void C15_dd_ana_merged()
    TCanvas *c_kn_el_lr = new TCanvas();
    angle_vs_energy_lr->Draw("ZCOL");
    draw_kinematics("C15_dhe3_gs.txt");
-   draw_kinematics("C15_dt_gs.txt");continue
-   draw_kinematics("C15_da_gs.txt");
+   draw_kinematics("C15_dt_gs.txt");
+   continue draw_kinematics("C15_da_gs.txt");
 
    /*
       TCanvas *c8 = new TCanvas();
@@ -288,15 +288,13 @@ void C15_dd_ana_merged()
 
 void draw_kinematics(std::string fileName)
 {
-   std::array<double,20000> thetaCms;
-   std::array<double,20000> thetaLabRec;
-   std::array<double,20000> thetaLabSca;
-   std::array<double,20000> enerLabRec;
-   std::array<double,20000> enerLabSca;
-   std::array<double,20000> momLabRec;
+   std::array<double, 20000> thetaCms;
+   std::array<double, 20000> thetaLabRec;
+   std::array<double, 20000> thetaLabSca;
+   std::array<double, 20000> enerLabRec;
+   std::array<double, 20000> enerLabSca;
+   std::array<double, 20000> momLabRec;
 
-
-   
    std::ifstream *kineStr = new std::ifstream(fileName);
    Int_t numKin = 0;
 
@@ -309,5 +307,5 @@ void draw_kinematics(std::string fileName)
    } else if (kineStr->fail())
       std::cout << " Warning : No Kinematics (" << fileName << ") file found for this reaction!" << std::endl;
 
-    (new TGraph(numKin, thetaLabRec.data(), enerLabRec.data()))->Draw("SAME");
+   (new TGraph(numKin, thetaLabRec.data(), enerLabRec.data()))->Draw("SAME");
 }

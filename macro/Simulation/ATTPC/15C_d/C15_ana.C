@@ -1,59 +1,60 @@
-void GetEnergy(Double_t M,Double_t IZ,Double_t BRO,Double_t &E);
+void GetEnergy(Double_t M, Double_t IZ, Double_t BRO, Double_t &E);
 
 void C15_ana()
 {
 
-    FairRunAna *run = new FairRunAna();
+   FairRunAna *run = new FairRunAna();
 
-    //Histograms
-    TH2F *angle_vs_energy = new TH2F("angle_vs_energy", "angle_vs_energy", 720, 0, 179, 1000, 0, 100.0);
-    TH2F *bro_vs_eloss = new TH2F("bro_vs_eloss", "bro_vs_eloss", 4000, 0, 25000.0, 1000, 0, 3);
-    TH2F *bro_vs_dedx = new TH2F("bro_vs_dedx", "bro_vs_dedx", 4000, 0, 4000.0, 1000, 0, 3);
-    TH2F *angle_vs_bro = new TH2F("angle_vs_bro", "angle_vs_bro", 720, 0, 179, 1000, 0, 3);
+   // Histograms
+   TH2F *angle_vs_energy = new TH2F("angle_vs_energy", "angle_vs_energy", 720, 0, 179, 1000, 0, 100.0);
+   TH2F *bro_vs_eloss = new TH2F("bro_vs_eloss", "bro_vs_eloss", 4000, 0, 25000.0, 1000, 0, 3);
+   TH2F *bro_vs_dedx = new TH2F("bro_vs_dedx", "bro_vs_dedx", 4000, 0, 4000.0, 1000, 0, 3);
+   TH2F *angle_vs_bro = new TH2F("angle_vs_bro", "angle_vs_bro", 720, 0, 179, 1000, 0, 3);
 
-    std::vector<TString> files = {"./data/C15_d3He_gs.root","./data/C15_d4He_gs_1.root","./data/C15_d4He_gs_2.root","./data/C15_dt_gs.root","./data/C15_dd_gs.root"};
+   std::vector<TString> files = {"./data/C15_d3He_gs.root", "./data/C15_d4He_gs_1.root", "./data/C15_d4He_gs_2.root",
+                                 "./data/C15_dt_gs.root", "./data/C15_dd_gs.root"};
 
-    for(auto filename : files){
+   for (auto filename : files) {
 
-        std::cout << " Opening File : " << filename.Data() << std::endl;
-        TFile *file = new TFile(filename.Data(), "READ");
+      std::cout << " Opening File : " << filename.Data() << std::endl;
+      TFile *file = new TFile(filename.Data(), "READ");
 
-        TTreeReader Reader1("cbmsim", file);
-        TTreeReaderValue<TClonesArray> eventArray(Reader1, "AtPatternEvent");
+      TTreeReader Reader1("cbmsim", file);
+      TTreeReaderValue<TClonesArray> eventArray(Reader1, "AtPatternEvent");
 
-        TTree *tree = (TTree *)file->Get("cbmsim");
-        Int_t nEvents = tree->GetEntries();
-        std::cout << " Number of events : " << nEvents << std::endl;
+      TTree *tree = (TTree *)file->Get("cbmsim");
+      Int_t nEvents = tree->GetEntries();
+      std::cout << " Number of events : " << nEvents << std::endl;
 
-        for (Int_t i = 0; i < nEvents; i++) {
+      for (Int_t i = 0; i < nEvents; i++) {
 
-            std::cout << " Event Number : " << i << "\n";
+         std::cout << " Event Number : " << i << "\n";
 
-            Reader1.Next();
-      
-            AtPatternEvent *patternEvent = (AtPatternEvent *)eventArray->At(0);
+         Reader1.Next();
 
-            if (patternEvent) {
-                std::vector<AtTrack> &patternTrackCand = patternEvent->GetTrackCand();
-                std::cout << " Number of pattern tracks " << patternTrackCand.size() << "\n";
-                for (auto track : patternTrackCand) {
+         AtPatternEvent *patternEvent = (AtPatternEvent *)eventArray->At(0);
 
-                Double_t theta = track.GetGeoTheta();
-                Double_t rad   = track.GetGeoRadius();
-                Double_t phi = track.GetGeoPhi();
+         if (patternEvent) {
+            std::vector<AtTrack> &patternTrackCand = patternEvent->GetTrackCand();
+            std::cout << " Number of pattern tracks " << patternTrackCand.size() << "\n";
+            for (auto track : patternTrackCand) {
 
-                Double_t B_f = 2.85;
+               Double_t theta = track.GetGeoTheta();
+               Double_t rad = track.GetGeoRadius();
+               Double_t phi = track.GetGeoPhi();
 
-                double bro = B_f * rad / TMath::Sin(theta) / 1000.0;
-                double ener = 0;
-                Double_t Am = 3.0;
+               Double_t B_f = 2.85;
 
-                GetEnergy(Am, 2.0, bro, ener);
+               double bro = B_f * rad / TMath::Sin(theta) / 1000.0;
+               double ener = 0;
+               Double_t Am = 3.0;
 
-                angle_vs_energy->Fill(180.0 - theta * TMath::RadToDeg(), ener * Am);
-                angle_vs_bro->Fill(180.0 - theta * TMath::RadToDeg(), bro);
+               GetEnergy(Am, 2.0, bro, ener);
 
-                 // PID
+               angle_vs_energy->Fill(180.0 - theta * TMath::RadToDeg(), ener * Am);
+               angle_vs_bro->Fill(180.0 - theta * TMath::RadToDeg(), bro);
+
+               // PID
                Double_t len = 0;
                Double_t eloss = 0;
                Double_t dedx = 0;
@@ -103,44 +104,41 @@ void C15_ana()
                eloss /= cnt;
                dedx /= len;
 
-                std::cout << " Brho : " << bro << " - Theta : " << theta * TMath::RadToDeg()
-                        << " - Phi : " << phi * TMath::RadToDeg() << " - Radius : " << rad << " - Energy :" << ener * Am
-                        << "\n";
+               std::cout << " Brho : " << bro << " - Theta : " << theta * TMath::RadToDeg()
+                         << " - Phi : " << phi * TMath::RadToDeg() << " - Radius : " << rad
+                         << " - Energy :" << ener * Am << "\n";
 
-                         bro_vs_eloss->Fill(eloss, bro);
-                         bro_vs_dedx->Fill(dedx, bro);
+               bro_vs_eloss->Fill(eloss, bro);
+               bro_vs_dedx->Fill(dedx, bro);
 
-     
-                }//if pattern
-            }//patternevent
+            } // if pattern
+         }    // patternevent
 
-        }//Events
+      } // Events
 
-    }//files
+   } // files
 
-    TCanvas *c1 = new TCanvas();
-    c1->Divide(2,2);
-    c1->Draw();
-    c1->cd(1);
-    angle_vs_energy->Draw();
-    c1->cd(2);
-    angle_vs_bro->Draw();
-    c1->cd(3);
-    bro_vs_eloss->Draw("colz");
-    c1->cd(4);
-    bro_vs_dedx->Draw("colz");
+   TCanvas *c1 = new TCanvas();
+   c1->Divide(2, 2);
+   c1->Draw();
+   c1->cd(1);
+   angle_vs_energy->Draw();
+   c1->cd(2);
+   angle_vs_bro->Draw();
+   c1->cd(3);
+   bro_vs_eloss->Draw("colz");
+   c1->cd(4);
+   bro_vs_dedx->Draw("colz");
+}
 
-}    
+void GetEnergy(Double_t M, Double_t IZ, Double_t BRO, Double_t &E)
+{
 
-
-void GetEnergy(Double_t M,Double_t IZ,Double_t BRO,Double_t &E){
-
-  //Energy per nucleon
-  Float_t  AM=931.5;
-  Float_t X=BRO/0.1439*IZ/M;
-  X=pow(X,2);
-  X=2.*AM*X;
-  X=X+pow(AM,2);
-  E=TMath::Sqrt(X)-AM;
-
+   // Energy per nucleon
+   Float_t AM = 931.5;
+   Float_t X = BRO / 0.1439 * IZ / M;
+   X = pow(X, 2);
+   X = 2. * AM * X;
+   X = X + pow(AM, 2);
+   E = TMath::Sqrt(X) - AM;
 }
