@@ -65,6 +65,13 @@ public:
    void SetDistanceStep(double step) { fDistStep = step; } //<In mm
 
    void NewEvent();
+
+   /**
+    * Simulates a particle over a given distance and returns the position and momentum of the particle at the stoping
+    * point. By default the particle will stop when it reaches the end of the TPC. A user defined function can test the
+    * position and momentum of the particle for each time step and stop it when a given condition is met (such as a
+    * depth in the TPC or an energy to stop at).
+    */
    std::pair<XYZPoint, PxPyPzEVector> SimulateParticle(
       int Z, int A, const XYZPoint &iniPos, const PxPyPzEVector &iniMom,
       std::function<bool(XYZPoint, PxPyPzEVector)> func = [](XYZPoint pos, PxPyPzEVector mom) { return true; });
@@ -78,6 +85,12 @@ protected:
    bool IsInVolume(const std::string &volName, const XYZPoint &point);
    std::string GetVolumeName(const XYZPoint &point);
 
+   /**
+    * Simulates a particle over a given distance and returns the position and momentum of the particle at the stoping
+    * point. By default the particle will stop when it reaches the end of the TPC. A user defined function can test the
+    * position and momentum of the particle for each time step and stop it when a given condition is met (such as a
+    * depth in the TPC or an energy to stop at).
+    */
    std::pair<XYZPoint, PxPyPzEVector> SimulateParticle(
       ModelPtr model, const XYZPoint &iniPos, const PxPyPzEVector &iniMom,
       std::function<bool(XYZPoint, PxPyPzEVector)> func = [](XYZPoint pos, PxPyPzEVector mom) { return true; });
