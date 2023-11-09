@@ -26,8 +26,8 @@ AtClusterizeLineTask.cxx
 AtPulse.cxx
 AtPulseLine.cxx
 AtPulseTask.cxx
+AtPulseGADGET.cxx
 #AtPulseLineTask.cxx
-
 AtSimulatedPoint.cxx
 AtSimulatedLine.cxx
 

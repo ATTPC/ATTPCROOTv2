@@ -15,7 +15,7 @@ void Mg20_test_sim(Int_t nEvents = 100, TString mcEngine = "TGeant4")
    // ------------------------------------------------------------------------
 
    // gSystem->Load("libAtGen.so");
-   AtVertexPropagator *vertex_prop = new AtVertexPropagator();
+   //AtVertexPropagator *vertex_prop = new AtVertexPropagator();
 
    // -----   Create simulation run   ----------------------------------------
    FairRunSim *run = new FairRunSim();

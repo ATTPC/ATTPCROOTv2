@@ -1,4 +1,4 @@
-void rundigi_sim(
+void rundigi_sim_Diff(
    TString mcFile = "./data/gadgetsim.root",
    TString mapParFile =
       "/mnt/simulations/attpcroot/fair_install_2020/yassid/ATTPCROOTv2/scripts/scripts/Lookup20150611.xml",
@@ -39,10 +39,10 @@ void rundigi_sim(
    AtClusterizeTask *clusterizer = new AtClusterizeTask();
    clusterizer->SetPersistence(kFALSE);
 
-   AtPulseTask *pulse = new AtPulseTask();
+   auto pulseImp = std::make_shared<AtPulse>(mapping);
+   AtPulseTask *pulse = new AtPulseTask(pulseImp);
    pulse->SetPersistence(kTRUE);
    pulse->SetSaveMCInfo();
-   pulse->SetMap(mapping);
 
    auto psa = std::make_unique<AtPSAMax>();
    psa->SetThreshold(5);
@@ -69,7 +69,7 @@ void rundigi_sim(
    // __ Init and run ___________________________________
 
    fRun->Init();
-   fRun->Run(0, 10);
+   fRun->Run(0, 1000);
 
    std::cout << std::endl << std::endl;
    std::cout << "Macro finished succesfully." << std::endl << std::endl;

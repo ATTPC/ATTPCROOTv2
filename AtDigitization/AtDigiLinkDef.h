@@ -12,6 +12,7 @@
 #pragma link C++ class AtPulse - !;
 #pragma link C++ class AtPulseLine - !;
 #pragma link C++ class AtPulseTask + ;
+#pragma link C++ class AtPulseTaskGADGET + ;
 #pragma link C++ class AtPulseLineTask + ;
 
 #pragma link C++ class AtSimulatedPoint + ;

@@ -218,7 +218,7 @@ TGeoVolume *create_detector()
 
       TGeoVolume *dummy = gGeoManager->MakeTube("dummy", mediumvacuum4, 0, 0, 0);
       gGeoMan->GetVolume(geoVersion)->AddNode(dummy, 1, new TGeoCombiTrans(0.0, 0, 0, new TGeoRotation("dummy", 0, 0,
-      0))); dummy->SetTransparency(100);*/
+      0))); dummy->SetTransparency(60);*/
 
    TGeoVolume **Cry_vol;
    Cry_vol = new TGeoVolume *[17];
@@ -244,12 +244,12 @@ TGeoVolume *create_detector()
       // GADGET SeGA central contact
       TGeoVolume *cencon = gGeoManager->MakeTube("cencon", mediumvacuum4, 0, sega_central_contact_rad_out,
                                                  sega_central_contact_length / 2);
-      cencon->SetLineColor(kBlue);
+      cencon->SetLineColor(kRed);
       gGeoMan->GetVolume(geoVersion)
          ->AddNode(cencon, nora + 1,
                    new TGeoCombiTrans(x_posSega, y_posSega, z_posSega,
                                       new TGeoRotation("cencon", phirot[nora], updown * thetarot[nora], 0.0)));
-      cencon->SetTransparency(80);
+      cencon->SetTransparency(60);
 
       // GADGET SeGA inner dead layer
       TGeoVolume *indeadL = gGeoManager->MakeTube("indeadL", segamatter, sega_central_contact_rad_out,
@@ -259,16 +259,16 @@ TGeoVolume *create_detector()
          ->AddNode(indeadL, nora + 1,
                    new TGeoCombiTrans(x_posSega, y_posSega, z_posSega,
                                       new TGeoRotation("indeadL", phirot[nora], updown * thetarot[nora], 0.0)));
-      indeadL->SetTransparency(80);
+      indeadL->SetTransparency(40);
       // GADGET SeGA active layer
       Cry_vol[nora] = gGeoManager->MakeTube(CrystalName + name_cry[nora], segamatter, sega_inner_dead_layer_rad_out,
                                             sega_active_rad_out, sega_active_length / 2);
-      Cry_vol[nora]->SetLineColor(kBlue);
+      Cry_vol[nora]->SetLineColor(kCyan);
       gGeoMan->GetVolume(geoVersion)
          ->AddNode(Cry_vol[nora], nora + 1,
                    new TGeoCombiTrans(x_posSega, y_posSega, z_posSega,
                                       new TGeoRotation("activeL", phirot[nora], updown * thetarot[nora], 0)));
-      Cry_vol[nora]->SetTransparency(80);
+      Cry_vol[nora]->SetTransparency(40);
 
       // GADGET SeGA germanium crystal
 
@@ -279,45 +279,45 @@ TGeoVolume *create_detector()
          ->AddNode(GeCrystal, nora + 1,
                    new TGeoCombiTrans(x_posSega, y_posSega, z_posSega,
                                       new TGeoRotation("GeCrystal", phirot[nora], updown * thetarot[nora], 0)));
-      GeCrystal->SetTransparency(80);
+      GeCrystal->SetTransparency(40);
       // GADGET SeGA vacuum 1
       TGeoVolume *vac1 =
          gGeoManager->MakeTube("vac1", mediumvacuum4, sega_Ge_crystal_rad_out, sega_vac1_rad_out, sega_vac1_length / 2);
-      vac1->SetLineColor(kBlue);
+      vac1->SetLineColor(kRed);
       gGeoMan->GetVolume(geoVersion)
          ->AddNode(vac1, nora + 1,
                    new TGeoCombiTrans(x_posSega, y_posSega, z_posSega,
                                       new TGeoRotation("vac1", phirot[nora], updown * thetarot[nora], 0)));
-      vac1->SetTransparency(80);
+      vac1->SetTransparency(60);
       // GADGET SeGA detector cup
       TGeoVolume *segadetcup = gGeoManager->MakeTube("segadetcup", segacryomatter, sega_vac1_rad_out,
                                                      sega_det_cup_rad_out, sega_det_cup_length / 2);
-      segadetcup->SetLineColor(kCyan);
+      segadetcup->SetLineColor(kBlue);
       gGeoMan->GetVolume(geoVersion)
          ->AddNode(segadetcup, nora + 1,
                    new TGeoCombiTrans(x_posSega, y_posSega, z_posSega,
                                       new TGeoRotation("segadetcup", phirot[nora], updown * thetarot[nora], 0)));
-      segadetcup->SetTransparency(80);
+      segadetcup->SetTransparency(40);
 
       // GADGET SeGA vacuum 2
       TGeoVolume *vac2 =
          gGeoManager->MakeTube("vac2", mediumvacuum4, sega_det_cup_rad_out, sega_vac2_rad_out, sega_vac2_length / 2);
-      vac2->SetLineColor(kBlue);
+      vac2->SetLineColor(kRed);
       gGeoMan->GetVolume(geoVersion)
          ->AddNode(vac2, nora + 1,
                    new TGeoCombiTrans(x_posSega, y_posSega, z_posSega,
                                       new TGeoRotation("vac2", phirot[nora], updown * thetarot[nora], 0)));
-      vac2->SetTransparency(80);
+      vac2->SetTransparency(30);
 
       // GADGET SeGA Cryostat
       TGeoVolume *cryostat =
          gGeoManager->MakeTube("cryostat", segacryomatter, sega_vac2_rad_out, sega_cryo_rad_out, sega_cryo_length / 2);
-      cryostat->SetLineColor(kCyan);
+      cryostat->SetLineColor(kBlue);
       gGeoMan->GetVolume(geoVersion)
          ->AddNode(cryostat, nora + 1,
                    new TGeoCombiTrans(x_posSega, y_posSega, z_posSega,
                                       new TGeoRotation("cryostat", phirot[nora], updown * thetarot[nora], 0)));
-      cryostat->SetTransparency(80);
+      cryostat->SetTransparency(40);
    };
    // radius = (tpc_diameter_in /2+sega_cryo_rad_out+2)
    // downstream ring
@@ -332,12 +332,12 @@ TGeoVolume *create_detector()
       // GADGET SeGA central contact
       TGeoVolume *cencon = gGeoManager->MakeTube("cencon", mediumvacuum4, 0, sega_central_contact_rad_out,
                                                  sega_central_contact_length / 2);
-      cencon->SetLineColor(kBlue);
+      cencon->SetLineColor(kRed);
       gGeoMan->GetVolume(geoVersion)
          ->AddNode(cencon, nora + 1,
                    new TGeoCombiTrans(x_posSega, y_posSega, z_posSega,
                                       new TGeoRotation("cencon", phirot[nora], updown * thetarot[nora], 0.0)));
-      cencon->SetTransparency(80);
+      cencon->SetTransparency(60);
       cout << "sega_Ge_crystal_rad_out" << sega_Ge_crystal_rad_out << endl;
       // GADGET SeGA inner dead layer
       TGeoVolume *indeadL = gGeoManager->MakeTube("indeadL", segamatter, sega_central_contact_rad_out,
@@ -347,17 +347,17 @@ TGeoVolume *create_detector()
          ->AddNode(indeadL, nora + 1,
                    new TGeoCombiTrans(x_posSega, y_posSega, z_posSega,
                                       new TGeoRotation("indeadL", phirot[nora], updown * thetarot[nora], 0.0)));
-      indeadL->SetTransparency(80);
+      indeadL->SetTransparency(40);
       // GADGET SeGA active layer
       Cry_vol[nora + 8] =
          gGeoManager->MakeTube(CrystalName + name_cry[nora + 8], segamatter, sega_inner_dead_layer_rad_out,
                                sega_active_rad_out, sega_active_length / 2);
-      Cry_vol[nora]->SetLineColor(kBlue);
+      Cry_vol[nora]->SetLineColor(kCyan);
       gGeoMan->GetVolume(geoVersion)
          ->AddNode(Cry_vol[nora + 8], nora + 9,
                    new TGeoCombiTrans(x_posSega, y_posSega, z_posSega,
                                       new TGeoRotation("activeL", phirot[nora], updown * thetarot[nora], 0)));
-      Cry_vol[nora]->SetTransparency(80);
+      Cry_vol[nora]->SetTransparency(40);
 
       // GADGET SeGA germanium crystal
 
@@ -368,45 +368,45 @@ TGeoVolume *create_detector()
          ->AddNode(GeCrystal, nora + 1,
                    new TGeoCombiTrans(x_posSega, y_posSega, z_posSega,
                                       new TGeoRotation("GeCrystal", phirot[nora], updown * thetarot[nora], 0)));
-      GeCrystal->SetTransparency(80);
+      GeCrystal->SetTransparency(40);
       // GADGET SeGA vacuum 1
       TGeoVolume *vac1 =
          gGeoManager->MakeTube("vac1", mediumvacuum4, sega_Ge_crystal_rad_out, sega_vac1_rad_out, sega_vac1_length / 2);
-      vac1->SetLineColor(kBlue);
+      vac1->SetLineColor(kRed);
       gGeoMan->GetVolume(geoVersion)
          ->AddNode(vac1, nora + 1,
                    new TGeoCombiTrans(x_posSega, y_posSega, z_posSega,
                                       new TGeoRotation("vac1", phirot[nora], updown * thetarot[nora], 0)));
-      vac1->SetTransparency(80);
+      vac1->SetTransparency(60);
       // GADGET SeGA detector cup
       TGeoVolume *segadetcup = gGeoManager->MakeTube("segadetcup", segacryomatter, sega_vac1_rad_out,
                                                      sega_det_cup_rad_out, sega_det_cup_length / 2);
-      segadetcup->SetLineColor(kCyan);
+      segadetcup->SetLineColor(kBlue);
       gGeoMan->GetVolume(geoVersion)
          ->AddNode(segadetcup, nora + 1,
                    new TGeoCombiTrans(x_posSega, y_posSega, z_posSega,
                                       new TGeoRotation("segadetcup", phirot[nora], updown * thetarot[nora], 0)));
-      segadetcup->SetTransparency(80);
+      segadetcup->SetTransparency(40);
 
       // GADGET SeGA vacuum 2
       TGeoVolume *vac2 =
          gGeoManager->MakeTube("vac2", mediumvacuum4, sega_det_cup_rad_out, sega_vac2_rad_out, sega_vac2_length / 2);
-      vac2->SetLineColor(kBlue);
+      vac2->SetLineColor(kRed);
       gGeoMan->GetVolume(geoVersion)
          ->AddNode(vac2, nora + 1,
                    new TGeoCombiTrans(x_posSega, y_posSega, z_posSega,
                                       new TGeoRotation("vac2", phirot[nora], updown * thetarot[nora], 0)));
-      vac2->SetTransparency(80);
+      vac2->SetTransparency(30);
 
       // GADGET SeGA Cryostat
       TGeoVolume *cryostat =
          gGeoManager->MakeTube("cryostat", segacryomatter, sega_vac2_rad_out, sega_cryo_rad_out, sega_cryo_length / 2);
-      cryostat->SetLineColor(kCyan);
+      cryostat->SetLineColor(kBlue);
       gGeoMan->GetVolume(geoVersion)
          ->AddNode(cryostat, nora + 1,
                    new TGeoCombiTrans(x_posSega, y_posSega, z_posSega,
                                       new TGeoRotation("cryostat", phirot[nora], updown * thetarot[nora], 0)));
-      cryostat->SetTransparency(80);
+      cryostat->SetTransparency(40);
    };
    // GADGET Main drift volume
    double tpc_rot = 0;
@@ -414,7 +414,7 @@ TGeoVolume *create_detector()
    gGeoMan->GetVolume(geoVersion)
       ->AddNode(drift_volume, 1,
                 new TGeoCombiTrans(0.0, 0, drift_length / 2.0, new TGeoRotation("drift_volume", 0, tpc_rot, 0)));
-   drift_volume->SetTransparency(80);
+   drift_volume->SetTransparency(40);
 
    // GADGET Outer steel chamber
    TGeoVolume *steel_chamber = gGeoManager->MakeTube("steel_chamber", OuterCylinder, tpc_diameter_in / 2,
@@ -422,7 +422,7 @@ TGeoVolume *create_detector()
    gGeoMan->GetVolume(geoVersion)
       ->AddNode(steel_chamber, 1,
                 new TGeoCombiTrans(0.0, 0, drift_length / 2.0, new TGeoRotation("steel_chamber", 0, tpc_rot, 0)));
-   steel_chamber->SetTransparency(80);
+   steel_chamber->SetTransparency(40);
 
    // GADGET Upstream  Ring
    TGeoVolume *upstream_ring = gGeoManager->MakeTube("upstream_ring", OuterCylinder, upstream_ring_dia_in / 2,
@@ -431,7 +431,7 @@ TGeoVolume *create_detector()
       ->AddNode(
          upstream_ring, 1,
          new TGeoCombiTrans(0.0, 0, -upstream_ring_length / 2.0, new TGeoRotation("upstream_ring", 0, tpc_rot, 0)));
-   upstream_ring->SetTransparency(80);
+   upstream_ring->SetTransparency(40);
 
    // GADGET Upstream Cap
    TGeoVolume *upstream_cap = gGeoManager->MakeTube("upstream_cap", OuterCylinder, upstream_cap_dia_in / 2,
@@ -440,7 +440,7 @@ TGeoVolume *create_detector()
       ->AddNode(upstream_cap, 1,
                 new TGeoCombiTrans(0.0, 0, -upstream_cap_length / 2.0 - upstream_ring_length,
                                    new TGeoRotation("upstream_cap", 0, tpc_rot, 0)));
-   upstream_cap->SetTransparency(80);
+   upstream_cap->SetTransparency(40);
 
    // GADGET Downstream  Ring
    TGeoVolume *downstream_ring = gGeoManager->MakeTube("downstream_ring", OuterCylinder, downstream_ring_dia_in / 2,
@@ -449,7 +449,7 @@ TGeoVolume *create_detector()
       ->AddNode(downstream_ring, 1,
                 new TGeoCombiTrans(0.0, 0, drift_length + downstream_ring_length / 2.0,
                                    new TGeoRotation("downstream_ring", 0, tpc_rot, 0)));
-   downstream_ring->SetTransparency(80);
+   downstream_ring->SetTransparency(40);
 
    // GADGET Downstream Cap
    TGeoVolume *downstream_cap = gGeoManager->MakeTube("downstream_cap", OuterCylinder, downstream_cap_dia_in / 2,
@@ -458,7 +458,7 @@ TGeoVolume *create_detector()
       ->AddNode(downstream_cap, 1,
                 new TGeoCombiTrans(0.0, 0, downstream_cap_length / 2.0 + downstream_ring_length + drift_length,
                                    new TGeoRotation("downstream_cap", 0, tpc_rot, 0)));
-   downstream_cap->SetTransparency(80);
+   downstream_cap->SetTransparency(40);
 
    // GADGET Entrance Window
    TGeoVolume *tpc_window =
@@ -467,7 +467,7 @@ TGeoVolume *create_detector()
       ->AddNode(tpc_window, 1,
                 new TGeoCombiTrans(0.0, 0, -upstream_ring_length - upstream_cap_length - window_length / 2,
                                    new TGeoRotation("tpc_window", 0, tpc_rot, 0)));
-   tpc_window->SetTransparency(80);
+   tpc_window->SetTransparency(40);
 
    // GADGET Kapton Window
    TGeoVolume *kapton_window = gGeoManager->MakeTube("kapton_window", windowmat, 0, 5.08 / 2.0, 0.0127 / 2.0);
@@ -498,7 +498,7 @@ TGeoVolume *create_detector()
                                    micromegas_ring_length / 2.0 + drift_length + micromegas_length +
                                       downstream_ring_length + downstream_cap_length,
                                    new TGeoRotation("micromegas_ring", 0, tpc_rot, 0)));
-   micromegas_ring->SetTransparency(80);
+   micromegas_ring->SetTransparency(40);
 
    // GADGET Cathode
    TGeoVolume *cathode =
@@ -506,7 +506,7 @@ TGeoVolume *create_detector()
    cathode->SetLineColor(kGreen);
    gGeoMan->GetVolume(geoVersion)
       ->AddNode(cathode, 1, new TGeoCombiTrans(0.0, 0, cathode_length / 2, new TGeoRotation("cathode", 0, tpc_rot, 0)));
-   downstream_cap->SetTransparency(80);
+   downstream_cap->SetTransparency(40);
 
    // GADGET Cathode Mount
    TGeoVolume *cathode_mount = gGeoManager->MakeTube("cathode_mount", OuterCylinder, cathode_mount_dia_in / 2,
@@ -514,14 +514,14 @@ TGeoVolume *create_detector()
    gGeoMan->GetVolume(geoVersion)
       ->AddNode(cathode_mount, 1,
                 new TGeoCombiTrans(0.0, 0, cathode_mount_length / 2, new TGeoRotation("cathode_mount", 0, tpc_rot, 0)));
-   downstream_cap->SetTransparency(80);
+   downstream_cap->SetTransparency(40);
    // BALL
    /*
         Cry_vol[16]= gGeoManager->MakeSphere(CrystalName + name_cry[16], segamatter, 0,  25 );
         Cry_vol[16]->SetLineColor(kMagenta);
         gGeoMan->GetVolume(geoVersion)
            ->AddNode(Cry_vol[16],17, new TGeoCombiTrans(0.0, 0.0 , 20 - 8.56 / 2 - 1.3746,  new
-     TGeoRotation("GeCrystal", 0 ,0, 0))); Cry_vol[16]->SetTransparency(80);
+     TGeoRotation("GeCrystal", 0 ,0, 0))); Cry_vol[16]->SetTransparency(40);
   */
    return drift_volume;
 }

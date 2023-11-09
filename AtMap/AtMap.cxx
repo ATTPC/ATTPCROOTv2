@@ -75,7 +75,7 @@ TH2Poly *AtMap::GetPadPlane()
    return dynamic_cast<TH2Poly *>(fPadPlane->Clone());
 }
 
-Int_t AtMap::GetPadNum(ROOT::Math::XYPoint &point)
+Int_t AtMap::GetPadNum(ROOT::Math::XYPoint point)
 {
    if (fPadPlane == nullptr)
       GeneratePadPlane();
