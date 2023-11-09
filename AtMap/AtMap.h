@@ -10,7 +10,7 @@
 
 #include "AtPadReference.h"
 
-#include <Math/Point2Dfwd.h>
+#include <Math/Point2D.h>
 #include <Rtypes.h>
 #include <TNamed.h>
 #include <TString.h>
@@ -73,7 +73,7 @@ public:
    UInt_t GetNumPads() const { return fNumberPads; }
 
    Int_t GetPadNum(const AtPadReference &PadRef) const;
-   Int_t GetPadNum(ROOT::Math::XYPoint &point);
+   Int_t GetPadNum(ROOT::Math::XYPoint point);
 
    multiarray GetPadCoordArr() { return AtPadCoord; }
    multiarray *GetPadCoord() { return fAtPadCoordPtr = &AtPadCoord; }

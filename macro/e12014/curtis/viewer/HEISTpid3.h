@@ -42,5 +42,4 @@ void PlotPID(AtTabInfo *info)
       TText *text = new TText(x, y, name);
       text->Draw("SAME");
    }
-   
 }

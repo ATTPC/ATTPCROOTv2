@@ -41,12 +41,12 @@ void rundigi_sim_CD(
    AtClusterizeTask *clusterizer = new AtClusterizeTask();
    clusterizer->SetPersistence(kFALSE);
 
-   AtPulseTaskGADGET *pulse = new AtPulseTaskGADGET();
-   pulse->SetAdjecentPads(2);
+auto pulseImp = std::make_shared<AtPulseGADGET>(mapping);
+   auto *pulse = new AtPulseTask(pulseImp);
+   pulseImp->SetAdjecentPads(2);
    pulse->SetPersistence(kTRUE);
    pulse->SetSaveMCInfo();
-   pulse->SetMap(mapping);
-   pulse->UseChargeSave(kTRUE);
+   pulseImp->SetSaveCharge(kTRUE);
 
    auto psa = std::make_unique<AtPSAMax>();
    psa->SetThreshold(5);
