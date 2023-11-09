@@ -101,7 +101,7 @@ Bool_t AtTPC20MgDecay_pag::ReadEvent(FairPrimaryGenerator *primGen)
 
    if (fNuclearDecayChainIsSet) {
 
-      if (!protonPDGID == 2212)
+      if (protonPDGID != 2212)
          LOG(fatal) << "AtTPC20MgDecay_pagGenerator:PDG code" << protonPDGID << "is not a proton!";
       // if(protonPDGID == 2212)
       brp = gRandom->Uniform(0, 1);
