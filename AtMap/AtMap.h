@@ -10,7 +10,7 @@
 
 #include "AtPadReference.h"
 
-#include <Math/Point2D.h>
+#include <Math/Point2Dfwd.h> // for XYPoint
 #include <Rtypes.h>
 #include <TNamed.h>
 #include <TString.h>

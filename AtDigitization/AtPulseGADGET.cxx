@@ -1,37 +1,30 @@
 #include "AtPulseGADGET.h"
 
-#include "AtDigiPar.h"
+
 #include "AtElectronicResponse.h"
-#include "AtMCPoint.h"
 #include "AtMap.h"
-#include "AtPad.h"
-#include "AtPadArray.h"
-#include "AtPadBase.h"
 #include "AtRawEvent.h"
 #include "AtSimulatedPoint.h"
 
 #include <FairLogger.h>
 #include <FairParSet.h> // for FairParSet
 #include <FairRootManager.h>
-#include <FairRunAna.h>
-#include <FairRuntimeDb.h>
-#include <FairTask.h>
+
 
 #include <Math/Vector3D.h>
-#include <TAxis.h>
-#include <TClonesArray.h>
-#include <TF1.h>
+
 #include <TH1.h>
-#include <TH2Poly.h>
 #include <TMath.h>
-#include <TObject.h>
-#include <TRandom.h>
 
 #include <algorithm>
-#include <cmath>
-#include <cstdio>
 #include <iostream>
-#include <utility>
+
+
+#include <Math/Point2D.h>          // for PositionVector2D
+#include <Math/Point2Dfwd.h>       // for XYPoint
+#include <map>                     // for operator!=, _Rb_tree_const_iterator
+#include <set>                     // for set
+class AtPad;
 
 constexpr auto cRED = "\033[1;31m";
 constexpr auto cYELLOW = "\033[1;33m";
@@ -68,7 +61,6 @@ bool AtPulseGADGET::AssignElectronsToPad(AtSimulatedPoint *point)
    auto yElectron = coord.y();       // mm
    auto eTime = coord.z();           // us
    eTime += fTBPadPlane * fTBTime;   // correct time for pad plane location
-   auto charge = point->GetCharge(); // number of electrons
    auto padNumber = fMap->GetPadNum(XYPoint{xElectron, yElectron});
 
    if (padNumber < 0 || padNumber >= fMap->GetNumPads()) { // if electron cloud hits edge center cant be calculated thus
@@ -89,9 +81,10 @@ bool AtPulseGADGET::AssignElectronsToPad(AtSimulatedPoint *point)
    // Calculate xPadCurrent and yPadCurrent outside the loop
    Double_t xPadCurrent, yPadCurrent;
    for (Int_t i = 0; i < Items; i++) {
-      xPadCurrent = PadCenter.X() + coords[i];
+      xPadCurrent = PadCenter.X() + coords[i]; // NOLINT
       for (Int_t j = 0; j < Items; j++) {
-         yPadCurrent = PadCenter.Y() + coords[j];
+         yPadCurrent = PadCenter.Y() + coords[j]; // NOLINT
+         
 
          // Calculate newpadNumber directly from newbinNumber
          auto newpadNumber = fMap->GetPadNum(XYPoint{xPadCurrent, yPadCurrent});

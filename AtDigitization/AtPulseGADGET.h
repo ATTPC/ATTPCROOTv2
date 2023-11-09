@@ -12,16 +12,13 @@
 
 #include <Rtypes.h>
 
-#include <map>
+
 #include <vector>
+#include <memory>        // for make_shared, shared_ptr
+#include "AtRawEvent.h"  // for AtRawEvent
 
-#include "Math/Vector3Dfwd.h"
-
-class AtSimulatedLine;
 class AtSimulatedPoint;
-class TBuffer;
-class TClass;
-class TMemberInspector;
+
 
 class AtPulseGADGET : public AtPulse {
 

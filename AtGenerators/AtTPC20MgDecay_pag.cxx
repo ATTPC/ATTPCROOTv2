@@ -2,23 +2,21 @@
 
 #include "AtTPC20MgDecay_pag.h"
 
-#include "FairLogger.h"
-#include "FairMCEventHeader.h"
+
 #include "FairPrimaryGenerator.h"
-#include "FairRootManager.h"
-#include "FairRunAna.h"
-#include "FairRunSim.h"
 #include "TDatabasePDG.h"
-#include "TF1.h"
-#include "TGraph.h"
-#include "TH1.h"
 #include "TMath.h"
 #include "TParticlePDG.h"
 #include "TRandom.h"
 
+#include <FairLogger.h>            // for Logger, LOG
+#include <math.h>                  // for acos
+#include <iostream>                // for operator<<, endl, basic_ostream
+#include <map>                     // for allocator
+
 // -----   Default constructor   ------------------------------------------
 AtTPC20MgDecay_pag::AtTPC20MgDecay_pag()
-   : fOnlyAPBranch(0), fBoxVtxIsSet(0), fNuclearDecayChainIsSet(0), fParticlesDefinedInNuclearDecay(0), fX(0), fY(0),
+   : fOnlyAPBranch(false), fBoxVtxIsSet(false), fNuclearDecayChainIsSet(false), fParticlesDefinedInNuclearDecay(0), fX(0), fY(0),
      fZ(0), fX1(0), fY1(0), fZ1(0), fX2(0), fY2(0), fZ2(0)
 {
 }

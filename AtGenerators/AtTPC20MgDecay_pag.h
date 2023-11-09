@@ -3,14 +3,14 @@
 #define AtTPC20MGDECAY_pag_H
 
 #include "FairGenerator.h"
-#include "FairIon.h"
-#include "FairParticle.h"
 
-#include <iostream>
-#include <map>
 
+#include <Rtypes.h>         // for Double32_t, Bool_t, THashConsistencyHolder
+class TBuffer;
+class TClass;
+class TMemberInspector;
 class FairPrimaryGenerator;
-class AtTPCIonGenerator;
+
 
 class AtTPC20MgDecay_pag : public FairGenerator {
 
@@ -57,8 +57,8 @@ private:
    Double32_t fX1, fY1, fZ1, fX2, fY2, fZ2; // Box vertex coords (x1,y1,z1)->(x2,y2,z2)
    Bool_t fNuclearDecayChainIsSet;
    Int_t fParticlesDefinedInNuclearDecay;
-   Double32_t fParticleEnergies[3];
-   Double32_t fParticleBranchingRatios[3];
+   Double32_t fParticleEnergies[3]= {0,0,0};
+   Double32_t fParticleBranchingRatios[3]= {0,0,0};
    ClassDef(AtTPC20MgDecay_pag, 1)
 };
 
