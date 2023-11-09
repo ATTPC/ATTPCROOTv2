@@ -1,29 +1,20 @@
 #include "AtPulseGADGET.h"
 
-
 #include "AtElectronicResponse.h"
 #include "AtMap.h"
 #include "AtRawEvent.h"
 #include "AtSimulatedPoint.h"
 
 #include <FairLogger.h>
-#include <FairParSet.h> // for FairParSet
-#include <FairRootManager.h>
 
-
+#include <Math/Point2D.h>    // for PositionVector2D
+#include <Math/Point2Dfwd.h> // for XYPoint
 #include <Math/Vector3D.h>
-
 #include <TH1.h>
 #include <TMath.h>
 
-#include <algorithm>
 #include <iostream>
-
-
-#include <Math/Point2D.h>          // for PositionVector2D
-#include <Math/Point2Dfwd.h>       // for XYPoint
-#include <map>                     // for operator!=, _Rb_tree_const_iterator
-#include <set>                     // for set
+#include <set> // for set
 class AtPad;
 
 constexpr auto cRED = "\033[1;31m";
@@ -57,10 +48,10 @@ bool AtPulseGADGET::AssignElectronsToPad(AtSimulatedPoint *point)
    };
 
    auto coord = point->GetPosition();
-   auto xElectron = coord.x();       // mm
-   auto yElectron = coord.y();       // mm
-   auto eTime = coord.z();           // us
-   eTime += fTBPadPlane * fTBTime;   // correct time for pad plane location
+   auto xElectron = coord.x();     // mm
+   auto yElectron = coord.y();     // mm
+   auto eTime = coord.z();         // us
+   eTime += fTBPadPlane * fTBTime; // correct time for pad plane location
    auto padNumber = fMap->GetPadNum(XYPoint{xElectron, yElectron});
 
    if (padNumber < 0 || padNumber >= fMap->GetNumPads()) { // if electron cloud hits edge center cant be calculated thus
@@ -84,7 +75,6 @@ bool AtPulseGADGET::AssignElectronsToPad(AtSimulatedPoint *point)
       xPadCurrent = PadCenter.X() + coords[i]; // NOLINT
       for (Int_t j = 0; j < Items; j++) {
          yPadCurrent = PadCenter.Y() + coords[j]; // NOLINT
-         
 
          // Calculate newpadNumber directly from newbinNumber
          auto newpadNumber = fMap->GetPadNum(XYPoint{xPadCurrent, yPadCurrent});

@@ -2,6 +2,7 @@
 
 #include "AtTPC20MgDecay_pag.h"
 
+#include <FairLogger.h> // for Logger, LOG
 
 #include "FairPrimaryGenerator.h"
 #include "TDatabasePDG.h"
@@ -9,20 +10,16 @@
 #include "TParticlePDG.h"
 #include "TRandom.h"
 
-#include <FairLogger.h>            // for Logger, LOG
-#include <math.h>                  // for acos
-#include <iostream>                // for operator<<, endl, basic_ostream
-#include <map>                     // for allocator
+#include <cmath>    // for acos
+#include <iostream> // for operator<<, endl, basic_ostream
+#include <map>      // for allocator
 
 // -----   Default constructor   ------------------------------------------
 AtTPC20MgDecay_pag::AtTPC20MgDecay_pag()
-   : fOnlyAPBranch(false), fBoxVtxIsSet(false), fNuclearDecayChainIsSet(false), fParticlesDefinedInNuclearDecay(0), fX(0), fY(0),
-     fZ(0), fX1(0), fY1(0), fZ1(0), fX2(0), fY2(0), fZ2(0)
+   : fOnlyAPBranch(false), fBoxVtxIsSet(false), fNuclearDecayChainIsSet(false), fParticlesDefinedInNuclearDecay(0),
+     fX(0), fY(0), fZ(0), fX1(0), fY1(0), fZ1(0), fX2(0), fY2(0), fZ2(0)
 {
 }
-
-// -----   Destructor   ---------------------------------------------------
-AtTPC20MgDecay_pag::~AtTPC20MgDecay_pag() {}
 
 Bool_t AtTPC20MgDecay_pag::Init()
 {
@@ -50,22 +47,22 @@ Bool_t AtTPC20MgDecay_pag::ReadEvent(FairPrimaryGenerator *primGen)
    Int_t protonPDGID = 2212;
    Int_t alphaPDGID = 1000020040;
    Int_t gammaPDGID = 22;
-   Int_t betaPDGID = 11;
+   Int_t betaPDGID = 11; // NOLINT
    // Check for particle type
    TDatabasePDG *pdgBase = TDatabasePDG::Instance();
    TParticlePDG *protonParticle = pdgBase->GetParticle(protonPDGID);
    TParticlePDG *alphaParticle = pdgBase->GetParticle(alphaPDGID);
    TParticlePDG *gammaParticle = pdgBase->GetParticle(gammaPDGID);
-   TParticlePDG *betaParticle = pdgBase->GetParticle(betaPDGID);
+   TParticlePDG *betaParticle = pdgBase->GetParticle(betaPDGID); // NOLINT
    if (!protonParticle)
       LOG(fatal) << "AtTPC20MgDecay_pag: PDG code " << protonPDGID << " (proton) not defined.";
-   Double32_t protonMass = protonParticle->Mass();
+   Double32_t protonMass = protonParticle->Mass(); // NOLINT
    if (!gammaParticle)
       LOG(fatal) << "AtTPC20MgDecay_pag: PDG code" << gammaPDGID << " (gamma) not defined.";
-   Double32_t gammaMass = gammaParticle->Mass();
+   Double32_t gammaMass = gammaParticle->Mass(); // NOLINT
    if (!alphaParticle)
       LOG(fatal) << "AtTPC20MgDecay_pag: PDG code " << alphaPDGID << " (alpha) not defined.";
-   Double32_t alphaMass = alphaParticle->Mass();
+   Double32_t alphaMass = alphaParticle->Mass(); // NOLINT
 
    std::cout << " protonMass: " << protonMass << std::endl;
    std::cout << " gammaMass: " << gammaMass << std::endl;
@@ -92,15 +89,15 @@ Bool_t AtTPC20MgDecay_pag::ReadEvent(FairPrimaryGenerator *primGen)
    pxAlpha = ptAlpha * TMath::Cos(phiAlpha);
    pyAlpha = ptAlpha * TMath::Sin(phiAlpha);
 
-   Double32_t ptGamma = 0, pxGamma = 0, pyGamma = 0, pzGamma = 0;
-   Double32_t pabsGamma = 0.004033; // GeV/c
+   Double32_t ptGamma = 0, pxGamma = 0, pyGamma = 0, pzGamma = 0; // NOLINT
+   Double32_t pabsGamma = 0.004033;                               // GeV/c
    // Double32_t brg=0;
    Double32_t thetaGamma = acos(gRandom->Uniform(0, 1));
    Double32_t phiGamma = gRandom->Uniform(0, 360) * TMath::DegToRad();
-   pzGamma = pabsGamma * TMath::Cos(thetaGamma);
+   pzGamma = pabsGamma * TMath::Cos(thetaGamma); // NOLINT
    ptGamma = pabsGamma * TMath::Sin(thetaGamma);
-   pxGamma = ptGamma * TMath::Cos(phiGamma);
-   pyGamma = ptGamma * TMath::Sin(phiGamma);
+   pxGamma = ptGamma * TMath::Cos(phiGamma); // NOLINT
+   pyGamma = ptGamma * TMath::Sin(phiGamma); // NOLINT
 
    if (fNuclearDecayChainIsSet) {
 

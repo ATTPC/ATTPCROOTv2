@@ -9,16 +9,14 @@
 #define AtPULSETASKGADGET_H
 
 #include "AtPulse.h"
+#include "AtRawEvent.h" // for AtRawEvent
 
 #include <Rtypes.h>
 
-
+#include <memory> // for make_shared, shared_ptr
 #include <vector>
-#include <memory>        // for make_shared, shared_ptr
-#include "AtRawEvent.h"  // for AtRawEvent
 
 class AtSimulatedPoint;
-
 
 class AtPulseGADGET : public AtPulse {
 
