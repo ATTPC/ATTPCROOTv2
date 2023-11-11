@@ -1,0 +1,43 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: ATTPCROOT
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: Adam
+    family-names: Anthony
+    affiliation: High Point University
+    orcid: 'https://orcid.org/0000-0002-3220-7474'
+  - given-names: Yassid
+    family-names: Ayyad
+    orcid: 'https://orcid.org/0000-0001-8604-4976'
+    affiliation: University of Santiago de Compostela
+  - given-names: Curtis
+    family-names: Hunt
+  - given-names: Héctor
+    family-names: Alvarez Pol
+  - family-names: 'Zamora '
+    given-names: Juan
+  - given-names: Nabin
+    family-names: 'Rijal '
+  - family-names: Muñoz Ramos
+    given-names: Alicia
+  - given-names: Ari
+    family-names: 'Andalib '
+  - given-names: Ruchi
+    family-names: Mahajan
+  - given-names: Simon
+    family-names: Giraud
+  - given-names: Joseph
+    family-names: Wieske
+  - given-names: Javier
+    family-names: Diaz
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.10027878
+repository-code: 'https://github.com/ATTPC/ATTPCROOTv2'
+license: GPL-3.0
