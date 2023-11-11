@@ -80,8 +80,9 @@ Inheritance diagram for AtPulse:</div>
 <div class="dyncontent">
 <div class="center"><img src="classAtPulse__inherit__graph.png" border="0" usemap="#AtPulse_inherit__map" alt="Inheritance graph"/></div>
 <map name="AtPulse_inherit__map" id="AtPulse_inherit__map">
-<area shape="rect" title=" " alt="" coords="18,5,86,32"/>
-<area shape="rect" href="classAtPulseLine.html" title=" " alt="" coords="5,80,99,107"/>
+<area shape="rect" title=" " alt="" coords="98,5,166,32"/>
+<area shape="rect" href="classAtPulseGADGET.html" title=" " alt="" coords="5,80,128,107"/>
+<area shape="rect" href="classAtPulseLine.html" title=" " alt="" coords="152,80,245,107"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <div class="dynheader">
@@ -128,7 +129,7 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:adf93f645c48a0d30e267c622bf81af6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af8ce0b676a76eeaf5fb96e68cce2f1fc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAtRawEvent.html">AtRawEvent</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtPulse.html#af8ce0b676a76eeaf5fb96e68cce2f1fc">GenerateEvent</a> (std::vector&lt; <a class="el" href="classAtPulse.html#a506ecadab921ca96b5749022fe4df657">SimPointPtr</a> &gt; &amp;vec)</td></tr>
 <tr class="separator:af8ce0b676a76eeaf5fb96e68cce2f1fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adfac35630714401977205447a7c6a2eb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classAtRawEvent.html">AtRawEvent</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtPulse.html#adfac35630714401977205447a7c6a2eb">GenerateEvent</a> (std::vector&lt; <a class="el" href="classAtSimulatedPoint.html">AtSimulatedPoint</a> * &gt; &amp;vec)</td></tr>
+<tr class="memitem:adfac35630714401977205447a7c6a2eb"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classAtRawEvent.html">AtRawEvent</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtPulse.html#adfac35630714401977205447a7c6a2eb">GenerateEvent</a> (std::vector&lt; <a class="el" href="classAtSimulatedPoint.html">AtSimulatedPoint</a> * &gt; &amp;vec)</td></tr>
 <tr class="separator:adfac35630714401977205447a7c6a2eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa43ba4f5aa7960e114a71ba5de817ebb"><td class="memItemLeft" align="right" valign="top">virtual std::shared_ptr&lt; <a class="el" href="classAtPulse.html">AtPulse</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtPulse.html#aa43ba4f5aa7960e114a71ba5de817ebb">Clone</a> () const</td></tr>
 <tr class="separator:aa43ba4f5aa7960e114a71ba5de817ebb"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -472,7 +473,7 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p>Assign electons to pad and apply the gain from the umegas (including gain reduction from smartzap) Returns if we were able to add the point to a pad. </p>
 
-<p>Reimplemented in <a class="el" href="classAtPulseLine.html#ab969f7692e7afc581715227d2998564a">AtPulseLine</a>.</p>
+<p>Reimplemented in <a class="el" href="classAtPulseGADGET.html#a9996b41e7c323d4c5527480126af2631">AtPulseGADGET</a>, and <a class="el" href="classAtPulseLine.html#ab969f7692e7afc581715227d2998564a">AtPulseLine</a>.</p>
 
 <p class="definition">Definition at line <a class="el" href="AtPulse_8cxx_source.html#l00182">182</a> of file <a class="el" href="AtPulse_8cxx_source.html">AtPulse.cxx</a>.</p>
 
@@ -501,7 +502,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Reimplemented in <a class="el" href="classAtPulseLine.html#a72bd90d6ee15484d952bb7f16967466f">AtPulseLine</a>.</p>
+<p>Reimplemented in <a class="el" href="classAtPulseGADGET.html#a60ddbc6a72b10997d459da0315793b14">AtPulseGADGET</a>, and <a class="el" href="classAtPulseLine.html#a72bd90d6ee15484d952bb7f16967466f">AtPulseLine</a>.</p>
 
 <p class="definition">Definition at line <a class="el" href="AtPulse_8h_source.html#l00070">70</a> of file <a class="el" href="AtPulse_8h_source.html">AtPulse.h</a>.</p>
 
@@ -550,6 +551,9 @@ Protected Attributes</h2></td></tr>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="classAtRawEvent.html">AtRawEvent</a> AtPulse::GenerateEvent </td>
@@ -559,7 +563,14 @@ Protected Attributes</h2></td></tr>
           <td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
+
+<p>Reimplemented in <a class="el" href="classAtPulseGADGET.html#a7cb2ceaebc03008df415bcc56b549457">AtPulseGADGET</a>.</p>
 
 <p class="definition">Definition at line <a class="el" href="AtPulse_8cxx_source.html#l00062">62</a> of file <a class="el" href="AtPulse_8cxx_source.html">AtPulse.cxx</a>.</p>
 
@@ -1322,7 +1333,7 @@ Protected Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Oct 20 2023 16:34:09 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sat Nov 11 2023 15:30:40 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.18
 </small></address>

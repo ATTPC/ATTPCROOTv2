@@ -1,3 +1,8 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$structEFieldMapRef.html" title=" " alt="" coords="5,5,108,32"/>
+<area shape="rect" id="node1" href="$classElectronicResponse_1_1AtElectronicResponse.html" title="Base class for describing the response of electronics to charge." alt="" coords="5,104,161,145"/>
+<area shape="rect" id="node2" href="$classElectronicResponse_1_1AtNominalResponse.html" title="Nominal response of GET electronics." alt="" coords="225,5,372,47"/>
+<area shape="rect" id="node3" href="$classElectronicResponse_1_1AtReducedTimeResponse.html" title="Response of GET electronics given by a function of the reduced time." alt="" coords="209,71,388,112"/>
+<area shape="rect" id="node4" href="$classElectronicResponse_1_1AtRootResponse.html" title="Response function is represended by an AtEvent in a root file." alt="" coords="230,136,367,177"/>
+<area shape="rect" id="node5" href="$classElectronicResponse_1_1AtVectorResponse.html" title="Response function speficied as a trace." alt="" coords="230,201,367,243"/>
+<area shape="rect" id="node6" href="$classElectronicResponse_1_1AtFileResponse.html" title="Response function speficied as a trace in a txt file." alt="" coords="436,201,573,243"/>
 </map>

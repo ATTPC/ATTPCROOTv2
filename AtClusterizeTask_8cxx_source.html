@@ -95,7 +95,7 @@ $(function() {
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#include &lt;string&gt;</span> <span class="comment">// for string</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor">#include &lt;utility&gt;</span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
-<div class="line"><a name="l00025"></a><span class="lineno"><a class="line" href="AtClusterizeTask_8cxx.html#a26aee3b2de2720f24802d48feab0c40a">   25</a></span>&#160;<span class="keyword">using</span> <a class="code" href="AtClusterizeTask_8cxx.html#a26aee3b2de2720f24802d48feab0c40a">XYZVector</a> = <a class="code" href="AtClusterizeTask_8cxx.html#a26aee3b2de2720f24802d48feab0c40a">ROOT::Math::XYZVector</a>;</div>
+<div class="line"><a name="l00025"></a><span class="lineno"><a class="line" href="AtClusterizeTask_8cxx.html#a26aee3b2de2720f24802d48feab0c40a">   25</a></span>&#160;<span class="keyword">using</span> <a class="code" href="AtAnalysis_2AtFindVertex_8h.html#a26aee3b2de2720f24802d48feab0c40a">XYZVector</a> = <a class="code" href="AtClusterizeTask_8cxx.html#a26aee3b2de2720f24802d48feab0c40a">ROOT::Math::XYZVector</a>;</div>
 <div class="line"><a name="l00026"></a><span class="lineno"><a class="line" href="AtClusterizeTask_8cxx.html#acdbe604dea12970b4e97a316f9046ae7">   26</a></span>&#160;<span class="keyword">using</span> <a class="code" href="AtPatternCircle2D_8h.html#acdbe604dea12970b4e97a316f9046ae7">XYZPoint</a> = <a class="code" href="AtClusterizeTask_8cxx.html#acdbe604dea12970b4e97a316f9046ae7">ROOT::Math::XYZPoint</a>;</div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
 <div class="line"><a name="l00028"></a><span class="lineno"><a class="line" href="AtClusterizeTask_8cxx.html#a7f7e9b91b8dae8ed8d3e4968dea1848e">   28</a></span>&#160;constexpr <span class="keyword">auto</span> <a class="code" href="AtClusterizeTask_8cxx.html#a7f7e9b91b8dae8ed8d3e4968dea1848e">cRED</a> = <span class="stringliteral">&quot;\033[1;31m&quot;</span>;</div>
@@ -156,6 +156,7 @@ $(function() {
 </div><!-- fragment --></div><!-- contents -->
 <div class="ttc" id="aAtClusterizeTask_8cxx_html_a88438739a7deae383946c1690d812074"><div class="ttname"><a href="AtClusterizeTask_8cxx.html#a88438739a7deae383946c1690d812074">cGREEN</a></div><div class="ttdeci">constexpr auto cGREEN</div><div class="ttdef"><b>Definition:</b> <a href="AtClusterizeTask_8cxx_source.html#l00031">AtClusterizeTask.cxx:31</a></div></div>
 <div class="ttc" id="aAtClusterizeTask_8cxx_html_a589c19906f4a04433cbba459fd2e2d71"><div class="ttname"><a href="AtClusterizeTask_8cxx.html#a589c19906f4a04433cbba459fd2e2d71">cNORMAL</a></div><div class="ttdeci">constexpr auto cNORMAL</div><div class="ttdef"><b>Definition:</b> <a href="AtClusterizeTask_8cxx_source.html#l00030">AtClusterizeTask.cxx:30</a></div></div>
+<div class="ttc" id="aAtAnalysis_2AtFindVertex_8h_html_a26aee3b2de2720f24802d48feab0c40a"><div class="ttname"><a href="AtAnalysis_2AtFindVertex_8h.html#a26aee3b2de2720f24802d48feab0c40a">XYZVector</a></div><div class="ttdeci">ROOT::Math::XYZVector XYZVector</div><div class="ttdef"><b>Definition:</b> <a href="AtAnalysis_2AtFindVertex_8h_source.html#l00020">AtFindVertex.h:20</a></div></div>
 <div class="ttc" id="aAtClusterize_8h_html"><div class="ttname"><a href="AtClusterize_8h.html">AtClusterize.h</a></div></div>
 <div class="ttc" id="aAtClusterizeTask_8cxx_html_a7485a494fd25551a21eb58034227a500"><div class="ttname"><a href="AtClusterizeTask_8cxx.html#a7485a494fd25551a21eb58034227a500">cBLUE</a></div><div class="ttdeci">constexpr auto cBLUE</div><div class="ttdef"><b>Definition:</b> <a href="AtClusterizeTask_8cxx_source.html#l00032">AtClusterizeTask.cxx:32</a></div></div>
 <div class="ttc" id="aclassAtClusterizeTask_html_a55b597011ddcb1415b486da8bfedfc69"><div class="ttname"><a href="classAtClusterizeTask.html#a55b597011ddcb1415b486da8bfedfc69">AtClusterizeTask::fMCPointArray</a></div><div class="ttdeci">TClonesArray * fMCPointArray</div><div class="ttdef"><b>Definition:</b> <a href="AtClusterizeTask_8h_source.html#l00032">AtClusterizeTask.h:32</a></div></div>
@@ -181,7 +182,7 @@ $(function() {
 <div class="ttc" id="aclassAtClusterizeTask_html_a20d8f2a8226ea6b8d0954d741f8fd430"><div class="ttname"><a href="classAtClusterizeTask.html#a20d8f2a8226ea6b8d0954d741f8fd430">AtClusterizeTask::SetParContainers</a></div><div class="ttdeci">virtual void SetParContainers() override</div><div class="ttdoc">Load the parameter container from the runtime database.</div><div class="ttdef"><b>Definition:</b> <a href="AtClusterizeTask_8cxx_source.html#l00044">AtClusterizeTask.cxx:44</a></div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Oct 20 2023 16:34:05 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sat Nov 11 2023 15:30:37 for ATTPCROOT by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.18
 </small></address>

@@ -1,5 +1,12 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" title=" " alt="" coords="5,31,100,57"/>
-<area shape="rect" id="node2" href="$classPyTr1Rng.html" title=" " alt="" coords="148,5,227,32"/>
-<area shape="rect" id="node3" href="$classPyTr3Rng.html" title=" " alt="" coords="148,56,227,83"/>
+<area shape="rect" id="node1" href="$classRandomSample_1_1AtSample.html" title="Interface for randomly sampling AtHits." alt="" coords="5,147,183,173"/>
+<area shape="rect" id="node2" href="$classRandomSample_1_1AtIndependentSample.html" title="Interface for independent samples." alt="" coords="232,45,436,86"/>
+<area shape="rect" id="node6" href="$classRandomSample_1_1AtSampleFromReference.html" title="Sample when PDF depends on reference." alt="" coords="231,110,437,151"/>
+<area shape="rect" id="node9" href="$classRandomSample_1_1AtUniform.html" title="Uniformly sample a collection of AtHits." alt="" coords="245,176,423,203"/>
+<area shape="rect" id="node10" href="$classRandomSample_1_1AtWeightedGaussianTrunc.html" title="Uniformly sample a collection of AtHits." alt="" coords="241,227,427,269"/>
+<area shape="rect" id="node3" href="$classRandomSample_1_1AtChargeWeighted.html" title="Sample AtHits according to charge." alt="" coords="485,5,713,32"/>
+<area shape="rect" id="node5" href="$classRandomSample_1_1AtY.html" title="Sample AtHits according to charge for Y shaped tracks." alt="" coords="528,56,671,83"/>
+<area shape="rect" id="node4" href="$classRandomSample_1_1AtWeightedY.html" title="Sample AtHits according to charge for Y shaped tracks." alt="" coords="761,5,957,32"/>
+<area shape="rect" id="node7" href="$classRandomSample_1_1AtGaussian.html" title="Sample AtHits in gaussian from reference." alt="" coords="505,113,693,140"/>
+<area shape="rect" id="node8" href="$classRandomSample_1_1AtWeightedGaussian.html" title="Sample with a charge&#45;weighted gaussian." alt="" coords="506,165,693,206"/>
 </map>
