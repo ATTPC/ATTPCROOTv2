@@ -657,10 +657,10 @@ void plotFit_e20009(std::string fileFolder = "data_344_367/")
 
                // NB: Uncomment for calibration
                /* if ((*trackLengthVec)[index] < 16.0 || (*trackLengthVec)[index] > 22.0)
-                   continue;
-
-                if ((*EFitVec)[index] < 0 || (*EFitVec)[index] > 20)
                    continue;*/
+
+               if ((*EFitVec)[index] < 0 || (*EFitVec)[index] > 6)
+                  continue;
                // NB: Uncomment for calibration
 
                // if ((*trackLengthVec)[index] < 22.0 || (*trackLengthVec)[index] > 100.0)
@@ -1385,7 +1385,7 @@ void plotFit_e20009(std::string fileFolder = "data_344_367/")
    Ang_Ener->GetXaxis()->SetTitle("Angle (deg)");
    Ang_Ener->GetYaxis()->SetTitle("Energy (MeV)");
    Kine_AngRec_EnerRec->Draw("SAME");
-   Kine_AngRec_EnerRec->Kine_AngRec_EnerRec_9AMeV->Draw("SAME");
+   Kine_AngRec_EnerRec_9AMeV->Draw("SAME");
    Kine_AngRec_EnerRec_in->Draw("ZCOL SAME");
    Kine_AngRec_EnerRec_dp->Draw("ZCOL SAME");
    // Kine_AngRec_EnerRec_dp_first->Draw("ZCOL SAME");

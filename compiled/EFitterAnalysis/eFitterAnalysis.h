@@ -121,6 +121,7 @@ public:
    void SetExpNum(Exp exp) { fExpNum = exp; }
    void SetICMult(Int_t mult) { ICMult = mult; }
    void SetIC(std::vector<Float_t> energy) { ICVec = energy; }
+   void SetNoMaterialEffects(Bool_t val) { fNoMatEffects = val; }
 
    // Getters
    std::shared_ptr<TTreeReader> GetReader() { return fReader; }
@@ -167,6 +168,7 @@ private:
    Double_t fClusterSize{0};
    Double_t fClusterRadius{0};
    Int_t fFitDirection;
+   Bool_t fNoMatEffects{0};
    std::vector<AtTools::IonFitInfo> *ionList;
    AtTools::AtParsers fParser;
    std::unique_ptr<AtTools::AtTrackTransformer> fTrackTransformer;

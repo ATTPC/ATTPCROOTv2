@@ -36,7 +36,7 @@ std::tuple<double,double> kine_2b(Double_t m1, Double_t m2, Double_t m3, Double_
    return std::make_tuple(Ex,theta_cm);
 }
 
-void plotFit_full_noIC(std::string fileFolder = "data_sim_0_0/")
+void plotFit_full_noIC(std::string fileFolder = "data_106_107/")
 {
 
    std::ofstream outputFileEvents("list_of_events.txt");
@@ -848,25 +848,51 @@ void plotFit_full_noIC(std::string fileFolder = "data_sim_0_0/")
 
    Double_t modUp = 1.0;
    Double_t modDown = 1.0;
+   Double_t mod = 0.25;
 
    auto gEff = new TGraph();
+   gEff->SetMarkerStyle(20);
+   gEff->SetMarkerColor(kBlue);
+   auto gEffFit = new TGraph();
+   gEffFit->SetMarkerStyle(20);
+   gEffFit->SetMarkerColor(kRed);
+
+   auto gEffCorr = new TGraph();
+   gEffCorr->SetMarkerStyle(20);
+
+   // p0                        =     -2.29098   +/-   0.610501
+   // p1                        =      0.32452   +/-   0.0926367
+   // p2                        =   -0.0130934   +/-   0.00506222
+   // p3                        =  0.000250133   +/-   0.000126691
+   // p4                        = -2.22791e-06   +/-   1.47432e-06
+   // p5                        =  7.39528e-09   +/-   6.46136e-09
+
+   // TF1 * fCorr = new TF1("fCorr",[](double*x,double*p){return p[0] + p[1]*x[0] + p[2]*TMath::Power(x[1],2) +
+   // p[3]*TMath::Power(x[3],3) + p[4]*TMath::Power(x[4],4) + p[5]*TMath::Power(x[5],5) ;},0,80,6);
+   TF1 *fCorr = new TF1("fCorr", "pol5", 0, 80);
+   fCorr->SetParameter(0, -2.29098);
+   fCorr->SetParameter(1, 0.32452);
+   fCorr->SetParameter(2, -0.0130934);
+   fCorr->SetParameter(3, 0.000250133);
+   fCorr->SetParameter(4, -2.22791e-06);
+   fCorr->SetParameter(5, 7.39528e-09);
 
    for (auto ibin = 1; ibin < AngCMSim->GetNbinsX(); ++ibin) {
 
       if (ibin < 26)
          if (ibin == 25)
-            modDown = 0.7;
+            modDown = 0.7 + mod;
          else
-            modDown = 0.5;
+            modDown = 0.5 + mod;
 
       else if (ibin > 30 && ibin < 37)
          if (ibin == 35)
-            modDown = 2.4;
+            modDown = 2.4 + mod;
          else
-            modDown = 1.6;
+            modDown = 1.6 + mod;
 
       else
-         modDown = 1.1;
+         modDown = 1.1 + mod;
 
       Double_t simAng = AngCMSim->GetBinContent(ibin);
       Double_t expAng = AngCM->GetBinContent(ibin) * modDown;
@@ -877,11 +903,23 @@ void plotFit_full_noIC(std::string fileFolder = "data_sim_0_0/")
 
       AngCMNorm->SetBinContent(ibin, expAng);
 
-      std::cout << ibin << " - " << ratioLab << "\n";
+      // std::cout << ibin << " - " << ratioLab << "\n";
+
+      Double_t offset = 0.15;
 
       if (!std::isnan(ratio) && !std::isinf(ratio)) {
          AngCorr->SetBinContent(ibin, ratio);
          gEff->SetPoint(gEff->GetN(), ibin, ratio);
+         gEffFit->SetPoint(gEffFit->GetN(), ibin, fCorr->Eval(ibin));
+         // std::cout<<fCorr->Eval(ibin)<<"\n";
+         Double_t diff = ratio - fCorr->Eval(ibin);
+
+         if (diff > 0)
+            diff = ratio - diff / 2.0 - offset;
+         else if (diff < 0)
+            diff = fCorr->Eval(ibin) - diff / 2.0 - offset;
+
+         gEffCorr->SetPoint(gEffCorr->GetN(), ibin, diff);
       }
 
       if (!std::isnan(ratioLab) && !std::isinf(ratioLab)) {
@@ -1208,6 +1246,11 @@ void plotFit_full_noIC(std::string fileFolder = "data_sim_0_0/")
 
    TCanvas *ceff = new TCanvas();
    gEff->Draw("Ap");
+   gEffFit->Draw("p");
+   gEffCorr->Draw("p");
+
+   TCanvas *cEffFit = new TCanvas("cEffFit", "cEffFit", 700, 700);
+   gEffCorr->Draw("Ap");
 
    /*TCanvas *c2 = new TCanvas();
    c2->Divide(2, 3);
