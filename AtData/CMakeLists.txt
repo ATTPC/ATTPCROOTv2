@@ -34,12 +34,13 @@ set(SRCS
   AtEvent.cxx
   AtProtoEvent.cxx
   AtProtoEventAna.cxx
-  AtTrackingEventAna.cxx
+  AtTrackingEvent.cxx
   AtPatternEvent.cxx
   AtGenericTrace.cxx
 
   AtProtoQuadrant.cxx
   AtTrack.cxx
+  AtFittedTrack.cxx
   AtContainerManip.cxx
 
   AtMCResult.cxx

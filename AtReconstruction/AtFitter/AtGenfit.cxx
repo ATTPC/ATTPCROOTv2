@@ -50,7 +50,7 @@ constexpr auto cGREEN = "\033[1;32m";
 using XYZPoint = ROOT::Math::XYZPoint;
 
 AtFITTER::AtGenfit::AtGenfit(Float_t magfield, Float_t minbrho, Float_t maxbrho, std::string eLossFile,
-                             Float_t gasMediumDensity, Int_t pdg, Int_t minit, Int_t maxit)
+                             Float_t gasMediumDensity, Int_t pdg, Int_t minit, Int_t maxit, Bool_t noMatEffects)
    : fEnergyLossFile(std::move(eLossFile)),
      fMeasurementProducer(
         new genfit::MeasurementProducer<AtHitCluster, genfit::AtSpacepointMeasurement>(fHitClusterArray)),
@@ -68,6 +68,7 @@ AtFITTER::AtGenfit::AtGenfit(Float_t magfield, Float_t minbrho, Float_t maxbrho,
    genfit::MaterialEffects *materialEffects = genfit::MaterialEffects::getInstance();
    materialEffects->setEnergyLossBrems(false);
    materialEffects->setNoiseBrems(false);
+   materialEffects->setNoEffects(noMatEffects);
    materialEffects->useEnergyLossParam();
    materialEffects->init(new genfit::TGeoMaterialInterface()); // NOLINT
    // Parameteres set after initialization

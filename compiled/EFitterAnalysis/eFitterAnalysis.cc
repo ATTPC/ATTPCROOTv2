@@ -31,7 +31,8 @@ int main(int argc, char *argv[])
    Double_t clusterRadius = 7.5;//mm
    Double_t clusterDistance   = 15.0;//mm
    bool externalTimeStamp = 0;       // Enables Timestamp merging from FRIB DAQ file
-   Exp exp = e20009;
+   bool noMatEffects = 0;            // Disables material effects
+   Exp exp = a1975;
 
    // Physics parameters
    Float_t magneticField = 3.0;       // T
@@ -73,6 +74,7 @@ int main(int argc, char *argv[])
    case a1975:
       gasMediumDensity = 0.083147;
       magneticField = 2.85;
+      noMatEffects = true;
 
       if (simulationConv) {
          filePath = dir + "/macro/Simulation/ATTPC/16C_pp/data/";
@@ -223,6 +225,7 @@ int main(int argc, char *argv[])
    fitManager->SetFitDirection(fitDirection);
    fitManager->EnableMerging(enableMerging);
    fitManager->EnableSingleVertexTrack(enableSingleVertexTrack);
+   fitManager->SetNoMaterialEffects(noMatEffects);
    fitManager->EnableReclustering(enableReclustering, clusterRadius, clusterDistance);
    fitManager->SetExpNum(exp);
 
@@ -938,7 +941,7 @@ Bool_t FitManager::SetFitters(Bool_t simConv)
      std::cout << " Creating fitter for : " << ion._ionName << " - " << (Int_t)ion._PDG << "\n";
      std::cout << " Energy loss file : " << fWorkDir.Data() + ion._eLossFile << "\n";
      fFitter = new AtFITTER::AtGenfit(fMagneticField, 0.00001, 1000.0, fWorkDir.Data() + ion._eLossFile, fGasDensity,
-                                      (Int_t)ion._PDG);
+                                      (Int_t)ion._PDG, 5, 20, fNoMatEffects);
      // dynamic_cast<AtFITTER::AtGenfit*>(fFitter)->SetPDGCode((Int_t)ion._PDG);
      dynamic_cast<AtFITTER::AtGenfit *>(fFitter)->SetIonName(ion._ionName);
      dynamic_cast<AtFITTER::AtGenfit *>(fFitter)->SetMass((Double_t)ion._mass);

@@ -53,6 +53,7 @@ private:
    Float_t fGasMediumDensity{};   //<! Medium density in mg/cm3
    Double_t fPhiOrientation{0};   //<! Phi angle orientation for fit
    std::string fIonName;          //<! Name of ion to fit
+   Bool_t fNoMaterialEffects;     //<! Disable material effects in GENFIT
 
    genfit::MeasurementProducer<AtHitCluster, genfit::AtSpacepointMeasurement> *fMeasurementProducer;
    genfit::MeasurementFactory<genfit::AbsMeasurement> *fMeasurementFactory;
@@ -61,7 +62,7 @@ private:
 
 public:
    AtGenfit(Float_t magfield, Float_t minbrho, Float_t maxbrho, std::string eLossFile, Float_t gasMediumDensity,
-            Int_t pdg = 2212, Int_t minit = 5, Int_t maxit = 20);
+            Int_t pdg = 2212, Int_t minit = 5, Int_t maxit = 20, Bool_t noMatEffects = kFALSE);
    ~AtGenfit();
 
    genfit::Track *FitTracks(AtTrack *track) override;

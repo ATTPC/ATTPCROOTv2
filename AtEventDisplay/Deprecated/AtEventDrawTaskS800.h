@@ -19,7 +19,7 @@ class AtMap;
 class AtMlesacMod;
 class AtRansacMod;
 class AtRawEvent;
-class AtTrackingEventAna;
+class AtTrackingEvent;
 class S800Calc;
 class TBuffer;
 class TCanvas;
@@ -141,7 +141,7 @@ protected:
    TClonesArray *fProtoEventArray;
    TClonesArray *fRansacArray{};
    TClonesArray *fTrackFinderHCArray{};
-   TClonesArray *fTrackingEventAnaArray{};
+   TClonesArray *fTrackingEventArray{};
    TClonesArray *fPatternEventArray{};
    // TClonesArray* fS800CalcArray;
 
@@ -149,7 +149,7 @@ protected:
    AtRansacMod *fRansacMod{};
    AtMlesacMod *fMlesacMod{};
    AtLmedsMod *fLmedsMod{};
-   AtTrackingEventAna *fTrackingEventAna{};
+   AtTrackingEvent *fTrackingEvent{};
    AtPATTERN::AtTrackFinderHC *fTrackFinderHC{};
 
    S800Calc *fS800Calc{};
