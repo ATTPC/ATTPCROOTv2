@@ -2,10 +2,34 @@
 #define ATGENFIT_H
 
 #include "AtFitter.h"
+#include "AtFormat.h"
+#include "AtKinematics.h"
+#include "AtParsers.h"
 
 #include <Rtypes.h>
 #include <TMath.h> // for DegToRad
 #include <Track.h>
+
+#include "AbsFitterInfo.h"
+#include "AbsKalmanFitter.h"
+#include "ConstField.h"
+#include "DAF.h"
+#include "EventDisplay.h"
+#include "Exception.h"
+#include "FairLogger.h"
+#include "FairRootManager.h"
+#include "FairRun.h"
+#include "FairRunAna.h"
+#include "FieldManager.h"
+#include "FitStatus.h"
+#include "KalmanFitStatus.h"
+#include "KalmanFitterInfo.h"
+#include "KalmanFitterRefTrack.h"
+#include "MaterialEffects.h"
+#include "MeasuredStateOnPlane.h"
+#include "MeasurementFactory.h"
+#include "MeasurementOnPlane.h"
+#include "MeasurementProducer.h"
 
 #include <memory>
 #include <string>
@@ -54,18 +78,35 @@ private:
    Double_t fPhiOrientation{0};   //<! Phi angle orientation for fit
    std::string fIonName;          //<! Name of ion to fit
    Bool_t fNoMaterialEffects;     //<! Disable material effects in GENFIT
+   Bool_t fEnableMerging{0};
+   Bool_t fEnableSingleVertexTrack{0};
+   Bool_t fEnableReclustering{0};
+   Double_t fClusterSize{0};
+   Double_t fClusterRadius{0};
+
+   enum Exp { e20020, e20009, a1954, a1975, a1954b };
+   Exp fExpNum;
+   std::vector<AtTools::IonFitInfo> *ionList;
+   std::unique_ptr<AtTools::AtTrackTransformer> fTrackTransformer;
+   std::shared_ptr<AtTools::AtKinematics> fKinematics;
 
    genfit::MeasurementProducer<AtHitCluster, genfit::AtSpacepointMeasurement> *fMeasurementProducer;
    genfit::MeasurementFactory<genfit::AbsMeasurement> *fMeasurementFactory;
 
    std::vector<Int_t> *fPDGCandidateArray{};
 
+   std::vector<AtTrack *> FindSingleTracks(std::vector<AtTrack *> &tracks);
+   Double_t CenterDistance(AtTrack *trA, AtTrack *trB);
+   Bool_t CompareTracks(AtTrack *trA, AtTrack *trB);
+   Bool_t CheckOverlap(AtTrack *trA, AtTrack *trB);
+
 public:
    AtGenfit(Float_t magfield, Float_t minbrho, Float_t maxbrho, std::string eLossFile, Float_t gasMediumDensity,
             Int_t pdg = 2212, Int_t minit = 5, Int_t maxit = 20, Bool_t noMatEffects = kFALSE);
    ~AtGenfit();
 
-   genfit::Track *FitTracks(AtTrack *track) override;
+   genfit::Track *FitTracks(AtTrack *track);
+   std::unique_ptr<AtFittedTrack> ProcessTracks(std::vector<AtTrack> &tracks) override;
    void Init() override;
 
    inline void SetMinIterations(Int_t minit) { fMinIterations = minit; }
