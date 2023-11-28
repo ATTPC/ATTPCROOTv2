@@ -40,11 +40,10 @@ set(SRCS
 
   AtProtoQuadrant.cxx
   AtTrack.cxx
-  AtFittedTrack.cxx
   AtContainerManip.cxx
-
   AtMCResult.cxx
   AtFissionEvent.cxx
+  
 
   AtPattern/AtPattern.cxx
   AtPattern/AtPatternLine.cxx
@@ -53,6 +52,9 @@ set(SRCS
   AtPattern/AtPatternFission.cxx
   AtPattern/AtPatternRay.cxx
   AtPattern/AtPatternTypes.cxx
+
+  AtFittedTrack.cxx
+  
   )
 
 generate_target_and_root_library(${LIBRARY_NAME}
