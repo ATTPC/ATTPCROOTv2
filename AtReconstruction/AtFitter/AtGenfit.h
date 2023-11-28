@@ -62,7 +62,7 @@ private:
    TClonesArray *fHitClusterArray;
    Int_t fPDGCode{2212}; //<! Particle PGD code
    Int_t fTPCDetID{0};
-   Int_t fCurrentDirection{-1};
+   Int_t fFitDirection{0};
    Float_t fMaxBrho;              //<! Max Brho allowed in Tm
    Float_t fMinBrho;              //<! Min Brho allowed in Tm
    Int_t fMaxIterations;          //<! Max iterations for fitter
@@ -85,7 +85,7 @@ private:
    Double_t fClusterRadius{0};
 
    enum Exp { e20020, e20009, a1954, a1975, a1954b };
-   Exp fExpNum;
+   Exp fExpNum{a1975};
    std::vector<AtTools::IonFitInfo> *ionList;
    std::unique_ptr<AtTools::AtTrackTransformer> fTrackTransformer;
    std::shared_ptr<AtTools::AtKinematics> fKinematics;
@@ -106,7 +106,7 @@ public:
    ~AtGenfit();
 
    genfit::Track *FitTracks(AtTrack *track);
-   std::unique_ptr<AtFittedTrack> ProcessTracks(std::vector<AtTrack> &tracks) override;
+   std::vector<std::unique_ptr<AtFittedTrack>> ProcessTracks(std::vector<AtTrack> &tracks) override;
    void Init() override;
 
    inline void SetMinIterations(Int_t minit) { fMinIterations = minit; }
@@ -124,6 +124,17 @@ public:
    inline void SetGasMediumDensity(Float_t mediumDensity) { fGasMediumDensity = mediumDensity; }
    inline void RotatePhi(Double_t phi) { fPhiOrientation = phi; }
    inline void SetIonName(std::string ionName) { fIonName = std::move(ionName); }
+   inline void EnableMerging(Bool_t merging) { fEnableMerging = merging; }
+   inline void EnableSingleVertexTrack(Bool_t singletrack) { fEnableSingleVertexTrack = singletrack; }
+   inline void EnableReclustering(Bool_t reclustering, Double_t clusterRadius, Double_t clusterSize)
+   {
+      fEnableReclustering = reclustering;
+      fClusterRadius = clusterRadius;
+      fClusterSize = clusterSize;
+   }
+
+   inline void SetExpNum(Exp exp) { fExpNum = exp; }
+   inline void SetFitDirection(Int_t direction) { fFitDirection = direction; }
 
    TClonesArray *GetGenfitTrackArray();
    Int_t GetPDGCode() { return fPDGCode; }

@@ -21,6 +21,7 @@
 #include <iostream>
 
 class AtTrack;
+class AtFittedTrack;
 
 ClassImp(AtFitterTask);
 
@@ -96,7 +97,10 @@ void AtFitterTask::Exec(Option_t *option)
    std::vector<AtTrack> &tracks = patternEvent.GetTrackCand();
    std::cout << " AtFitterTask:Exec -  Number of candidate tracks : " << tracks.size() << "\n";
 
-   trackingEvent->AddFittedTrack(std::move(fFitter->ProcessTracks(tracks)));
+   auto fittedTracks = fFitter->ProcessTracks(tracks);
+
+   for (auto &fittedTrack : fittedTracks)
+      trackingEvent->AddFittedTrack(std::move(fittedTrack));
 
    ++fEventCnt;
 }

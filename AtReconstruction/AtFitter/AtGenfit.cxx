@@ -161,8 +161,10 @@ TClonesArray *AtFITTER::AtGenfit::GetGenfitTrackArray()
    return fGenfitTrackArray;
 }
 
-std::unique_ptr<AtFittedTrack> AtFITTER::AtGenfit::ProcessTracks(std::vector<AtTrack> &tracks)
+std::vector<std::unique_ptr<AtFittedTrack>> AtFITTER::AtGenfit::ProcessTracks(std::vector<AtTrack> &tracks)
 {
+
+   std::vector<std::unique_ptr<AtFittedTrack>> fittedTracks;
 
    // Global variables for AtFittedTrack
    Int_t trackID = -1;
@@ -434,7 +436,8 @@ std::unique_ptr<AtFittedTrack> AtFITTER::AtGenfit::ProcessTracks(std::vector<AtT
          case a1954: pdgCandFit.push_back(2212); break;
          case a1954b: pdgCandFit.push_back(2212); break;
          // case a1954b: pdgCandFit.push_back(1000010020); break;
-         case a1975: pdgCandFit.push_back(2212); break;
+         // case a1975: pdgCandFit.push_back(2212); break;
+         case a1975: pdgCandFit.push_back(1000010020); break;
          }
 
       } else if (thetaConv < 10) {
@@ -451,14 +454,14 @@ std::unique_ptr<AtFittedTrack> AtFITTER::AtGenfit::ProcessTracks(std::vector<AtT
 
          genfit::Track *fitTrack = FitTracks(&track);
 
-         Int_t atomicNumber = 0;
-         Double_t mass = 0;
-         Double_t M_Ener = 0.0;
+         Int_t atomicNumber = fAtomicNumber;
+         Double_t mass = fMass;
+         Double_t M_Ener = mass * 931.49401 / 1000.0;
 
          // PDG needs to be defined
          Int_t pdg = pdgCandFit.at(0);
 
-         auto fIl =
+         /*auto fIl =
             std::find_if(ionList->begin(), ionList->end(), [&pdg](AtTools::IonFitInfo ion) { return ion._PDG == pdg; });
          if (fIl != ionList->end()) {
 
@@ -467,7 +470,7 @@ std::unique_ptr<AtFittedTrack> AtFITTER::AtGenfit::ProcessTracks(std::vector<AtT
             atomicNumber = ionList->at(index)._atomicNumber;
             mass = ionList->at(index)._mass;
             M_Ener = mass * 931.49401 / 1000.0;
-         }
+         }*/
 
          // Kinematics from PRA
 
@@ -696,7 +699,7 @@ std::unique_ptr<AtFittedTrack> AtFITTER::AtGenfit::ProcessTracks(std::vector<AtT
          // fittedTrack->SetIonChamber(Float_t icenergy, Int_t ictime);
          // fittedTrack->SetExcitationEnergy(Float_t exenergy, Float_t exenergyxtr);
          fittedTrack->SetDistances(distXtr, trackLength, POCA);
-         return std::move(fittedTrack);
+         fittedTracks.push_back(std::move(fittedTrack));
 
       } catch (std::exception &e) {
          std::cout << " Exception fitting track !" << e.what() << "\n";
@@ -705,7 +708,7 @@ std::unique_ptr<AtFittedTrack> AtFITTER::AtGenfit::ProcessTracks(std::vector<AtT
 
    } // Merged track loop
 
-   return NULL;
+   return std::move(fittedTracks);
 }
 
 /**
