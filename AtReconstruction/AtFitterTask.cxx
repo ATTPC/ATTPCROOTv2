@@ -87,7 +87,7 @@ void AtFitterTask::Exec(Option_t *option)
    if (fPatternEventArray->GetEntriesFast() == 0)
       return;
 
-   fTrackingEventArray.Clear("C");
+   fTrackingEventArray.Delete();
 
    auto trackingEvent = dynamic_cast<AtTrackingEvent *>(fTrackingEventArray.ConstructedAt(0));
 
@@ -98,6 +98,8 @@ void AtFitterTask::Exec(Option_t *option)
    std::cout << " AtFitterTask:Exec -  Number of candidate tracks : " << tracks.size() << "\n";
 
    auto fittedTracks = fFitter->ProcessTracks(tracks);
+
+   std::cout << " Number of fitted tracks " << fittedTracks.size() << "\n";
 
    for (auto &fittedTrack : fittedTracks)
       trackingEvent->AddFittedTrack(std::move(fittedTrack));

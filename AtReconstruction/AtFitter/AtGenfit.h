@@ -84,8 +84,6 @@ private:
    Double_t fClusterSize{0};
    Double_t fClusterRadius{0};
 
-   enum Exp { e20020, e20009, a1954, a1975, a1954b };
-   Exp fExpNum{a1975};
    std::vector<AtTools::IonFitInfo> *ionList;
    std::unique_ptr<AtTools::AtTrackTransformer> fTrackTransformer;
    std::shared_ptr<AtTools::AtKinematics> fKinematics;
@@ -104,6 +102,9 @@ public:
    AtGenfit(Float_t magfield, Float_t minbrho, Float_t maxbrho, std::string eLossFile, Float_t gasMediumDensity,
             Int_t pdg = 2212, Int_t minit = 5, Int_t maxit = 20, Bool_t noMatEffects = kFALSE);
    ~AtGenfit();
+
+   enum Exp { e20020, e20009, a1954, a1975, a1954b };
+   Exp fExpNum{a1975};
 
    genfit::Track *FitTracks(AtTrack *track);
    std::vector<std::unique_ptr<AtFittedTrack>> ProcessTracks(std::vector<AtTrack> &tracks) override;

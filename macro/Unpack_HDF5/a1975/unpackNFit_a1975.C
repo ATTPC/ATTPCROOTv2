@@ -8,7 +8,7 @@ bool reduceFunc(AtRawEvent *evt)
    return (evt->GetNumPads() > 0) && evt->IsGood();
 }
 
-void unpackNFit_a1975(TString fileName = "run_0116")
+void unpackNFit_a1975(TString fileName = "run_0100")
 {
 
    // Load the library for unpacking and reconstruction
@@ -100,12 +100,11 @@ void unpackNFit_a1975(TString fileName = "run_0116")
    // praTask->SetMinNumHits(100);
 
    // Fitting task
-   enum Exp { e20020, e20009, a1954, a1975, a1954b };
    Float_t gasMediumDensity = 0.083147;
    Float_t magneticField = 2.85;
    Int_t pdg = 1000010020;
    Bool_t noMatEffects = 1;
-   Exp exp = a1975;
+   AtFITTER::AtGenfit::Exp exp = AtFITTER::AtGenfit::a1975;
    std::string elossFile = (std::string)dir.Data() + "/resources/energy_loss/deuteron_D2_600torr.txt";
    auto fitter = std::make_unique<AtFITTER::AtGenfit>(magneticField, 0.00001, 1000.0, elossFile, gasMediumDensity, pdg,
                                                       5, 20, noMatEffects);
@@ -139,7 +138,7 @@ void unpackNFit_a1975(TString fileName = "run_0116")
    auto numEvents = unpackTask->GetNumEvents();
    std::cout << "Unpacking " << numEvents << " events. " << std::endl;
 
-   run->Run(0, 10);
+   run->Run(0, numEvents);
 
    std::cout << std::endl << std::endl;
    std::cout << "Done unpacking events" << std::endl << std::endl;

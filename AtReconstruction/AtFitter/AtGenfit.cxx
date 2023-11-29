@@ -368,7 +368,7 @@ std::vector<std::unique_ptr<AtFittedTrack>> AtFITTER::AtGenfit::ProcessTracks(st
       Double_t theta = track.GetGeoTheta();
       Double_t radius = track.GetGeoRadius() / 1000.0; // mm to m
       Double_t phi = track.GetGeoPhi();
-      Double_t brho = fMagneticField * radius / TMath::Sin(theta); // Tm
+      Double_t brho = (fMagneticField / 10.0) * radius / TMath::Sin(theta); // Tm
       Double_t points = track.GetHitArray().size();
 
       std::cout << "      Merged track - Theta : " << theta * TMath::RadToDeg() << " Phi : " << phi * TMath::RadToDeg()
@@ -708,6 +708,7 @@ std::vector<std::unique_ptr<AtFittedTrack>> AtFITTER::AtGenfit::ProcessTracks(st
 
    } // Merged track loop
 
+   // std::cout<<" Fitted tracks "<<fittedTracks.size()<<"\n";
    return std::move(fittedTracks);
 }
 
@@ -985,30 +986,6 @@ genfit::Track *AtFITTER::AtGenfit::FitTracks(AtTrack *track)
    } catch (genfit::Exception &e) {
       return nullptr;
    }
-
-   // TODO: Extrapolate back to Z axis (done in e20009 analysis for the moment)
-   /*TVector3 posVertex(0,0,pos_res.Z());
-        TVector3 normalVertex(0, 0, 1);
-
-
-   try {
-     for(auto iStep=0;iStep<20;++iStep){
-     trackRep -> extrapolateBy(fitState, -0.1*iStep);
-     //trackRep -> extrapolateToPlane(fitState,genfit::SharedPlanePtr(new
-   genfit::DetPlane(posVertex,normalVertex))); mom_res = fitState.getMom(); pos_res = fitState.getPos(); double
-   distance = TMath::Sqrt(pos_res.X()*pos_res.X() + pos_res.Y()*pos_res.Y()); if (fVerbosity > 0) std::cout <<
-   cYELLOW << " Extrapolation: Total Momentum : " << mom_res.Mag() << " - Position : " << pos_res.X() << "  "
-                        << pos_res.Y() << "  " << pos_res.Z() <<" - POCA : "<<POCA<< cNORMAL << "\n";
-     }
-
-        } catch (genfit::Exception &e) {
-     mom_res.SetXYZ(0, 0, 0);
-     pos_res.SetXYZ(0, 0, 0);
-     }*/
-
-   // gfTrack ->Print();
-
-   //} // iTrack
 
    std::cout << " End of GENFIT "
              << "\n";
