@@ -68,10 +68,11 @@ void C16_dd_anaFit()
 {
    FairRunAna *run = new FairRunAna();
 
-   TH2F *Ang_Ener = new TH2F("Ang_Ener", "Ang_Ener", 720, 0, 179, 1000, 0, 100.0);
-   TH2F *Ang_Ener_PRAC = new TH2F("Ang_Ener_PRAC", "Ang_Ener_PRAC", 1000, 0, 100, 1000, 0, 10.0);
-   TH2F *ELossvsBrho = new TH2F("ELossvsBrho", "ELossvsBrho", 4000, 0, 4000, 1000, 0, 3);
-   TH2F *dedxvsBrho = new TH2F("dedxvsBrho", "dedxvsBrho", 4000, 0, 10000, 1000, 0, 3);
+   TH2F *Ang_Ener = new TH2F("Ang_Ener", "Ang_Ener", 720, 0, 179, 1000, 0, 200.0);
+   TH2F *Ang_Ener_PRAC = new TH2F("Ang_Ener_PRAC", "Ang_Ener_PRAC", 1000, 0, 100, 1000, 0, 200.0);
+   TH2F *ELossvsBrho = new TH2F("ELossvsBrho", "ELossvsBrho", 4000, 0, 25000, 1000, 0, 4);
+   TH2F *dedxvsBrho = new TH2F("dedxvsBrho", "dedxvsBrho", 4000, 0, 10000, 1000, 0, 4);
+   TH2F *hVxVy = new TH2F("hVxVy", "hVxVy", 1000, 0, 10, 1000, 0, 10);
 
    Double_t m_p = 1.007825 * 931.49401;
    Double_t m_d = 2.0135532 * 931.49401;
@@ -102,10 +103,136 @@ void C16_dd_anaFit()
    Double_t Am = 2.0;
 
    std::vector<TString> files{"run_0100.root"};
-   /*files.push_back("run_0107.root");
-   files.push_back("run_0108.root");
-   files.push_back("run_0109.root");
-   files.push_back("run_0110.root");*/
+   files.push_back("run_0011.root");
+   files.push_back("run_0013.root");
+   files.push_back("run_0014.root");
+   files.push_back("run_0015.root");
+   files.push_back("run_0016.root");
+   files.push_back("run_0017.root");
+   files.push_back("run_0018.root");
+   files.push_back("run_0019.root");
+   files.push_back("run_0020.root");
+   files.push_back("run_0021.root");
+   files.push_back("run_0022.root");
+   files.push_back("run_0023.root");
+   files.push_back("run_0024.root");
+   files.push_back("run_0025.root");
+   files.push_back("run_0026.root");
+   files.push_back("run_0027.root");
+   files.push_back("run_0028.root");
+   files.push_back("run_0029.root");
+   files.push_back("run_0030.root");
+   files.push_back("run_0031.root");
+   files.push_back("run_0032.root");
+   files.push_back("run_0033.root");
+   files.push_back("run_0034.root");
+   files.push_back("run_0035.root");
+   files.push_back("run_0036.root");
+   files.push_back("run_0037.root");
+   files.push_back("run_0038.root");
+   files.push_back("run_0039.root");
+   files.push_back("run_0040.root");
+   files.push_back("run_0041.root");
+   files.push_back("run_0042.root");
+   files.push_back("run_0043.root");
+   files.push_back("run_0044.root");
+   files.push_back("run_0045.root");
+   files.push_back("run_0046.root");
+   files.push_back("run_0047.root");
+   files.push_back("run_0048.root");
+   files.push_back("run_0049.root");
+   files.push_back("run_0050.root");
+   files.push_back("run_0051.root");
+   files.push_back("run_0052.root");
+   files.push_back("run_0053.root");
+   files.push_back("run_0054.root");
+   files.push_back("run_0055.root");
+   files.push_back("run_0056.root");
+   files.push_back("run_0057.root");
+   files.push_back("run_0058.root");
+   files.push_back("run_0059.root");
+   files.push_back("run_0060.root");
+   files.push_back("run_0061.root");
+   files.push_back("run_0062.root");
+   files.push_back("run_0063.root");
+   files.push_back("run_0064.root");
+   files.push_back("run_0065.root");
+   files.push_back("run_0066.root");
+   files.push_back("run_0067.root");
+   files.push_back("run_0068.root");
+   files.push_back("run_0069.root");
+   files.push_back("run_0070.root");
+   files.push_back("run_0071.root");
+   files.push_back("run_0072.root");
+   files.push_back("run_0073.root");
+   files.push_back("run_0074.root");
+   files.push_back("run_0075.root");
+   files.push_back("run_0076.root");
+   files.push_back("run_0077.root");
+   files.push_back("run_0078.root");
+   files.push_back("run_0079.root");
+   files.push_back("run_0080.root");
+   files.push_back("run_0081.root");
+   files.push_back("run_0082.root");
+   files.push_back("run_0083.root");
+   files.push_back("run_0084.root");
+   files.push_back("run_0085.root");
+   files.push_back("run_0086.root");
+   files.push_back("run_0087.root");
+   files.push_back("run_0088.root");
+   files.push_back("run_0089.root");
+   files.push_back("run_0090.root");
+   files.push_back("run_0091.root");
+   files.push_back("run_0092.root");
+   files.push_back("run_0093.root");
+   files.push_back("run_0094.root");
+   files.push_back("run_0095.root");
+   files.push_back("run_0096.root");
+   files.push_back("run_0097.root");
+   files.push_back("run_0098.root");
+   files.push_back("run_0099.root");
+
+   TCutG *cutt = new TCutG("CUTT", 10);
+   cutt->SetVarX("ELossvsBrho");
+   cutt->SetVarY("");
+   cutt->SetTitle("Graph");
+   cutt->SetFillStyle(1000);
+   cutt->SetPoint(0, 116.0509, 2.755236);
+   cutt->SetPoint(1, 161.867, 1.927617);
+   cutt->SetPoint(2, 439.1129, 1.341213);
+   cutt->SetPoint(3, 527.2208, 1.299624);
+   cutt->SetPoint(4, 655.2708, 1.465979);
+   cutt->SetPoint(5, 658.7951, 1.865233);
+   cutt->SetPoint(6, 402.695, 2.405889);
+   cutt->SetPoint(7, 219.4308, 2.821779);
+   cutt->SetPoint(8, 113.7014, 2.755236);
+   cutt->SetPoint(9, 116.0509, 2.755236);
+
+   TCutG *cutd = new TCutG("CUTD", 20);
+   cutd->SetVarX("ELossvsBrho");
+   cutd->SetVarY("");
+   cutd->SetTitle("Graph");
+   cutd->SetFillStyle(1000);
+   cutd->SetPoint(0, 48.7938, 1.961132);
+   cutd->SetPoint(1, 923.042, 0.9194652);
+   cutd->SetPoint(2, 1360.166, 0.7639925);
+   cutd->SetPoint(3, 3737.028, 0.4841418);
+   cutd->SetPoint(4, 8053.629, 0.3364428);
+   cutd->SetPoint(5, 16905.39, 0.289801);
+   cutd->SetPoint(6, 22888.53, 0.2664801);
+   cutd->SetPoint(7, 24309.18, 0.2198383);
+   cutd->SetPoint(8, 24746.3, 0.1576492);
+   cutd->SetPoint(9, 24555.06, 0.04881838);
+   cutd->SetPoint(10, 10731.01, 0.04104475);
+   cutd->SetPoint(11, 8217.55, 0.04881838);
+   cutd->SetPoint(12, 6523.694, 0.1343283);
+   cutd->SetPoint(13, 3299.904, 0.2276119);
+   cutd->SetPoint(14, 1360.166, 0.4375);
+   cutd->SetPoint(15, 458.5976, 0.6707089);
+   cutd->SetPoint(16, 158.0748, 1.028296);
+   cutd->SetPoint(17, -33.16696, 1.510261);
+   cutd->SetPoint(18, 48.7938, 1.922264);
+   cutd->SetPoint(19, 48.7938, 1.961132);
 
    for (auto iFile : files) {
 
@@ -135,7 +262,19 @@ void C16_dd_anaFit()
             auto &fittedTracks = trackingEvent->GetFittedTracks();
             // std::cout<<" Number of fitted tracks "<<fittedTracks.size()<<"\n";
 
+            // Find track with largets angle
+            auto itMax = std::max_element(fittedTracks.begin(), fittedTracks.end(), [](const auto &a, const auto &b) {
+               auto [energyb, energyXtrb, thetab, phib, energyPRAb, thetaPRAb, phiPRAb] = b.get()->GetEnergyAngles();
+               auto [energya, energyXtra, thetaa, phia, energyPRAa, thetaPRAa, phiPRAa] = a.get()->GetEnergyAngles();
+               return energyb > energya;
+            });
+
+            Int_t maxAIndex = std::distance(fittedTracks.begin(), itMax);
+
             for (auto index = 0; index < fittedTracks.size(); ++index) {
+
+               if (index != maxAIndex)
+                  continue;
 
                auto [energy, energyXtr, theta, phi, energyPRA, thetaPRA, phiPRA] =
                   fittedTracks.at(0)->GetEnergyAngles();
@@ -145,10 +284,20 @@ void C16_dd_anaFit()
                // auto [ICEnergy,ICTime] = fittedTracks.at(0)->GetIonChamber(); //TODO
                auto [exEnergy, exEnergyXtr] = fittedTracks.at(0)->GetExcitationEnergy();
 
+               // Conditions
+               // if (!cutd->IsInside(eLossADC, brho))
+               // continue;
+
+               // Histograms
                Ang_Ener->Fill(theta, energy * Am);
                Ang_Ener_PRAC->Fill(thetaPRA, energyPRA * Am);
                ELossvsBrho->Fill(eLossADC, brho);
                dedxvsBrho->Fill(dEdxADC, brho);
+
+               Double_t vx = TMath::Sin(theta * TMath::DegToRad()) * TMath::Sqrt(energy * Am);
+               Double_t vy = TMath::Cos(theta * TMath::DegToRad()) * TMath::Sqrt(energy * Am);
+
+               hVxVy->Fill(vx, vy);
             }
          }
 
@@ -167,12 +316,16 @@ void C16_dd_anaFit()
    Ang_Ener->GetYaxis()->SetTitle("Energy (MeV)");
    c1->cd(2);
    Ang_Ener_PRAC->Draw("col");
+   c1->cd(3);
+   hVxVy->Draw("zcol");
 
    TCanvas *cpid = new TCanvas();
    cpid->Divide(2, 2);
    cpid->Draw("zcol");
    cpid->cd(1);
    ELossvsBrho->Draw("zcol");
+   cutt->Draw("l");
+   cutd->Draw("l");
    cpid->cd(2);
    dedxvsBrho->Draw("zcol");
 }
