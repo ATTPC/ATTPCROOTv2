@@ -214,10 +214,10 @@ double AtPulse::GetGain(int padNum, int numElectrons)
       lowGain = fLowGainFactor;
 
    if (fUseFastGain && numElectrons > 10)
-      return gRandom->Gaus(fGain, fAvgGainDeviation / TMath::Sqrt(numElectrons)) * lowGain * fScaling;
+      return gRandom->Gaus(fGain, fAvgGainDeviation / TMath::Sqrt(numElectrons)) * lowGain;
 
    double g = 0;
    for (Int_t i = 0; i < numElectrons; i++)
       g += fGainFunc->GetRandom();
-   return g / numElectrons * lowGain * fScaling;
+   return g / numElectrons * lowGain;
 }

@@ -30,6 +30,9 @@ namespace ElectronicResponse {
  * @ingroup elecResponse
  */
 class AtElectronicResponse {
+private:
+   double fScale{1};
+
 protected:
    virtual double GetResponse(double time) const = 0;
    virtual double GetResponse(int padNum, double time) const = 0;
@@ -39,11 +42,12 @@ public:
    /**
     * Returns the response of the electronics to a delta-function of charge at t=0 after time (us).
     */
-   double operator()(double time) const { return GetResponse(time); }
+   double operator()(double time) const { return GetResponse(time) * fScale; }
    /**
     * Returns the response of the electronics to a delta-function of charge at t=0 after time (us).
     */
-   double operator()(int padNum, double time) const { return GetResponse(padNum, time); }
+   double operator()(int padNum, double time) const { return GetResponse(padNum, time) * fScale; }
+   void SetScale(double scale) { fScale = scale; }
 };
 
 /**
@@ -114,4 +118,4 @@ public:
 
 } // namespace ElectronicResponse
 
-#endif //#ifndef ATELECTRONICRESPONSE_H
+#endif // #ifndef ATELECTRONICRESPONSE_H
