@@ -12,6 +12,7 @@
 
 #include <Rtypes.h>
 #include <TClonesArray.h>
+#include <TString.h>
 
 #include <cstddef>
 #include <functional> // for function
@@ -40,6 +41,8 @@ protected:
    Bool_t fIsPersistentAtTpcPoint{false}; //!< If true, save container
    Bool_t fSaveMCInfo{false};             //!<< Propagates MC information (adds AtTpcPoint branch to output
 
+   TString fOutputBranchName{"AtRawEvent"};
+
    TClonesArray *fSimulatedPointArray{nullptr}; //!< drifted electron array (input)
    TClonesArray *fMCPointArray{nullptr};        //!< MC Point Array (input)
    TClonesArray fRawEventArray;                 //!< Raw Event array (only one)
@@ -56,6 +59,7 @@ public:
    void SetPersistence(Bool_t val) { fIsPersistent = val; }
    void SetPersistenceAtTpcPoint(Bool_t val) { fIsPersistentAtTpcPoint = val; }
    void SetSaveMCInfo() { fSaveMCInfo = true; }
+   void SetOutputBranch(TString branchName) { fOutputBranchName = branchName; }
 
    virtual InitStatus Init() override;        //!< Initiliazation of task at the beginning of a run.
    virtual void Exec(Option_t *opt) override; //!< Executed for each event.

@@ -61,7 +61,7 @@ InitStatus AtPulseTask::Init()
       return kFATAL;
    }
 
-   ioman->Register("AtRawEvent", "cbmsim", &fRawEventArray, fIsPersistent);
+   ioman->Register(fOutputBranchName, "cbmsim", &fRawEventArray, fIsPersistent);
 
    fPulse->SetParameters(fPar);
 

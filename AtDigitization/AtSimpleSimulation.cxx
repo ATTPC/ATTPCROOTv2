@@ -21,6 +21,12 @@
 thread_local TClonesArray AtSimpleSimulation::fMCPoints("AtMCPoint");
 thread_local int AtSimpleSimulation::fTrackID = 0;
 
+using SpaceChargeModel = std::shared_ptr<AtSpaceChargeModel>;
+using ModelPtr = std::shared_ptr<AtTools::AtELossModel>;
+using XYZPoint = ROOT::Math::XYZPoint;
+using XYZVector = ROOT::Math::XYZVector;
+using PxPyPzEVector = ROOT::Math::PxPyPzEVector;
+
 AtSimpleSimulation::AtSimpleSimulation(std::string geoFile)
 {
    TGeoManager *geo = TGeoManager::Import(geoFile.c_str());
@@ -89,7 +95,9 @@ void AtSimpleSimulation::AddModel(int Z, int A, ModelPtr model)
    fModels[id] = model;
 }
 
-void AtSimpleSimulation::SimulateParticle(int Z, int A, const XYZPoint &iniPos, const PxPyPzEVector &iniMom)
+std::pair<XYZPoint, PxPyPzEVector>
+AtSimpleSimulation::SimulateParticle(int Z, int A, const XYZPoint &iniPos, const PxPyPzEVector &iniMom,
+                                     std::function<bool(XYZPoint, PxPyPzEVector)> func)
 {
    auto modelIt = fModels.find({A, Z});
    if (modelIt == fModels.end())
@@ -97,10 +105,12 @@ void AtSimpleSimulation::SimulateParticle(int Z, int A, const XYZPoint &iniPos, 
    if (!IsInVolume("drift_volume", iniPos))
       throw std::invalid_argument("Position of particle is not in active volume but is in " + GetVolumeName(iniPos));
 
-   SimulateParticle(modelIt->second, iniPos, iniMom);
+   return SimulateParticle(modelIt->second, iniPos, iniMom, func);
 }
 
-void AtSimpleSimulation::SimulateParticle(ModelPtr model, const XYZPoint &iniPos, const PxPyPzEVector &iniMom)
+std::pair<XYZPoint, PxPyPzEVector>
+AtSimpleSimulation::SimulateParticle(ModelPtr model, const XYZPoint &iniPos, const PxPyPzEVector &iniMom,
+                                     std::function<bool(XYZPoint, PxPyPzEVector)> func)
 {
    // This is a new track
    fTrackID++;
@@ -110,11 +120,11 @@ void AtSimpleSimulation::SimulateParticle(ModelPtr model, const XYZPoint &iniPos
    double length = 0;
 
    // Go until we exit the volume or the KE is less than 1keV
-   while (IsInVolume("drift_volume", pos) && mom.E() - mom.M() > 1e-3) {
+   while (IsInVolume("drift_volume", pos) && mom.E() - mom.M() > 1e-3 && func(pos, mom)) {
 
       if (isnan(pos.X()) || isnan(mom.X())) {
          LOG(error) << "Failed to simulate a point with nan!";
-         return;
+         return {{0, 0, 0}, {0, 0, 0, 0}};
       }
       // Direction particle is traveling
       auto dir = mom.Vect().Unit();
@@ -136,6 +146,8 @@ void AtSimpleSimulation::SimulateParticle(ModelPtr model, const XYZPoint &iniPos
       length += fDistStep;
       AddHit(eLoss, pos, mom, length);
    }
+
+   return {pos, mom};
 }
 
 void AtSimpleSimulation::NewEvent()

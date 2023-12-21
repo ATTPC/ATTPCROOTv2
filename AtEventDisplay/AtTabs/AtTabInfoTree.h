@@ -63,7 +63,7 @@ public:
    {
    }
 
-   T *GetInfo() { return fDetector->Get(); }
+   T *GetInfo() { return fDetector.Get(); }
 
    std::string GetDefaultName() override { return T::Class_Name(); }
 };

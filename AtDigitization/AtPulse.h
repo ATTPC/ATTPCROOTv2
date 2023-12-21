@@ -63,6 +63,7 @@ public:
    void SetNoiseSigma(double val) { fNoiseSigma = val; }
    void SetSaveCharge(bool val) { fSaveCharge = val; }
    void SetDoConvolution(bool val) { fDoConvolution = val; }
+   void SetLowGain(double val) { fLowGainFactor = val; }
 
    AtRawEvent GenerateEvent(std::vector<SimPointPtr> &vec);
    virtual AtRawEvent GenerateEvent(std::vector<AtSimulatedPoint *> &vec);

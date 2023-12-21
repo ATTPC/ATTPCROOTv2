@@ -31,6 +31,9 @@ private:
    std::string fLabel;
 
 public:
+   /**
+    * A sidebar object for displaying a string provided by a user defined function.
+    */
    AtSidebarInfoMacro(DataHandling::AtTreeEntry &entryNumber, const TGWindow *p = nullptr, UInt_t w = 1, UInt_t h = 1,
                       UInt_t options = 0, Pixel_t back = GetDefaultFrameBackground())
       : AtSidebarAddon(p, w, h, options, back), fEntryNumber(entryNumber)
@@ -39,7 +42,14 @@ public:
    }
    ~AtSidebarInfoMacro() { fEntryNumber.Detach(this); }
 
+   /**
+    * Set the user defined function. The user function must return a string.
+    */
    void SetFunction(MacroFunction function) { fFunction = std::move(function); }
+   /**
+    * Set the label for the displayed string. The label will be displayed on the sidebar with the string. This label
+    * must be unique.
+    */
    void SetLabel(std::string label) { fLabel = label; }
 
    void Update(DataHandling::AtSubject *sub) override;

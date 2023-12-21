@@ -14,14 +14,20 @@ void AtTPCIonGeneratorGaussian::SetBeamLimits(Double32_t r, Double32_t z, Double
    fTheta = theta;
 }
 
+void AtTPCIonGeneratorGaussian::SetBeamOrigin(Double32_t x, Double32_t y)
+{
+   fX = x;
+   fY = y;
+}
+
 void AtTPCIonGeneratorGaussian::SetVertexCoordinates()
 {
    double pi = 2 * asin(1.0);
 
    Double_t radius = std::clamp(gRandom->Gaus(0, fR / 3), 0.0, fR);
    Double_t phi_R = gRandom->Uniform(0, 2 * pi);
-   fVx = radius * cos(phi_R);
-   fVy = radius * sin(phi_R);
+   fVx = radius * cos(phi_R) + fX;
+   fVy = radius * sin(phi_R) + fY;
 
    Double_t theta = gRandom->Uniform(0, fTheta);
    Double_t pr = fPz * sin(theta);
