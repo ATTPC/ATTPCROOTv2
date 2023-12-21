@@ -23,14 +23,17 @@ private:
 
    std::string fLabel;
 
-   int fMin{0};
-   int fMax{10};
-   int fStart{0};
+   int fMin;
+   int fMax;
+   int fStart;
 
 public:
-   AtSidebarIntMacro(const TGWindow *p = nullptr, UInt_t w = 1, UInt_t h = 1, UInt_t options = 0,
-                     Pixel_t back = GetDefaultFrameBackground())
-      : AtSidebarAddon(p, w, h, options, back)
+   /**
+    * A sidebar object for an integer value whose value can be used in a user defined function.
+    */
+   AtSidebarIntMacro(const TGWindow *p = nullptr, int min = 0, int max = 10, int start = 0, UInt_t w = 1, UInt_t h = 1,
+                     UInt_t options = 0, Pixel_t back = GetDefaultFrameBackground())
+      : AtSidebarAddon(p, w, h, options, back), fMin{min}, fMax{max}, fStart{start}
    {
    }
    ~AtSidebarIntMacro() {}
@@ -39,13 +42,26 @@ public:
 
    void RunFunction();
 
+   /**
+    * Set the lower and upper bounds for the integer.
+    */
    void SetBounds(int min, int max)
    {
       fMin = min;
       fMax = max;
    }
+   /**
+    * Set the user defined function. The user function must be void and takes the value in as an int.
+    */
    void SetFunction(MacroFunction function) { fFunction = std::move(function); }
+   /**
+    * Set the inital value of the integer.
+    */
    void SetInitialValue(int value) { fStart = value; }
+   /**
+    * Set the label for the integer. The label will be displayed on the sidebar with the number. This label must be
+    * unique.
+    */
    void SetLabel(std::string label) { fLabel = label; }
 
    ClassDefOverride(AtSidebarIntMacro, 1);

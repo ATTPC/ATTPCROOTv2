@@ -12,6 +12,7 @@
 
 #include <Rtypes.h>
 #include <TClonesArray.h>
+#include <TString.h>
 
 #include <cstddef>
 #include <functional> // for function

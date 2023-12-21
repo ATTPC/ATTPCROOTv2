@@ -49,7 +49,7 @@ XYZPoint AtLineChargeModel::ApplySpaceCharge(const XYZPoint &reverseInputPositio
    auto delZ = input.Z();         // in mm
    double dist2 = getDist2(delZ); // in mm;
    double newRho = sqrt(input.Rho() * input.Rho() - dist2);
-   if (!(newRho > 0)) {
+   if (newRho < 0) {
       // std::cout << "newRho is " << newRho << std::endl;
       newRho = 0;
    }

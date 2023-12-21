@@ -16,7 +16,8 @@
 #include <map>
 #include <memory>
 #include <mutex>
-#include <string> // for string
+#include <string>  // for string
+#include <utility> // for pair
 namespace AtTools {
 class AtELossModel;
 }
@@ -68,9 +69,8 @@ public:
 
    /**
     * Simulates a particle over a given distance and returns the position and momentum of the particle at the stoping
-    * point. By default the particle will stop when it reaches the end of the TPC. A user defined function can test the
-    * position and momentum of the particle for each time step and stop it when a given condition is met (such as a
-    * depth in the TPC or an energy to stop at).
+    * point. Uses Z and A to provide a model to the protected version of SimulateParticle (see below for more
+    * information on the simulation).
     */
    std::pair<XYZPoint, PxPyPzEVector> SimulateParticle(
       int Z, int A, const XYZPoint &iniPos, const PxPyPzEVector &iniMom,

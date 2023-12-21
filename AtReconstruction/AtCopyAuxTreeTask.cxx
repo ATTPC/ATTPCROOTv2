@@ -1,17 +1,16 @@
 #include "AtCopyAuxTreeTask.h"
 
-#include "AtRawEvent.h"
+#include "AtBaseEvent.h"
 
 #include <FairLogger.h>
-#include <FairRootFileSink.h>
 #include <FairRootManager.h>
-#include <FairRunAna.h>
-#include <FairSink.h> // for FairSink
 #include <FairTask.h>
 
 #include <TChain.h>
 #include <TClonesArray.h>
+#include <TFile.h>
 #include <TObject.h>
+#include <TTree.h>
 
 bool AtCopyAuxTreeTask::SetInputTree(TString fileName, TString treeName)
 {
@@ -47,9 +46,9 @@ InitStatus AtCopyAuxTreeTask::Init()
       return kFATAL;
    }
 
-   fRawEventArray = dynamic_cast<TClonesArray *>(ioMan->GetObject(fRawEventBranchName));
-   if (fRawEventArray == nullptr) {
-      LOG(fatal) << "Cannot find AtRawEvent array in branch " << fRawEventBranchName << "!";
+   fCheckEventArray = dynamic_cast<TClonesArray *>(ioMan->GetObject(fCheckEventBranchName));
+   if (fCheckEventArray == nullptr) {
+      LOG(fatal) << "Cannot find AtBaseEvent array in branch " << fCheckEventBranchName << "!";
       return kFATAL;
    }
 
@@ -75,7 +74,7 @@ void AtCopyAuxTreeTask::Exec(Option_t *opt)
 {
    fInputTree->GetEntry(FairRootManager::Instance()->GetEntryNr());
 
-   auto fEvent = dynamic_cast<AtRawEvent *>(fRawEventArray->At(0));
+   auto fEvent = dynamic_cast<AtBaseEvent *>(fCheckEventArray->At(0));
 
    if (fEvent->IsGood())
       fOutputTree->Fill();

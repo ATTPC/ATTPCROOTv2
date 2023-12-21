@@ -1,7 +1,5 @@
 #include "AtSidebarIntMacro.h"
 
-#include <FairLogger.h> // for endl, basic_ostream, cout, ostream
-
 ClassImp(AtSidebarIntMacro);
 
 void AtSidebarIntMacro::FillFrame()

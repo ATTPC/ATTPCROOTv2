@@ -13,14 +13,12 @@
 
 #include <TChain.h>
 #include <TString.h>
-#include <TTree.h>
 // FairRoot classes
 #include <FairTask.h>
 
 #include <Rtypes.h>
 
 #include <memory>
-#include <vector>
 
 // ROOT classes
 class TClonesArray;
@@ -31,8 +29,8 @@ class AtCopyAuxTreeTask : public FairTask {
 
 private:
    // Info for AT-TPC Tree
-   TClonesArray *fRawEventArray{};            // AtRawEvent
-   TString fRawEventBranchName{"AtRawEvent"}; // Name of AtRawEvent branch
+   TClonesArray *fCheckEventArray{};            // AtBaseEvent
+   TString fCheckEventBranchName{"AtRawEvent"}; // Name of AtBaseEvent branch used to check if event is good
 
    // Info for output tree
    TString fOutputFileName{""};
@@ -60,7 +58,7 @@ public:
    /**
     * Sets the name of the AtRawEvent branch that is monitored for good events
     */
-   void SetRawEventBranch(TString name) { fRawEventBranchName = name; }
+   void SetCheckEventBranch(TString name) { fCheckEventBranchName = name; }
 
    /**
     * Returns a pointer to the TChain object for the input tree

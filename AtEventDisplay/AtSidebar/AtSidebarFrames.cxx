@@ -43,8 +43,11 @@ void AtSidebarRunInfo::FillFrame()
 {
    TString Infile = "Input file : ";
    TFile *file = FairRootManager::Instance()->GetInChain()->GetFile();
-
-   fRunFile = new TGLabel(this, (Infile + file->GetName()).Data());
+   if(file != nullptr) {
+      fRunFile = new TGLabel(this, (Infile + file->GetName()).Data());
+   } else {
+      fRunFile = new TGLabel(this, "null");
+   }
 
    // If the file path is too long to fit in the sidebar, just grab the file name
    if (fRunFile->GetWidth() > this->GetWidth()) {
