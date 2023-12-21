@@ -13,6 +13,7 @@
 
 #include <TChain.h>
 #include <TString.h>
+#include <TTree.h>
 // FairRoot classes
 #include <FairTask.h>
 
