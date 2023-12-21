@@ -3,6 +3,8 @@
 
 #include <FairTask.h>
 
+#include <Rtypes.h> // for ClassDef
+
 #include <functional> // for function
 #include <vector>
 
