@@ -43,7 +43,7 @@ void AtSidebarRunInfo::FillFrame()
 {
    TString Infile = "Input file : ";
    TFile *file = FairRootManager::Instance()->GetInChain()->GetFile();
-   if(file != nullptr) {
+   if (file != nullptr) {
       fRunFile = new TGLabel(this, (Infile + file->GetName()).Data());
    } else {
       fRunFile = new TGLabel(this, "null");
