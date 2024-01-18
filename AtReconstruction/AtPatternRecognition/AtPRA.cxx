@@ -57,7 +57,10 @@ std::cout << " Processing track with " << track.GetHitArray().size() << " points
 
       auto &hits = circularTracks.at(0).GetHitArray();
 
-      auto circle = dynamic_cast<const AtPatterns::AtPatternCircle2D *>(circularTracks.at(0).GetPattern());
+      // auto circle = dynamic_cast<const AtPatterns::AtPatternCircle2D *>(circularTracks.at(0).GetPattern());
+
+      auto circle = std::make_unique<AtPatterns::AtPatternCircle2D>();
+      circle->AtPattern::FitPattern(ContainerManip::GetConstPointerVector(track.GetHitArray()));
 
       auto center = circle->GetCenter();
       auto radius = circle->GetRadius();
@@ -65,6 +68,8 @@ std::cout << " Processing track with " << track.GetHitArray().size() << " points
       track.SetGeoCenter({center.X(), center.Y()});
       track.SetGeoRadius(radius);
       track.SetPattern(circle->Clone());
+
+      circularTracks.at(0).SetPattern(std::move(circle));
 
       // std::vector<double> wpca;
       std::vector<double> whit;

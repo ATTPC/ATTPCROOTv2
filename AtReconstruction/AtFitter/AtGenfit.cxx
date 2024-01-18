@@ -426,6 +426,8 @@ std::vector<std::unique_ptr<AtFittedTrack>> AtFITTER::AtGenfit::ProcessTracks(st
          switch (fExpNum) {
          case e20020: pdgCandFit.push_back(1000010020); break;
          case e20009: pdgCandFit.push_back(2212); break;
+         case a1975: pdgCandFit.push_back(1000010020); break;
+         default: pdgCandFit.push_back(2212);
          }
 
       } else if (thetaConv < 90 && thetaConv > 10) {
@@ -438,6 +440,7 @@ std::vector<std::unique_ptr<AtFittedTrack>> AtFITTER::AtGenfit::ProcessTracks(st
          // case a1954b: pdgCandFit.push_back(1000010020); break;
          // case a1975: pdgCandFit.push_back(2212); break;
          case a1975: pdgCandFit.push_back(1000010020); break;
+         default: pdgCandFit.push_back(2212);
          }
 
       } else if (thetaConv < 10) {
@@ -447,6 +450,7 @@ std::vector<std::unique_ptr<AtFittedTrack>> AtFITTER::AtGenfit::ProcessTracks(st
             pdgCandFit.push_back(1000040100);
             break;
             // pdgCandFit.push_back(1000040110);
+         default: pdgCandFit.push_back(2212);
          }
       }
 
@@ -536,11 +540,11 @@ std::vector<std::unique_ptr<AtFittedTrack>> AtFITTER::AtGenfit::ProcessTracks(st
             auto it = hitClusterArray->rbegin();
             while (it != hitClusterArray->rend()) {
 
-               if (((Float_t)cnt / (Float_t)hitClusterArray->size()) > 0.5)
+               if (((Float_t)cnt / (Float_t)hitClusterArray->size()) > 0.8)
                   break;
                auto dir = (*it).GetPosition() - (*std::next(it, 1)).GetPosition();
                eloss += (*it).GetCharge();
-               len += std::sqrt(dir.Mag2());
+               len = std::sqrt(dir.Mag2());
                dedx += (*it).GetCharge();
                // std::cout<<(*it).GetCharge()<<"\n";
                it++;
@@ -553,10 +557,10 @@ std::vector<std::unique_ptr<AtFittedTrack>> AtFITTER::AtGenfit::ProcessTracks(st
             cnt = 1;
             for (auto iHitClus = 1; iHitClus < hitClusterArray->size(); ++iHitClus) {
 
-               if (((Float_t)cnt / (Float_t)hitClusterArray->size()) > 0.5)
+               if (((Float_t)cnt / (Float_t)hitClusterArray->size()) > 0.8)
                   break;
                auto dir = hitClusterArray->at(iHitClus).GetPosition() - hitClusterArray->at(iHitClus - 1).GetPosition();
-               len += std::sqrt(dir.Mag2());
+               len = std::sqrt(dir.Mag2());
                eloss += hitClusterArray->at(iHitClus).GetCharge();
                dedx += hitClusterArray->at(iHitClus).GetCharge();
                // std::cout<<len<<" - "<<eloss<<" - "<<hitClusterArray->at(iHitClus).GetCharge()<<"\n";
@@ -565,7 +569,7 @@ std::vector<std::unique_ptr<AtFittedTrack>> AtFITTER::AtGenfit::ProcessTracks(st
          }
 
          eloss /= cnt;
-         dedx /= len;
+         // dedx /= len;
 
          if (fitTrack == nullptr)
             continue;

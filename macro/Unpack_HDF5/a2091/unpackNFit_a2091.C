@@ -8,7 +8,7 @@ bool reduceFunc(AtRawEvent *evt)
    return (evt->GetNumPads() > 0) && evt->IsGood();
 }
 
-void unpackNFit_a1975(TString fileName = "run_0011")
+void unpackNFit_a2091(TString fileName = "run_0013")
 {
 
    // Load the library for unpacking and reconstruction
@@ -19,7 +19,7 @@ void unpackNFit_a1975(TString fileName = "run_0011")
 
    TString parameterFile = "ATTPC.a1954.par";
    TString mappath = "";
-   TString filepath = "/media/yassid/bdcb3c81-adb9-4a9d-9172-0bd5935c1dd5/data/a1957/";
+   TString filepath = "/media/yassid/bdcb3c81-adb9-4a9d-9172-0bd5935c1dd5/data/a2091/h5/";
    TString fileExt = ".h5";
    TString inputFile = filepath + fileName + fileExt;
    TString scriptfile = "ANL2023.xml";
@@ -32,7 +32,7 @@ void unpackNFit_a1975(TString fileName = "run_0011")
    TString outputFile = fileName + ".root";
    TString loggerFile = dataDir + "ATTPCLog.log";
    TString digiParFile = dir + "/parameters/" + parameterFile;
-   TString geoManFile = dir + "/geometry/ATTPC_H1bar_geomanager.root";
+   TString geoManFile = dir + "/geometry/ATTPC_D300torr_v2_geomanager.root";
 
    // Specific paths for three LUT for electric field correction
    TString zlutFile = dir + "/resources/corrections/a1954/zLUT.txt";
@@ -106,14 +106,14 @@ void unpackNFit_a1975(TString fileName = "run_0011")
    // Fitting task
    Float_t gasMediumDensity = 0.083147;
    Float_t magneticField = 2.85;
-   Int_t pdg = 2212; // 1000010020;
+   Int_t pdg = 1000010020; // 1000010020; 2212;
    Bool_t noMatEffects = 1;
    AtFITTER::AtGenfit::Exp exp = AtFITTER::AtGenfit::a1975;
    std::string elossFile = (std::string)dir.Data() + "/resources/energy_loss/proton_D2_600torr.txt";
    auto fitter = std::make_unique<AtFITTER::AtGenfit>(magneticField, 0.00001, 1000.0, elossFile, gasMediumDensity, pdg,
                                                       5, 20, noMatEffects);
-   fitter->SetIonName("proton"); // deuteron
-   fitter->SetMass(1.00727646);  // 2.0135532
+   fitter->SetIonName("deuteron"); // deuteron
+   fitter->SetMass(2.0135532);     // 2.0135532 1.00727646
    fitter->SetAtomicNumber(1);
    fitter->SetNumFitPoints(1.0);
    fitter->SetVerbosityLevel(1);

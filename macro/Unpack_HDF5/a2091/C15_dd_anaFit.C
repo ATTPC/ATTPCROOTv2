@@ -64,7 +64,7 @@ kine_2b(Double_t m1, Double_t m2, Double_t m3, Double_t m4, Double_t K_proj, Dou
 
 void GetEnergy(Double_t M, Double_t IZ, Double_t BRO, Double_t &E);
 
-void C16_dd_anaFit()
+void C15_dd_anaFit()
 {
    FairRunAna *run = new FairRunAna();
 
@@ -100,97 +100,23 @@ void C16_dd_anaFit()
    m_b = m_d;
    m_B = m_C16;
 
-   Double_t Am = 0.5;
+   Double_t Am = 2;
 
-   std::vector<TString> files{"run_0011.root"};
-   files.push_back("run_0013.root");
+   std::vector<TString> files{"run_0013.root"};
    files.push_back("run_0014.root");
    files.push_back("run_0015.root");
    files.push_back("run_0016.root");
    files.push_back("run_0017.root");
    files.push_back("run_0018.root");
    files.push_back("run_0019.root");
-   files.push_back("run_0020.root");
-   files.push_back("run_0021.root");
    files.push_back("run_0022.root");
    files.push_back("run_0023.root");
    files.push_back("run_0024.root");
-   files.push_back("run_0025.root");
    files.push_back("run_0026.root");
    files.push_back("run_0027.root");
    files.push_back("run_0028.root");
    files.push_back("run_0029.root");
    files.push_back("run_0030.root");
-   files.push_back("run_0031.root");
-   files.push_back("run_0032.root");
-   files.push_back("run_0033.root");
-   files.push_back("run_0034.root");
-   files.push_back("run_0035.root");
-   files.push_back("run_0036.root");
-   files.push_back("run_0037.root");
-   files.push_back("run_0038.root");
-   files.push_back("run_0039.root");
-   files.push_back("run_0040.root");
-   files.push_back("run_0041.root");
-   files.push_back("run_0042.root");
-   files.push_back("run_0043.root");
-   files.push_back("run_0044.root");
-   files.push_back("run_0045.root");
-   files.push_back("run_0046.root");
-   files.push_back("run_0047.root");
-   files.push_back("run_0048.root");
-   files.push_back("run_0049.root");
-   files.push_back("run_0050.root");
-   files.push_back("run_0051.root");
-   files.push_back("run_0052.root");
-   files.push_back("run_0053.root");
-   files.push_back("run_0054.root");
-   files.push_back("run_0055.root");
-   files.push_back("run_0056.root");
-   files.push_back("run_0057.root");
-   files.push_back("run_0058.root");
-   files.push_back("run_0059.root");
-   files.push_back("run_0060.root");
-   files.push_back("run_0061.root");
-   files.push_back("run_0062.root");
-   files.push_back("run_0063.root");
-   files.push_back("run_0064.root");
-   files.push_back("run_0065.root");
-   files.push_back("run_0066.root");
-   files.push_back("run_0067.root");
-   files.push_back("run_0068.root");
-   files.push_back("run_0069.root");
-   files.push_back("run_0070.root");
-   files.push_back("run_0071.root");
-   files.push_back("run_0072.root");
-   files.push_back("run_0073.root");
-   files.push_back("run_0074.root");
-   files.push_back("run_0075.root");
-   files.push_back("run_0076.root");
-   files.push_back("run_0077.root");
-   files.push_back("run_0078.root");
-   files.push_back("run_0079.root");
-   files.push_back("run_0080.root");
-   files.push_back("run_0081.root");
-   files.push_back("run_0082.root");
-   files.push_back("run_0083.root");
-   files.push_back("run_0084.root");
-   files.push_back("run_0085.root");
-   files.push_back("run_0086.root");
-   files.push_back("run_0087.root");
-   files.push_back("run_0088.root");
-   files.push_back("run_0089.root");
-   files.push_back("run_0090.root");
-   files.push_back("run_0091.root");
-   files.push_back("run_0092.root");
-   files.push_back("run_0093.root");
-   files.push_back("run_0094.root");
-   files.push_back("run_0095.root");
-   files.push_back("run_0096.root");
-   files.push_back("run_0097.root");
-   files.push_back("run_0098.root");
-   files.push_back("run_0099.root");
-   files.push_back("run_0100.root");
 
    TCutG *cutt = new TCutG("CUTT", 10);
    cutt->SetVarX("ELossvsBrho");
@@ -314,8 +240,8 @@ void C16_dd_anaFit()
                /*if (!cutd->IsInside(eLossADC, brho))
                 continue;*/
 
-               if (!cuttdedx->IsInside(dEdxADC, brho))
-                  continue;
+               /* if(!cuttdedx->IsInside(dEdxADC, brho))
+                   continue;*/
 
                if (theta > 90.0 || theta < 10.0)
                   continue;

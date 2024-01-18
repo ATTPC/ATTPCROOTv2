@@ -13,7 +13,8 @@ public:
    AtTrackTransformer();
    ~AtTrackTransformer();
 
-   void ClusterizeSmooth3D(AtTrack &track, Float_t distance, Float_t radius);
+   void ClusterizeSmooth3D(AtTrack &track, Float_t radius, Float_t distance);
+   const std::tuple<Double_t, Double_t> GetPIDFromHits(AtTrack &track, Double_t theta);
 
 private:
 };
