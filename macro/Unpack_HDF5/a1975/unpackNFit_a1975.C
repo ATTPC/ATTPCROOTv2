@@ -6,9 +6,7 @@
 bool reduceFunc(AtRawEvent *evt)
 {
    return (evt->GetNumPads() > 0) && evt->IsGood();
-}
-
-void unpackNFit_a1975(TString fileName = "run_0011")
+}void unpackNFit_a1975(TString fileName = "run_0011")
 {
 
    // Load the library for unpacking and reconstruction

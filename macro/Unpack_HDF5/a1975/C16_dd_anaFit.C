@@ -71,7 +71,11 @@ void C16_dd_anaFit()
    TH2F *Ang_Ener = new TH2F("Ang_Ener", "Ang_Ener", 720, 0, 179, 1000, 0, 200.0);
    TH2F *Ang_Ener_PRAC = new TH2F("Ang_Ener_PRAC", "Ang_Ener_PRAC", 1000, 0, 100, 1000, 0, 200.0);
    TH2F *ELossvsBrho = new TH2F("ELossvsBrho", "ELossvsBrho", 4000, 0, 25000, 1000, 0, 4);
+<<<<<<< HEAD
    TH2F *dedxvsBrho = new TH2F("dedxvsBrho", "dedxvsBrho", 4000, 0, 4000000, 1000, 0, 4);
+=======
+   TH2F *dedxvsBrho = new TH2F("dedxvsBrho", "dedxvsBrho", 4000, 0, 10000, 1000, 0, 4);
+>>>>>>> 95c577ba7e9d25925765b6910c9977af62e66bda
    TH2F *hVxVy = new TH2F("hVxVy", "hVxVy", 1000, 0, 10, 1000, 0, 10);
 
    Double_t m_p = 1.007825 * 931.49401;
@@ -100,9 +104,16 @@ void C16_dd_anaFit()
    m_b = m_d;
    m_B = m_C16;
 
+<<<<<<< HEAD
    Double_t Am = 0.5;
 
    std::vector<TString> files{"run_0011.root"};
+=======
+   Double_t Am = 2.0;
+
+   std::vector<TString> files{"run_0100.root"};
+   files.push_back("run_0011.root");
+>>>>>>> 95c577ba7e9d25925765b6910c9977af62e66bda
    files.push_back("run_0013.root");
    files.push_back("run_0014.root");
    files.push_back("run_0015.root");
@@ -190,7 +201,10 @@ void C16_dd_anaFit()
    files.push_back("run_0097.root");
    files.push_back("run_0098.root");
    files.push_back("run_0099.root");
+<<<<<<< HEAD
    files.push_back("run_0100.root");
+=======
+>>>>>>> 95c577ba7e9d25925765b6910c9977af62e66bda
 
    TCutG *cutt = new TCutG("CUTT", 10);
    cutt->SetVarX("ELossvsBrho");
