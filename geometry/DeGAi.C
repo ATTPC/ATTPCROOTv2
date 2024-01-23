@@ -106,7 +106,6 @@ void convert2coords(Double_t r, Double_t phi, Double_t theta, Double_t outputArr
 
   
 
-
   
 // Forward declarations
 void create_materials_from_media_file();
@@ -314,7 +313,6 @@ for (Int_t i = 0; i < 10; i++) {
         Cry_vol->SetTransparency(0);
     }
 }
-
 
 
    // GADGET Main drift volume

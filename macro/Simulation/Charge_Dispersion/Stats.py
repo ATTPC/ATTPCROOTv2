@@ -19,7 +19,6 @@ def run_root_script(script_path,input_data):
     except subprocess.CalledProcessError as e:
         print("Command failed with return code:", e.returncode)
 
-
 # Specify the script path to be executed
 script_path = './rundigi_sim_Ari.C'
 

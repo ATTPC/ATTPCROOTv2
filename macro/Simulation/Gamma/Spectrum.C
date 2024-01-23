@@ -10,33 +10,16 @@
 #include "TCanvas.h"
 #include "TRandom3.h"
 
-bool doesNotEqualAny(const std::string& str, const std::vector<std::string>& values) {
-    for (const auto& value : values) {
-        if (str == value) {
-            return false;  // String matches a value in the list
-        }
-    }
-    return true;  // String does not match any value in the list
-}
 
-void gamma_analysis(Int_t num_ev = 50000)
-{
-    // Ask user for file name
-    std::cout << "Enter the file name for analysis: ";
-    std::string fileName;
-    std::cin >> fileName;
-    Double_t momentum;
-    std::vector<std::string> isotopes = { "60Co", "173Cs", "22Na" };
-<<<<<<< HEAD
-=======
-    if (doesNotEqualAny(fileName, isotopes)) {
->>>>>>> Better gamma analysis for degai and efficency curve creation
+void Spectrum(TString isotopeName = "Cs137",Int_t num_ev = 100000)
+{   
+    
+    
+    
 
-        std::cout << "momentum: (MeV)";
-        std::cin >> momentum;
-    }
-
-    TString mcFileName = mcFileNameHead + TString(fileName.c_str()) + mcFileNameTail;
+    TString mcFileNameHead = "./data/DeGAi_";
+    TString mcFileNameTail = ".root";
+    TString mcFileName = mcFileNameHead + isotopeName + mcFileNameTail;
     TString outFileNameHead = "./data/DeGAiana";
     TString outFileNameTail = ".root";
     TString outFileName = outFileNameHead + outFileNameTail;
@@ -93,43 +76,55 @@ void gamma_analysis(Int_t num_ev = 50000)
                 // Update hit count for VolName
                 crystalHits[VolName.Data()]++;
 
-<<<<<<< HEAD
                 
-=======
-                // Check if energyLoss is within the photopeak range for specific isotopes
-                if (fileName.find("60Co") != std::string::npos && ((energyLoss >= 1.16 && energyLoss <= 1.18) || (energyLoss >= 1.32 && energyLoss <= 1.34))) {
-                    PhotopeakCount++;
-                } else if (fileName.find("137Cs") != std::string::npos && energyLoss >= 0.65 && energyLoss <= 0.67) {
-                    PhotopeakCount++;
-                } else if (fileName.find("22Na") != std::string::npos && energyLoss >= 0.50 && energyLoss <= 0.52) {
-                    PhotopeakCount++;
-                } else if (energyLoss >= momentum * 0.95 && energyLoss <= momentum * 1.05) {
-                    PhotopeakCount++;
-                }
->>>>>>> Better gamma analysis for degai and efficency curve creation
             }
         }
 
         
         if (GausenergyLoss != 0.0) {
-            std::cout << "energyLoss: " << energyLoss << std::endl;
+        
             Energy_loss->Fill(GausenergyLoss);
         }
     }
-
+    std::vector<double> energies;
+    if (isotopeName == "Co60") {
+            energies = {1.173, 1.332}; // Cobalt-60 energies
+        } else if (isotopeName == "Cs137") {
+            energies = {0.662}; // Cesium-137 energy
+        } else if (isotopeName == "I131") {
+            energies = {0.364}; // Iodine-131 energy
+        } else if (isotopeName == "Te99") {
+            energies = {0.140}; // Technetium-99m energy
+        } else if (isotopeName == "Na22") {
+            energies = {1.275}; // Sodium-22 energy
+        } else if (isotopeName == "Am241") {
+            energies = {0.060}; // Americium-241 energy
+        } else if (isotopeName == "Th208") {
+            energies = {0.583, 0.860, 2.614}; // Thallium-208 energies
+        } else if (isotopeName == "U238") {
+            energies = {0.186}; // Uranium-238 energy
+        } else {
+            std::cerr << "Isotope not recognized: " << isotopeName << std::endl;
+            return;
+        }
    
-    for (Int_t bin = Energy_loss->GetXaxis()->FindBin(lowerBound); bin <= Energy_loss->GetXaxis()->FindBin(upperBound); bin++) {
-    PhotopeakCount += Energy_loss->GetBinContent(bin);
+for (auto energy : energies) {
+            double lowerBound = energy - 0.01;
+            double upperBound = energy + 0.01;
+            for (Int_t bin = Energy_loss->GetXaxis()->FindBin(lowerBound);
+                 bin <= Energy_loss->GetXaxis()->FindBin(upperBound); bin++) {
+                PhotopeakCount += Energy_loss->GetBinContent(bin);
+            }
 }
-    Double_t photopeakEfficency = (PhotopeakCount / num_ev) * 100.0;
-    Double_t Err = (TMath::Sqrt(PhotopeakCount)/PhotopeakCount) *photopeakEfficency;
+    Double_t photopeakEfficiency = (PhotopeakCount / num_ev) * 100.0;
+    Double_t Err = (TMath::Sqrt(PhotopeakCount)/PhotopeakCount) *photopeakEfficiency;
     // Print the tally board for each crystal volume
     for (const auto& crystal : crystalHits) {
         std::cout << "VolName: " << crystal.first << " had " << crystal.second << " hits." << std::endl;
     }
 
     std::cout << "Photopeak Efficiency : " << photopeakEfficiency << "%" << std::endl;
-    std::cout << PhotopeakCount << std::endl;
+    std::cout <<"Photopeak Count"<< PhotopeakCount << std::endl;
     std::cout <<"Error: "<< Err << std::endl;
     c1->cd(1);
     Energy_loss->SetTitle(Form("Photopeak Efficiency: Energy Loss Spectrum (%.2f%%)", photopeakEfficiency));
