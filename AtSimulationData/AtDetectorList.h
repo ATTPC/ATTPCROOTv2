@@ -22,6 +22,7 @@ enum DetectorId {
    kAtSiArray,
    kAtApollo,
    kAtSeGA,
+   kAtDeGAi,
    kSTOPHERE,
 };
 
