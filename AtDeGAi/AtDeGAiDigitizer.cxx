@@ -8,8 +8,8 @@
 
 #include "AtDeGAiDigitizer.h"
 
-#include "AtMCPoint.h"            // for AtMCPoint
 #include "AtDeGAiCrystalCalData.h" // for AtDeGAiCrystalCalData
+#include "AtMCPoint.h"             // for AtMCPoint
 
 #include <FairLogger.h>      // for Logger, LOG
 #include <FairRootManager.h> // for FairRootManager

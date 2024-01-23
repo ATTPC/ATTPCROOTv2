@@ -154,8 +154,8 @@ Bool_t AtDeGAi::CheckIfSensitive(std::string name)
 }
 
 // -----   Private method AddPoint   --------------------------------------------
-AtMCPoint *
-AtDeGAi::AddPoint(Int_t trackID, Int_t detID, TVector3 pos, TVector3 mom, Double_t time, Double_t length, Double_t eLoss)
+AtMCPoint *AtDeGAi::AddPoint(Int_t trackID, Int_t detID, TVector3 pos, TVector3 mom, Double_t time, Double_t length,
+                             Double_t eLoss)
 {
    TClonesArray &clref = *fAtDeGAiPointCollection;
    Int_t size = clref.GetEntriesFast();

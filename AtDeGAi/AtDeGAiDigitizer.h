@@ -21,7 +21,7 @@ class TMemberInspector;
 
 class AtDeGAiDigitizer : public FairTask {
 private:
-   TClonesArray *fMCPointDataCA;   //!  The crystal hit collection (we do not own)
+   TClonesArray *fMCPointDataCA;    //!  The crystal hit collection (we do not own)
    TClonesArray fDeGAiCryCalDataCA; /**< Array with CALIFA Cal- output data. >*/
 
    Double_t fNonUniformity{0}; // Experimental non-uniformity parameter

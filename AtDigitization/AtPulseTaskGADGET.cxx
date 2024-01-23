@@ -1,6 +1,5 @@
 #include "AtPulseTaskGADGET.h"
 
-
 #include "AtDigiPar.h"
 #include "AtElectronicResponse.h"
 #include "AtMCPoint.h"
@@ -43,21 +42,23 @@ using namespace ElectronicResponse;
 AtPulseTaskGADGET::AtPulseTaskGADGET() : AtPulseTaskGADGET("AtPulseTaskGADGET") {}
 AtPulseTaskGADGET::AtPulseTaskGADGET(const char *name) : AtPulseTask(name) {}
 
-   
-Double_t AtPulseTaskGADGET::ChargeDispersion(Double_t G,Double_t time, Double_t x0,Double_t y0,Double_t xi,Double_t yi) { 
-   Double_t rtTwoSigma = TMath::Sqrt(2*time/(R*C)+2*Dc*t_amp)*TMath::Sqrt(2)*SigmaPercent;
-   Double_t Charge = G/4*(TMath::Erf((xi+W/2-x0)/(rtTwoSigma))-TMath::Erf((xi-W/2-x0)/(rtTwoSigma)))*
-   (TMath::Erf((yi+W/2-y0)/(rtTwoSigma))-TMath::Erf((yi-W/2-y0)/(rtTwoSigma)));
+Double_t
+AtPulseTaskGADGET::ChargeDispersion(Double_t G, Double_t time, Double_t x0, Double_t y0, Double_t xi, Double_t yi)
+{
+   Double_t rtTwoSigma = TMath::Sqrt(2 * time / (R * C) + 2 * Dc * t_amp) * TMath::Sqrt(2) * SigmaPercent;
+   Double_t Charge = G / 4 *
+                     (TMath::Erf((xi + W / 2 - x0) / (rtTwoSigma)) - TMath::Erf((xi - W / 2 - x0) / (rtTwoSigma))) *
+                     (TMath::Erf((yi + W / 2 - y0) / (rtTwoSigma)) - TMath::Erf((yi - W / 2 - y0) / (rtTwoSigma)));
    return Charge;
 };
 
 Int_t skippy = 0; // looking at the skipped charge dispersed electrons
-bool AtPulseTaskGADGET::gatherElectronsFromSimulatedPoint(AtSimulatedPoint *point )
-{  
+bool AtPulseTaskGADGET::gatherElectronsFromSimulatedPoint(AtSimulatedPoint *point)
+{
    if (point == nullptr)
       return false;
-   
-   if (AdjecentPads == 0){
+
+   if (AdjecentPads == 0) {
       SetSigmaPercent(0.01);
    };
 
@@ -69,58 +70,57 @@ bool AtPulseTaskGADGET::gatherElectronsFromSimulatedPoint(AtSimulatedPoint *poin
    auto charge = point->GetCharge(); // number of electrons
    auto binNumber = fPadPlane->Fill(xElectron, yElectron);
    auto padNumber = fMap->BinToPad(binNumber);
-   
-   if(padNumber < 0 || padNumber >= fMap->GetNumPads()){// if electron cloud hits edge center cant be calculated thus were moving the cloud an edge away.
-      binNumber = fPadPlane->Fill(xElectron+0.001, yElectron+0.001);
+
+   if (padNumber < 0 || padNumber >= fMap->GetNumPads()) { // if electron cloud hits edge center cant be calculated thus
+                                                           // were moving the cloud an edge away.
+      binNumber = fPadPlane->Fill(xElectron + 0.001, yElectron + 0.001);
       padNumber = fMap->BinToPad(binNumber);
-      };
-   
+   };
+
    auto mcPoint = dynamic_cast<AtMCPoint *>(fMCPointArray->At(point->GetMCPointID()));
    auto trackID = mcPoint->GetTrackID();
-   auto PadCenter = fMap->CalcPadCenter(padNumber);// get pad center
-   auto gAvg =  AtPulseTaskGADGET::getAvgGETgain(point->GetCharge()); // get average gain
-  
-// Calculate the coordinates for adjacent pads
-std::vector<Double_t> coords(Items);
-Int_t adjecentPads = AdjecentPads; // Capture the variable as a local copy
-std::generate_n(coords.begin(), Items, [adjecentPads, n = 0]() mutable {
-    Double_t coord = adjecentPads * -2.2 + 2.2 * n++;
-    return coord;
-});
+   auto PadCenter = fMap->CalcPadCenter(padNumber);                  // get pad center
+   auto gAvg = AtPulseTaskGADGET::getAvgGETgain(point->GetCharge()); // get average gain
 
+   // Calculate the coordinates for adjacent pads
+   std::vector<Double_t> coords(Items);
+   Int_t adjecentPads = AdjecentPads; // Capture the variable as a local copy
+   std::generate_n(coords.begin(), Items, [adjecentPads, n = 0]() mutable {
+      Double_t coord = adjecentPads * -2.2 + 2.2 * n++;
+      return coord;
+   });
 
+   // Iterate over the adjacent pads using the calculated coordinates
+   for (const auto &coord : coords) {
+      Double_t xPadCurrent = PadCenter.X() + coord;
+      Double_t yPadCurrent = PadCenter.Y() + coord;
 
+      auto newbinNumber = fPadPlane->Fill(xPadCurrent, yPadCurrent); // assign new bin number to adjecent pad
+      auto newpadNumber = fMap->BinToPad(newbinNumber);              // assign new pad number to adjecent pad
 
-// Iterate over the adjacent pads using the calculated coordinates
-for (const auto& coord : coords) {
-    Double_t xPadCurrent = PadCenter.X() + coord;
-    Double_t yPadCurrent = PadCenter.Y() + coord;
-         
-         auto newbinNumber = fPadPlane->Fill(xPadCurrent, yPadCurrent); // assign new bin number to adjecent pad
-         auto newpadNumber = fMap->BinToPad(newbinNumber); // assign new pad number to adjecent pad
-   
-         if (newpadNumber < 0 || newpadNumber >= fMap->GetNumPads()) {// skip if dispersped pad is invalid
-            LOG(debug) << "Skipping electron...";
-            skippy++;
+      if (newpadNumber < 0 || newpadNumber >= fMap->GetNumPads()) { // skip if dispersped pad is invalid
+         LOG(debug) << "Skipping electron...";
+         skippy++;
 
-            continue;};
+         continue;
+      };
 
-         auto newtotalyInhibited = fMap->IsInhibited(newpadNumber) == AtMap::InhibitType::kTotal;
-         if (!newtotalyInhibited ){
-            Double_t ChargeDispersed = ChargeDispersion(gAvg,eTime ,xElectron,yElectron,xPadCurrent, yPadCurrent);// charge dispersed on adjecent pad
-            // appends the charge to the histogram 
-            
-            eleAccumulated[newpadNumber]->Fill(eTime, ChargeDispersed);
-            electronsMap[newpadNumber] = eleAccumulated[newpadNumber].get();
-            
+      auto newtotalyInhibited = fMap->IsInhibited(newpadNumber) == AtMap::InhibitType::kTotal;
+      if (!newtotalyInhibited) {
+         Double_t ChargeDispersed = ChargeDispersion(gAvg, eTime, xElectron, yElectron, xPadCurrent,
+                                                     yPadCurrent); // charge dispersed on adjecent pad
+         // appends the charge to the histogram
+
+         eleAccumulated[newpadNumber]->Fill(eTime, ChargeDispersed);
+         electronsMap[newpadNumber] = eleAccumulated[newpadNumber].get();
       }
    }
 
-   if (padNumber < 0 || padNumber >= fMap->GetNumPads()) {// Skip if pad is invalid
-         LOG(debug) << "Skipping electron...";
-         return false;
-      }
-   
+   if (padNumber < 0 || padNumber >= fMap->GetNumPads()) { // Skip if pad is invalid
+      LOG(debug) << "Skipping electron...";
+      return false;
+   }
+
    return true;
 }
 
@@ -131,7 +131,7 @@ void AtPulseTaskGADGET::Exec(Option_t *option)
 
    Int_t nMCPoints = fSimulatedPointArray->GetEntries();
    std::cout << " AtPulseTaskGADGET: Number of Points " << nMCPoints << std::endl;
-   std::cout << " AtPulseTaskGADGET: Number of Points (plus dispersion) " << (nMCPoints*Items*Items) << std::endl;
+   std::cout << " AtPulseTaskGADGET: Number of Points (plus dispersion) " << (nMCPoints * Items * Items) << std::endl;
    // Distributing electron pulses among the pads
    Int_t skippedPoints = 0;
    Int_t skippedDispersion = 0;
@@ -141,18 +141,18 @@ void AtPulseTaskGADGET::Exec(Option_t *option)
          LOG(fatal) << "The TClonesArray AtSimulatedPoint did not contain type AtSimulatedPoint!";
       if (!gatherElectronsFromSimulatedPoint(dElectron))
          skippedPoints++;
-      skippedPoints+=skippy;
-      skippedDispersion+=skippy;
-      skippy=0;  
+      skippedPoints += skippy;
+      skippedDispersion += skippy;
+      skippy = 0;
    }
-   
 
    std::cout << "...End of collection of electrons in this event." << std::endl;
-   std::cout << "Skipped " << (double)skippedPoints / (nMCPoints * Items*Items) * 100. << "% of " << (nMCPoints* Items*Items) << std::endl;
-                                                         //  ^^^^^^^^^ the total pads are the number of dispersed pads times the center pads.
-   std::cout << "Skipped dispersion " << (double)skippedDispersion / (nMCPoints*Items*Items) * 100  << "% of " << (nMCPoints*Items*Items) << std::endl;                                                      
+   std::cout << "Skipped " << (double)skippedPoints / (nMCPoints * Items * Items) * 100. << "% of "
+             << (nMCPoints * Items * Items) << std::endl;
+   //  ^^^^^^^^^ the total pads are the number of dispersed pads times the center pads.
+   std::cout << "Skipped dispersion " << (double)skippedDispersion / (nMCPoints * Items * Items) * 100 << "% of "
+             << (nMCPoints * Items * Items) << std::endl;
    generateTracesFromGatheredElectrons();
 }
-
 
 ClassImp(AtPulseTaskGADGET);
