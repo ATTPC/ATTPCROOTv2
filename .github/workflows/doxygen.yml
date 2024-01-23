@@ -1,0 +1,25 @@
+name: Doxygen Action
+
+on:
+  release:
+    types: [ published ]
+    
+jobs:
+  build-and-publish-doxygen:
+    runs-on: ubuntu-latest
+    steps:
+    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - uses: actions/checkout@v2
+        
+    - name: Run Doxygen
+      uses: mattnotmitt/doxygen-action@v1.8
+      with:
+        working-directory: ./doxygen
+    
+    - name: Deploy
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        # Default Doxyfile build documentation to html directory. 
+        # Change the directory if changes in Doxyfile
+        publish_dir: ./doxygen/html

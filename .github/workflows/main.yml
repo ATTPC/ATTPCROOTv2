@@ -1,0 +1,19 @@
+# Run clang-format
+name: Clang-format
+
+on: [push, pull_request]
+
+jobs:
+  checkout-and-check-formatting:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Run clang-format
+      uses: DoozyX/clang-format-lint-action@v0.13
+      # These are optional (defaults displayed)
+      with:
+        source: '.'
+        exclude: './macro ./scripts ./compiled ./resources ./include'
+        extensions: 'h,cxx,C'
+        clangFormatVersion: 12
