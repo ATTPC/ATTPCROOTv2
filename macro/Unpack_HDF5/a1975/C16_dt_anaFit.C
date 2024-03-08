@@ -64,7 +64,7 @@ kine_2b(Double_t m1, Double_t m2, Double_t m3, Double_t m4, Double_t K_proj, Dou
 
 void GetEnergy(Double_t M, Double_t IZ, Double_t BRO, Double_t &E);
 
-void C16_dd_anaFit()
+void C16_dt_anaFit()
 {
    FairRunAna *run = new FairRunAna();
 
@@ -74,8 +74,14 @@ void C16_dd_anaFit()
    TH2F *dedxvsBrho = new TH2F("dedxvsBrho", "dedxvsBrho", 4000, 0, 4000000, 1000, 0, 4);
    TH2F *hVxVy = new TH2F("hVxVy", "hVxVy", 1000, 0, 10, 1000, 0, 10);
    TH1F *henergyIC = new TH1F("henergyIC", "henergyIC", 2048, 0, 2047);
+   TH2F *QvsTrackLengthH = new TH2F("QvsTrackLengthH", "QvsTrackLengthH", 1000, -10, 50, 1000, 0, 1000);
+
    auto *hex = new TH1F("hex", "hex", 600, -5, 55);
    auto *QvsEb = new TH2F("QvsEb", "QvsEb", 1000, -5, 15, 300, 0, 300);
+   auto *QvsZpos = new TH2F("QvsZpos", "QvsZpos", 1000, -10, 50, 200, -100, 100);
+   auto *HQCorr = new TH1F("HQCorr", "HQCorr", 600, -5, 55);
+   auto *QcorrvsZpos = new TH2F("QcorrvsZpos", "QcorrvsZpos", 1000, -10, 10, 200, -100, 100);
+   auto *QcorrvsTrackLengthH = new TH2F("QcorrvsTrackLengthH", "QcorrvsTrackLengthH", 1000, -10, 50, 1000, 0, 1000);
 
    Double_t m_p = 1.007825 * 931.49401;
    Double_t m_d = 2.0135532 * 931.49401;
@@ -88,22 +94,33 @@ void C16_dd_anaFit()
    Float_t aMass = 4.00260325415;
    Float_t O16Mass = 15.99491461956;
    Double_t m_C14 = 14.003242 * 931.49401;
+   Double_t m_C15 = 15.010599256 * 931.49401;
    Double_t m_C13 = 13.00335484 * 931.49401;
    Double_t m_C12 = 12.00 * 931.49401;
    Double_t m_C16 = 16.0147 * 931.49401;
    Double_t m_C17 = 17.0226 * 931.49401;
+   Double_t m_C18 = 18.0268 * 931.49401;
 
    Double_t m_a = 4.00260325415 * 931.49401;
    Double_t m_O16 = 15.99491461956 * 931.49401;
 
-   Double_t Ebeam_buff = 154.0; // 192.0;
+   Double_t Ebeam_buff = 180.0; // 192.0;
    Double_t m_b;
    Double_t m_B;
 
-   m_b = m_d;
-   m_B = m_C16;
+   m_b = m_t;
+   m_B = m_C15;
 
-   Double_t Am = 0.5;
+   Double_t Am = 2.0 / 3.0;
+   Double_t dummy;
+
+   std::cout << " Beam energy : " << Ebeam_buff << " MeV " << std::endl;
+   std::cout << " Recoil mass : " << m_B / 931.49401 << " MeV " << std::endl;
+   std::cout << " Scattered mass : " << m_b / 931.49401 << " MeV " << std::endl;
+   std::cout << " Mass number : " << Am << " MeV " << std::endl;
+   std::cin >> dummy;
+
+   std::ofstream kinematicsFile("kinematics.dat");
 
    TString dir = gSystem->Getenv("VMCWORKDIR");
    TString dataDir = dir + "/macro/Unpack_HDF5/a1975/C16_dd_data/";
@@ -391,6 +408,7 @@ void C16_dd_anaFit()
                auto [charge, brho, eLossADC, dEdxADC, pdg, trackPoints] = fittedTracks.at(index)->GetTrackProperties();
                // auto [ICEnergy,ICTime] = fittedTracks.at(0)->GetIonChamber(); //TODO
                auto [exEnergy, exEnergyXtr] = fittedTracks.at(index)->GetExcitationEnergy();
+               auto [distanceXtr, trackLength, POCAXtr] = fittedTracks.at(index)->GetDistances();
 
                // Conditions
                /*if (!cutd->IsInside(eLossADC, brho))
@@ -402,7 +420,13 @@ void C16_dd_anaFit()
                /*if (cuttdedx->IsInside(dEdxADC, brho))
                   continue;*/
 
-               if (theta > 90.0 || theta < 10.0)
+               if (theta > 56.0 || theta < 25.0)
+                  continue;
+
+               if (energy * Am < 2.0 || energy * Am > 20.0)
+                  continue;
+
+               if (iniPosXtr.Z() / 10.0 < -1.0 || iniPosXtr.Z() / 10.0 > 50.0)
                   continue;
 
                /* if(eLossADC<600)
@@ -411,11 +435,37 @@ void C16_dd_anaFit()
                  if(dEdxADC<20000 || dEdxADC>110000)
                     continue; */
 
+               // Excitation energy
+               auto [ex_energy, theta_cm] =
+                  kine_2b(m_C16, m_d, m_b, m_B, Ebeam_buff, theta * TMath::DegToRad(), energy * Am);
+
+               // Excitation energy vs Beam energy
+               for (auto iEb = 0; iEb < 300; ++iEb) {
+                  auto [_ex_energy, _theta_cm] =
+                     kine_2b(m_C16, m_d, m_b, m_B, iEb, theta * TMath::DegToRad(), energy * Am);
+                  QvsEb->Fill(_ex_energy, iEb);
+               }
+
+               // kinematicsFile << energy*Am << " " << theta << "\n";
+
+               Double_t p0 = 2.92915;
+               Double_t p1 = -0.00977621;
+               Double_t mFactor = 1.00;
+               Double_t offSet = 0.0;
+               Double_t QcorrZ = 0.0;
+               QcorrZ = ex_energy - mFactor * p1 * (iniPosXtr.Z() / 10.0) - p0;
+               HQCorr->Fill(QcorrZ);
+               QcorrvsZpos->Fill(QcorrZ, iniPosXtr.Z() / 10.0);
+               QcorrvsTrackLengthH->Fill(QcorrZ, trackLength);
+
                // Histograms
                Ang_Ener->Fill(theta, energy * Am);
                Ang_Ener_PRAC->Fill(thetaPRA, energyPRA * Am);
                ELossvsBrho->Fill(eLossADC, brho);
                dedxvsBrho->Fill(dEdxADC, brho);
+               hex->Fill(ex_energy);
+               QvsZpos->Fill(ex_energy, iniPosXtr.Z() / 10.0);
+               QvsTrackLengthH->Fill(ex_energy, trackLength);
 
                Double_t vx = TMath::Sin(theta * TMath::DegToRad()) * TMath::Sqrt(energy * Am);
                Double_t vy = TMath::Cos(theta * TMath::DegToRad()) * TMath::Sqrt(energy * Am);
@@ -428,6 +478,8 @@ void C16_dd_anaFit()
 
    } // Files
 
+   kinematicsFile.close();
+
    Double_t *ThetaCMS = new Double_t[20000];
    Double_t *ThetaLabRec = new Double_t[20000];
    Double_t *EnerLabRec = new Double_t[20000];
@@ -435,7 +487,7 @@ void C16_dd_anaFit()
    Double_t *EnerLabSca = new Double_t[20000];
    Double_t *MomLabRec = new Double_t[20000];
 
-   TString fileKine = "C16_dd_gs.txt";
+   TString fileKine = "C16_dt_gs.txt";
    std::ifstream *kineStr = new std::ifstream(fileKine.Data());
    Int_t numKin = 0;
 
@@ -455,6 +507,51 @@ void C16_dd_anaFit()
 
    TGraph *kine_gs = new TGraph(numKin, ThetaLabRec, EnerLabRec);
 
+   TString fileKine2 = "C16_dt_first.txt";
+   std::ifstream *kineStr2 = new std::ifstream(fileKine2.Data());
+   numKin = 0;
+
+   if (!kineStr2->fail()) {
+      while (!kineStr2->eof()) {
+         *kineStr2 >> ThetaCMS[numKin] >> ThetaLabRec[numKin] >> EnerLabRec[numKin] >> ThetaLabSca[numKin] >>
+            EnerLabSca[numKin];
+         numKin++;
+      }
+   } else if (kineStr2->fail())
+      std::cout << " Warning : No Kinematics file found for this reaction!" << std::endl;
+
+   TGraph *kine_first = new TGraph(numKin, ThetaLabRec, EnerLabRec);
+
+   TString fileKine3 = "C16_dt_second.txt";
+   std::ifstream *kineStr3 = new std::ifstream(fileKine3.Data());
+   numKin = 0;
+
+   if (!kineStr3->fail()) {
+      while (!kineStr3->eof()) {
+         *kineStr3 >> ThetaCMS[numKin] >> ThetaLabRec[numKin] >> EnerLabRec[numKin] >> ThetaLabSca[numKin] >>
+            EnerLabSca[numKin];
+         numKin++;
+      }
+   } else if (kineStr3->fail())
+      std::cout << " Warning : No Kinematics file found for this reaction!" << std::endl;
+
+   TGraph *kine_second = new TGraph(numKin, ThetaLabRec, EnerLabRec);
+
+   TString fileKine4 = "C16_dt_third.txt";
+   std::ifstream *kineStr4 = new std::ifstream(fileKine4.Data());
+   numKin = 0;
+
+   if (!kineStr4->fail()) {
+      while (!kineStr4->eof()) {
+         *kineStr4 >> ThetaCMS[numKin] >> ThetaLabRec[numKin] >> EnerLabRec[numKin] >> ThetaLabSca[numKin] >>
+            EnerLabSca[numKin];
+         numKin++;
+      }
+   } else if (kineStr4->fail())
+      std::cout << " Warning : No Kinematics file found for this reaction!" << std::endl;
+
+   TGraph *kine_third = new TGraph(numKin, ThetaLabRec, EnerLabRec);
+
    TCanvas *c1 = new TCanvas();
    c1->Divide(2, 2);
    c1->Draw();
@@ -465,6 +562,9 @@ void C16_dd_anaFit()
    Ang_Ener->GetXaxis()->SetTitle("Angle (deg)");
    Ang_Ener->GetYaxis()->SetTitle("Energy (MeV)");
    kine_gs->Draw("same");
+   kine_first->Draw("same");
+   kine_second->Draw("same");
+   kine_third->Draw("same");
    c1->cd(2);
    Ang_Ener_PRAC->Draw("col");
    c1->cd(3);
@@ -482,6 +582,28 @@ void C16_dd_anaFit()
 
    TCanvas *c_IC = new TCanvas();
    henergyIC->Draw();
+
+   TCanvas *c_ExEner = new TCanvas();
+   c_ExEner->Divide(2, 1);
+   c_ExEner->cd(1);
+   hex->Draw();
+   c_ExEner->cd(2);
+   QvsTrackLengthH->Draw("zcol");
+
+   TCanvas *c_ExVsZ = new TCanvas();
+   QvsZpos->Draw("zcol");
+
+   TCanvas *c_ExEnerBeam = new TCanvas();
+   QvsEb->Draw("zcol");
+
+   TCanvas *c_ExEner_corr = new TCanvas();
+   c_ExEner_corr->Divide(2, 2);
+   c_ExEner_corr->cd(1);
+   QcorrvsZpos->Draw("zcol");
+   c_ExEner_corr->cd(2);
+   HQCorr->Draw();
+   c_ExEner_corr->cd(3);
+   QcorrvsTrackLengthH->Draw("zcol");
 }
 
 void GetEnergy(Double_t M, Double_t IZ, Double_t BRO, Double_t &E)

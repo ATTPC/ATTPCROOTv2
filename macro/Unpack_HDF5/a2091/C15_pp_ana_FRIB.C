@@ -18,7 +18,7 @@ Double_t GetNPeaksHRS(std::vector<Int_t> *timeMax, std::vector<Float_t> *adcMax,
    return nfound;
 }
 
-void C16_dd_ana_FRIB(TString fileName = "run_0047_FRIB")
+void C15_pp_ana_FRIB(TString fileName = "run_0138_FRIB")
 {
    FairRunAna *run = new FairRunAna(); // Forcing a dummy run
 

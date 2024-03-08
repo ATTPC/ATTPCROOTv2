@@ -137,20 +137,20 @@ AtFITTER::AtGenfit::~AtGenfit()
 
 void AtFITTER::AtGenfit::Init()
 {
-   std::cout << cGREEN << " AtFITTER::AtGenfit::Init() " << cNORMAL << "\n";
-   std::cout << cGREEN << " AtFitterTask::Init - Fit parameters. "
-             << "\n";
-   std::cout << " Magnetic Field       : " << fMagneticField << " T\n";
-   std::cout << " PDG Code             : " << fPDGCode << "\n";
-   std::cout << " Mass                 : " << fMass << " amu\n";
-   std::cout << " Atomic Number        : " << fAtomicNumber << "\n";
-   std::cout << " Number of fit points : " << fNumFitPoints << "\n";
-   std::cout << " Maximum iterations   : " << fMaxIterations << "\n";
-   std::cout << " Minimum iterations   : " << fMinIterations << "\n";
-   std::cout << " Maximum brho         : " << fMaxBrho << "\n";
-   std::cout << " Minimum brho         : " << fMinBrho << "\n";
-   std::cout << " Energy loss file     : " << fEnergyLossFile << "\n";
-   std::cout << " --------------------------------------------- " << cNORMAL << "\n";
+   LOG(debug) << cGREEN << " AtFITTER::AtGenfit::Init() " << cNORMAL << "\n";
+   LOG(debug) << cGREEN << " AtFitterTask::Init - Fit parameters. "
+              << "\n";
+   LOG(debug) << " Magnetic Field       : " << fMagneticField << " T\n";
+   LOG(debug) << " PDG Code             : " << fPDGCode << "\n";
+   LOG(debug) << " Mass                 : " << fMass << " amu\n";
+   LOG(debug) << " Atomic Number        : " << fAtomicNumber << "\n";
+   LOG(debug) << " Number of fit points : " << fNumFitPoints << "\n";
+   LOG(debug) << " Maximum iterations   : " << fMaxIterations << "\n";
+   LOG(debug) << " Minimum iterations   : " << fMinIterations << "\n";
+   LOG(debug) << " Maximum brho         : " << fMaxBrho << "\n";
+   LOG(debug) << " Minimum brho         : " << fMinBrho << "\n";
+   LOG(debug) << " Energy loss file     : " << fEnergyLossFile << "\n";
+   LOG(debug) << " --------------------------------------------- " << cNORMAL << "\n";
 
    fHitClusterArray->Delete();
    fGenfitTrackArray->Delete();
@@ -212,12 +212,12 @@ std::vector<std::unique_ptr<AtFittedTrack>> AtFITTER::AtGenfit::ProcessTracks(st
       trackID = track.GetTrackID();
 
       if (track.GetHitClusterArray()->size() < 3) {
-         std::cout << cRED << " Track has less than 3 clusters! " << cNORMAL << "\n";
+         LOG(debug) << cRED << " Track has less than 3 clusters! " << cNORMAL << "\n";
          continue;
       }
 
       if (track.GetTrackID() == -1) {
-         std::cout << cRED << " Track is noise! " << cNORMAL << "\n";
+         LOG(debug) << cRED << " Track is noise! " << cNORMAL << "\n";
          continue;
       }
 
@@ -285,22 +285,22 @@ std::vector<std::unique_ptr<AtFittedTrack>> AtFITTER::AtGenfit::ProcessTracks(st
       }
 
       // This is just to select distances
-      std::cout << cBLUE << "   Track ID " << track.GetTrackID() << "\n";
-      std::cout << "   Initial position : " << xiniPRA << " - " << yiniPRA << " - " << ziniPRA << " "
-                << iniCluster.GetTimeStamp() << "\n";
-      std::cout << "   Second position : " << secPos.X() << " - " << secPos.Y() << " - " << secPos.Z() << " "
-                << secCluster.GetTimeStamp() << "\n";
-      std::cout << "   End position : " << endPos.X() << " - " << endPos.Y() << " - " << zEndCal << " "
-                << endCluster.GetTimeStamp() << "\n";
-      std::cout << "   Theta (PRA) " << track.GetGeoTheta() * TMath::RadToDeg()
-                << "   Theta (convention) : " << thetaConv << " - Phi Clus : " << phiClus * TMath::RadToDeg() << "\n";
-      std::cout << "   Track center - X :  " << center.first << " - Y : " << center.second << "\n";
-      std::cout << "   Track phi recalc : " << track.GetGeoPhi() * TMath::RadToDeg() << cNORMAL << "\n";
+      LOG(debug) << cBLUE << "   Track ID " << track.GetTrackID() << "\n";
+      LOG(debug) << "   Initial position : " << xiniPRA << " - " << yiniPRA << " - " << ziniPRA << " "
+                 << iniCluster.GetTimeStamp() << "\n";
+      LOG(debug) << "   Second position : " << secPos.X() << " - " << secPos.Y() << " - " << secPos.Z() << " "
+                 << secCluster.GetTimeStamp() << "\n";
+      LOG(debug) << "   End position : " << endPos.X() << " - " << endPos.Y() << " - " << zEndCal << " "
+                 << endCluster.GetTimeStamp() << "\n";
+      LOG(debug) << "   Theta (PRA) " << track.GetGeoTheta() * TMath::RadToDeg()
+                 << "   Theta (convention) : " << thetaConv << " - Phi Clus : " << phiClus * TMath::RadToDeg() << "\n";
+      LOG(debug) << "   Track center - X :  " << center.first << " - Y : " << center.second << "\n";
+      LOG(debug) << "   Track phi recalc : " << track.GetGeoPhi() * TMath::RadToDeg() << cNORMAL << "\n";
 
       // Skip tracks that are far from Z (to be checked against number of iterations for extrapolation)
       Double_t dist = TMath::Sqrt(iniPos.X() * iniPos.X() + iniPos.Y() * iniPos.Y());
-      std::cout << KRED << "    Distance to Z " << dist << cNORMAL << "\n";
-      std::cout << KGRN << "    ---- Adding track candidate " << cNORMAL << "\n";
+      LOG(debug) << KRED << "    Distance to Z " << dist << cNORMAL << "\n";
+      LOG(debug) << KGRN << "    ---- Adding track candidate " << cNORMAL << "\n";
       track.SetVertexToZDist(dist);
       if (fEnableMerging) {
          sp[iTrack] = track;
@@ -802,13 +802,13 @@ genfit::Track *AtFITTER::AtGenfit::FitTracks(AtTrack *track)
    Int_t PDGCode = fPDGCode;
 
    if (fVerbosity > 0) {
-      std::cout << cYELLOW << "    ---- AtGenfit : Initial parameters "
-                << "\n";
-      std::cout << "    PDG : " << PDGCode << " - Mass : " << p_mass << " - Atomic number : " << p_Z << "\n";
-      std::cout << "    B field : " << fMagneticField / 10.0 << " - Min. Bhro : " << fMinBrho
-                << "    - Max. Brho : " << fMaxBrho << "\n";
-      std::cout << "    Theta : " << theta * TMath::RadToDeg() << " - Phi : " << phi * TMath::RadToDeg()
-                << "    - Brho (geo) : " << brho << cNORMAL << "\n";
+      LOG(debug) << cYELLOW << "    ---- AtGenfit : Initial parameters "
+                 << "\n";
+      LOG(debug) << "    PDG : " << PDGCode << " - Mass : " << p_mass << " - Atomic number : " << p_Z << "\n";
+      LOG(debug) << "    B field : " << fMagneticField / 10.0 << " - Min. Bhro : " << fMinBrho
+                 << "    - Max. Brho : " << fMaxBrho << "\n";
+      LOG(debug) << "    Theta : " << theta * TMath::RadToDeg() << " - Phi : " << phi * TMath::RadToDeg()
+                 << "    - Brho (geo) : " << brho << cNORMAL << "\n";
    }
 
    // hitClusterArray->resize(hitClusterArray->size() * 0.50);
@@ -958,10 +958,10 @@ genfit::Track *AtFITTER::AtGenfit::FitTracks(AtTrack *track)
    try {
       if (fVerbosity > 0) {
          fitStatus = gfTrack->getFitStatus(trackRep);
-         std::cout << cYELLOW << " Is fitted? " << fitStatus->isFitted() << "\n";
-         std::cout << " Is Converged ? " << fitStatus->isFitConverged() << "\n";
-         std::cout << " Is Converged Partially? " << fitStatus->isFitConvergedPartially() << "\n";
-         std::cout << " Is pruned ? " << fitStatus->isTrackPruned() << cNORMAL << "\n";
+         LOG(debug) << cYELLOW << " Is fitted? " << fitStatus->isFitted() << "\n";
+         LOG(debug) << " Is Converged ? " << fitStatus->isFitConverged() << "\n";
+         LOG(debug) << " Is Converged Partially? " << fitStatus->isFitConvergedPartially() << "\n";
+         LOG(debug) << " Is pruned ? " << fitStatus->isTrackPruned() << cNORMAL << "\n";
          fitStatus->Print();
       }
    } catch (genfit::Exception &e) {

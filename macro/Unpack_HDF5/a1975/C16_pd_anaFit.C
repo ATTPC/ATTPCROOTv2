@@ -64,9 +64,43 @@ kine_2b(Double_t m1, Double_t m2, Double_t m3, Double_t m4, Double_t K_proj, Dou
 
 void GetEnergy(Double_t M, Double_t IZ, Double_t BRO, Double_t &E);
 
-void C16_pp_anaFit()
+Int_t GetMaxAngleIndex(const std::vector<std::unique_ptr<AtFittedTrack>> &tracks)
+{
+
+   // Range of values to exclude
+   Double_t lowerBound = 90;
+   Double_t upperBound = 180;
+
+   // Lambda function to check if value falls within the range
+   auto isInRange = [=](AtFittedTrack &track) {
+      auto [energy, energyXtr, theta, phi, energyPRA, thetaPRA, phiPRA] = track.GetEnergyAngles();
+      return theta >= lowerBound && theta <= upperBound;
+   };
+
+   // Lambda function to compare CustomObjects based on value
+   auto compareTracks = [](AtFittedTrack &a, AtFittedTrack &b) {
+      auto [energyb, energyXtrb, thetab, phib, energyPRAb, thetaPRAb, phiPRAb] = b.GetEnergyAngles();
+      auto [energya, energyXtra, thetaa, phia, energyPRAa, thetaPRAa, phiPRAa] = a.GetEnergyAngles();
+      return thetab > thetaa;
+   };
+
+   return 0;
+}
+
+void C16_pd_anaFit()
 {
    FairRunAna *run = new FairRunAna();
+
+   // Output
+   Double_t _theta = 0.0, _energy = 0.0, _exEnergy = 0.0, _exEnergyCorr = 0.0, _zVertex = 0.0, _thetacm = 0.0;
+   TFile *fileOut = TFile::Open("C15_pd_analysis.root", "RECREATE");
+   TTree *treeOut = new TTree("output", "output");
+   treeOut->Branch("_theta", &_theta, "_theta/D");
+   treeOut->Branch("_energy", &_energy, "_energy/D");
+   treeOut->Branch("_exEnergy", &_exEnergy, "_exEnergy/D");
+   treeOut->Branch("_exEnergyCorr", &_exEnergyCorr, "_exEnergyCorr/D");
+   treeOut->Branch("_zVertex", &_zVertex, "_zVertex/D");
+   treeOut->Branch("_thetacm", &_thetacm, "_thetacm/D");
 
    TH2F *Ang_Ener = new TH2F("Ang_Ener", "Ang_Ener", 720, 0, 179, 1000, 0, 200.0);
    TH2F *Ang_Ener_PRAC = new TH2F("Ang_Ener_PRAC", "Ang_Ener_PRAC", 1000, 0, 100, 1000, 0, 200.0);
@@ -74,10 +108,14 @@ void C16_pp_anaFit()
    TH2F *dedxvsBrho = new TH2F("dedxvsBrho", "dedxvsBrho", 4000, 0, 10000, 1000, 0, 4);
    TH2F *hVxVy = new TH2F("hVxVy", "hVxVy", 1000, 0, 20, 1000, 0, 20);
    TH1F *henergyIC = new TH1F("henergyIC", "henergyIC", 2048, 0, 2047);
+   TH2F *QvsTrackLengthH = new TH2F("QvsTrackLengthH", "QvsTrackLengthH", 1000, -10, 50, 1000, 0, 1000);
 
    auto *hex = new TH1F("hex", "hex", 600, -5, 55);
    auto *QvsEb = new TH2F("QvsEb", "QvsEb", 1000, -5, 15, 300, 0, 300);
-   auto *QvsZpos = new TH2F("QvsZpos", "QvsZpos", 1000, -10, 50, 200, -100, 100);
+   auto *QvsZpos = new TH2F("QvsZpos", "QvsZpos", 1000, -10, 50, 1000, -1000, 1000);
+   auto *HQCorr = new TH1F("HQCorr", "HQCorr", 600, -5, 55);
+   auto *QcorrvsZpos = new TH2F("QcorrvsZpos", "QcorrvsZpos", 1000, -10, 10, 200, -100, 100);
+   auto *QcorrvsTrackLengthH = new TH2F("QcorrvsTrackLengthH", "QcorrvsTrackLengthH", 1000, -10, 50, 1000, 0, 1000);
 
    Double_t m_p = 1.007825 * 931.49401;
    Double_t m_d = 2.0135532 * 931.49401;
@@ -103,21 +141,10 @@ void C16_pp_anaFit()
    Double_t m_b;
    Double_t m_B;
 
-   m_b = m_p;
-   m_B = m_C16;
+   m_b = m_d;
+   m_B = m_C15;
 
-   Double_t Am = 2.0;
-   Double_t dummy;
-
-   Bool_t saveKine = kFALSE;
-
-   std::cout << " Beam energy : " << Ebeam_buff << " MeV " << std::endl;
-   std::cout << " Recoil mass : " << m_B / 931.49401 << " MeV " << std::endl;
-   std::cout << " Scattered mass : " << m_b / 931.49401 << " MeV " << std::endl;
-   std::cout << " Mass number : " << Am << " MeV " << std::endl;
-   std::cin >> dummy;
-
-   std::ofstream trackFile("tracks.dat");
+   Double_t Am = 1.0;
 
    TString dir = gSystem->Getenv("VMCWORKDIR");
    TString dataDir = dir + "/macro/Unpack_HDF5/a1975/C16_pp_data/";
@@ -289,6 +316,18 @@ void C16_pp_anaFit()
    cutk->SetPoint(11, 22.6031, 190.9515);
    cutk->SetPoint(12, 22.54659, 192.1175);
 
+   // Angular distributions
+   Double_t sigmaLab1[360] = {0.0};
+   Double_t sigmaCM1[360] = {0.0};
+   TGraphErrors *gsigmaLab1 = new TGraphErrors();
+   gsigmaLab1->SetMarkerStyle(21);
+   gsigmaLab1->SetMarkerSize(1.5);
+   gsigmaLab1->SetMarkerColor(kRed);
+   TGraphErrors *gsigmaCM1 = new TGraphErrors();
+   gsigmaCM1->SetMarkerStyle(21);
+   gsigmaCM1->SetMarkerSize(1.5);
+   gsigmaCM1->SetMarkerColor(kRed);
+
    for (auto iFile : filepairs) {
 
       // GET Data
@@ -301,7 +340,6 @@ void C16_pp_anaFit()
       TTreeReader ReaderTracking("cbmsim", file);
       TTreeReaderValue<TClonesArray> trackingArray(ReaderTracking, "AtTrackingEvent");
       TTreeReaderValue<TClonesArray> eventHArray(ReaderTracking, "AtEventH");
-      TTreeReaderValue<TClonesArray> eventArray(ReaderTracking, "AtPatternEvent");
 
       // FRIB data
       TFile *fileFRIB = new TFile((dataDir + iFile.second).Data(), "READ");
@@ -339,12 +377,10 @@ void C16_pp_anaFit()
 
          AtTrackingEvent *trackingEvent = (AtTrackingEvent *)trackingArray->At(0);
          AtEvent *event = (AtEvent *)eventHArray->At(0);
-         AtPatternEvent *patternEvent = (AtPatternEvent *)eventArray->At(0);
 
-         if (trackingEvent && patternEvent) {
+         if (trackingEvent) {
 
             auto &fittedTracks = trackingEvent->GetFittedTracks();
-            auto &patternTrackCand = patternEvent->GetTrackCand();
             // std::cout<<" Number of fitted tracks "<<fittedTracks.size()<<"\n";
             auto eventName = event->GetEventName();
             auto getTS = event->GetTimestamp(1);
@@ -377,7 +413,7 @@ void C16_pp_anaFit()
             if (!goodBeam)
                continue;
 
-            // Find track with largest angle
+            // Find track with largets angle
             auto itMax = std::max_element(fittedTracks.begin(), fittedTracks.end(), [](const auto &a, const auto &b) {
                auto [energyb, energyXtrb, thetab, phib, energyPRAb, thetaPRAb, phiPRAb] = b.get()->GetEnergyAngles();
                auto [energya, energyXtra, thetaa, phia, energyPRAa, thetaPRAa, phiPRAa] = a.get()->GetEnergyAngles();
@@ -386,20 +422,29 @@ void C16_pp_anaFit()
 
             Int_t maxAIndex = std::distance(fittedTracks.begin(), itMax);
 
+            /*  std::cout<<" Max Angle Index : "<<maxAIndex<<" - Number of fitted tracks "<<fittedTracks.size()<<"\n";
+
+              for (auto index = 0; index < fittedTracks.size(); ++index) {
+
+                    auto [energy, energyXtr, theta, phi, energyPRA, thetaPRA, phiPRA] =
+                    fittedTracks.at(index)->GetEnergyAngles();
+
+                    std::cout<<" Energy : "<<energy<<" - Theta : "<<theta<<" - Index : "<<index<<"\n";
+
+
+              }  */
+
+            _theta = 0.0;
+            _energy = 0.0;
+            _exEnergy = 0.0;
+            _exEnergyCorr = 0.0;
+            _zVertex = 0.0;
+            _thetacm = 0.0;
+
             for (auto index = 0; index < fittedTracks.size(); ++index) {
 
                if (index != maxAIndex)
                   continue;
-
-               auto trackID = fittedTracks.at(index)->GetTrackID();
-
-               // Find hit pattern of associated track
-
-               auto itID = std::find_if(patternTrackCand.begin(), patternTrackCand.end(),
-                                        [&](auto const &track) { return track.GetTrackID() == trackID; });
-               Int_t itTrackID = std::distance(patternTrackCand.begin(), itID);
-
-               auto track = patternTrackCand.at(index);
 
                auto [energy, energyXtr, theta, phi, energyPRA, thetaPRA, phiPRA] =
                   fittedTracks.at(index)->GetEnergyAngles();
@@ -408,37 +453,15 @@ void C16_pp_anaFit()
                auto [charge, brho, eLossADC, dEdxADC, pdg, trackPoints] = fittedTracks.at(index)->GetTrackProperties();
                // auto [ICEnergy,ICTime] = fittedTracks.at(0)->GetIonChamber(); //TODO
                auto [exEnergy, exEnergyXtr] = fittedTracks.at(index)->GetExcitationEnergy();
+               auto [distanceXtr, trackLength, POCAXtr] = fittedTracks.at(index)->GetDistances();
 
                // Conditions
-               if (!cutp->IsInside(eLossADC, brho))
+               if (!cutd->IsInside(eLossADC, brho))
                   continue;
 
-               /* if(energy*Am < 2.0 || energy*Am > 10.0)
-                   continue;  */
-
-               /*  if(eLossADC>1500)
-                    continue;*/
-
-               // if (!cutk->IsInside(theta, energy * Am))
-               // continue;
-
-               if (theta > 90.0 || theta < 10.0)
+               if (energy * Am < 2.0 || energy * Am > 16.0)
                   continue;
 
-               if (saveKine)
-                  trackFile << " Run : " << iFile.first.Data() << " - Event : " << i << std::endl;
-
-               for (auto i = 0; i < track.GetHitArray().size(); ++i) {
-
-                  auto &hit = track.GetHitArray().at(i);
-                  auto position = hit->GetPosition();
-                  auto charge = hit->GetCharge();
-                  if (saveKine)
-                     trackFile << position.X() << "," << position.Y() << "," << position.Z() << "," << charge
-                               << std::endl;
-               }
-
-               // Excitation energy
                auto [ex_energy, theta_cm] =
                   kine_2b(m_C16, m_p, m_b, m_B, Ebeam_buff, theta * TMath::DegToRad(), energy * Am);
 
@@ -449,29 +472,114 @@ void C16_pp_anaFit()
                   QvsEb->Fill(_ex_energy, iEb);
                }
 
+               /*if(eLossADC>1500)
+                  continue; */
+
+               // if (!cutk->IsInside(theta, energy * Am))
+               // continue;
+
+               if (theta > 90.0 || theta < 10.0)
+                  continue;
+
+               if (iniPosXtr.Z() > 500.0)
+                  continue;
+
+               Double_t p0 = 1.42194;
+               Double_t p1 = -0.000192859;
+               Double_t mFactor = 1.00;
+               Double_t offSet = 0.721;
+               Double_t QcorrZ = 0.0;
+               QcorrZ = ex_energy - mFactor * p1 * (iniPosXtr.Z() / 10.0) - p0;
+               QcorrZ = QcorrZ + offSet;
+               HQCorr->Fill(QcorrZ);
+               QcorrvsZpos->Fill(QcorrZ, iniPosXtr.Z() / 10.0);
+               QcorrvsTrackLengthH->Fill(QcorrZ, trackLength);
+
                // Histograms
                Ang_Ener->Fill(theta, energy * Am);
                Ang_Ener_PRAC->Fill(thetaPRA, energyPRA * Am);
                ELossvsBrho->Fill(eLossADC, brho);
                dedxvsBrho->Fill(dEdxADC, brho);
                hex->Fill(ex_energy);
+               QvsZpos->Fill(ex_energy, iniPosXtr.Z());
 
                Double_t vx = TMath::Sin(theta * TMath::DegToRad()) * TMath::Sqrt(energy * Am);
                Double_t vy = TMath::Cos(theta * TMath::DegToRad()) * TMath::Sqrt(energy * Am);
 
                hVxVy->Fill(vx, vy);
 
-               if (saveKine)
-                  trackFile << " Track : " << index << " - Energy : " << energy * Am << " - Angle : " << theta
-                            << " - Excitation Energy : " << ex_energy << std::endl;
-            }
-         }
+               if (QcorrZ > 0.35 && QcorrZ < 1.3) { // 0.7 MeV
+
+                  Int_t index = theta;
+                  ++sigmaLab1[index];
+                  Int_t indexCM = theta_cm;
+                  ++sigmaCM1[indexCM];
+               }
+
+               // Tree
+               _theta = theta;
+               _energy = energy * Am;
+               _exEnergy = ex_energy;
+               _exEnergyCorr = QcorrZ;
+               _zVertex = iniPosXtr.Z();
+               _thetacm = theta_cm;
+
+               // std::cout<<" Event Number : "<<i<<" - "<<_theta<<" - "<<_energy<<" - "<<_exEnergy<<" -
+               // "<<_exEnergyCorr<<" - "<<_zVertex<<"\n";
+               fileOut->cd();
+               treeOut->Fill();
+
+            } // tracks
+
+         } // tracking event
 
       } // events
 
    } // Files
 
-   trackFile.close();
+   fileOut->cd();
+   treeOut->Write();
+
+   // Diff xs graph
+   Double_t beamIntensity = 59855710.0;
+   Double_t scale0 = 1.0 * (2.0 * TMath::Pi()) / (beamIntensity * 3.16E21 * 1E-27);
+   Double_t scale1 = 1.0; // 2.0 * 1.0 * (2.0 * TMath::Pi()) / (beamIntensity * 3.16E21 * 1E-27);
+   Double_t scale2 = 0.2;
+   Double_t scale3 = 0.1;
+
+   for (auto ig = 1; ig < 360; ++ig) {
+
+      /*  gsigmaLab0->SetPoint(ig, ig, sigmaLab0[ig]);
+        gsigmaLab0->SetPointError(ig, 0, TMath::Sqrt(sigmaLab0[ig]));
+        gsigmaCM0->SetPoint(ig, ig, sigmaCM0[ig] * scale0 / TMath::Sin(TMath::DegToRad() * ig) / fcorr0->Eval(ig));
+        gsigmaCM0->SetPointError(ig, 0, TMath::Sqrt(sigmaCM0[ig]) * scale0 / TMath::Sin(TMath::DegToRad() * ig));*/
+
+      gsigmaLab1->SetPoint(ig, ig, sigmaLab1[ig]);
+      gsigmaLab1->SetPointError(ig, 0, TMath::Sqrt(sigmaLab1[ig]));
+      gsigmaCM1->SetPoint(ig, ig, sigmaCM1[ig] * scale1 / TMath::Sin(TMath::DegToRad() * ig));
+      gsigmaCM1->SetPointError(ig, 0, TMath::Sqrt(sigmaCM1[ig]) * scale1 / TMath::Sin(TMath::DegToRad() * ig));
+
+      /*  gsigmaLab2->SetPoint(ig, ig, sigmaLab2[ig]);
+        gsigmaLab2->SetPointError(ig, 0, TMath::Sqrt(sigmaLab2[ig]));
+        gsigmaCM2->SetPoint(ig, ig, sigmaCM2[ig] * scale2 / TMath::Sin(TMath::DegToRad() * ig));
+        gsigmaCM2->SetPointError(ig, 0, TMath::Sqrt(sigmaCM2[ig]) * scale2 / TMath::Sin(TMath::DegToRad() * ig));
+
+        gsigmaLab3->SetPoint(ig, ig, sigmaLab3[ig]);
+        gsigmaLab3->SetPointError(ig, 0, TMath::Sqrt(sigmaLab3[ig]));
+        gsigmaCM3->SetPoint(ig, ig, sigmaCM3[ig] * scale3 / TMath::Sin(TMath::DegToRad() * ig));
+        gsigmaCM3->SetPointError(ig, 0, TMath::Sqrt(sigmaCM3[ig]) * scale3 / TMath::Sin(TMath::DegToRad() * ig));*/
+
+      /*  outputXSFile << ig << " " << sigmaCM0[ig] << " " << sigmaCM1[ig] << "  " << sigmaCM2[ig] << " " <<
+         sigmaCM3[ig]
+                     << " " << sigmaCM0[ig] * scale0 / TMath::Sin(TMath::DegToRad() * ig) / fcorr0->Eval(ig) << " "
+                     << "\n";*/
+   }
+
+   TCanvas *cxs = new TCanvas();
+   // gsigmaCM0->Draw("ALP");
+   gsigmaCM1->Draw("ALP");
+   // gsigmaCM2->Draw("LP");
+   // gsigmaCM3->Draw("LP");
 
    TCanvas *c1 = new TCanvas();
    c1->Divide(2, 2);
@@ -492,7 +600,6 @@ void C16_pp_anaFit()
    cpid->Draw("zcol");
    cpid->cd(1);
    ELossvsBrho->Draw("zcol");
-   cutp->Draw("same");
 
    // cutd->Draw("l");
    cpid->cd(2);
@@ -503,12 +610,25 @@ void C16_pp_anaFit()
    c_ExEner->cd(1);
    hex->Draw();
    c_ExEner->cd(2);
+   QvsTrackLengthH->Draw("zcol");
+
+   TCanvas *c_ExVsZ = new TCanvas();
+   QvsZpos->Draw("zcol");
 
    TCanvas *c_ExEnerBeam = new TCanvas();
    QvsEb->Draw("zcol");
 
    TCanvas *c_IC = new TCanvas();
    henergyIC->Draw();
+
+   TCanvas *c_ExEner_corr = new TCanvas();
+   c_ExEner_corr->Divide(2, 2);
+   c_ExEner_corr->cd(1);
+   QcorrvsZpos->Draw("zcol");
+   c_ExEner_corr->cd(2);
+   HQCorr->Draw();
+   c_ExEner_corr->cd(3);
+   QcorrvsTrackLengthH->Draw("zcol");
 }
 
 void GetEnergy(Double_t M, Double_t IZ, Double_t BRO, Double_t &E)

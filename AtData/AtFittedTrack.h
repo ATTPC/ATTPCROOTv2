@@ -136,6 +136,7 @@ public:
    const std::tuple<Int_t, Float_t, Float_t, Float_t, std::string, Int_t> GetTrackProperties();
    const std::tuple<Float_t, Float_t> GetIonChamber();
    const std::tuple<Float_t, Float_t> GetExcitationEnergy();
+   const std::tuple<Float_t, Float_t, Float_t> GetDistances();
 
    ClassDef(AtFittedTrack, 1);
 };

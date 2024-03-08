@@ -39,3 +39,8 @@ const std::tuple<Float_t, Float_t> AtFittedTrack::GetExcitationEnergy()
 {
    return std::forward_as_tuple(fExcitationEnergy, fExcitationEnergyXtr);
 }
+
+const std::tuple<Float_t, Float_t, Float_t> AtFittedTrack::GetDistances()
+{
+   return std::forward_as_tuple(fDistanceXtr, fTrackLength, fPOCAXtr);
+}
