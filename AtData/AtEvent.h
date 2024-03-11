@@ -67,7 +67,7 @@ public:
     * @return Reference to added hit
     */
    template <typename... Ts>
-   AtHit &AddHit(Ts &&...params)
+   AtHit &AddHit(Ts &&... params)
    {
       fHitArray.emplace_back(std::make_unique<AtHit>(std::forward<Ts>(params)...));
       if (fHitArray.back()->GetHitID() == -1)

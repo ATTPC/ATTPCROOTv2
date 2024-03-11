@@ -47,7 +47,7 @@ public:
    void AddTrack(AtTrack &&track) { fTrackCand.push_back(track); }
 
    template <typename... Ts>
-   void AddNoise(Ts &&...params)
+   void AddNoise(Ts &&... params)
    {
       fNoise.emplace_back(std::make_unique<AtHit>(std::forward<Ts>(params)...));
    }

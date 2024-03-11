@@ -38,7 +38,7 @@ enum class SampleMethod {
  * @ingroup AtHitSampling
  */
 template <typename... Ts>
-std::unique_ptr<AtSample> CreateSampler(SampleMethod method, Ts &&...params)
+std::unique_ptr<AtSample> CreateSampler(SampleMethod method, Ts &&... params)
 {
    switch (method) {
    case SampleMethod::kUniform: return std::make_unique<AtUniform>();

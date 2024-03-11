@@ -5,7 +5,7 @@ void run_eve(TString InputFile = "output_digi.root", TString OutputFile = "outpu
    fLogger->SetLogToScreen(kTRUE);
    fLogger->SetLogVerbosityLevel("MEDIUM");
    TString dir = getenv("VMCWORKDIR");
-   TString geoFile = "ATTPC_He600torr_v2_geomanager.root";
+   TString geoFile = "ATTPC_D600torr_v2_geomanager.root";
    TString mapFile = "Lookup20150611.xml";
 
    TString InputDataFile = dir + "/macro/" + unpackDir + InputFile;

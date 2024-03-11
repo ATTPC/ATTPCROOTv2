@@ -15,6 +15,7 @@
 #include <FairTask.h>
 
 #include <Rtypes.h>
+
 #include "EventDisplay.h"
 #include "Exception.h"
 #include "FairLogger.h"
@@ -58,7 +59,6 @@ public:
    virtual InitStatus Init();
    virtual void SetParContainers();
    virtual void Exec(Option_t *opt);
-
 
 private:
    TString fInputBranchName;

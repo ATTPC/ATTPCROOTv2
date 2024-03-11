@@ -63,7 +63,7 @@ void run_digi_attpc()
    fRun->Init();
 
    timer.Start();
-   fRun->Run(0, 20000);
+   fRun->Run(0, 20);
    timer.Stop();
 
    std::cout << std::endl << std::endl;

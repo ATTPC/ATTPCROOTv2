@@ -60,9 +60,9 @@ InitStatus AtFitterTask::Init()
       return kERROR;
    }
 
-      ioMan->Register(fOutputBranchName, "AtTPC", &fTrackingEventArray, fIsPersistence);
+   ioMan->Register(fOutputBranchName, "AtTPC", &fTrackingEventArray, fIsPersistence);
 
-      return kSUCCESS;
+   return kSUCCESS;
 }
 
 void AtFitterTask::SetParContainers()
@@ -106,4 +106,3 @@ void AtFitterTask::Exec(Option_t *option)
 
    ++fEventCnt;
 }
-
