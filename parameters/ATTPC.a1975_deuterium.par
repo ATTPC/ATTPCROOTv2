@@ -1,0 +1,45 @@
+################################################################################
+# Parameters used throughout ATTPCROOT software
+# Format:
+# parameter_name:parameter_type(Int_t-integer, Double_t-double) parameter_value
+# AtDigiPar
+# Description of parameters
+################################################################################
+[AtDigiPar]
+PadPlaneX:Int_t                864   # mm
+PadPlaneZ:Int_t               1344   # mm
+PadSizeX:Int_t                   8   # mm
+PadSizeZ:Int_t                  12   # mm
+PadRows:Int_t                  108   #
+PadLayers:Int_t                112   #
+AnodeWirePlaneY:Double_t     -4.05   # mm
+GroundWirePlaneY:Double_t     -8.1   # mm
+GatingWirePlaneY:Double_t      -14   # mm
+EField:Double_t               5000   # V/m
+NumTbs:Int_t                   512
+SamplingRate:Int_t             6.0   #
+DriftVelocity:Double_t        1.15   # cm/us
+DriftLength:Double_t          1000   # mm //ATTPC : 1000 - Prototype : 500
+YDivider:Int_t                1000   # Full drift length will be divided by this number when finding cluster
+GasFile:Int_t                    2
+PadPlaneFile:Int_t               3
+PadShapeFile:Int_t               4   # might not be needed because the shape is simply rectangle
+BField:Double_t               2.85   # Tesla
+TiltAng:Double_t               0.0   # Degrees
+TB0:Int_t                       98   # Time Bucket reference for micromegas position (DEPRECATED)
+LorentzAngle:Double_t          0.0   # Lorentz Angle
+TBEntrance:Int_t               480   # Beam position at detector entrance in TB
+ZPadPlane:Double_t          1000.0   # Position of the micromegas pad plane
+Density:Double_t             0.197   # Gas density (kg/m3 or mg/cm3)
+ThetaPad:Double_t            110.9   # AT-TPC pad plane rotation
+ThetaRot:Double_t              0.0   # Second Lorentz Angle
+GasPressure:Double_t           600   # Gas pressure in torr
+EIonize:Double_t            15.603   # Ionization energy of gas in eV
+Fano:Double_t                 0.24   # Fano factor of the gas
+CoefL:Double_t              0.0009   # Longitudal coefficient of diffusion [cm^2/us]
+CoefT:Double_t              0.0009   # Transverse coefficient of diffusion [cm^2/us]
+Gain:Double_t                10000   # Average gain of micromegas
+GETGain:Double_t              1000   # Gain of the GET electronics in fC
+PeakingTime:Int_t              720   # Electronic peaking time in ns
+MaxRange:Double_t            500.0   # Maximum range from Beam energy in mm
+################################################################################

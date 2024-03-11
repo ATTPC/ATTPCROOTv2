@@ -79,7 +79,7 @@ public:
     * @return Pointer to newly created pad
     */
    template <typename... Ts>
-   AtPad *AddPad(Ts &&...params)
+   AtPad *AddPad(Ts &&... params)
    {
       fPadList.push_back(std::make_unique<AtPad>(std::forward<Ts>(params)...));
       return fPadList.back().get();
@@ -106,7 +106,7 @@ public:
    void SetSimMCPointMap(std::multimap<Int_t, std::size_t> map) { fSimMCPointMap = std::move(map); }
 
    template <typename... Ts>
-   AtGenericTrace *AddGenericTrace(Ts &&...params)
+   AtGenericTrace *AddGenericTrace(Ts &&... params)
    {
       fGTraceList.push_back(std::make_unique<AtGenericTrace>(std::forward<Ts>(params)...));
       return fGTraceList.back().get();

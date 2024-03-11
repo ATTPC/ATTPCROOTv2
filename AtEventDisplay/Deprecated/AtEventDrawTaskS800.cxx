@@ -18,7 +18,7 @@
 #include "AtTpcMap.h"           // for AtTpcMap
 #include "AtTpcProtoMap.h"      // for AtTpcProtoMap
 #include "AtTrack.h"            // for AtTrack, operator<<
-#include "AtTrackingEventAna.h" // for AtTrackingEventAna
+#include "AtTrackingEvent.h"    // for AtTrackingEvent
 
 #include <FairLogger.h>      // for Logger, LOG
 #include <FairRootManager.h> // for FairRootManager
@@ -213,8 +213,8 @@ InitStatus AtEventDrawTaskS800::Init()
    if (fPatternEventArray)
       LOG(INFO) << cGREEN << "Pattern Event Array Found." << cNORMAL;
 
-   fTrackingEventAnaArray = dynamic_cast<TClonesArray *>(ioMan->GetObject("AtTrackingEventAna"));
-   if (fTrackingEventAnaArray)
+   fTrackingEventArray = dynamic_cast<TClonesArray *>(ioMan->GetObject("AtTrackingEvent"));
+   if (fTrackingEventArray)
       LOG(INFO) << cGREEN << "Tracking Event Analysis Array Found." << cNORMAL;
 
    fS800Calc = dynamic_cast<S800Calc *>(ioMan->GetObject("s800cal"));
@@ -500,17 +500,17 @@ void AtEventDrawTaskS800::DrawHitPoints()
          }
       }
 
-      if (fTrackingEventAnaArray) {
+      if (fTrackingEventArray) {
 
          for (auto &i : fHitSetMC)
             i = nullptr;
 
-         fTrackingEventAna = dynamic_cast<AtTrackingEventAna *>(fTrackingEventAnaArray->At(0));
-         std::vector<AtTrack> anaTracks = fTrackingEventAna->GetTrackArray();
+         fTrackingEvent = dynamic_cast<AtTrackingEvent *>(fTrackingEventArray->At(0));
+         std::vector<AtTrack> anaTracks = fTrackingEvent->GetTrackArray();
          std::cout << cRED << "Calling code for MC Minimization which is depricated!!!" << std::endl;
          std::cout << cYELLOW << "  ====   Tracking analysis ==== " << std::endl;
          std::cout << " Number of analyzed tracks : " << anaTracks.size() << std::endl;
-         std::cout << " Vertex of reaction : " << fTrackingEventAna->GetVertex() << std::endl;
+         std::cout << " Vertex of reaction : " << fTrackingEvent->GetVertex() << std::endl;
 
          fTrackNum = anaTracks.size();
 
@@ -758,7 +758,7 @@ void AtEventDrawTaskS800::DrawHitPoints()
             for (Int_t i = 0; i < fLineNum; i++)
                gEve->AddElement(fHitSetTFHC[i]);
 
-      if (fTrackingEventAnaArray)
+      if (fTrackingEventArray)
          if (fTrackNum > 0 && fTrackNum < 5)
             for (Int_t i = 0; i < fTrackNum; i++)
                gEve->AddElement(fHitSetMC[i]);
@@ -857,7 +857,7 @@ void AtEventDrawTaskS800::Reset()
          }
       }
 
-      if (fTrackingEventAnaArray) {
+      if (fTrackingEventArray) {
 
          for (Int_t i = 0; i < fTrackNum; i++) {
             if (fHitSetMC[i]) {

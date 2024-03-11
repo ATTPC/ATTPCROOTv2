@@ -3,7 +3,9 @@
 #include "AtDigiPar.h"
 #include "AtFitter.h"
 #include "AtGenfit.h"
+#include "AtParsers.h"
 #include "AtPatternEvent.h"
+#include "AtTrackingEvent.h"
 
 #include <FairLogger.h>
 #include <FairRootManager.h>
@@ -19,25 +21,29 @@
 #include <iostream>
 
 class AtTrack;
-
-constexpr auto cRED = "\033[1;31m";
-constexpr auto cYELLOW = "\033[1;33m";
-constexpr auto cNORMAL = "\033[0m";
-constexpr auto cGREEN = "\033[1;32m";
+class AtFittedTrack;
 
 ClassImp(AtFitterTask);
 
-AtFitterTask::AtFitterTask()
-   : fLogger(FairLogger::GetLogger()), fIsPersistence(kFALSE), fPatternEventArray(new TClonesArray("ATPatternEvent")),
-     fGenfitTrackArray(new TClonesArray("genfit::Track")), fGenfitTrackVector(new std::vector<genfit::Track>())
+AtFitterTask::AtFitterTask(std::unique_ptr<AtFITTER::AtFitter> fitter)
+   : fInputBranchName("AtPatternEvent"), fOutputBranchName("AtTrackingEvent"), fIsPersistence(kFALSE),
+     fTrackingEventArray(TClonesArray("AtTrackingEvent", 1)), fFitter(std::move(fitter))
 {
 }
-
-AtFitterTask::~AtFitterTask() = default;
 
 void AtFitterTask::SetPersistence(Bool_t value)
 {
    fIsPersistence = value;
+}
+
+void AtFitterTask::SetInputBranch(TString branchName)
+{
+   fInputBranchName = branchName;
+}
+
+void AtFitterTask::SetOutputBranch(TString branchName)
+{
+   fOutputBranchName = branchName;
 }
 
 InitStatus AtFitterTask::Init()
@@ -54,40 +60,7 @@ InitStatus AtFitterTask::Init()
       return kERROR;
    }
 
-   // Algorithm selection
-
-   if (fFitterAlgorithm == 0) {
-      LOG(info) << "Using GENFIT2";
-      std::cout << cGREEN << " AtFitterTask::Init - Fit parameters. "
-                << "\n";
-      std::cout << " Magnetic Field       : " << fMagneticField << " T\n";
-      std::cout << " PDG Code             : " << fPDGCode << "\n";
-      std::cout << " Mass                 : " << fMass << " amu\n";
-      std::cout << " Atomic Number        : " << fAtomicNumber << "\n";
-      std::cout << " Number of fit points : " << fNumFitPoints << "\n";
-      std::cout << " Maximum iterations   : " << fMaxIterations << "\n";
-      std::cout << " Minimum iterations   : " << fMinIterations << "\n";
-      std::cout << " Maximum brho         : " << fMaxBrho << "\n";
-      std::cout << " Minimum brho         : " << fMinBrho << "\n";
-      std::cout << " Energy loss file     : " << fELossFile << "\n";
-      std::cout << " --------------------------------------------- " << cNORMAL << "\n";
-
-      fFitter = new AtFITTER::AtGenfit(fMagneticField, fMinBrho, fMaxBrho, fELossFile, fMinIterations, fMaxIterations);
-      dynamic_cast<AtFITTER::AtGenfit *>(fFitter)->SetPDGCode(fPDGCode);
-      dynamic_cast<AtFITTER::AtGenfit *>(fFitter)->SetMass(fMass);
-      dynamic_cast<AtFITTER::AtGenfit *>(fFitter)->SetAtomicNumber(fAtomicNumber);
-      dynamic_cast<AtFITTER::AtGenfit *>(fFitter)->SetNumFitPoints(fNumFitPoints);
-
-   } else if (fFitterAlgorithm == 1) {
-      LOG(error) << "Fitter algorithm not defined!";
-      return kERROR;
-   } else if (fFitterAlgorithm == 2) {
-      LOG(error) << "Fitter algorithm not defined!";
-      return kERROR;
-   }
-
-   // ioMan -> Register("genfitTrackTCA","ATTPC",fGenfitTrackArray, fIsPersistence);
-   ioMan->RegisterAny("ATTPC", fGenfitTrackVector, fIsPersistence);
+   ioMan->Register(fOutputBranchName, "AtTPC", &fTrackingEventArray, fIsPersistence);
 
    return kSUCCESS;
 }
@@ -114,66 +87,22 @@ void AtFitterTask::Exec(Option_t *option)
    if (fPatternEventArray->GetEntriesFast() == 0)
       return;
 
-   fGenfitTrackArray->Clear("C");
-   fGenfitTrackVector->clear();
+   fTrackingEventArray.Delete();
 
-   fFitter->Init();
+   auto trackingEvent = dynamic_cast<AtTrackingEvent *>(fTrackingEventArray.ConstructedAt(0));
 
    std::cout << " Event Counter " << fEventCnt << "\n";
 
    AtPatternEvent &patternEvent = *(dynamic_cast<AtPatternEvent *>(fPatternEventArray->At(0)));
-   std::vector<AtTrack> &patternTrackCand = patternEvent.GetTrackCand();
-   std::cout << " AtFitterTask:Exec -  Number of candidate tracks : " << patternTrackCand.size() << "\n";
+   std::vector<AtTrack> &tracks = patternEvent.GetTrackCand();
+   std::cout << " AtFitterTask:Exec -  Number of candidate tracks : " << tracks.size() << "\n";
 
-   if (patternTrackCand.size() < 10) {
+   auto fittedTracks = fFitter->ProcessTracks(tracks);
 
-      for (auto track : patternTrackCand) {
+   std::cout << " Number of fitted tracks " << fittedTracks.size() << "\n";
 
-         genfit::Track *fitTrack = fFitter->FitTracks(&track);
-         if (fitTrack != nullptr)
-            fGenfitTrackVector->push_back(*static_cast<genfit::Track *>(fitTrack));
-      }
-   }
-
-   /*if(patternTrackCand.size()>1){
-     genfit::Track *fitTrack=fFitter->FitTracks(&patternTrackCand.at(1));
-   if(fitTrack!=nullptr)fGenfitTrackVector->push_back(*static_cast<genfit::Track *>(fitTrack));
-   }*/
-
-   // if(fitTrack==nullptr)
-   // std::cout<<" Nullptr "<<"\n";
-
-   //}
-
-   // }
-
-   // TODO: Genfit block, add a dynamic cast and a try-catch
-
-   /*try {
-      auto genfitTrackArray = dynamic_cast<AtFITTER::AtGenfit *>(fFitter)->GetGenfitTrackArray();
-      auto genfitTracks = genfitTrackArray->GetEntriesFast();
-
-       for (auto iTrack = 0; iTrack < genfitTracks; ++iTrack) {
-         new ((*fGenfitTrackArray)[iTrack]) genfit::Track(*static_cast<genfit::Track *>(genfitTrackArray->At(iTrack)));
-         // auto trackTest = *static_cast<genfit::Track*>(genfitTrackArray->At(iTrack));
-         // trackTest.Print();
-         // genfit::MeasuredStateOnPlane fitState = trackTest.getFittedState();
-         // fitState.Print();
-         fGenfitTrackVector->push_back(*static_cast<genfit::Track *>(genfitTrackArray->At(iTrack)));
-    }
-
-      //auto genfitTracks_ = fGenfitTrackArray->GetEntriesFast();
-      //for(auto iTrack=0;iTrack<genfitTracks_;++iTrack){
-
-        //      auto trackTest = *static_cast<genfit::Track*>(fGenfitTrackArray->At(iTrack));
-         //     trackTest.Print();
-         //     genfit::MeasuredStateOnPlane fitState = trackTest.getFittedState();
-          //    fitState.Print();
-      //}
-
-   } catch (std::exception &e) {
-      std::cout << " " << e.what() << "\n";
-      }*/
+   for (auto &fittedTrack : fittedTracks)
+      trackingEvent->AddFittedTrack(std::move(fittedTrack));
 
    ++fEventCnt;
 }

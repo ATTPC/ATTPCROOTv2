@@ -8,7 +8,7 @@ bool reduceFunc(AtRawEvent *evt)
    return (evt->GetNumPads() > 0) && evt->IsGood();
 }
 
-void unpack_a1975_FRIBDAQ(TString fileName = "run_0106")
+void unpack_a1975_FRIBDAQ(TString fileName = "run_0047")
 {
 
    // Load the library for unpacking and reconstruction
@@ -19,7 +19,7 @@ void unpack_a1975_FRIBDAQ(TString fileName = "run_0106")
 
    TString parameterFile = "ATTPC.a1954.par";
    TString mappath = "";
-   TString filepath = "/media/yassid/bdcb3c81-adb9-4a9d-9172-0bd5935c1dd5/data/a1957/";
+   TString filepath = "/media/yassid/bdcb3c81-adb9-4a9d-9172-0bd5935c1dd5/data/a1975/";
    TString fileExt = ".h5";
    TString inputFile = filepath + fileName + fileExt;
    TString scriptfile = "ANL2023.xml";

@@ -5,7 +5,7 @@ void run_digi_attpc()
    TString inOutDir = "./data/";
    TString outputFile = inOutDir + "output_digi.root";
    TString scriptfile = "Lookup20150611.xml";
-   TString paramFile = "ATTPC.e20020_sim.par";
+   TString paramFile = "ATTPC.e20009_sim.par";
 
    TString dir = getenv("VMCWORKDIR");
 
@@ -41,10 +41,8 @@ void run_digi_attpc()
    AtClusterizeTask *clusterizer = new AtClusterizeTask();
    clusterizer->SetPersistence(kFALSE);
 
-   AtPulseTask *pulse = new AtPulseTask();
+   AtPulseTask *pulse = new AtPulseTask(std::make_shared<AtPulse>(mapping));
    pulse->SetPersistence(kTRUE);
-   pulse->SetSaveMCInfo();
-   pulse->SetMap(mapping);
 
    auto psa = std::make_unique<AtPSAMax>();
    psa->SetThreshold(0);
@@ -53,15 +51,19 @@ void run_digi_attpc()
    AtPSAtask *psaTask = new AtPSAtask(std::move(psa));
    psaTask->SetPersistence(kTRUE);
 
+   AtPRAtask *praTask = new AtPRAtask();
+   praTask->SetPersistence(kTRUE);
+
    fRun->AddTask(clusterizer);
    fRun->AddTask(pulse);
    fRun->AddTask(psaTask);
+   fRun->AddTask(praTask);
 
    //  __ Init and run ___________________________________
    fRun->Init();
 
    timer.Start();
-   fRun->Run(0, 1000);
+   fRun->Run(0, 20);
    timer.Stop();
 
    std::cout << std::endl << std::endl;

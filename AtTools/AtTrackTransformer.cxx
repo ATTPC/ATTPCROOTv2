@@ -22,7 +22,7 @@ AtTools::AtTrackTransformer::AtTrackTransformer() = default;
 AtTools::AtTrackTransformer::~AtTrackTransformer() = default;
 using XYZPoint = ROOT::Math::XYZPoint;
 
-void AtTools::AtTrackTransformer::ClusterizeSmooth3D(AtTrack &track, Float_t distance, Float_t radius)
+void AtTools::AtTrackTransformer::ClusterizeSmooth3D(AtTrack &track, Float_t radius, Float_t distance)
 {
    std::vector<AtHit> hitArray = track.GetHitArrayObject();
    std::vector<AtHit> hitTBArray;
@@ -264,4 +264,49 @@ void AtTools::AtTrackTransformer::ClusterizeSmooth3D(AtTrack &track, Float_t dis
       } // Cluster array size
 
    } // if array size
+}
+
+const std::tuple<Double_t, Double_t> AtTools::AtTrackTransformer::GetPIDFromHits(AtTrack &track, Double_t theta)
+{
+
+   Double_t dedx = 0.0;
+   Double_t eloss = 0.0;
+
+   auto hitArray = &track.GetHitArray();
+   std::size_t cnt = 0;
+
+   if (theta < 90) {
+
+      auto it = hitArray->rbegin();
+      while (it != hitArray->rend()) {
+
+         if (((Float_t)cnt / (Float_t)hitArray->size()) > 0.8)
+            break;
+         auto dir = (*it).get()->GetPosition() - (*std::next(it, 1)).get()->GetPosition();
+         eloss += (*it).get()->GetCharge();
+         dedx += (*it).get()->GetCharge();
+         // std::cout<<(*it).GetCharge()<<"\n";
+         it++;
+         ++cnt;
+      }
+   } else if (theta > 90) {
+
+      eloss += hitArray->at(0).get()->GetCharge();
+
+      cnt = 1;
+      for (auto iHitClus = 1; iHitClus < hitArray->size(); ++iHitClus) {
+
+         if (((Float_t)cnt / (Float_t)hitArray->size()) > 0.8)
+            break;
+         auto dir = hitArray->at(iHitClus).get()->GetPosition() - hitArray->at(iHitClus - 1).get()->GetPosition();
+         eloss += hitArray->at(iHitClus).get()->GetCharge();
+         dedx += hitArray->at(iHitClus).get()->GetCharge();
+         // std::cout<<len<<" - "<<eloss<<" - "<<hitClusterArray->at(iHitClus).GetCharge()<<"\n";
+         ++cnt;
+      }
+   }
+
+   eloss /= cnt;
+
+   return std::forward_as_tuple(dedx, eloss);
 }

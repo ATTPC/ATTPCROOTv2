@@ -25,9 +25,10 @@
 #pragma link C++ class AtProtoEvent + ;
 #pragma link C++ class AtProtoEventAna + ;
 #pragma link C++ class AtPatternEvent + ;
-#pragma link C++ class AtTrackingEventAna + ;
+#pragma link C++ class AtTrackingEvent + ;
 #pragma link C++ class AtProtoQuadrant + ;
 #pragma link C++ class AtTrack + ;
+#pragma link C++ class AtFittedTrack + ;
 #pragma link C++ class AtFissionEvent + ;
 #pragma link C++ class AtGenericTrace + ;
 
