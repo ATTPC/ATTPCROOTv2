@@ -32,13 +32,11 @@ InitStatus AtHDF5WriteTask::Init()
    fEventArray = dynamic_cast<TClonesArray *>(ioMan->GetObject(fInputBranchName));
 
    fFile = std::make_unique<H5::H5File>(fOutputFileName, H5F_ACC_TRUNC);
-
    return kSUCCESS;
 }
 
 void AtHDF5WriteTask::Exec(Option_t *opt)
 {
-
    auto *event = dynamic_cast<AtEvent *>(fEventArray->At(0));
    if (!event->IsGood())
       return;
@@ -71,7 +69,17 @@ void AtHDF5WriteTask::Exec(Option_t *opt)
 
    int eventNum = fUseEventNum ? event->GetEventID() : fEventNum;
 
-   auto eventGroup = std::make_unique<H5::Group>(fFile->createGroup(TString::Format("/Event_[%d]", eventNum)));
+
+   LOG(info) << "Writing event " << eventNum;
+   std::unique_ptr<H5::Group> eventGroup = nullptr;
+   try {
+      eventGroup = std::make_unique<H5::Group>(fFile->createGroup(TString::Format("/Event_[%d]", eventNum)));
+   } catch (H5::Exception& e) {
+      LOG(fatal) << "Failed to create group for event " << eventNum << ": " << e.getDetailMsg();
+      return ;
+   } 
+   
+   
    H5::DataSet hitset = fFile->createDataSet(TString::Format("/Event_[%d]/HitArray", eventNum), hdf5Type, hitSpace);
    hitset.write(hits, hdf5Type);
 

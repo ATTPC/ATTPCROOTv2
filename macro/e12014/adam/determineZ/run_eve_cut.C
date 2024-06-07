@@ -20,6 +20,7 @@ void run_eve_cut(TString cut = "cut1", TString species = "Bi200", int pressure =
    TString InputDataFile = TString::Format("/mnt/analysis/e12014/TPC/%dTorr_yFit/%s/%s/%sChi2.root", pressure,
                                            cut.Data(), lise ? "LISE" : "SRIM", species.Data());
 
+   InputDataFile = "~/fission/data/e12014/unpacked/Bi200Chi2.root";
    // InputDataFile = "/mnt/analysis/e12014/TPC/150Torr_nomod/pConserve/SRIM/Bi200Chi2.root";
    // InputDataFile = "./Bi200NewObj.root";
    // InputDataFile = "./Bi200NewFit.root";

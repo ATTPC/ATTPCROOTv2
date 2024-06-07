@@ -8,7 +8,7 @@ echo "Staring tests at " `date`
 for d in */; do
     echo $d
     cd ${SCRIPT_DIR}/$d
-    runTests.sh
+    ./runTests.sh
     echo
 done
 

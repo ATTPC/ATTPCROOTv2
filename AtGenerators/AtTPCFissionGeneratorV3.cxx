@@ -17,6 +17,7 @@
 #include <TVirtualMCStack.h>
 
 #include <iostream>
+#include <fstream>
 
 void AtTPCFissionGeneratorV3::loadIonList(TString ionList)
 {
