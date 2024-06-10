@@ -38,7 +38,7 @@ InitStatus AtHDF5WriteTask::Init()
 void AtHDF5WriteTask::Exec(Option_t *opt)
 {
    auto *event = dynamic_cast<AtEvent *>(fEventArray->At(0));
-   if (!event->IsGood())
+   if (!event || !event->IsGood())
       return;
 
    Int_t nHits = event->GetNumHits();
@@ -69,8 +69,9 @@ void AtHDF5WriteTask::Exec(Option_t *opt)
 
    int eventNum = fUseEventNum ? event->GetEventID() : fEventNum;
 
-
-   LOG(info) << "Writing event " << eventNum;
+   if(eventNum % 100 == 0)
+      LOG(info) << "Writing event " << eventNum;
+   
    std::unique_ptr<H5::Group> eventGroup = nullptr;
    try {
       eventGroup = std::make_unique<H5::Group>(fFile->createGroup(TString::Format("/Event_[%d]", eventNum)));
