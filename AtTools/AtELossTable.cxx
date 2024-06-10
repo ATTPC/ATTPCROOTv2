@@ -12,6 +12,7 @@ namespace AtTools {
 
 void AtELossTable::LoadTable(const std::vector<double> &energy, const std::vector<double> &dEdX)
 {
+   
    if (energy.size() > 0)
       LOG(info) << "Loading dE/dX from " << energy.front() << " MeV to " << energy.back() << " MeV ";
    else
@@ -39,7 +40,12 @@ double AtELossTable::GetRange(double energyIni, double energyFin) const
 {
    if (energyIni == energyFin)
       return 0;
-
+    if(energyFin < fdXdE.get_x_min())
+       {
+          LOG(debug) << "Attemting to integrate energy to " << energyFin << 
+             " when min energy in table is " << fdXdE.get_x_min();
+             energyFin = fdXdE.get_x_min();
+       }
    return fdXdE.integrate(energyFin, energyIni);
 }
 

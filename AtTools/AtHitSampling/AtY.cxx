@@ -13,7 +13,7 @@ using namespace RandomSample;
 std::vector<AtHit> AtY::SampleHits(int N)
 {
    std::vector<AtHit> ret;
-   LOG(debug) << "Vetoing " << fBeam.size() << " from beam region";
+   LOG(debug) << "Vetoing " << fBeam.size() << " from beam region. Total hits: " << fHits->size();
 
    // If every hit is outside of the beam region, then skip the vetoed beam region
    if (fBeam.size() + N - 2 > fHits->size() || fNotBeam.size() + 2 > fHits->size()) {
@@ -23,7 +23,7 @@ std::vector<AtHit> AtY::SampleHits(int N)
       return ret;
    }
 
-   double maxZ = std::max(ret[0].GetPosition().Z(), ret[1].GetPosition().Z());
+   
 
    // Try to sample 10 times respecting all of the conditions.
    // If they're not met just return the final attempt
@@ -34,6 +34,7 @@ std::vector<AtHit> AtY::SampleHits(int N)
       for (auto ind : sampleIndicesFromCDF(2, fNotBeam))
          ret.push_back(*fHits->at(ind));
 
+      double maxZ = std::max(ret[0].GetPosition().Z(), ret[1].GetPosition().Z());
       // try 10 times to find fragment hits that are closer to the pad plane
       for (int iterFF = 0; iterFF < 10; ++iterFF) {
          auto indices = sampleIndicesFromCDF(N - 2, fBeam);

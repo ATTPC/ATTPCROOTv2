@@ -3,6 +3,8 @@
 // Saves the hists to an H5 file for DavidsonML group.
 void unpack_toH5(TString inputFilePath, TString branchName)
 {
+   inputFilePath = "/home/faculty/aanthony/fission/data/e12014/unpacked/Bi200Sim.root";
+   inputFilePath = "/home/faculty/aanthony/attpcroot/macro/e12014/adam/ML/data/output_digi01.root";
    // Load the library for unpacking and reconstruction
    gSystem->Load("libAtReconstruction.so");
 
@@ -11,10 +13,10 @@ void unpack_toH5(TString inputFilePath, TString branchName)
 
    // Set the input/output directories
    TString outDir = "./data";
-
+   TString outFileName = "Bi200Sim";
    // Set the in/out files
    TString inputFile(inputFilePath);
-   TString outputFile = outDir + "/out.root";
+   TString outputFile = outDir + "/" + outFileName + ".root";
 
    std::cout << "Unpacking file: " << inputFile << std::endl;
    std::cout << "Saving in: " << outputFile << std::endl;
@@ -48,7 +50,7 @@ void unpack_toH5(TString inputFilePath, TString branchName)
    // We must get the container before initializing a run
    rtdb->getContainer("AtDigiPar");
 
-   auto *wHDF = new AtHDF5WriteTask("data/output.h5", branchName);
+   auto *wHDF = new AtHDF5WriteTask("data/" + outFileName + ".h5", branchName);
    wHDF->SetUseEventNum(false);
 
    run->AddTask(wHDF);
