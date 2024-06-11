@@ -36,7 +36,7 @@ AtPxCTDigitizer::AtPxCTDigitizer()
 
 AtPxCTDigitizer::~AtPxCTDigitizer()
 {
-   LOG(INFO) << "AtPxCTDigitizer: Delete instance";
+   LOG(info) << "AtPxCTDigitizer: Delete instance";
 
    fPxCTCryCalDataCA.Delete();
 }
@@ -46,7 +46,7 @@ void AtPxCTDigitizer::SetParContainers()
 
    FairRuntimeDb *rtdb = FairRuntimeDb::instance();
    if (!rtdb) {
-      LOG(ERROR) << "AtPxCTDigitizer:: FairRuntimeDb not opened!";
+      LOG(error) << "AtPxCTDigitizer:: FairRuntimeDb not opened!";
    }
 }
 
@@ -54,7 +54,7 @@ void AtPxCTDigitizer::SetParameter() {}
 
 InitStatus AtPxCTDigitizer::Init()
 {
-   LOG(INFO) << "AtPxCTDigitizer::Init ";
+   LOG(info) << "AtPxCTDigitizer::Init ";
 
    FairRootManager *rootManager = FairRootManager::Instance();
    if (!rootManager)
@@ -160,7 +160,7 @@ void AtPxCTDigitizer::Register()
 void AtPxCTDigitizer::Reset()
 {
    // Clear the CA structure
-   LOG(DEBUG) << "Clearing PxCTCrystalCalData Structure";
+   LOG(debug) << "Clearing PxCTCrystalCalData Structure";
    fPxCTCryCalDataCA.Clear();
 
    ResetParameters();
@@ -171,7 +171,7 @@ void AtPxCTDigitizer::FinishEvent() {}
 void AtPxCTDigitizer::SetDetectionThreshold(Double_t thresholdEne)
 {
    fThreshold = thresholdEne;
-   LOG(INFO) << "AtPxCTDigitizer::SetDetectionThreshold to " << fThreshold << " GeV.";
+   LOG(info) << "AtPxCTDigitizer::SetDetectionThreshold to " << fThreshold << " GeV.";
 }
 
 AtPxCTCrystalCalData *AtPxCTDigitizer::AddCrystalCal(Int_t ident, Double_t energy, ULong64_t time)
@@ -179,7 +179,7 @@ AtPxCTCrystalCalData *AtPxCTDigitizer::AddCrystalCal(Int_t ident, Double_t energ
    TClonesArray &clref = fPxCTCryCalDataCA;
    Int_t size = clref.GetEntriesFast();
    if (fVerbose > 1)
-      LOG(INFO) << "-I- AtPxCTDigitizer: Adding CrystalCalData "
+      LOG(info) << "-I- AtPxCTDigitizer: Adding CrystalCalData "
                 << " with unique identifier " << ident << " entering with " << energy * 1e06 << " keV "
                 << " Time=" << time;
 
@@ -190,7 +190,7 @@ void AtPxCTDigitizer::SetExpEnergyRes(Double_t crystalResGe)
 {
    fResolutionGe = crystalResGe;
 
-   LOG(INFO) << "AtPxCTDigitizer::SetExpEnergyRes to " << fResolutionGe << "% @ 1 MeV for Ge";
+   LOG(info) << "AtPxCTDigitizer::SetExpEnergyRes to " << fResolutionGe << "% @ 1 MeV for Ge";
 }
 
 Double_t AtPxCTDigitizer::NUSmearing(Double_t inputEnergy)
@@ -205,7 +205,7 @@ Double_t AtPxCTDigitizer::NUSmearing(Double_t inputEnergy)
 void AtPxCTDigitizer::SetNonUniformity(Double_t nonU)
 {
    fNonUniformity = nonU;
-   LOG(INFO) << "AtPxCTDigitizer::SetNonUniformity to " << fNonUniformity << " %";
+   LOG(info) << "AtPxCTDigitizer::SetNonUniformity to " << fNonUniformity << " %";
 }
 
 Double_t AtPxCTDigitizer::ExpResSmearingGe(Double_t inputEnergy)

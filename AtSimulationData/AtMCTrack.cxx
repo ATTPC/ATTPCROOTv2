@@ -66,7 +66,7 @@ AtMCTrack::~AtMCTrack() = default;
 // -----   Public method Print   -------------------------------------------
 void AtMCTrack::Print(Int_t trackId) const
 {
-   LOG(DEBUG) << "Track " << trackId << ", mother : " << fMotherId << ", Type " << fPdgCode << ", momentum (" << fPx
+   LOG(debug) << "Track " << trackId << ", mother : " << fMotherId << ", Type " << fPdgCode << ", momentum (" << fPx
               << ", " << fPy << ", " << fPz << ") GeV";
    /* LOG(DEBUG2) << "       Ref " << GetNPoints(kREF)
                 << ", TutDet " << GetNPoints(kTutDet)

@@ -29,13 +29,6 @@ using std::endl;
 
 static AtFieldCreator gAtFieldCreator;
 
-AtFieldCreator::AtFieldCreator() : FairFieldFactory(), fFieldPar(nullptr)
-{
-   fCreator = this;
-}
-
-AtFieldCreator::~AtFieldCreator() = default;
-
 void AtFieldCreator::SetParm()
 {
    FairRunAna *Run = FairRunAna::Instance();

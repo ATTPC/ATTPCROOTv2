@@ -71,7 +71,7 @@ void AtPSASimple2::Analyze(AtRawEvent *rawEvent, AtEvent *event)
       }
 
       if (!(pad->IsPedestalSubtracted())) {
-         LOG(ERROR) << "Pedestal should be subtracted to use this class!";
+         LOG(error) << "Pedestal should be subtracted to use this class!";
       }
 
       auto adc = pad->GetADC();

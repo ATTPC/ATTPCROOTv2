@@ -60,7 +60,7 @@ void S800Ana::SetPID1cut(std::vector<TString> files)
       TKey *key = nullptr;
 
       while ((key = dynamic_cast<TKey *>(next()))) {
-         LOG(INFO) << "PID1 Loading Cut file:  " << key->GetName();
+         LOG(info) << "PID1 Loading Cut file:  " << key->GetName();
          fcutPID1.push_back(dynamic_cast<TCutG *>(f.Get(key->GetName())));
       }
    }
@@ -73,7 +73,7 @@ void S800Ana::SetPID2cut(std::vector<TString> files)
       TKey *key = nullptr;
 
       while ((key = dynamic_cast<TKey *>(next()))) {
-         LOG(INFO) << "PID2 Loading Cut file:  " << key->GetName();
+         LOG(info) << "PID2 Loading Cut file:  " << key->GetName();
          fcutPID2.push_back(dynamic_cast<TCutG *>(f.Get(key->GetName())));
       }
    }
@@ -86,7 +86,7 @@ void S800Ana::SetPID3cut(std::vector<TString> files)
       TKey *key = nullptr;
 
       while ((key = dynamic_cast<TKey *>(next()))) {
-         LOG(INFO) << "PID3 Loading Cut file:  " << key->GetName();
+         LOG(info) << "PID3 Loading Cut file:  " << key->GetName();
          fcutPID3.push_back(dynamic_cast<TCutG *>(f.Get(key->GetName())));
       }
    }
@@ -152,7 +152,7 @@ void S800Ana::Calc(S800Calc *s800calc)
 {
    Reset();
    if (fMTDCXfRange.size() < 2 || fMTDCObjRange.size() < 2 || fTofObjCorr.size() < 2) {
-      LOG(WARNING) << "S800Ana::Calc : MTDCXfRange, MTDCObjRange, TofObjCorr size must be 2 : " << fMTDCXfRange.size()
+      LOG(warning) << "S800Ana::Calc : MTDCXfRange, MTDCObjRange, TofObjCorr size must be 2 : " << fMTDCXfRange.size()
                    << " " << fMTDCObjRange.size() << " " << fTofObjCorr.size() << " ... skip event";
       return;
    }

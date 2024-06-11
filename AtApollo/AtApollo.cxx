@@ -52,7 +52,7 @@ void AtApollo::Initialize()
    FairDetector::Initialize();
    // FairRuntimeDb *rtdb = FairRun::Instance()->GetRuntimeDb();
    //  AtApolloGeoPar* par=(AtApolloGeoPar*)(rtdb->getContainer("AtApolloGeoPar"));
-   LOG(INFO) << "AtApollo: initialisation";
+   LOG(info) << "AtApollo: initialisation";
 }
 
 Bool_t AtApollo::ProcessHits(FairVolume *vol)
@@ -130,17 +130,17 @@ void AtApollo::Reset()
 void AtApollo::Print(Option_t *option) const
 {
    Int_t nHits = fAtApolloPointCollection->GetEntriesFast();
-   LOG(INFO) << "APOLLO: " << nHits << " points registered in this event";
+   LOG(info) << "APOLLO: " << nHits << " points registered in this event";
 }
 
 void AtApollo::ConstructGeometry()
 {
    TString fileName = GetGeometryFileName();
    if (fileName.EndsWith(".geo")) {
-      LOG(INFO) << "Constructing APOLLO geometry from ASCII file " << fileName;
+      LOG(info) << "Constructing APOLLO geometry from ASCII file " << fileName;
       // ConstructASCIIGeometry();
    } else if (fileName.EndsWith(".root")) {
-      LOG(INFO) << "Constructing APOLLO geometry from ROOT file " << fileName;
+      LOG(info) << "Constructing APOLLO geometry from ROOT file " << fileName;
       ConstructRootGeometry();
    } else {
       std::cout << "Geometry format not supported." << std::endl;
@@ -151,7 +151,7 @@ Bool_t AtApollo::CheckIfSensitive(std::string name)
 {
    TString tsname = name;
    if (tsname.Contains("Crystal_")) {
-      LOG(INFO) << " APOLLO geometry: Sensitive volume found: " << tsname;
+      LOG(info) << " APOLLO geometry: Sensitive volume found: " << tsname;
       return kTRUE;
    }
    return kFALSE;
@@ -164,7 +164,7 @@ AtApolloPoint *AtApollo::AddPoint(Int_t trackID, Int_t detID, TVector3 pos, TVec
    TClonesArray &clref = *fAtApolloPointCollection;
    Int_t size = clref.GetEntriesFast();
    if (fVerboseLevel > 1)
-      LOG(INFO) << "APOLLO: Adding Point in detector " << detID << ", track " << trackID << ", energy loss "
+      LOG(info) << "APOLLO: Adding Point in detector " << detID << ", track " << trackID << ", energy loss "
                 << eLoss * 1e06 << " keV";
 
    return new (clref[size]) AtApolloPoint(trackID, detID, pos, mom, crystalID, time, length, eLoss);

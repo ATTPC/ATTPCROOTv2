@@ -151,7 +151,7 @@ InitStatus AtMergeTask::Init()
    TTreeReader reader1("caltree", fS800file);
    TTreeReaderValue<Long64_t> ts(reader1, "fts");
 
-   LOG(INFO) << cBLUE << "Loading S800 timestamps..." << cNORMAL;
+   LOG(info) << cBLUE << "Loading S800 timestamps..." << cNORMAL;
    while (reader1.Next()) {
       fS800Ts.push_back((Long64_t)*ts);
       // fS800Ts.push_back((Long64_t) *ts - fTsDelta);//special for run180 e18027
@@ -204,7 +204,7 @@ void AtMergeTask::Exec(Option_t *opt)
    Long64_t AtTPCTs = -1;
    if (!fUseATTPCClock) {
       if (rawEvent->GetTimestamps().size() == 1) {
-         LOG(WARNING)
+         LOG(warning)
             << cYELLOW
             << " AtMergeTask : only TS based on internal AT-TPC clock available, check fUseATTPCClock unpacking macro"
             << cNORMAL << std::endl;
@@ -265,7 +265,7 @@ void AtMergeTask::Exec(Option_t *opt)
    }
 
    if (S800EvtMatch < 0)
-      LOG(WARNING) << cRED << "NO TS MATCHING !" << cNORMAL;
+      LOG(warning) << cRED << "NO TS MATCHING !" << cNORMAL;
 
    if (S800EvtMatch > 0) {
       TTreeReader reader2("caltree", fS800file);

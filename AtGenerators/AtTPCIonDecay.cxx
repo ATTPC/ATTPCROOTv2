@@ -128,30 +128,30 @@ Bool_t AtTPCIonDecay::ReadEvent(FairPrimaryGenerator *primGen)
    fIsDecay = kFALSE;
    Double_t excitationEnergy = 0.0;
 
-   LOG(INFO) << cBLUE << " AtTPCIonDecay - Decay energy -  Excitation energy from reaction :  " << ExEject
+   LOG(info) << cBLUE << " AtTPCIonDecay - Decay energy -  Excitation energy from reaction :  " << ExEject
              << " and from task : " << fExEnergy
              << ". Beam energy : " << AtVertexPropagator::Instance()->GetEnergy() / 1000.0 << " GeV . Is Sequential? "
              << fIsSequentialDecay << cNORMAL << "\n";
-   LOG(INFO) << cORANGEWARNING
+   LOG(info) << cORANGEWARNING
              << " AtTPCIonDecay - Warning: Temporary warning message to control the flow of generators.Please, check "
                 "that if the decay comes from beam fusion, the energy from reaction is 0"
              << cNORMAL << "\n";
 
    if (ExEject > 0.0 && !fIsSequentialDecay) {
-      LOG(INFO) << cBLINKINGRED
+      LOG(info) << cBLINKINGRED
                 << " AtTPCIonDecay - Warning, Inconsistent variables: Recoil excitation energy from Vertex propagator "
                    "greater than 0 but sequential decay not enabled! Continue at your own risk!"
                 << cNORMAL << "\n";
 
    } else if (fIsSequentialDecay && fExEnergy > 0.0) {
 
-      LOG(INFO) << cBLINKINGRED
+      LOG(info) << cBLINKINGRED
                 << " AtTPCIonDecay - Warning, Inconsistent variables: Sequential decay should take the Ex energy from "
                    "the reaction generator! Continue at your own risk!"
                 << cNORMAL << "\n";
 
    } else if (ExEject > 0.0 && fExEnergy > 0.0) {
-      LOG(INFO)
+      LOG(info)
          << cBLINKINGRED
          << " AtTPCIonDecay - Warning, Inconsistent variables: Both, excitation energy from Vertex propagator and "
             "excitation energy from task (introduced through the macro) are positive! Continue at your own risk!"
@@ -173,7 +173,7 @@ Bool_t AtTPCIonDecay::ReadEvent(FairPrimaryGenerator *primGen)
       auto it = GoodCases.begin();
       std::advance(it, RandVar);
       Int_t Case = *it;
-      // LOG(INFO)<<"iterator "<<" "<<Case<<" "<<RandVar<<" "<<GoodCases.size()<<" "<<std::endl;
+      // LOG(info)<<"iterator "<<" "<<Case<<" "<<RandVar<<" "<<GoodCases.size()<<" "<<std::endl;
 
       Double_t beta;
       Double_t s = 0.0;
@@ -197,7 +197,7 @@ Bool_t AtTPCIonDecay::ReadEvent(FairPrimaryGenerator *primGen)
       fPy.resize(fMult.at(Case));
       fPz.resize(fMult.at(Case));
 
-      // LOG(INFO)<<" Case : "<<Case<<" with multiplicity : "<<fMult.at(Case)<<"\n";
+      // LOG(info)<<" Case : "<<Case<<" with multiplicity : "<<fMult.at(Case)<<"\n";
 
       fIsDecay = kFALSE;
 
@@ -222,7 +222,7 @@ Bool_t AtTPCIonDecay::ReadEvent(FairPrimaryGenerator *primGen)
          fIon.at(Case).at(0)->GetName()); // NB: The first particle of the list must be the decaying ion
       int pdgType0 = thisPart0->PdgCode();
 
-      LOG(INFO) << cBLUE << " Ejectile info : " << pdgType0 << " " << fBeamMass << " " << fPxBeam << " " << fPyBeam
+      LOG(info) << cBLUE << " Ejectile info : " << pdgType0 << " " << fBeamMass << " " << fPxBeam << " " << fPyBeam
                 << " " << fPzBeam << " " << fBeamEnergy << " " << excitationEnergy << cNORMAL << "\n";
 
       // === Phase Space Calculation
@@ -232,7 +232,7 @@ Bool_t AtTPCIonDecay::ReadEvent(FairPrimaryGenerator *primGen)
       fEnergyImpulsionLab_target = TLorentzVector(TVector3(0, 0, 0), fTargetMass);
 
       if (fTargetMass > 0 && fIsSequentialDecay) {
-         LOG(INFO)
+         LOG(info)
             << cBLINKINGRED
             << " AtTPCIonDecay - Warning, Inconsistent variables: Target Impulsion included in sequential decay. "
                "Continue at your own risk!"
@@ -263,7 +263,7 @@ Bool_t AtTPCIonDecay::ReadEvent(FairPrimaryGenerator *primGen)
          std::vector<Double_t> KineticEnergy;
          std::vector<Double_t> ThetaLab;
 
-         LOG(INFO) << cBLUE << " AtTPCIonDecay -  Phase Space Information "
+         LOG(info) << cBLUE << " AtTPCIonDecay -  Phase Space Information "
                    << "\n";
          for (Int_t i = 0; i < fMult.at(Case); i++) {
             p_vector.push_back(event1.GetDecay(i));
@@ -272,16 +272,16 @@ Bool_t AtTPCIonDecay::ReadEvent(FairPrimaryGenerator *primGen)
             fPz.at(i) = p_vector.at(i)->Pz();
             KineticEnergy.push_back((p_vector.at(i)->E() - mass_1[i]) * 1000.0);
             ThetaLab.push_back(p_vector.at(i)->Theta() * 180. / TMath::Pi());
-            LOG(INFO) << " Particle " << i << " - TKE (MeV) : " << KineticEnergy.at(i)
+            LOG(info) << " Particle " << i << " - TKE (MeV) : " << KineticEnergy.at(i)
                       << " - Lab Angle (deg) : " << ThetaLab.at(i) << "\n";
          }
-         LOG(INFO) << cNORMAL;
+         LOG(info) << cNORMAL;
 
       } else { // if kinematics condition
 
-         LOG(INFO) << cYELLOW << "AtTPCIonDecay - Warning, kinematical conditions for decay not fulfilled " << cNORMAL
+         LOG(info) << cYELLOW << "AtTPCIonDecay - Warning, kinematical conditions for decay not fulfilled " << cNORMAL
                    << "\n";
-         LOG(INFO) << cYELLOW << " s = " << s << " - pow(M_tot,2) = " << pow(M_tot, 2) << cNORMAL << "\n";
+         LOG(info) << cYELLOW << " s = " << s << " - pow(M_tot,2) = " << pow(M_tot, 2) << cNORMAL << "\n";
       }
 
       // === Propagate the decay products from the vertex of the reaction

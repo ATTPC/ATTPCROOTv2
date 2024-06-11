@@ -4,7 +4,7 @@ void Init()
 {
    FairRootManager *ioManager = FairRootManager::Instance();
    if (ioManager == nullptr) {
-      LOG(ERROR) << "Cannot find RootManager!" << std::endl;
+      LOG(error) << "Cannot find RootManager!" << std::endl;
       return;
    }
 

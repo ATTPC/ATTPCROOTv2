@@ -149,27 +149,27 @@ InitStatus AtEventDrawTask::Init()
 
    fEventArray = dynamic_cast<TClonesArray *>(ioMan->GetObject(fEventBranchName));
    if (fEventArray)
-      LOG(INFO) << cGREEN << "Event Array Found in branch " << fEventBranchName << "." << cNORMAL << std::endl;
+      LOG(info) << cGREEN << "Event Array Found in branch " << fEventBranchName << "." << cNORMAL << std::endl;
 
    fCorrectedEventArray = dynamic_cast<TClonesArray *>(ioMan->GetObject(fCorrectedEventBranchName));
    if (fCorrectedEventArray)
-      LOG(INFO) << cGREEN << "Corrected Event Array Found in branch " << fCorrectedEventBranchName << "." << cNORMAL
+      LOG(info) << cGREEN << "Corrected Event Array Found in branch " << fCorrectedEventBranchName << "." << cNORMAL
                 << std::endl;
 
    fRawEventArray = dynamic_cast<TClonesArray *>(ioMan->GetObject(fRawEventBranchName));
    if (fRawEventArray) {
-      LOG(INFO) << cGREEN << "Raw Event Array Found in branch " << fRawEventBranchName << "." << cNORMAL << std::endl;
+      LOG(info) << cGREEN << "Raw Event Array Found in branch " << fRawEventBranchName << "." << cNORMAL << std::endl;
       fIsRawData = kTRUE;
    }
 
    fPatternEventArray = dynamic_cast<TClonesArray *>(ioMan->GetObject(fPatternEventBranchName));
    if (fPatternEventArray)
-      LOG(INFO) << cGREEN << "Pattern Event Array Found in branch " << fPatternEventBranchName << "." << cNORMAL
+      LOG(info) << cGREEN << "Pattern Event Array Found in branch " << fPatternEventBranchName << "." << cNORMAL
                 << std::endl;
 
    fS800Calc = dynamic_cast<S800Calc *>(ioMan->GetObject("s800cal"));
    if (fS800Calc)
-      LOG(INFO) << cGREEN << "S800Calc Found." << cNORMAL;
+      LOG(info) << cGREEN << "S800Calc Found." << cNORMAL;
 
    gStyle->SetPalette(55);
 

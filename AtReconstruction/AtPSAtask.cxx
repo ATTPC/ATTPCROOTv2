@@ -54,13 +54,13 @@ InitStatus AtPSAtask::Init()
 {
    FairRootManager *ioMan = FairRootManager::Instance();
    if (ioMan == nullptr) {
-      LOG(ERROR) << "Cannot find RootManager!";
+      LOG(error) << "Cannot find RootManager!";
       return kERROR;
    }
 
    fRawEventArray = dynamic_cast<TClonesArray *>(ioMan->GetObject(fInputBranchName));
    if (fRawEventArray == nullptr) {
-      LOG(ERROR) << "Cannot find AtRawEvent array in branch " << fInputBranchName << "!";
+      LOG(error) << "Cannot find AtRawEvent array in branch " << fInputBranchName << "!";
       return kERROR;
    }
 
@@ -69,10 +69,10 @@ InitStatus AtPSAtask::Init()
    // Retrieving simulated points, if available
    fMCPointArray = dynamic_cast<TClonesArray *>(ioMan->GetObject(fSimulatedPointBranchName));
    if (fMCPointArray != nullptr) {
-      LOG(INFO) << " Simulated points found (simulation analysis) in branch " << fSimulatedPointBranchName;
+      LOG(info) << " Simulated points found (simulation analysis) in branch " << fSimulatedPointBranchName;
       fPSA->SetSimulatedEvent(fMCPointArray);
    } else {
-      LOG(INFO) << " Simulated points not found (experimental data analysis) looking at branch "
+      LOG(info) << " Simulated points not found (experimental data analysis) looking at branch "
                 << fSimulatedPointBranchName;
    }
 

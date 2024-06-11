@@ -92,7 +92,7 @@ void AtFilterSubtraction::AverageBaseline()
                fRawBaseline[cobo][asad][tb] /= fAgetCount[cobo][asad];
             }
          else {
-            LOG(ERROR) << "No baseline for cobo " << cobo << " asad " << asad << " in event " << fEventNumber;
+            LOG(error) << "No baseline for cobo " << cobo << " asad " << asad << " in event " << fEventNumber;
             fNumberMissedAsads++;
          }
 }

@@ -22,7 +22,7 @@ InitStatus AtHDF5ReadTask::Init()
 
    FairRootManager *ioMan = FairRootManager::Instance();
    if (ioMan == nullptr) {
-      LOG(ERROR) << "Cannot find RootManager!";
+      LOG(error) << "Cannot find RootManager!";
       return kERROR;
    }
 

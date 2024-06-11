@@ -48,7 +48,7 @@ void AtDeGAi::Initialize()
 {
    FairDetector::Initialize();
    // AtDeGAiGeoPar* par=(AtDeGAiGeoPar*)(rtdb->getContainer("AtDeGAiGeoPar"));
-   LOG(INFO) << "AtDeGAi: initialisation";
+   LOG(info) << "AtDeGAi: initialisation";
 }
 
 Bool_t AtDeGAi::ProcessHits(FairVolume *vol)
@@ -126,17 +126,17 @@ void AtDeGAi::Reset()
 void AtDeGAi::Print(Option_t *option) const
 {
    Int_t nHits = fAtDeGAiPointCollection->GetEntriesFast();
-   LOG(INFO) << "DeGAi: " << nHits << " points registered in this event";
+   LOG(info) << "DeGAi: " << nHits << " points registered in this event";
 }
 
 void AtDeGAi::ConstructGeometry()
 {
    TString fileName = GetGeometryFileName();
    if (fileName.EndsWith(".geo")) {
-      LOG(INFO) << "Constructing DeGAi geometry from ASCII file " << fileName;
+      LOG(info) << "Constructing DeGAi geometry from ASCII file " << fileName;
       // ConstructASCIIGeometry();
    } else if (fileName.EndsWith(".root")) {
-      LOG(INFO) << "Constructing DeGAi geometry from ROOT file " << fileName;
+      LOG(info) << "Constructing DeGAi geometry from ROOT file " << fileName;
       ConstructRootGeometry();
    } else {
       std::cout << "Geometry format not supported." << std::endl;
@@ -147,7 +147,7 @@ Bool_t AtDeGAi::CheckIfSensitive(std::string name)
 {
    TString tsname = name;
    if (tsname.Contains("Crystal_")) {
-      LOG(INFO) << " DeGAi geometry: Sensitive volume found: " << tsname;
+      LOG(info) << " DeGAi geometry: Sensitive volume found: " << tsname;
       return kTRUE;
    }
    return kFALSE;
@@ -160,7 +160,7 @@ AtMCPoint *AtDeGAi::AddPoint(Int_t trackID, Int_t detID, TVector3 pos, TVector3 
    TClonesArray &clref = *fAtDeGAiPointCollection;
    Int_t size = clref.GetEntriesFast();
    if (fVerboseLevel > 1)
-      LOG(INFO) << "DeGAi: Adding Point in detector " << detID << ", track " << trackID << ", energy loss "
+      LOG(info) << "DeGAi: Adding Point in detector " << detID << ", track " << trackID << ", energy loss "
                 << eLoss * 1e06 << " keV";
 
    auto point = new (clref[size]) AtMCPoint(trackID, detID, pos, mom, time, length, eLoss);

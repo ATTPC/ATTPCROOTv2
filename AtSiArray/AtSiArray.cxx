@@ -25,14 +25,14 @@ AtSiArray::AtSiArray()
    : FairDetector("AtSiArray", kTRUE, kAtSiArray), fTrackID(-1), fVolumeID(-1), fPos(), fMom(), fTime(-1.),
      fLength(-1.), fELoss(-1), fPosIndex(-1), fAtSiArrayPointCollection(new TClonesArray("AtSiPoint")), fELossAcc(-1)
 {
-   // LOG(INFO)<<" AtSiArray detector initialized ";
+   // LOG(info)<<" AtSiArray detector initialized ";
 }
 
 AtSiArray::AtSiArray(const char *name, Bool_t active)
    : FairDetector(name, active, kAtSiArray), fTrackID(-1), fVolumeID(-1), fPos(), fMom(), fTime(-1.), fLength(-1.),
      fELoss(-1), fPosIndex(-1), fAtSiArrayPointCollection(new TClonesArray("AtSiPoint")), fELossAcc(-1)
 {
-   // LOG(INFO)<<" AtSiArray detector initialized ";
+   // LOG(info)<<" AtSiArray detector initialized ";
 }
 
 AtSiArray::~AtSiArray()
@@ -72,20 +72,20 @@ Bool_t AtSiArray::ProcessHits(FairVolume *vol)
 
       std::cout << " AtSiArray: Track is entering "
                 << "\n";
-      LOG(INFO) << " HELIOS: First hit in Volume " << fVolName;
-      LOG(INFO) << " Particle : " << gMC->ParticleName(gMC->TrackPid());
-      LOG(INFO) << " PID PdG : " << gMC->TrackPid();
-      LOG(INFO) << " Atomic Mass : " << AZ.first;
-      LOG(INFO) << " Atomic Number : " << AZ.second;
-      LOG(INFO) << " Volume ID " << gMC->CurrentVolID(VolumeID);
-      LOG(INFO) << " Track ID : " << fTrackID;
-      LOG(INFO) << " Position In : " << fPosIn.X() << " " << fPosIn.Y() << "  " << fPosIn.Z() << std::endl;
-      LOG(INFO) << " Position Out : " << fPosOut.X() << " " << fPosOut.Y() << "  " << fPosOut.Z() << std::endl;
-      LOG(INFO) << " Momentum In: " << fMomIn.X() << " " << fMomIn.Y() << "  " << fMomIn.Z() << std::endl;
-      // LOG(INFO)<<" Total relativistic energy " <<gMC->Etot()<< FairLogger::endl;
-      // LOG(INFO)<<" Mass of the Tracked particle (gAVTP) :
-      // "<<AtVertexPropagator::Instance()->GetBeamMass()<<std::endl; LOG(INFO)<<" Mass of the Tracked particle (gMC) :
-      // "<<gMC->TrackMass()<<std::endl; LOG(INFO)<<" Initial energy of the current particle in this volume :
+      LOG(info) << " HELIOS: First hit in Volume " << fVolName;
+      LOG(info) << " Particle : " << gMC->ParticleName(gMC->TrackPid());
+      LOG(info) << " PID PdG : " << gMC->TrackPid();
+      LOG(info) << " Atomic Mass : " << AZ.first;
+      LOG(info) << " Atomic Number : " << AZ.second;
+      LOG(info) << " Volume ID " << gMC->CurrentVolID(VolumeID);
+      LOG(info) << " Track ID : " << fTrackID;
+      LOG(info) << " Position In : " << fPosIn.X() << " " << fPosIn.Y() << "  " << fPosIn.Z() << std::endl;
+      LOG(info) << " Position Out : " << fPosOut.X() << " " << fPosOut.Y() << "  " << fPosOut.Z() << std::endl;
+      LOG(info) << " Momentum In: " << fMomIn.X() << " " << fMomIn.Y() << "  " << fMomIn.Z() << std::endl;
+      // LOG(info)<<" Total relativistic energy " <<gMC->Etot()<< FairLogger::endl;
+      // LOG(info)<<" Mass of the Tracked particle (gAVTP) :
+      // "<<AtVertexPropagator::Instance()->GetBeamMass()<<std::endl; LOG(info)<<" Mass of the Tracked particle (gMC) :
+      // "<<gMC->TrackMass()<<std::endl; LOG(info)<<" Initial energy of the current particle in this volume :
       // "<<((gMC->Etot() - gMC->TrackMass()) * 1000.)<<FairLogger::endl;// Relativistic Mass
    }
 
@@ -143,17 +143,17 @@ Bool_t AtSiArray::ProcessHits(FairVolume *vol)
 
          std::cout << " AtSiArray: Track is exiting "
                    << "\n";
-         LOG(INFO) << " HELIOS: First hit in Volume " << fVolName;
-         LOG(INFO) << " Particle : " << gMC->ParticleName(gMC->TrackPid());
-         LOG(INFO) << " PID PdG : " << gMC->TrackPid();
-         LOG(INFO) << " Atomic Mass : " << AZ.first;
-         LOG(INFO) << " Atomic Number : " << AZ.second;
-         LOG(INFO) << " Volume ID " << gMC->CurrentVolID(VolumeID);
-         LOG(INFO) << " Track ID : " << fTrackID;
-         LOG(INFO) << " Position In : " << fPosIn.X() << " " << fPosIn.Y() << "  " << fPosIn.Z() << std::endl;
-         LOG(INFO) << " Position Out : " << fPosOut.X() << " " << fPosOut.Y() << "  " << fPosOut.Z() << std::endl;
-         LOG(INFO) << " Momentum In: " << fMomIn.X() << " " << fMomIn.Y() << "  " << fMomIn.Z() << std::endl;
-         LOG(INFO) << " Momentum Out: " << fMomOut.X() << " " << fMomOut.Y() << "  " << fMomOut.Z() << std::endl;
+         LOG(info) << " HELIOS: First hit in Volume " << fVolName;
+         LOG(info) << " Particle : " << gMC->ParticleName(gMC->TrackPid());
+         LOG(info) << " PID PdG : " << gMC->TrackPid();
+         LOG(info) << " Atomic Mass : " << AZ.first;
+         LOG(info) << " Atomic Number : " << AZ.second;
+         LOG(info) << " Volume ID " << gMC->CurrentVolID(VolumeID);
+         LOG(info) << " Track ID : " << fTrackID;
+         LOG(info) << " Position In : " << fPosIn.X() << " " << fPosIn.Y() << "  " << fPosIn.Z() << std::endl;
+         LOG(info) << " Position Out : " << fPosOut.X() << " " << fPosOut.Y() << "  " << fPosOut.Z() << std::endl;
+         LOG(info) << " Momentum In: " << fMomIn.X() << " " << fMomIn.Y() << "  " << fMomIn.Z() << std::endl;
+         LOG(info) << " Momentum Out: " << fMomOut.X() << " " << fMomOut.Y() << "  " << fMomOut.Z() << std::endl;
       }
 
       /* AddHit(fTrackID,
@@ -223,17 +223,17 @@ void AtSiArray::Reset()
 void AtSiArray::Print(Option_t *option) const
 {
    Int_t nHits = fAtSiArrayPointCollection->GetEntriesFast();
-   LOG(INFO) << "Si Array: " << nHits << " points registered in this event";
+   LOG(info) << "Si Array: " << nHits << " points registered in this event";
 }
 
 void AtSiArray::ConstructGeometry()
 {
    TString fileName = GetGeometryFileName();
    if (fileName.EndsWith(".geo")) {
-      LOG(INFO) << "Constructing Si Array geometry from ASCII file " << fileName;
+      LOG(info) << "Constructing Si Array geometry from ASCII file " << fileName;
       // ConstructASCIIGeometry();
    } else if (fileName.EndsWith(".root")) {
-      LOG(INFO) << "Constructing Si Array geometry from ROOT file " << fileName;
+      LOG(info) << "Constructing Si Array geometry from ROOT file " << fileName;
       ConstructRootGeometry();
    } else {
       std::cout << "Geometry format not supported." << std::endl;
@@ -245,7 +245,7 @@ Bool_t AtSiArray::CheckIfSensitive(std::string name)
 
    TString tsname = name;
    if (tsname.Contains("silicon")) {
-      LOG(INFO) << " Si Array geometry: Sensitive volume found: " << tsname;
+      LOG(info) << " Si Array geometry: Sensitive volume found: " << tsname;
       return kTRUE;
    }
    return kFALSE;
@@ -270,7 +270,7 @@ AtSiPoint *AtSiArray::AddHit(Int_t trackID, Int_t detID, TString VolName, Int_t 
    // " << detID << ", track " << trackID
    //<< ", energy loss " << eLoss << " MeV" <<" with accumulated Energy Loss : "<<fELossAcc<<" MeV "<< std::endl;
    if (fVerboseLevel > 1)
-      LOG(INFO) << "Si Array: Adding Point at (" << posIn.X() << ", " << posIn.Y() << ", " << posIn.Z()
+      LOG(info) << "Si Array: Adding Point at (" << posIn.X() << ", " << posIn.Y() << ", " << posIn.Z()
                 << ") cm,  detector " << detID << ", track " << trackID << ", energy loss " << eLoss * 1e06 << " keV";
 
    return new (clref[size]) AtSiPoint(trackID, detID, posIn, posOut, momIn, momOut, time, length, eLoss, VolName,

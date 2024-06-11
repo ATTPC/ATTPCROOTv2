@@ -10,7 +10,7 @@ namespace DataHandling {
 void AtTreeEntry::Set(long entry)
 {
    fEntry = entry;
-   FairRunAna::Instance()->Run((Long64_t)fEntry);
+   FairRunAna::Instance()->RunSingleEntry((Long64_t)fEntry);
    Notify();
 }
 

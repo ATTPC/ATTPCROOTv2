@@ -35,14 +35,14 @@ InitStatus AtAuxFilterTask::Init()
    FairRootManager *ioManager = FairRootManager::Instance();
 
    if (ioManager == nullptr) {
-      LOG(ERROR) << "Cannot find RootManager!" << std::endl;
+      LOG(error) << "Cannot find RootManager!" << std::endl;
       return kERROR;
    }
 
    // Get the old data from the io manager
    fInputEventArray = dynamic_cast<TClonesArray *>(ioManager->GetObject(fInputEventBranchName));
    if (fInputEventArray == nullptr) {
-      LOG(ERROR) << "AtAuxFilterTask: Cannot find AtRawEvent array " << fInputEventBranchName;
+      LOG(error) << "AtAuxFilterTask: Cannot find AtRawEvent array " << fInputEventBranchName;
       return kERROR;
    }
 

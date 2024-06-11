@@ -36,7 +36,7 @@ AtSeGADigitizer::AtSeGADigitizer()
 
 AtSeGADigitizer::~AtSeGADigitizer()
 {
-   LOG(INFO) << "AtSeGADigitizer: Delete instance";
+   LOG(info) << "AtSeGADigitizer: Delete instance";
 
    fSeGACryCalDataCA.Delete();
 }
@@ -46,7 +46,7 @@ void AtSeGADigitizer::SetParContainers()
 
    FairRuntimeDb *rtdb = FairRuntimeDb::instance();
    if (!rtdb) {
-      LOG(ERROR) << "AtSeGADigitizer:: FairRuntimeDb not opened!";
+      LOG(error) << "AtSeGADigitizer:: FairRuntimeDb not opened!";
    }
 }
 
@@ -54,7 +54,7 @@ void AtSeGADigitizer::SetParameter() {}
 
 InitStatus AtSeGADigitizer::Init()
 {
-   LOG(INFO) << "AtSeGADigitizer::Init ";
+   LOG(info) << "AtSeGADigitizer::Init ";
 
    FairRootManager *rootManager = FairRootManager::Instance();
    if (!rootManager)
@@ -160,7 +160,7 @@ void AtSeGADigitizer::Register()
 void AtSeGADigitizer::Reset()
 {
    // Clear the CA structure
-   LOG(DEBUG) << "Clearing SeGACrystalCalData Structure";
+   LOG(debug) << "Clearing SeGACrystalCalData Structure";
    fSeGACryCalDataCA.Clear();
 
    ResetParameters();
@@ -171,7 +171,7 @@ void AtSeGADigitizer::FinishEvent() {}
 void AtSeGADigitizer::SetDetectionThreshold(Double_t thresholdEne)
 {
    fThreshold = thresholdEne;
-   LOG(INFO) << "AtSeGADigitizer::SetDetectionThreshold to " << fThreshold << " GeV.";
+   LOG(info) << "AtSeGADigitizer::SetDetectionThreshold to " << fThreshold << " GeV.";
 }
 
 AtSeGACrystalCalData *AtSeGADigitizer::AddCrystalCal(Int_t ident, Double_t energy, ULong64_t time)
@@ -179,7 +179,7 @@ AtSeGACrystalCalData *AtSeGADigitizer::AddCrystalCal(Int_t ident, Double_t energ
    TClonesArray &clref = fSeGACryCalDataCA;
    Int_t size = clref.GetEntriesFast();
    if (fVerbose > 1)
-      LOG(INFO) << "-I- AtSeGADigitizer: Adding CrystalCalData "
+      LOG(info) << "-I- AtSeGADigitizer: Adding CrystalCalData "
                 << " with unique identifier " << ident << " entering with " << energy * 1e06 << " keV "
                 << " Time=" << time;
 
@@ -190,7 +190,7 @@ void AtSeGADigitizer::SetExpEnergyRes(Double_t crystalResGe)
 {
    fResolutionGe = crystalResGe;
 
-   LOG(INFO) << "AtSeGADigitizer::SetExpEnergyRes to " << fResolutionGe << "% @ 1 MeV for Ge";
+   LOG(info) << "AtSeGADigitizer::SetExpEnergyRes to " << fResolutionGe << "% @ 1 MeV for Ge";
 }
 
 Double_t AtSeGADigitizer::NUSmearing(Double_t inputEnergy)
@@ -205,7 +205,7 @@ Double_t AtSeGADigitizer::NUSmearing(Double_t inputEnergy)
 void AtSeGADigitizer::SetNonUniformity(Double_t nonU)
 {
    fNonUniformity = nonU;
-   LOG(INFO) << "AtSeGADigitizer::SetNonUniformity to " << fNonUniformity << " %";
+   LOG(info) << "AtSeGADigitizer::SetNonUniformity to " << fNonUniformity << " %";
 }
 
 Double_t AtSeGADigitizer::ExpResSmearingGe(Double_t inputEnergy)

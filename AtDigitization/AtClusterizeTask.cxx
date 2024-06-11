@@ -54,7 +54,7 @@ void AtClusterizeTask::SetParContainers()
 }
 InitStatus AtClusterizeTask::Init()
 {
-   LOG(INFO) << "Initilization of AtClusterizeTask";
+   LOG(info) << "Initilization of AtClusterizeTask";
 
    FairRootManager *ioman = FairRootManager::Instance();
 

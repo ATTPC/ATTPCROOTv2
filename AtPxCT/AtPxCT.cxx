@@ -48,7 +48,7 @@ void AtPxCT::Initialize()
 {
    FairDetector::Initialize();
    // AtPxCTGeoPar* par=(AtPxCTGeoPar*)(rtdb->getContainer("AtPxCTGeoPar"));
-   LOG(INFO) << "AtPxCT: initialisation";
+   LOG(info) << "AtPxCT: initialisation";
 }
 
 Bool_t AtPxCT::ProcessHits(FairVolume *vol)
@@ -126,17 +126,17 @@ void AtPxCT::Reset()
 void AtPxCT::Print(Option_t *option) const
 {
    Int_t nHits = fAtPxCTPointCollection->GetEntriesFast();
-   LOG(INFO) << "PxCT: " << nHits << " points registered in this event";
+   LOG(info) << "PxCT: " << nHits << " points registered in this event";
 }
 
 void AtPxCT::ConstructGeometry()
 {
    TString fileName = GetGeometryFileName();
    if (fileName.EndsWith(".geo")) {
-      LOG(INFO) << "Constructing PxCT geometry from ASCII file " << fileName;
+      LOG(info) << "Constructing PxCT geometry from ASCII file " << fileName;
       // ConstructASCIIGeometry();
    } else if (fileName.EndsWith(".root")) {
-      LOG(INFO) << "Constructing PxCT geometry from ROOT file " << fileName;
+      LOG(info) << "Constructing PxCT geometry from ROOT file " << fileName;
       ConstructRootGeometry();
    } else {
       std::cout << "Geometry format not supported." << std::endl;
@@ -147,7 +147,7 @@ Bool_t AtPxCT::CheckIfSensitive(std::string name)
 {
    TString tsname = name;
    if (tsname.Contains("Crystal_")) {
-      LOG(INFO) << " PxCT geometry: Sensitive volume found: " << tsname;
+      LOG(info) << " PxCT geometry: Sensitive volume found: " << tsname;
       return kTRUE;
    }
    return kFALSE;
@@ -160,7 +160,7 @@ AtPxCT::AddPoint(Int_t trackID, Int_t detID, TVector3 pos, TVector3 mom, Double_
    TClonesArray &clref = *fAtPxCTPointCollection;
    Int_t size = clref.GetEntriesFast();
    if (fVerboseLevel > 1)
-      LOG(INFO) << "PxCT: Adding Point in detector " << detID << ", track " << trackID << ", energy loss "
+      LOG(info) << "PxCT: Adding Point in detector " << detID << ", track " << trackID << ", energy loss "
                 << eLoss * 1e06 << " keV";
 
    auto point = new (clref[size]) AtMCPoint(trackID, detID, pos, mom, time, length, eLoss);

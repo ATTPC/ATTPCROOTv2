@@ -27,14 +27,14 @@ class TMemberInspector;
 class AtFieldCreator : public FairFieldFactory {
 
 public:
-   AtFieldCreator();
-   virtual ~AtFieldCreator();
+   AtFieldCreator() = default;
+   virtual ~AtFieldCreator() = default;
    virtual FairField *createFairField();
    virtual void SetParm();
    ClassDef(AtFieldCreator, 1);
 
 protected:
-   AtFieldPar *fFieldPar;
+   AtFieldPar *fFieldPar{nullptr};
 
 private:
    AtFieldCreator(const AtFieldCreator &);

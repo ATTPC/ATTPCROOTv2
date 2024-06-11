@@ -35,7 +35,7 @@ AtPSASpectrum::HitVector AtPSASpectrum::AnalyzePad(AtPad *pad)
    }
 
    if (!(pad->IsPedestalSubtracted())) {
-      LOG(ERROR) << "Pedestal should be subtracted to use this class!";
+      LOG(error) << "Pedestal should be subtracted to use this class!";
    }
 
    auto adc = pad->GetADC();

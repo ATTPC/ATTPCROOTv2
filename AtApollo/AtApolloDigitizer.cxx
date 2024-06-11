@@ -36,7 +36,7 @@ AtApolloDigitizer::AtApolloDigitizer()
 
 AtApolloDigitizer::~AtApolloDigitizer()
 {
-   LOG(INFO) << "AtApolloDigitizer: Delete instance";
+   LOG(info) << "AtApolloDigitizer: Delete instance";
 
    if (fApolloPointDataCA) {
       fApolloPointDataCA->Delete();
@@ -50,7 +50,7 @@ void AtApolloDigitizer::SetParContainers()
 
    FairRuntimeDb *rtdb = FairRuntimeDb::instance();
    if (!rtdb) {
-      LOG(ERROR) << "AtApolloDigitizer:: FairRuntimeDb not opened!";
+      LOG(error) << "AtApolloDigitizer:: FairRuntimeDb not opened!";
    }
 }
 
@@ -58,7 +58,7 @@ void AtApolloDigitizer::SetParameter() {}
 
 InitStatus AtApolloDigitizer::Init()
 {
-   LOG(INFO) << "AtApolloDigitizer::Init ";
+   LOG(info) << "AtApolloDigitizer::Init ";
 
    FairRootManager *rootManager = FairRootManager::Instance();
    if (!rootManager) {
@@ -170,7 +170,7 @@ void AtApolloDigitizer::Register()
 void AtApolloDigitizer::Reset()
 {
    // Clear the CA structure
-   LOG(DEBUG) << "Clearing ApolloCrystalCalData Structure";
+   LOG(debug) << "Clearing ApolloCrystalCalData Structure";
    fApolloCryCalDataCA.Clear();
 
    ResetParameters();
@@ -181,7 +181,7 @@ void AtApolloDigitizer::FinishEvent() {}
 void AtApolloDigitizer::SetDetectionThreshold(Double_t thresholdEne)
 {
    fThreshold = thresholdEne;
-   LOG(INFO) << "AtApolloDigitizer::SetDetectionThreshold to " << fThreshold << " GeV.";
+   LOG(info) << "AtApolloDigitizer::SetDetectionThreshold to " << fThreshold << " GeV.";
 }
 
 AtApolloCrystalCalData *AtApolloDigitizer::AddCrystalCal(Int_t ident, Double_t energy, ULong64_t time)
@@ -189,7 +189,7 @@ AtApolloCrystalCalData *AtApolloDigitizer::AddCrystalCal(Int_t ident, Double_t e
    TClonesArray &clref = fApolloCryCalDataCA;
    Int_t size = clref.GetEntriesFast();
    if (fVerbose > 1)
-      LOG(INFO) << "-I- AtApolloDigitizer: Adding CrystalCalData "
+      LOG(info) << "-I- AtApolloDigitizer: Adding CrystalCalData "
                 << " with unique identifier " << ident << " entering with " << energy * 1e06 << " keV "
                 << " Time=" << time;
 
@@ -200,7 +200,7 @@ void AtApolloDigitizer::SetExpEnergyRes(Double_t crystalResCsI, Double_t crystal
 {
    fResolutionCsI = crystalResCsI;
    fResolutionLaBr = crystalResLaBr;
-   LOG(INFO) << "AtApolloDigitizer::SetExpEnergyRes to " << fResolutionCsI << "% @ 1 MeV for CsI and "
+   LOG(info) << "AtApolloDigitizer::SetExpEnergyRes to " << fResolutionCsI << "% @ 1 MeV for CsI and "
              << fResolutionLaBr << "% @ 1 MeV for LaBr.";
 }
 
@@ -216,7 +216,7 @@ Double_t AtApolloDigitizer::NUSmearing(Double_t inputEnergy)
 void AtApolloDigitizer::SetNonUniformity(Double_t nonU)
 {
    fNonUniformity = nonU;
-   LOG(INFO) << "AtApolloDigitizer::SetNonUniformity to " << fNonUniformity << " %";
+   LOG(info) << "AtApolloDigitizer::SetNonUniformity to " << fNonUniformity << " %";
 }
 
 Double_t AtApolloDigitizer::ExpResSmearingCsI(Double_t inputEnergy)

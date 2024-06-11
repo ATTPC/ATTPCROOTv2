@@ -35,7 +35,7 @@ AtPSAFull::HitVector AtPSAFull::AnalyzePad(AtPad *pad)
    Int_t numPeaks = 0;
 
    if (!(pad->IsPedestalSubtracted())) {
-      LOG(ERROR) << "Pedestal should be subtracted to use this class!";
+      LOG(error) << "Pedestal should be subtracted to use this class!";
       // return;
    }
 

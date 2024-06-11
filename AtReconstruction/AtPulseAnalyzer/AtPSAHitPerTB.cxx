@@ -27,7 +27,7 @@ AtPSAHitPerTB::HitVector AtPSAHitPerTB::AnalyzePad(AtPad *pad)
       LOG(error) << " AtPSAHitPErTB::Analysis Warning! Wrong Coordinates for Pad : " << pad->GetPadNum() << std::endl;
 
    if (!(pad->IsPedestalSubtracted())) {
-      LOG(ERROR) << "Pedestal should be subtracted to use this class!";
+      LOG(error) << "Pedestal should be subtracted to use this class!";
       // return;
    }
 

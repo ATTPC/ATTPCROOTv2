@@ -156,7 +156,7 @@ void AtGRAWUnpacker::FillRawEvent(AtRawEvent &event)
             ProcessBasicFrame(frame);
 
       } else {
-         LOG(ERROR) << "We are not setup to unpack unseperated data for the current detector type!";
+         LOG(error) << "We are not setup to unpack unseperated data for the current detector type!";
          event.SetIsGood(false);
       }
    }

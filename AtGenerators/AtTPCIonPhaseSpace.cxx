@@ -145,7 +145,7 @@ Bool_t AtTPCIonPhaseSpace::ReadEvent(FairPrimaryGenerator *primGen)
    /*  FairRootManager* ioMan = FairRootManager::Instance();
 
      TClonesArray* fPointArray = (TClonesArray*) ioMan->GetObject("AtMCPoint"); // TODO: Why this confusing name? It
-     should be fEventArray if(fPointArray) LOG(INFO)<<"-I- AtTPCIonPhaseSpace : AtMCPoint Array Found with size :
+     should be fEventArray if(fPointArray) LOG(info)<<"-I- AtTPCIonPhaseSpace : AtMCPoint Array Found with size :
      "<<fPointArray->GetSize()<<FairLogger::endl;
      if(fPointArray->IsEmpty()) std::cout<<" AtMCPoint TClonesArray Empty !!!"<<std::endl;*/
 

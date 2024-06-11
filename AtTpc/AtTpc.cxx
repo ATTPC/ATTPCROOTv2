@@ -132,7 +132,7 @@ void AtTpc::getTrackParametersWhileExiting()
 void AtTpc::resetVertex()
 {
    AtVertexPropagator::Instance()->ResetVertex();
-   LOG(INFO) << cRED << " - AtTpc Warning : Beam punched through the AtTPC. Reseting Vertex! " << cNORMAL << std::endl;
+   LOG(info) << cRED << " - AtTpc Warning : Beam punched through the AtTPC. Reseting Vertex! " << cNORMAL << std::endl;
 }
 
 void AtTpc::correctPosOut()
@@ -269,17 +269,17 @@ void AtTpc::Reset()
 void AtTpc::Print(Option_t *option) const
 {
    Int_t nHits = fAtTpcPointCollection->GetEntriesFast();
-   LOG(INFO) << "AtTPC: " << nHits << " points registered in this event";
+   LOG(info) << "AtTPC: " << nHits << " points registered in this event";
 }
 
 void AtTpc::ConstructGeometry()
 {
    TString fileName = GetGeometryFileName();
    if (fileName.EndsWith(".geo")) {
-      LOG(INFO) << "Constructing AtTPC geometry from ASCII file " << fileName;
+      LOG(info) << "Constructing AtTPC geometry from ASCII file " << fileName;
       // ConstructASCIIGeometry();
    } else if (fileName.EndsWith(".root")) {
-      LOG(INFO) << "Constructing AtTPC geometry from ROOT file " << fileName;
+      LOG(info) << "Constructing AtTPC geometry from ROOT file " << fileName;
       ConstructRootGeometry();
    } else {
       std::cout << "Geometry format not supported." << std::endl;
@@ -291,7 +291,7 @@ Bool_t AtTpc::CheckIfSensitive(std::string name)
 
    TString tsname = name;
    if (tsname.Contains("drift_volume") || tsname.Contains("window") || tsname.Contains("cell")) {
-      LOG(INFO) << " AtTPC geometry: Sensitive volume found: " << tsname;
+      LOG(info) << " AtTPC geometry: Sensitive volume found: " << tsname;
       return kTRUE;
    }
    return kFALSE;
@@ -312,7 +312,7 @@ AtMCPoint *AtTpc::AddHit(Int_t trackID, Int_t detID, TString VolName, Int_t detC
    TClonesArray &clref = *fAtTpcPointCollection;
    Int_t size = clref.GetEntriesFast();
    if (fVerboseLevel > 1)
-      LOG(INFO) << "AtTPC: Adding Point at (" << pos.X() << ", " << pos.Y() << ", " << pos.Z() << ") cm,  detector "
+      LOG(info) << "AtTPC: Adding Point at (" << pos.X() << ", " << pos.Y() << ", " << pos.Z() << ") cm,  detector "
                 << detID << ", track " << trackID << ", energy loss " << eLoss * 1e06 << " keV";
 
    return new (clref[size])

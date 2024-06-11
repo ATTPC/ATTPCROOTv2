@@ -184,44 +184,44 @@ InitStatus AtEventDrawTaskS800::Init()
    fHitArray = dynamic_cast<TClonesArray *>(
       ioMan->GetObject("AtEventH")); // TODO: Why this confusing name? It should be fEventArray
    if (fHitArray)
-      LOG(INFO) << cGREEN << "Hit Array Found." << cNORMAL;
+      LOG(info) << cGREEN << "Hit Array Found." << cNORMAL;
 
    /*
    fRawEventArray = (TClonesArray*) ioMan->GetObject("AtRawEvent");
    if(fRawEventArray){
-       LOG(INFO)<<cGREEN<<"Raw Event Array  Found."<<cNORMAL<<FairLogger::endl;
+       LOG(info)<<cGREEN<<"Raw Event Array  Found."<<cNORMAL<<FairLogger::endl;
        fIsRawData=kTRUE;
    }
    */
    fHoughSpaceArray = dynamic_cast<TClonesArray *>(ioMan->GetObject("AtHough"));
    if (fHoughSpaceArray)
-      LOG(INFO) << cGREEN << "Hough Array Found." << cNORMAL;
+      LOG(info) << cGREEN << "Hough Array Found." << cNORMAL;
 
    fProtoEventArray = dynamic_cast<TClonesArray *>(ioMan->GetObject("AtProtoEvent"));
    if (fProtoEventArray)
-      LOG(INFO) << cGREEN << "Prototype Event Array Found." << cNORMAL;
+      LOG(info) << cGREEN << "Prototype Event Array Found." << cNORMAL;
 
    fRansacArray = dynamic_cast<TClonesArray *>(ioMan->GetObject("AtRansac"));
    if (fRansacArray)
-      LOG(INFO) << cGREEN << "RANSAC Array Found." << cNORMAL;
+      LOG(info) << cGREEN << "RANSAC Array Found." << cNORMAL;
 
    // fTrackFinderHCArray = (TClonesArray*) ioMan->GetObject("AtTrackFinderHC");
-   // if(fTrackFinderHCArray)  LOG(INFO)<<cGREEN<<"Track Finder Hierarchical Clustering Array
+   // if(fTrackFinderHCArray)  LOG(info)<<cGREEN<<"Track Finder Hierarchical Clustering Array
    // Found."<<cNORMAL<<FairLogger::endl;
 
    fPatternEventArray = dynamic_cast<TClonesArray *>(ioMan->GetObject("AtPatternEvent"));
    if (fPatternEventArray)
-      LOG(INFO) << cGREEN << "Pattern Event Array Found." << cNORMAL;
+      LOG(info) << cGREEN << "Pattern Event Array Found." << cNORMAL;
 
    fTrackingEventArray = dynamic_cast<TClonesArray *>(ioMan->GetObject("AtTrackingEvent"));
    if (fTrackingEventArray)
-      LOG(INFO) << cGREEN << "Tracking Event Analysis Array Found." << cNORMAL;
+      LOG(info) << cGREEN << "Tracking Event Analysis Array Found." << cNORMAL;
 
    fS800Calc = dynamic_cast<S800Calc *>(ioMan->GetObject("s800cal"));
    if (fS800Calc)
-      LOG(INFO) << cGREEN << "S800Calc Found." << cNORMAL;
+      LOG(info) << cGREEN << "S800Calc Found." << cNORMAL;
    // fS800CalcArray = (TClonesArray*) ioMan->GetObject("s800cal");
-   // if(fS800CalcArray) LOG(INFO)<<cGREEN<<"S800Calc Array Found."<<cNORMAL<<FairLogger::endl;
+   // if(fS800CalcArray) LOG(info)<<cGREEN<<"S800Calc Array Found."<<cNORMAL<<FairLogger::endl;
 
    // gROOT->GetListOfSpecials()->Add(fRawEventArray);
    // fRawEventArray->SetName("AtRawEvent");

@@ -52,7 +52,7 @@ void AtPulseTask::SetParContainers()
 
 InitStatus AtPulseTask::Init()
 {
-   LOG(INFO) << "Initilization of AtPulseTask";
+   LOG(info) << "Initilization of AtPulseTask";
    FairRootManager *ioman = FairRootManager::Instance();
 
    fSimulatedPointArray = dynamic_cast<TClonesArray *>(ioman->GetObject("AtSimulatedPoint"));

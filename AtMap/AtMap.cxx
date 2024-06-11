@@ -230,7 +230,7 @@ Bool_t AtMap::ParseXMLMap(Char_t const *xmlfile)
    ParseMapList(node->GetChildren());
    // itrEnd = pmap.end();
 
-   LOG(INFO) << "Pad map has an average load of " << fPadMap.load_factor() << " and a max load of "
+   LOG(info) << "Pad map has an average load of " << fPadMap.load_factor() << " and a max load of "
              << fPadMap.max_load_factor() << " with buckets " << fPadMap.bucket_count() << " for " << fPadMap.size()
              << " pads.";
 

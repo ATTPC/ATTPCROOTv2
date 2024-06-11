@@ -32,15 +32,15 @@ void AtPSA::Init()
 
    FairRun *run = FairRun::Instance();
    if (!run)
-      LOG(FATAL) << "No analysis run!";
+      LOG(fatal) << "No analysis run!";
 
    FairRuntimeDb *db = run->GetRuntimeDb(); // NOLINT
    if (!db)
-      LOG(FATAL) << "No runtime database!";
+      LOG(fatal) << "No runtime database!";
 
    auto fPar = (AtDigiPar *)db->getContainer("AtDigiPar"); // NOLINT
    if (!fPar) {
-      LOG(FATAL) << "AtDigiPar not found!!";
+      LOG(fatal) << "AtDigiPar not found!!";
       return;
    }
 

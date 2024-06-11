@@ -109,7 +109,7 @@ void AtFindVertex::FindVertexMultipleLines(std::vector<AtTrack> tracks, Int_t nb
    // "<<cogVtx.at(i).Y()<<" "<<cogVtx.at(i).Z()<<std::endl;
 
    if (vtxCand.size() != cogVtx.size())
-      LOG(WARNING) << cYELLOW << "AtFindVertex : vtxCand.size() != cogVtx.size()" << cNORMAL << std::endl;
+      LOG(warning) << cYELLOW << "AtFindVertex : vtxCand.size() != cogVtx.size()" << cNORMAL << std::endl;
 
    for (Int_t i = 0; i < vtxCand.size(); i++) {
       if (cogVtx.at(i).X() != cogVtx.at(i).X() || cogVtx.at(i).Y() != cogVtx.at(i).Y() ||

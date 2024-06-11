@@ -36,7 +36,7 @@ AtPSATBAvg::HitVector AtPSATBAvg::AnalyzePad(AtPad *pad)
    }
 
    if (!(pad->IsPedestalSubtracted())) {
-      LOG(ERROR) << "Pedestal should be subtracted to use this class!";
+      LOG(error) << "Pedestal should be subtracted to use this class!";
    }
 
    std::array<Double_t, 512> floatADC{};

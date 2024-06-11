@@ -139,27 +139,27 @@ InitStatus AtEventDrawTaskProto::Init()
    fHitArray = dynamic_cast<TClonesArray *>(
       ioMan->GetObject("AtEventH")); // TODO: Why this confusing name? It should be fEventArray
    if (fHitArray)
-      LOG(INFO) << cGREEN << "Hit Array Found." << cNORMAL;
+      LOG(info) << cGREEN << "Hit Array Found." << cNORMAL;
 
    fRawEventArray = dynamic_cast<TClonesArray *>(ioMan->GetObject("AtRawEvent"));
    if (fRawEventArray) {
-      LOG(INFO) << cGREEN << "Raw Event Array  Found." << cNORMAL;
+      LOG(info) << cGREEN << "Raw Event Array  Found." << cNORMAL;
       fIsRawData = kTRUE;
    }
 
    fPatternEventArray = dynamic_cast<TClonesArray *>(ioMan->GetObject("AtPatternEvent"));
    if (fPatternEventArray)
-      LOG(INFO) << cGREEN << "Pattern Event Array Found." << cNORMAL;
+      LOG(info) << cGREEN << "Pattern Event Array Found." << cNORMAL;
 
    // fHoughSpaceArray =  (TClonesArray*) ioMan->GetObject("AtHough");
-   // if(fHoughSpaceArray) LOG(INFO)<<cGREEN<<"Hough Array Found."<<cNORMAL<<FairLogger::endl;
+   // if(fHoughSpaceArray) LOG(info)<<cGREEN<<"Hough Array Found."<<cNORMAL<<FairLogger::endl;
 
    // fProtoEventArray =  (TClonesArray*) ioMan->GetObject("AtProtoEvent");
-   // if(fProtoEventArray) LOG(INFO)<<cGREEN<<"Prototype Event Array Found."<<cNORMAL<<FairLogger::endl;
+   // if(fProtoEventArray) LOG(info)<<cGREEN<<"Prototype Event Array Found."<<cNORMAL<<FairLogger::endl;
 
    fProtoEventAnaArray = dynamic_cast<TClonesArray *>(ioMan->GetObject("AtProtoEventAna"));
    if (fProtoEventAnaArray)
-      LOG(INFO) << cGREEN << "Prototype Event Analysis Array Found." << cNORMAL;
+      LOG(info) << cGREEN << "Prototype Event Analysis Array Found." << cNORMAL;
 
    // Drawing histograms
 
