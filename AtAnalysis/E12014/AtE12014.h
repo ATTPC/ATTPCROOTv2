@@ -92,4 +92,4 @@ public:
    static void FillSimSum(std::vector<double> &sim, const std::vector<AtHit *> &simHits);
 }; // namespace E12014
 
-#endif //#ifndef ATE12014_H
+#endif // #ifndef ATE12014_H

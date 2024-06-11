@@ -27,4 +27,4 @@ public:
    InitStatus Init() override;
    void Exec(Option_t *) override {}
 };
-#endif //#ifndef ATCOPYTREETASK_H
+#endif // #ifndef ATCOPYTREETASK_H

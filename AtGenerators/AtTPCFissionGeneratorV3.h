@@ -73,4 +73,4 @@ public:
    ClassDefOverride(AtTPCFissionGeneratorV3, 6)
 };
 
-#endif //#ifndef AtTPCFISSIONGENERAtORV3_H
+#endif // #ifndef AtTPCFISSIONGENERAtORV3_H

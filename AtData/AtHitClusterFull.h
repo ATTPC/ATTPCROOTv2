@@ -55,4 +55,4 @@ public:
    ClassDefOverride(AtHitClusterFull, 1);
 };
 
-#endif //#ifndef ATHITCLUSTERFULL_HH
+#endif // #ifndef ATHITCLUSTERFULL_HH

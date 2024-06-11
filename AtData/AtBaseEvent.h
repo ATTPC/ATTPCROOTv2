@@ -81,4 +81,4 @@ public:
    ClassDefOverride(AtBaseEvent, 1)
 };
 
-#endif //#ifndef ATBASEEVENT_H
+#endif // #ifndef ATBASEEVENT_H

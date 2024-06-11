@@ -48,4 +48,4 @@ public:
    virtual bool IsGoodEvent() = 0;
 };
 
-#endif //#ifndef ATFILTER_H
+#endif // #ifndef ATFILTER_H

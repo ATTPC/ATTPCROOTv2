@@ -41,4 +41,4 @@ public:
 
 } // namespace AtPatterns
 
-#endif //#ifndef ATPATTERNRAY_H
+#endif // #ifndef ATPATTERNRAY_H

@@ -34,4 +34,4 @@ public:
    ClassDefOverride(AtPadValue, 1);
 };
 
-#endif //#ifndef ATPADCHARGE_H
+#endif // #ifndef ATPADCHARGE_H

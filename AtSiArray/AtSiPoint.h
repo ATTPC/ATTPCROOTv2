@@ -85,4 +85,4 @@ inline void AtSiPoint::SetMomentumOut(TVector3 mom)
    fPy_out = mom.Py();
    fPz_out = mom.Pz();
 }
-#endif //#ifndef ATSIPOINT_H
+#endif // #ifndef ATSIPOINT_H

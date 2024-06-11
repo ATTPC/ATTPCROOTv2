@@ -32,4 +32,4 @@ std::unique_ptr<AtPattern> CreatePattern(PatternType type);
 */
 
 } // namespace AtPatterns
-#endif //#ifndef ATPATTERNTYPES_H
+#endif // #ifndef ATPATTERNTYPES_H

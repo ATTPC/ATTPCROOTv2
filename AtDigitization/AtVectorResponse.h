@@ -9,8 +9,7 @@ namespace ElectronicResponse {
 class AtFileResponse;
 }
 
-class [[deprecated("Use ElectronicResponse::AtFileResponse instead")]] AtVectorResponse
-{
+class [[deprecated("Use ElectronicResponse::AtFileResponse instead")]] AtVectorResponse {
 protected:
    static double fPeakingTime; //! Electronic peaking time in us
    static double fTBTime;      //! Time bucket size in us

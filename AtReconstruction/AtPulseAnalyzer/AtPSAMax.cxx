@@ -15,9 +15,9 @@
 #include <numeric>
 #include <utility> // for pair
 
-//#ifdef _OPENMP
-//#include <omp.h>
-//#endif
+// #ifdef _OPENMP
+// #include <omp.h>
+// #endif
 using XYZPoint = ROOT::Math::XYZPoint;
 
 AtPSAMax::HitVector AtPSAMax::AnalyzePad(AtPad *pad)

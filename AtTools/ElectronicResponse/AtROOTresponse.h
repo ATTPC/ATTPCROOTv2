@@ -29,4 +29,4 @@ public:
 };
 } // namespace ElectronicResponse
 
-#endif //#ifndef ATROOTRESPONSE_H
+#endif // #ifndef ATROOTRESPONSE_H

@@ -52,4 +52,4 @@ public:
    ClassDefOverride(AtSimulatedLine, 1);
 };
 
-#endif //#ifndef AtSIMULATEDLINE_H
+#endif // #ifndef AtSIMULATEDLINE_H

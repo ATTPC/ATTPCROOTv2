@@ -80,8 +80,14 @@ ClassImp(genfit::AtSpacepointMeasurement)
       this->initG();
    }
 
-   AbsMeasurement *AtSpacepointMeasurement::clone() const { return new AtSpacepointMeasurement(*this); }
+   AbsMeasurement *AtSpacepointMeasurement::clone() const
+   {
+      return new AtSpacepointMeasurement(*this);
+   }
 
-   Double_t AtSpacepointMeasurement::GetCharge() { return fCharge; }
+   Double_t AtSpacepointMeasurement::GetCharge()
+   {
+      return fCharge;
+   }
 
 } /* End of namespace genfit */

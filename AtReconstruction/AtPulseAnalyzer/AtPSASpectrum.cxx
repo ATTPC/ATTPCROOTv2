@@ -15,9 +15,9 @@
 #include <numeric>
 #include <utility> // for pair
 
-//#ifdef _OPENMP
-//#include <omp.h>
-//#endif
+// #ifdef _OPENMP
+// #include <omp.h>
+// #endif
 using XYZPoint = ROOT::Math::XYZPoint;
 ClassImp(AtPSASpectrum);
 AtPSASpectrum::HitVector AtPSASpectrum::AnalyzePad(AtPad *pad)

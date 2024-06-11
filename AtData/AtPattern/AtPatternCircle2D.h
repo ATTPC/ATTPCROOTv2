@@ -43,4 +43,4 @@ protected:
    ClassDefOverride(AtPatternCircle2D, 1)
 };
 } // namespace AtPatterns
-#endif //#ifndef ATPATTERNCIRCLE2D_H
+#endif // #ifndef ATPATTERNCIRCLE2D_H

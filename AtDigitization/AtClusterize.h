@@ -57,4 +57,4 @@ protected:
    XYZPoint getCurrentPointLocation(const AtMCPoint &mcPoint);
 };
 
-#endif //#ifndef ATCLUSTERIZE_H
+#endif // #ifndef ATCLUSTERIZE_H

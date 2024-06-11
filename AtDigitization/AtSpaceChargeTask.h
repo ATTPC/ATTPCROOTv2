@@ -56,4 +56,4 @@ public:
    ClassDefOverride(AtSpaceChargeTask, 1);
 };
 
-#endif //#ifndef ATSPACECHARGETASK_H
+#endif // #ifndef ATSPACECHARGETASK_H

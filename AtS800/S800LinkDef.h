@@ -40,7 +40,7 @@
 #pragma link C++ class AtMergeTask + ;
 #pragma link C++ class S800Settings + ;
 #pragma link C++ class S800Ana + ;
-//#pragma link C++ class vector<S800TSettings*>+;
+// #pragma link C++ class vector<S800TSettings*>+;
 #pragma link C++ class AtS800Task + ;
 
 #endif

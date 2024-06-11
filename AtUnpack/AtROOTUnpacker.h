@@ -65,4 +65,4 @@ private:
    Int_t GetFPNChannel(Int_t chIdx);
    void SetNumEvents();
 };
-#endif //#ifndef _ATROOTUNPACKER_H_
+#endif // #ifndef _ATROOTUNPACKER_H_

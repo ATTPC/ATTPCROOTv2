@@ -30,4 +30,4 @@ private:
    void addPulserInfo(AtPad *pad);
 };
 
-#endif //#ifndef ATREMOVEPULSER_H
+#endif // #ifndef ATREMOVEPULSER_H

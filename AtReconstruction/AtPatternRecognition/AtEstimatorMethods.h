@@ -51,4 +51,4 @@ int EvaluateWeightedRansac(AtPatterns::AtPattern *model, const std::vector<const
                            double distanceThreshold);
 
 } // namespace SampleConsensus
-#endif //#ifndef ATESTIMATORMETHODS_H
+#endif // #ifndef ATESTIMATORMETHODS_H

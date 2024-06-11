@@ -36,7 +36,7 @@
 #include <memory>
 #include <string>
 
-//#define DEBUG
+// #define DEBUG
 
 ClassImp(GETDecoder2);
 

@@ -43,4 +43,4 @@ public:
    virtual bool IsGoodEvent() override { return true; }
 };
 
-#endif //#define ATFILTERCALIBRATE_H
+#endif // #define ATFILTERCALIBRATE_H

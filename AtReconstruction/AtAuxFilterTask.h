@@ -40,4 +40,4 @@ public:
    virtual InitStatus Init() override;
    virtual void Exec(Option_t *opt) override;
 };
-#endif //#ifndef ATAUXFILTERTASK_H
+#endif // #ifndef ATAUXFILTERTASK_H

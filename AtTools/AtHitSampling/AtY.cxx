@@ -23,8 +23,6 @@ std::vector<AtHit> AtY::SampleHits(int N)
       return ret;
    }
 
-   
-
    // Try to sample 10 times respecting all of the conditions.
    // If they're not met just return the final attempt
    for (int iter = 0; iter < 10; iter++) {

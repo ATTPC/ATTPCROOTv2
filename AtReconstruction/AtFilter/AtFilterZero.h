@@ -32,4 +32,4 @@ private:
    void fillMissingDataLine(AtPad *pad, int start, int stop);
 };
 
-#endif //#ifndef ATFILTERZERO_H
+#endif // #ifndef ATFILTERZERO_H

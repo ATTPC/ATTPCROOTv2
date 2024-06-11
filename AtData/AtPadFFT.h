@@ -46,4 +46,4 @@ public:
    ClassDefOverride(AtPadFFT, 1);
 };
 
-#endif //#ifndef ATPADFFT_H
+#endif // #ifndef ATPADFFT_H

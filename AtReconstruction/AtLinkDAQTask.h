@@ -127,4 +127,4 @@ public:
          fEvtOutputTree->Fill();
    } // Called at the end of an event
 };
-#endif //#define ATLINKDAQTASK_H
+#endif // #define ATLINKDAQTASK_H

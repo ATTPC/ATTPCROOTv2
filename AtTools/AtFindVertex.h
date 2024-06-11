@@ -70,4 +70,4 @@ private:
    std::vector<std::vector<Double_t>> fLineCand;
 };
 
-#endif //#ifndef AtFindVertex_H
+#endif // #ifndef AtFindVertex_H

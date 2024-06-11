@@ -30,4 +30,4 @@ protected:
    virtual void SampleReferenceHit();
 };
 } // namespace RandomSample
-#endif //#ifndef ATSAMPLEFROMREFERENCE_H
+#endif // #ifndef ATSAMPLEFROMREFERENCE_H

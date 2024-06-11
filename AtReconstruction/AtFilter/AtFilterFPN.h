@@ -22,4 +22,4 @@ public:
 
    virtual void InitEvent(AtRawEvent *event) override;
 };
-#endif //#ifndef ATFILTERFPN_H
+#endif // #ifndef ATFILTERFPN_H

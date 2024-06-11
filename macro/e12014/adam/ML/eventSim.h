@@ -76,7 +76,7 @@ double beamDirYsig2 = 0;
 
 double beamE = 2.7000e+03;
 double beamEsig = 1.28122e+02;
-//double beamEsig = 0;
+// double beamEsig = 0;
 
 double vertexZ;
 double vertexE;
@@ -188,7 +188,6 @@ void Init()
    }
 
    ioManager->Register("Info", "AtTPC", simInfo, true);
-
 }
 
 Int_t sumVector(const vecInt &vec)
@@ -205,7 +204,7 @@ double violaEn(int A, int Z)
 void generateEvent()
 {
 
-   for(int i = 0; i < 8; i++) {
+   for (int i = 0; i < 8; i++) {
       simInfo->SetBinContent(i, 0);
    }
 
@@ -248,13 +247,13 @@ void generateEvent()
    auto beamPos =
       fSimulation->SimulateParticle(beamZ, beamA, beamOrigin, beamMomenta, [vertexZ](XYZPoint pos, VecXYZE mom) {
          return pos.Z() < vertexZ - 10;
-         //return (mom.E() < vertexE);
+         // return (mom.E() < vertexE);
       });
-   outFile << beamOrigin.X() << " " << beamOrigin.Y() << " " << beamOrigin.Z() << " " << beamMomenta.E() - beamMomenta.M()
-           << " ";
+   outFile << beamOrigin.X() << " " << beamOrigin.Y() << " " << beamOrigin.Z() << " "
+           << beamMomenta.E() - beamMomenta.M() << " ";
    outFile << beamPos.first.X() << " " << beamPos.first.Y() << " " << beamPos.first.Z() << " "
            << beamPos.second.E() - beamPos.second.M() << " ";
-   
+
    simInfo->Fill(vX, beamPos.first.X());
    simInfo->Fill(vY, beamPos.first.Y());
    simInfo->Fill(vZ, beamPos.first.Z());
@@ -387,10 +386,10 @@ std::vector<VecXYZE> getProductMomenta(const vecInt &fragA, const vecInt &fragZ,
       decayAng.SetPhi(rand->Uniform(TMath::TwoPi()));
    else {
       decayAng = SampleAsym();
-      //decayAng = SampleInvSin();
+      // decayAng = SampleInvSin();
    }
 
-   cout << "Theta: " << decayAng.Theta() * TMath::RadToDeg() << "deg" <<endl;
+   cout << "Theta: " << decayAng.Theta() * TMath::RadToDeg() << "deg" << endl;
 
    // Set the momentum of first particles
    // decayAng.SetR(TMath::Sqrt(E[0] * E[0] - m[0] * m[0]));

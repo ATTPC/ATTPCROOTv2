@@ -9,8 +9,7 @@
 // Allow us use std::make_unique using a protected constructor this struct
 // is only defined in this translation unit (.cpp file)
 namespace {
-struct concrete_AtTPCXSManager : public AtTPCXSManager {
-};
+struct concrete_AtTPCXSManager : public AtTPCXSManager {};
 } // namespace
 
 std::unique_ptr<AtTPCXSManager> AtTPCXSManager::fInstance = nullptr;

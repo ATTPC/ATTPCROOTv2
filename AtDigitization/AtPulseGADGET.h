@@ -47,4 +47,4 @@ public:
    virtual std::shared_ptr<AtPulse> Clone() const override { return std::make_shared<AtPulseGADGET>(*this); }
 };
 
-#endif //#ifndef AtPULSETASKGADGET_H
+#endif // #ifndef AtPULSETASKGADGET_H

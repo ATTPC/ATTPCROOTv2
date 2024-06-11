@@ -109,4 +109,4 @@ public:
    CSVIterator<T> end() const { return CSVIterator<T>{}; }
 };
 
-#endif //#ifndef ATCSVREADER_H
+#endif // #ifndef ATCSVREADER_H

@@ -185,4 +185,4 @@ std::vector<T> MoveFromVector(std::vector<T> &vec, Operator op)
 
 } // namespace ContainerManip
 
-#endif //#ifndef ATCONTAINERMANIP_H
+#endif // #ifndef ATCONTAINERMANIP_H

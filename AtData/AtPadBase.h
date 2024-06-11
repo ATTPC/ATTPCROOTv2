@@ -41,4 +41,4 @@ public:
    ClassDefOverride(AtPadBase, 1);
 };
 
-#endif //#ifndef ATPADBASE_H
+#endif // #ifndef ATPADBASE_H

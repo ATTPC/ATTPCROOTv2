@@ -32,4 +32,4 @@ public:
 
 } // namespace MCFitter
 
-#endif //#ifndef ATMCRESULT_H
+#endif // #ifndef ATMCRESULT_H

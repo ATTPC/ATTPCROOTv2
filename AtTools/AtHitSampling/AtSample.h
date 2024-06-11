@@ -78,4 +78,4 @@ protected:
 };
 } // namespace RandomSample
 
-#endif //#ifndef ATHITSAMPLER_H
+#endif // #ifndef ATHITSAMPLER_H

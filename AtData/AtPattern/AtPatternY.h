@@ -78,4 +78,4 @@ protected:
 };
 } // namespace AtPatterns
 
-#endif //#ifndef ATPATTERNY_H
+#endif // #ifndef ATPATTERNY_H

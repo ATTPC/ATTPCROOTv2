@@ -4,7 +4,7 @@
  *   Log: 31-03-2015 11:42 JST					     *
  *								     *
  *********************************************************************/
-//#pragma once
+// #pragma once
 #ifndef ATTPCPROTOMAP_H
 #define ATTPCPROTOMAP_H
 

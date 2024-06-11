@@ -27,4 +27,4 @@ public:
    virtual bool IsGoodEvent() override;
 };
 
-#endif //#ifndef ATFILTERDIVIDE_H
+#endif // #ifndef ATFILTERDIVIDE_H

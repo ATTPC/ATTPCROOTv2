@@ -170,9 +170,9 @@ void AtDecoder2Task::SetParContainers()
 
 void AtDecoder2Task::Exec(Option_t *opt)
 {
-   //#ifdef TASKTIMER
-   //  STDebugLogger::Instance() -> TimerStart("DecoderTask");
-   //#endif
+   // #ifdef TASKTIMER
+   //   STDebugLogger::Instance() -> TimerStart("DecoderTask");
+   // #endif
    fRawEventArray->Delete();
 
    if (fRawEvent == nullptr)
@@ -185,9 +185,9 @@ void AtDecoder2Task::Exec(Option_t *opt)
    new ((*fRawEventArray)[0]) AtRawEvent(*fRawEvent);
 
    fRawEvent = nullptr;
-   //#ifdef TASKTIMER
-   //  STDebugLogger::Instance() -> TimerStop("DecoderTask");
-   //#endif
+   // #ifdef TASKTIMER
+   //   STDebugLogger::Instance() -> TimerStop("DecoderTask");
+   // #endif
 }
 
 Int_t AtDecoder2Task::ReadEvent(Int_t eventID)

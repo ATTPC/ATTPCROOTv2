@@ -49,4 +49,4 @@ private:
 };
 
 } // namespace AtTools
-#endif //#ifndef ATELOSSTABLE_H
+#endif // #ifndef ATELOSSTABLE_H

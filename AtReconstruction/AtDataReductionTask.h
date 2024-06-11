@@ -61,4 +61,4 @@ public:
    ClassDefOverride(AtDataReductionTask, 2)
 };
 
-#endif //#ifndef ATDATAREDUCTIONTSAK_H
+#endif // #ifndef ATDATAREDUCTIONTSAK_H

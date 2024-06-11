@@ -24,4 +24,4 @@ public:
 };
 } // namespace SampleConsensus
 
-#endif //#ifndef ATSAMPLEESTIMATOR_H
+#endif // #ifndef ATSAMPLEESTIMATOR_H

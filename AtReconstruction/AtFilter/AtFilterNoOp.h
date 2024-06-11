@@ -6,7 +6,6 @@
 /**
  * @ingroup RawFilters
  */
-class AtFilterDivide : public AtFilter {
-};
+class AtFilterDivide : public AtFilter {};
 
-#endif //#ifndef ATFILTERDIVIDE_H
+#endif // #ifndef ATFILTERDIVIDE_H

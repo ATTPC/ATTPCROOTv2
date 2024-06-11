@@ -87,4 +87,4 @@ private:
    double getFilterKernel(int freq, int fFilterOrder, int fCutoffFreq);
 };
 
-#endif //#ifndef ATFFTFILTER_H
+#endif // #ifndef ATFFTFILTER_H

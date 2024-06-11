@@ -43,4 +43,4 @@ ROOT::Math::XYZPoint GetIntersection(const std::vector<Vector1> &point, const st
 }
 
 } // namespace AtTools
-#endif //#ifndef ATVECTORUTIL_H
+#endif // #ifndef ATVECTORUTIL_H

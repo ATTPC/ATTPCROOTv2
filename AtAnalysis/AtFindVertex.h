@@ -77,4 +77,4 @@ private:
    ClassDef(AtFindVertex, 1);
 };
 
-#endif //#ifndef AtFindVertex_H
+#endif // #ifndef AtFindVertex_H

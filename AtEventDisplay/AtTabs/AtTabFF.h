@@ -69,4 +69,4 @@ protected:
    ClassDefOverride(AtTabFF, 1);
 };
 
-#endif //#ifndef ATTABFF_H
+#endif // #ifndef ATTABFF_H

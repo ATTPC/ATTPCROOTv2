@@ -47,4 +47,4 @@ public:
    AtPadReference GetReference() { return fRef; }
    ClassDefOverride(AtElectronicReference, 1);
 };
-#endif //#ifndef _PADREFERENCE_H
+#endif // #ifndef _PADREFERENCE_H

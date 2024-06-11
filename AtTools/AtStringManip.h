@@ -12,4 +12,4 @@ namespace AtTools {
 std::vector<std::string> SplitString(const std::string &s, char delim);
 
 } // namespace AtTools
-#endif //#ifndef ATSTRINGMANIP_H
+#endif // #ifndef ATSTRINGMANIP_H

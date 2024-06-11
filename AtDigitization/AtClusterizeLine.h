@@ -28,4 +28,4 @@ protected:
    virtual std::string GetSavedClassName() const override { return "AtSimulatedLine"; }
 };
 
-#endif //#define ATCLUSTERIZELINETASK_H
+#endif // #define ATCLUSTERIZELINETASK_H

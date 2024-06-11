@@ -51,4 +51,4 @@ protected:
    ClassDefOverride(AtPatternLine, 1)
 };
 } // namespace AtPatterns
-#endif //#ifndef ATPATTERNLINE_H
+#endif // #ifndef ATPATTERNLINE_H

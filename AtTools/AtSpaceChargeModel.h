@@ -52,4 +52,4 @@ protected:
    XYZPoint UndoOffsetForBeam(XYZPoint point);
 };
 
-#endif //#ifndef ATSPACECHARGEMODEL_H
+#endif // #ifndef ATSPACECHARGEMODEL_H

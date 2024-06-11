@@ -24,4 +24,4 @@ protected:
 };
 } // namespace RandomSample
 
-#endif //#ifndef ATINDEPENDENTSAMPLE_H
+#endif // #ifndef ATINDEPENDENTSAMPLE_H

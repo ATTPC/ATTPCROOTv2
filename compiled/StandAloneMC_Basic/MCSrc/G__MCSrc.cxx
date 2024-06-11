@@ -196,7 +196,7 @@ static void delete_MCMinimization(void *p)
 }
 static void deleteArray_MCMinimization(void *p)
 {
-   delete[]((::MCMinimization *)p);
+   delete[] ((::MCMinimization *)p);
 }
 static void destruct_MCMinimization(void *p)
 {
@@ -223,7 +223,7 @@ static void delete_MCMinimizationcLcLFitPar(void *p)
 }
 static void deleteArray_MCMinimizationcLcLFitPar(void *p)
 {
-   delete[]((::MCMinimization::FitPar *)p);
+   delete[] ((::MCMinimization::FitPar *)p);
 }
 static void destruct_MCMinimizationcLcLFitPar(void *p)
 {
@@ -249,7 +249,7 @@ static void delete_MCQMinimization(void *p)
 }
 static void deleteArray_MCQMinimization(void *p)
 {
-   delete[]((::MCQMinimization *)p);
+   delete[] ((::MCQMinimization *)p);
 }
 static void destruct_MCQMinimization(void *p)
 {
@@ -316,7 +316,7 @@ static void delete_vectorlEintgR(void *p)
 }
 static void deleteArray_vectorlEintgR(void *p)
 {
-   delete[]((vector<int> *)p);
+   delete[] ((vector<int> *)p);
 }
 static void destruct_vectorlEintgR(void *p)
 {
@@ -384,7 +384,7 @@ static void delete_vectorlEdoublegR(void *p)
 }
 static void deleteArray_vectorlEdoublegR(void *p)
 {
-   delete[]((vector<double> *)p);
+   delete[] ((vector<double> *)p);
 }
 static void destruct_vectorlEdoublegR(void *p)
 {
@@ -451,7 +451,7 @@ static void delete_vectorlEATHitgR(void *p)
 }
 static void deleteArray_vectorlEATHitgR(void *p)
 {
-   delete[]((vector<ATHit> *)p);
+   delete[] ((vector<ATHit> *)p);
 }
 static void destruct_vectorlEATHitgR(void *p)
 {

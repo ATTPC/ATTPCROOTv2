@@ -1,4 +1,4 @@
 #ifndef ATNOMINALRESPONSE
 #define ATNOMINALRESPONSE
 
-#endif //#ifndef ATNOMINALRESPONSE
+#endif // #ifndef ATNOMINALRESPONSE

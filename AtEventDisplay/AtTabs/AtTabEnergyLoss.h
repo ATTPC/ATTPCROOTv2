@@ -101,4 +101,4 @@ private:
    void FillRatio();
 };
 
-#endif //#ifndef ATTABENERGYLOSS_H
+#endif // #ifndef ATTABENERGYLOSS_H

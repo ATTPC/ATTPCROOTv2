@@ -69,18 +69,17 @@ void AtHDF5WriteTask::Exec(Option_t *opt)
 
    int eventNum = fUseEventNum ? event->GetEventID() : fEventNum;
 
-   if(eventNum % 100 == 0)
+   if (eventNum % 100 == 0)
       LOG(info) << "Writing event " << eventNum;
-   
+
    std::unique_ptr<H5::Group> eventGroup = nullptr;
    try {
       eventGroup = std::make_unique<H5::Group>(fFile->createGroup(TString::Format("/Event_[%d]", eventNum)));
-   } catch (H5::Exception& e) {
+   } catch (H5::Exception &e) {
       LOG(fatal) << "Failed to create group for event " << eventNum << ": " << e.getDetailMsg();
-      return ;
-   } 
-   
-   
+      return;
+   }
+
    H5::DataSet hitset = fFile->createDataSet(TString::Format("/Event_[%d]/HitArray", eventNum), hdf5Type, hitSpace);
    hitset.write(hits, hdf5Type);
 

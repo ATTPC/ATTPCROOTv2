@@ -47,10 +47,10 @@
 #define NO_INCLUDE_FENV
 #endif
 #ifdef NO_INCLUDE_FENV
-//#pragma message("Do not use fenv header.")
+// #pragma message("Do not use fenv header.")
 #else
-//#pragma message("Use fenv header. If there is a warning about unknown #pragma STDC FENV_ACCESS, this can be ignored.")
-//#pragma STDC FENV_ACCESS on
+// #pragma message("Use fenv header. If there is a warning about unknown #pragma STDC FENV_ACCESS, this can be
+// ignored.") #pragma STDC FENV_ACCESS on
 #include <fenv.h>
 #endif
 
@@ -382,11 +382,9 @@ public:
    void Union(const t_index node1, const t_index node2) { parent[node1] = parent[node2] = nextparent++; }
 };
 
-class nan_error {
-};
+class nan_error {};
 #ifdef FE_INVALID
-class fenv_error {
-};
+class fenv_error {};
 #endif
 
 static void MST_linkage_core(const t_index N, const t_float *const D, cluster_result &Z2)

@@ -51,4 +51,4 @@ public:
    ClassDefOverride(AtPulseLineTask, 2);
 };
 
-#endif //#ifndef AtPULSELINETASK_H
+#endif // #ifndef AtPULSELINETASK_H

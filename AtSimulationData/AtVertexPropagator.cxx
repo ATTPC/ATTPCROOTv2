@@ -10,8 +10,7 @@
 // Allow us use std::make_unique using a protected constructor this struct
 // is only defined in this translation unit (.cpp file)
 namespace {
-struct concrete_AtVertexPropagator : public AtVertexPropagator {
-};
+struct concrete_AtVertexPropagator : public AtVertexPropagator {};
 } // namespace
 std::unique_ptr<AtVertexPropagator> AtVertexPropagator::fInstance = nullptr;
 

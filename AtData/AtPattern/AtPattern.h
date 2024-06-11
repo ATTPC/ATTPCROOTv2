@@ -152,4 +152,4 @@ protected:
    ClassDef(AtPattern, 1)
 };
 } // namespace AtPatterns
-#endif //#ifndef ATTRACKPATTERN_H
+#endif // #ifndef ATTRACKPATTERN_H

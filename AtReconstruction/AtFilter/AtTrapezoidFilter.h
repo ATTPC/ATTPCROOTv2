@@ -47,4 +47,4 @@ public:
    virtual bool IsGoodEvent() override { return true; }
 };
 
-#endif //#ifndef ATTRAPEZOIDFILTER_H
+#endif // #ifndef ATTRAPEZOIDFILTER_H

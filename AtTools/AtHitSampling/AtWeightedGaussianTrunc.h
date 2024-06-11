@@ -22,4 +22,4 @@ protected:
    virtual std::vector<double> PDF(const AtHit &hit) override;
 };
 } // namespace RandomSample
-#endif //#ifndef ATWEIGHTEDGAUSSIANTRUNC_H
+#endif // #ifndef ATWEIGHTEDGAUSSIANTRUNC_H

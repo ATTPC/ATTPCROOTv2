@@ -70,4 +70,4 @@ public:
    virtual bool IsGoodEvent() override;
 };
 
-#endif //#ifndef ATFILTERSUBTRACTION_H
+#endif // #ifndef ATFILTERSUBTRACTION_H

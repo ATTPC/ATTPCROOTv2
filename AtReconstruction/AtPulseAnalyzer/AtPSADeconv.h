@@ -132,4 +132,4 @@ protected:
    HitVector AnalyzeFFTpad(AtPad &pad);
 };
 
-#endif //#ifndef ATPSADECONV_H
+#endif // #ifndef ATPSADECONV_H

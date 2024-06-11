@@ -42,4 +42,4 @@ public:
 
    ClassDefOverride(AtFilterTask, 1)
 };
-#endif //#ifndef ATFILTERTASK_H
+#endif // #ifndef ATFILTERTASK_H
