@@ -57,7 +57,7 @@ public:
     */
    AtSimpleSimulation(std::string geoFile);
    AtSimpleSimulation();
-   AtSimpleSimulation(const AtSimpleSimulation &other) = default;
+   AtSimpleSimulation(const AtSimpleSimulation &other) = delete; // Implicity deleted because of std::mutex
    ~AtSimpleSimulation() = default;
 
    void RegisterBranch(std::string branchName = "AtTpcPoint", bool pers = true);
