@@ -57,6 +57,8 @@ set(SRCS
   
   )
 
+attpcroot_add_test_dir(test)
+
 generate_target_and_root_library(${LIBRARY_NAME}
   LINKDEF ${LINKDEF}
   SRCS ${SRCS}

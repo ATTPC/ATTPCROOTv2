@@ -17,7 +17,6 @@ include(ATTPCRootUtils)
 include(ATTPCRootFindPackage2)
 include(ROOTTargetMacros)
 include(WriteConfigFile)
-include(CTest)
 include(GNUInstallDirs)
 include(PrintSummary)
 include(FetchContent)
@@ -139,7 +138,6 @@ if(TARGET Eigen3::Eigen)
   #endif()
 endif()
 
-
 if (OPENMP_CXX_FOUND)
  # MESSAGE("${Green} OpenMP Support Found ${OpenMP_CXX_SPEC_DATE} ${ColourReset}")
   set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
@@ -175,9 +173,11 @@ add_subdirectory (AtAnalysis)
 add_subdirectory (AtTools)
 add_subdirectory (AtEventDisplay)
 
+if(BUILD_TESTS)
+  include(ATTPCRootCTest)
+endif(BUILD_TESTS)
 
 # Generate config file for build
-
 fairroot_generate_config_sh(${CMAKE_BINARY_DIR}/config.sh
   BUILD
   PATH ${ROOT_BINARY_DIR}

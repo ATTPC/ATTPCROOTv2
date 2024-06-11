@@ -3,6 +3,23 @@
 # https://github.com/dennisklein/FairRoot/blob/modernize_cmake_phase2
 # Adam Anthony 3/25/2022
 
+function(attpcroot_add_test_dir DIR)
+  file(RELATIVE_PATH subdir ${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/${DIR})
+  set_property(GLOBAL APPEND PROPERTY ATTPCROOT_TEST_DIRS ${subdir})
+endfunction()
+
+function(attpcroot_generate_tests TEST_NAME)
+  cmake_parse_arguments(ARG "" "" "SRCS;DEPS" ${ARGN})
+
+  #message(STATUS "Generating test ${TEST_NAME} with sources ${ARG_SRCS} and dependencies ${ARG_DEPS}")
+  add_executable(${TEST_NAME} ${ARG_SRCS})
+  target_link_libraries(${TEST_NAME} PRIVATE ${ARG_DEPS} GTest::gtest_main)
+  
+  include(GoogleTest)
+  gtest_discover_tests(${TEST_NAME})
+endfunction()
+
+
 macro(set_attpcroot_defaults)
 
   set(CMAKE_CXX_STANDARD ${PROJECT_MINIMUM_CXX_STANDARD})
@@ -120,7 +137,10 @@ macro(set_attpcroot_defaults)
 
   endif(RUN_STATIC_ANALYSIS)
 
-  
+  if(NOT DEFINED BUILD_TESTS)
+    set(BUILD_TESTS ON)
+endif()
+
 endmacro(set_attpcroot_defaults)
 
 function(join VALUES GLUE OUTPUT)

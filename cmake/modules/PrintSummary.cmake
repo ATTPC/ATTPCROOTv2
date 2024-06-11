@@ -250,11 +250,27 @@ function(PrintStaticAnalyzers)
   endif()
 endfunction()
 
+function(PrintTests)
+  message(STATUS "  ")
+
+  if(BUILD_TESTS)
+    message(STATUS "  ${Cyan}BUILD_TESTS ON ${ColourReset}")
+    message(STATUS "  (Disable with ${BMagenta}-DBUILD_TESTS=OFF${ColourReset})")
+    message(STATUS "  Test Binary Output Directory: ${CMAKE_BINARY_DIR}/tests")
+    message(STATUS "  ")
+    
+  else(BUILD_TESTS)
+    message(STATUS "  ${Cyan}BUILD_TESTS OFF ${ColourReset}")
+    message(STATUS "  (Enable with ${BMagenta}-DBUILD_TESTS=ON${ColourReset})")
+  endif()
+endfunction()
+
 function(PrintSummary)
   PrintProjectAndStandard()
   PrintConfiguration()
   PrintDependencies()
   PrintStaticAnalyzers()
+  PrintTests()
   
   message(STATUS "")
   message(STATUS "Searched for cmake config files in : ${CMAKE_PREFIX_PATH}")

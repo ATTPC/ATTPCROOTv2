@@ -6,6 +6,7 @@
 #                  copied verbatim in the file "LICENSE"                       #
 ################################################################################
 # Functions for ATTPCROOT code. Based on FairMacros.cmake from FairRoot.
+include(GoogleTest)
 if(NOT WIN32 AND NOT DISABLE_COLOR)
   string(ASCII 27 Esc)
   set(CR       "${Esc}[m")
@@ -25,6 +26,8 @@ if(NOT WIN32 AND NOT DISABLE_COLOR)
   set(BCyan    "${Esc}[1;36m")
   set(BWhite   "${Esc}[1;37m")
 endif()
+
+
 
 # Must be a macro so the variables set are in the scope of the caller (unlike a function)
 macro(check_and_set_enviroment)
