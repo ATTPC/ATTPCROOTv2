@@ -47,7 +47,7 @@ public:
       swap(first.fEventName, second.fEventName);
    };
 
-   void Clear(Option_t *opt) override;
+   void Clear(Option_t *opt = nullptr) override;
 
    /**
     * @brief Add new auxilary pad (AtAuxPad) to event
