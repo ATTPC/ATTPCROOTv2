@@ -581,7 +581,7 @@ Bool_t AtTPC_d2He::ReadEvent(FairPrimaryGenerator *primGen)
       // TVector3 d2HeVtx(fVx,fVy,fVz);
       // AtVertexPropagator::Instance()->Setd2HeVtx(d2HeVtx);
 
-      if (i > 1 && i != 3 && AtVertexPropagator::Instance()->GetDecayEvtCnt() && pdgType != 1000500500 &&
+      if (i > 1 && i != 3 && AtVertexPropagator::Instance()->IsReactionEvent() && pdgType != 1000500500 &&
           fPType.at(i) == "Ion") {
          // TODO: Dirty way to propagate only the products (0 and 1 are beam and target respectively)
          // i=3 is excluded because  corresponds to 2He
@@ -593,7 +593,7 @@ Bool_t AtTPC_d2He::ReadEvent(FairPrimaryGenerator *primGen)
 
          primGen->AddTrack(pdgType, fPx.at(i), fPy.at(i), fPz.at(i), fVx, fVy, fVz);
 
-      } else if (i > 1 && i != 3 && AtVertexPropagator::Instance()->GetDecayEvtCnt() && pdgType == 2212 &&
+      } else if (i > 1 && i != 3 && AtVertexPropagator::Instance()->IsReactionEvent() && pdgType == 2212 &&
                  fPType.at(i) == "Proton") {
 
          /*  			      std::cout << "-I- FairIonGenerator: Generating ions of type "
@@ -605,7 +605,7 @@ Bool_t AtTPC_d2He::ReadEvent(FairPrimaryGenerator *primGen)
          // primGen->AddTrack(pdgType, fPx.at(i), fPy.at(i), fPz.at(i), fVx, fVy, fVz);
          primGen->AddTrack(pdgType, fPx.at(i), fPy.at(i), fPz.at(i), fVx, fVy, fVz);
 
-      } else if (i > 1 && i != 3 && AtVertexPropagator::Instance()->GetDecayEvtCnt() && pdgType == 2112 &&
+      } else if (i > 1 && i != 3 && AtVertexPropagator::Instance()->IsReactionEvent() && pdgType == 2112 &&
                  fPType.at(i) == "Neutron") {
 
          /*         std::cout << "-I- FairIonGenerator: Generating ions of type "

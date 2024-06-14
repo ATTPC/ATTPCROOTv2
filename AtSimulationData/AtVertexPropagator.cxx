@@ -180,18 +180,6 @@ void AtVertexPropagator::Setd2HeVtx(Double_t x0, Double_t y0, Double_t Ax, Doubl
    fIsd2HeEvt = kTRUE;
 }
 
-Int_t AtVertexPropagator::GetGlobalEvtCnt()
-{
-   return fGlobalEvtCnt;
-}
-Int_t AtVertexPropagator::GetBeamEvtCnt()
-{
-   return fBeamEvtCnt;
-}
-Int_t AtVertexPropagator::GetDecayEvtCnt()
-{
-   return fDecayEvtCnt;
-}
 Double_t AtVertexPropagator::GetVx()
 {
    return fVx;
@@ -309,18 +297,6 @@ TVector3 AtVertexPropagator::Getd2HeVtx()
    return fd2HeVtx;
 }
 
-void AtVertexPropagator::IncGlobalEvtCnt()
-{
-   fGlobalEvtCnt++;
-}
-void AtVertexPropagator::IncBeamEvtCnt()
-{
-   fBeamEvtCnt++;
-}
-void AtVertexPropagator::IncDecayEvtCnt()
-{
-   fDecayEvtCnt++;
-}
 void AtVertexPropagator::SetValidKine(Bool_t val)
 {
    fIsValidKine = val;

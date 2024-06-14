@@ -34,11 +34,6 @@ public:
    **@param px,py,pz  Momentum components [GeV] per nucleon!
    **@param vx,vy,vz  Vertex coordinates [cm]
    **/
-   // AtTPCIonDecay(const char* name,std::vector<Int_t> *z,std::vector<Int_t> *a,std::vector<Int_t> *q, Int_t mult,
-   // std::vector<Double_t> *px,
-   //   std::vector<Double_t>* py,std::vector<Double_t> *pz, std::vector<Double_t> *mass , Double_t ResEner, Int_t ZB,
-   //   Int_t AB, Double_t PxB, Double_t PyB, Double_t PzB, Double_t BMass, Double_t TMass);
-
    AtTPCIonDecay(std::vector<std::vector<Int_t>> *z, std::vector<std::vector<Int_t>> *a,
                  std::vector<std::vector<Int_t>> *q, std::vector<std::vector<Double_t>> *mass, Int_t ZB, Int_t AB,
                  Double_t BMass, Double_t TMass, Double_t ExEnergy, std::vector<Double_t> *SepEne);
@@ -63,9 +58,7 @@ private:
    std::vector<std::vector<std::unique_ptr<FairIon>>> fIon; // Pointer to the FairIon to be generated
    std::vector<std::vector<std::unique_ptr<FairParticle>>> fParticle;
    std::vector<std::vector<TString>> fPType;
-   std::vector<Int_t> fQ; // Electric charge [e]
-   // std::vector<Int_t> fA;
-   // std::vector<Int_t> fZ;
+   std::vector<Int_t> fQ;       // Electric charge [e]
    Double_t fBeamEnergy{};      // Residual beam energy for phase calculation
    Double_t fBeamEnergy_buff{}; // Residual beam energy for phase calculation
    Int_t fZBeam{};

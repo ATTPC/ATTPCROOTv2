@@ -72,15 +72,15 @@ void AtTpc::trackEnteringVolume()
    fTrackID = gMC->GetStack()->GetCurrentTrackNumber();
 
    // Position of the first hit of the beam in the TPC volume ( For tracking purposes in the TPC)
-   if (AtVertexPropagator::Instance()->GetBeamEvtCnt() % 2 != 0 && fTrackID == 0 &&
+   if (AtVertexPropagator::Instance()->IsBeamEvent() && fTrackID == 0 &&
        (fVolName == "drift_volume" || fVolName == "cell"))
       InPos = fPosIn;
 
    Int_t VolumeID = 0;
 
-   if (AtVertexPropagator::Instance()->GetBeamEvtCnt() % 2 != 0)
+   if (AtVertexPropagator::Instance()->IsBeamEvent())
       LOG(debug) << cGREEN << " AtTPC: Beam Event ";
-   else if (AtVertexPropagator::Instance()->GetDecayEvtCnt() % 2 == 0)
+   else if (AtVertexPropagator::Instance()->IsReactionEvent())
       LOG(debug) << cBLUE << " AtTPC: Reaction/Decay Event ";
 
    LOG(debug) << " AtTPC: First hit in Volume " << fVolName;
@@ -124,7 +124,7 @@ void AtTpc::getTrackParametersWhileExiting()
    if (gMC->IsTrackExiting()) {
       correctPosOut();
       if ((fVolName.Contains("drift_volume") || fVolName.Contains("cell")) &&
-          AtVertexPropagator::Instance()->GetBeamEvtCnt() % 2 != 0 && fTrackID == 0)
+          AtVertexPropagator::Instance()->IsBeamEvent() && fTrackID == 0)
          resetVertex();
    }
 }
@@ -167,7 +167,7 @@ void AtTpc::correctPosOut()
 bool AtTpc::reactionOccursHere()
 {
    bool atEnergyLoss = fELossAcc * 1000 > AtVertexPropagator::Instance()->GetRndELoss();
-   bool isPrimaryBeam = AtVertexPropagator::Instance()->GetBeamEvtCnt() % 2 != 0 && fTrackID == 0;
+   bool isPrimaryBeam = AtVertexPropagator::Instance()->IsBeamEvent() && fTrackID == 0;
    bool isInRightVolume = fVolName.Contains("drift_volume") || fVolName.Contains("cell");
    return atEnergyLoss && isPrimaryBeam && isInRightVolume;
 }
@@ -229,10 +229,10 @@ void AtTpc::addHit()
 
    // We assume that the beam-like particle is fTrackID==0 since it is the first one added in the
    // primary generator
-   if (AtVertexPropagator::Instance()->GetBeamEvtCnt() % 2 != 0 && fTrackID == 0) {
+   if (AtVertexPropagator::Instance()->IsBeamEvent() && fTrackID == 0) {
       EIni = 0;
       AIni = 0;
-   } else if (AtVertexPropagator::Instance()->GetDecayEvtCnt() % 2 == 0) {
+   } else if (AtVertexPropagator::Instance()->IsReactionEvent()) {
       EIni = AtVertexPropagator::Instance()->GetTrackEnergy(fTrackID);
       AIni = AtVertexPropagator::Instance()->GetTrackAngle(fTrackID);
    }

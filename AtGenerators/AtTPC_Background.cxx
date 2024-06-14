@@ -441,7 +441,7 @@ fPz.at(3) = (Prec*cos(angrec) )/1000.0; // To GeV for FairRoot
       fVy = random_r * sin(random_phi);
       fVz = 100.0 * (gRandom->Uniform()); // cm
 
-      if (i > 1 && AtVertexPropagator::Instance()->GetDecayEvtCnt() && pdgType == 2212) {
+      if (i > 1 && AtVertexPropagator::Instance()->IsReactionEvent() && pdgType == 2212) {
          // TODO: Dirty way to propagate only the products (0 and 1 are beam and target respectively)
 
          // std::cout << "-I- FairIonGenerator: Generating ions of type "

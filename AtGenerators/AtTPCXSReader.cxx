@@ -168,7 +168,7 @@ Bool_t AtTPCXSReader::ReadEvent(FairPrimaryGenerator *primGen)
    fBeamEnergy = AtVertexPropagator::Instance()->GetEnergy();
 
    // Requires a non zero vertex energy and pre-generated Beam event (not punch thorugh)
-   if (AtVertexPropagator::Instance()->GetEnergy() > 0 && AtVertexPropagator::Instance()->GetDecayEvtCnt() % 2 != 0) {
+   if (AtVertexPropagator::Instance()->GetEnergy() > 0 && AtVertexPropagator::Instance()->IsReactionEvent()) {
       // proton parameters come from the XS PDF
       Double_t energyFromPDF, thetaFromPDF;
       fh_pdf->GetRandom2(energyFromPDF, thetaFromPDF);
@@ -281,21 +281,21 @@ Bool_t AtTPCXSReader::ReadEvent(FairPrimaryGenerator *primGen)
          fVz = AtVertexPropagator::Instance()->GetVz();
 
          // TODO: Dirty way to propagate only the products (0 and 1 are beam and target respectively)
-         if (i > 1 && AtVertexPropagator::Instance()->GetDecayEvtCnt() && pdgType != 1000500500 &&
+         if (i > 1 && AtVertexPropagator::Instance()->IsReactionEvent() && pdgType != 1000500500 &&
              fPType.at(i) == "Ion") {
             std::cout << "-I- FairIonGenerator: Generating ions of type " << fIon.at(i)->GetName() << " (PDG code "
                       << pdgType << ")" << std::endl;
             std::cout << "    Momentum (" << fPx.at(i) << ", " << fPy.at(i) << ", " << fPz.at(i)
                       << ") Gev from vertex (" << fVx << ", " << fVy << ", " << fVz << ") cm" << std::endl;
             primGen->AddTrack(pdgType, fPx.at(i), fPy.at(i), fPz.at(i), fVx, fVy, fVz);
-         } else if (i > 1 && AtVertexPropagator::Instance()->GetDecayEvtCnt() && pdgType == 2212 &&
+         } else if (i > 1 && AtVertexPropagator::Instance()->IsReactionEvent() && pdgType == 2212 &&
                     fPType.at(i) == "Proton") {
             std::cout << "-I- FairIonGenerator: Generating ions of type " << fParticle.at(i)->GetName() << " (PDG code "
                       << pdgType << ")" << std::endl;
             std::cout << "    Momentum (" << fPx.at(i) << ", " << fPy.at(i) << ", " << fPz.at(i)
                       << ") Gev from vertex (" << fVx << ", " << fVy << ", " << fVz << ") cm" << std::endl;
             primGen->AddTrack(pdgType, fPx.at(i), fPy.at(i), fPz.at(i), fVx, fVy, fVz);
-         } else if (i > 1 && AtVertexPropagator::Instance()->GetDecayEvtCnt() && pdgType == 2112 &&
+         } else if (i > 1 && AtVertexPropagator::Instance()->IsReactionEvent() && pdgType == 2112 &&
                     fPType.at(i) == "Neutron") {
             std::cout << "-I- FairIonGenerator: Generating ions of type " << fParticle.at(i)->GetName() << " (PDG code "
                       << pdgType << ")" << std::endl;

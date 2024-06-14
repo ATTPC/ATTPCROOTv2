@@ -184,7 +184,7 @@ Bool_t AtTPC2Body::ReadEvent(FairPrimaryGenerator *primGen)
    }
 
    if (fBeamEnergy > 0 &&
-       (AtVertexPropagator::Instance()->GetDecayEvtCnt() % 2 != 0 ||
+       (AtVertexPropagator::Instance()->IsReactionEvent() ||
         fIsFixedTargetPos)) { // Requires a non zero vertex energy and pre-generated Beam event (not punch thorugh)
 
       if (fIsFixedTargetPos) {
@@ -494,7 +494,7 @@ Bool_t AtTPC2Body::ReadEvent(FairPrimaryGenerator *primGen)
          else
             trackIdCut = 1; // Remove beam
 
-         if (i > trackIdCut && (AtVertexPropagator::Instance()->GetDecayEvtCnt() || fIsFixedTargetPos) &&
+         if (i > trackIdCut && (AtVertexPropagator::Instance()->IsReactionEvent() || fIsFixedTargetPos) &&
              pdgType != 1000500500 && fPType.at(i) == "Ion") {
 
             std::cout << cBLUE << "-I- FairIonGenerator: Generating ions of type " << fIon.at(i)->GetName()
@@ -503,7 +503,7 @@ Bool_t AtTPC2Body::ReadEvent(FairPrimaryGenerator *primGen)
                       << ") Gev from vertex (" << fVx << ", " << fVy << ", " << fVz << ") cm" << std::endl;
             primGen->AddTrack(pdgType, fPx.at(i), fPy.at(i), fPz.at(i), fVx, fVy, fVz);
 
-         } else if (i > 1 && (AtVertexPropagator::Instance()->GetDecayEvtCnt() || fIsFixedTargetPos) &&
+         } else if (i > 1 && (AtVertexPropagator::Instance()->IsReactionEvent() || fIsFixedTargetPos) &&
                     pdgType == 2212 && fPType.at(i) == "Proton") {
 
             std::cout << "-I- FairIonGenerator: Generating ions of type " << fParticle.at(i)->GetName() << " (PDG code "
@@ -512,7 +512,7 @@ Bool_t AtTPC2Body::ReadEvent(FairPrimaryGenerator *primGen)
                       << ") Gev from vertex (" << fVx << ", " << fVy << ", " << fVz << ") cm" << std::endl;
             primGen->AddTrack(pdgType, fPx.at(i), fPy.at(i), fPz.at(i), fVx, fVy, fVz);
 
-         } else if (i > 1 && (AtVertexPropagator::Instance()->GetDecayEvtCnt() || fIsFixedTargetPos) &&
+         } else if (i > 1 && (AtVertexPropagator::Instance()->IsReactionEvent() || fIsFixedTargetPos) &&
                     pdgType == 2112 && fPType.at(i) == "Neutron") {
 
             std::cout << "-I- FairIonGenerator: Generating ions of type " << fParticle.at(i)->GetName() << " (PDG code "

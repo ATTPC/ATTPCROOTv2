@@ -20,6 +20,7 @@ private:
    Int_t fGlobalEvtCnt;
    Int_t fBeamEvtCnt;
    Int_t fDecayEvtCnt;
+   Bool_t kIsBeamEvent{true};
 
    std::map<int, double> fTrackEn;
    std::map<int, double> fTrackAngle;
@@ -70,16 +71,6 @@ public:
    void SetTrackEnergy(int trackID, double energy);
    void SetTrackAngle(int trackID, double angle);
 
-   /*   void SetRecoilE(Double_t val);
-      void SetRecoilA(Double_t val);
-      void SetScatterE(Double_t val);
-      void SetScatterA(Double_t val);
-      void SetBURes1E(Double_t val); // Recoil(Scatt) breaks up. Residual 1
-      void SetBURes1A(Double_t val);
-      void SetBURes2E(Double_t val); // Recoil(Scatt) breaks up. Residual 2
-      void SetBURes2A(Double_t val);
-   */
-
    void SetRndELoss(Double_t eloss);
    void SetBeamNomE(Double_t ener);
    void ResetVertex();
@@ -90,9 +81,12 @@ public:
    void Setd2HeVtx(TVector3 val);
    void Setd2HeVtx(Double_t x0, Double_t y0, Double_t theta, Double_t phi);
 
-   Int_t GetGlobalEvtCnt();
-   Int_t GetBeamEvtCnt();
-   Int_t GetDecayEvtCnt();
+   bool IsBeamEvent() { return kIsBeamEvent; };
+   bool IsReactionEvent() { return !kIsBeamEvent; };
+
+   // Int_t GetGlobalEvtCnt();
+   // Int_t GetBeamEvtCnt();
+   // Int_t GetDecayEvtCnt();
    Double_t GetBeamMass();
    Double_t GetVx();
    Double_t GetVy();
@@ -110,26 +104,15 @@ public:
    Double_t GetTrackAngle(int trackID);
    Double_t GetTrackEnergy(int trackID);
 
-   /*
-   Double_t GetRecoilE();
-   Double_t GetRecoilA();
-   Double_t GetScatterE();
-   Double_t GetScatterA();
-   Double_t GetBURes1E(); // Recoil(Scatt) breaks up. Residual 1
-   Double_t GetBURes1A();
-   Double_t GetBURes2E(); // Recoil(Scatt) breaks up. Residual 2
-   Double_t GetBURes2A();
-   */
-
    Int_t GetMassNum();
    Int_t GetAtomicNum();
    TVector3 GetScatterP();
    Double_t GetScatterEx();
    TVector3 Getd2HeVtx();
 
-   void IncGlobalEvtCnt();
-   void IncBeamEvtCnt();
-   void IncDecayEvtCnt();
+   // void IncGlobalEvtCnt();
+   void IncBeamEvtCnt() { kIsBeamEvent = !kIsBeamEvent; };
+   void IncDecayEvtCnt() { kIsBeamEvent = !kIsBeamEvent; };
 
    void SetValidKine(Bool_t val);
    Bool_t GetValidKine();

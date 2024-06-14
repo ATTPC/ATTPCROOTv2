@@ -46,8 +46,6 @@ AtTPCIonDecay::AtTPCIonDecay()
    : fMult(0), fPx(0.), fPy(0.), fPz(0.), fVx(0.), fVy(0.), fVz(0.), fIon(0), fParticle(0), fPType(0), fNbCases(0),
      fSepEne(0), fMasses(0), fQ(0), fPxBeam(0.), fPyBeam(0.), fPzBeam(0.)
 {
-   //  cout << "-W- AtTPCIonGenerator: "
-   //      << " Please do not use the default constructor! " << endl;
 }
 
 // -----   Default constructor   ------------------------------------------
@@ -116,7 +114,7 @@ AtTPCIonDecay::AtTPCIonDecay(std::vector<std::vector<Int_t>> *z, std::vector<std
          fIon.at(k).push_back(std::move(IonBuff));
          fParticle.at(k).push_back(std::move(ParticleBuff));
       } // for mult
-   }    // for case
+   } // for case
 }
 
 // -----   Public method ReadEvent   --------------------------------------
@@ -263,8 +261,7 @@ Bool_t AtTPCIonDecay::ReadEvent(FairPrimaryGenerator *primGen)
          std::vector<Double_t> KineticEnergy;
          std::vector<Double_t> ThetaLab;
 
-         LOG(info) << cBLUE << " AtTPCIonDecay -  Phase Space Information "
-                   << "\n";
+         LOG(info) << cBLUE << " AtTPCIonDecay -  Phase Space Information " << "\n";
          for (Int_t i = 0; i < fMult.at(Case); i++) {
             p_vector.push_back(event1.GetDecay(i));
             fPx.at(i) = p_vector.at(i)->Px();
@@ -333,7 +330,7 @@ Bool_t AtTPCIonDecay::ReadEvent(FairPrimaryGenerator *primGen)
          }
 
       } // for fMult.at(Case)
-   }    // if IsGoodCase
+   } // if IsGoodCase
 
    // if (!fIsSequentialDecay)
    AtVertexPropagator::Instance()->IncDecayEvtCnt(); // Increase count only if no other generator is meant to do it.
