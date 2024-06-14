@@ -92,11 +92,13 @@ void C16_pd_anaFit()
    FairRunAna *run = new FairRunAna();
 
    // Output
-   Double_t _theta = 0.0, _energy = 0.0, _exEnergy = 0.0, _exEnergyCorr = 0.0, _zVertex = 0.0, _thetacm = 0.0;
-   TFile *fileOut = TFile::Open("C15_pd_analysis.root", "RECREATE");
+   Double_t _theta = 0.0, _energy = 0.0, _energyCorr = 0.0, _exEnergy = 0.0, _exEnergyCorr = 0.0, _zVertex = 0.0,
+            _thetacm = 0.0;
+   TFile *fileOut = TFile::Open("C16_pd_analysis.root", "RECREATE");
    TTree *treeOut = new TTree("output", "output");
    treeOut->Branch("_theta", &_theta, "_theta/D");
    treeOut->Branch("_energy", &_energy, "_energy/D");
+   treeOut->Branch("_energyCorr", &_energyCorr, "_energyCorr/D");
    treeOut->Branch("_exEnergy", &_exEnergy, "_exEnergy/D");
    treeOut->Branch("_exEnergyCorr", &_exEnergyCorr, "_exEnergyCorr/D");
    treeOut->Branch("_zVertex", &_zVertex, "_zVertex/D");
@@ -436,6 +438,7 @@ void C16_pd_anaFit()
 
             _theta = 0.0;
             _energy = 0.0;
+            _energyCorr = 0.0;
             _exEnergy = 0.0;
             _exEnergyCorr = 0.0;
             _zVertex = 0.0;
@@ -459,8 +462,8 @@ void C16_pd_anaFit()
                if (!cutd->IsInside(eLossADC, brho))
                   continue;
 
-               if (energy * Am < 2.0 || energy * Am > 16.0)
-                  continue;
+               /*if (energy * Am < 2.0 || energy * Am > 16.0)
+                  continue;*/
 
                auto [ex_energy, theta_cm] =
                   kine_2b(m_C16, m_p, m_b, m_B, Ebeam_buff, theta * TMath::DegToRad(), energy * Am);
@@ -495,8 +498,13 @@ void C16_pd_anaFit()
                QcorrvsZpos->Fill(QcorrZ, iniPosXtr.Z() / 10.0);
                QcorrvsTrackLengthH->Fill(QcorrZ, trackLength);
 
+               // Kinetic energy correction for 16C+p (J. Lois)
+               Double_t p0_Ecal = 0.399174;
+               Double_t p1_Ecal = 0.864997;
+               Double_t energyCorr = p0_Ecal + p1_Ecal * energy * Am;
+
                // Histograms
-               Ang_Ener->Fill(theta, energy * Am);
+               Ang_Ener->Fill(theta, energyCorr * Am);
                Ang_Ener_PRAC->Fill(thetaPRA, energyPRA * Am);
                ELossvsBrho->Fill(eLossADC, brho);
                dedxvsBrho->Fill(dEdxADC, brho);
@@ -519,6 +527,7 @@ void C16_pd_anaFit()
                // Tree
                _theta = theta;
                _energy = energy * Am;
+               _energyCorr = energyCorr * Am;
                _exEnergy = ex_energy;
                _exEnergyCorr = QcorrZ;
                _zVertex = iniPosXtr.Z();

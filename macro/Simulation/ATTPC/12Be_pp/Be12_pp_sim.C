@@ -49,7 +49,7 @@ void Be12_pp_sim(Int_t nEvents = 20, TString mcEngine = "TGeant4")
    // -----   Magnetic field   -------------------------------------------
    // Constant Field
    AtConstField *fMagField = new AtConstField();
-   fMagField->SetField(0., 0., 30.);                      // values are in kG
+   fMagField->SetField(0., 0., 28.5);                     // values are in kG
    fMagField->SetFieldRegion(-50, 50, -50, 50, -10, 230); // values are in cm
                                                           //  (xmin,xmax,ymin,ymax,zmin,zmax)
    run->SetField(fMagField);
@@ -138,8 +138,8 @@ void Be12_pp_sim(Int_t nEvents = 20, TString mcEngine = "TGeant4")
    Mass.push_back(1.0078250322);
    ExE.push_back(0.0); // In MeV
 
-   Double_t ThetaMinCMS = 29.0;
-   Double_t ThetaMaxCMS = 29.0;
+   Double_t ThetaMinCMS = 103.0;
+   Double_t ThetaMaxCMS = 103.0;
 
    AtTPC2Body *TwoBody =
       new AtTPC2Body("TwoBody", &Zp, &Ap, &Qp, mult, &Pxp, &Pyp, &Pzp, &Mass, &ExE, ResEner, ThetaMinCMS, ThetaMaxCMS);

@@ -29,6 +29,8 @@ InitStatus AtHDF5WriteTask::Init()
       return kERROR;
    }
 
+   std::cout << "Branch name: " << fInputBranchName << std::endl;
+
    fEventArray = dynamic_cast<TClonesArray *>(ioMan->GetObject(fInputBranchName));
 
    fFile = std::make_unique<H5::H5File>(fOutputFileName, H5F_ACC_TRUNC);

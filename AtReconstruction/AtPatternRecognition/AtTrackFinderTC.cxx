@@ -12,6 +12,7 @@
 #include "graph.h"
 #include "option.h"
 #include "pointcloud.h"
+#include "postprocess.h"
 #include "triplet.h" // for triplet, generate_triplets
 
 #include <algorithm>
@@ -85,6 +86,9 @@ std::unique_ptr<AtPatternEvent> AtPATTERN::AtTrackFinderTC::FindTracks(AtEvent &
    // store cluster labels in points
    add_clusters(cloud_xyz, cl_group, opt_params.is_gnuplot());
 
+   // Post processing
+   // process_pointcloud(cloud_xyz, 25, 0);
+
    // Adapt clusters to AtTrack
    return clustersToTrack(cloud_xyz, cl_group, event);
 }
@@ -149,7 +153,7 @@ AtPATTERN::AtTrackFinderTC::clustersToTrack(PointCloud &cloud, const std::vector
 
    } // Clusters loop
 
-   std::cout << cRED << " Tracks found " << tracks.size() << cNORMAL << "\n";
+   std::cout << cRED << " Tracks found " << tracks.size() << cNORMAL << std::endl;
 
    // Dump noise into pattern event
    auto retEvent = std::make_unique<AtPatternEvent>();

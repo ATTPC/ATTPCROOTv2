@@ -68,6 +68,17 @@ void C16_dt_anaFit()
 {
    FairRunAna *run = new FairRunAna();
 
+   // Output
+   Double_t _theta = 0.0, _energy = 0.0, _exEnergy = 0.0, _exEnergyCorr = 0.0, _zVertex = 0.0, _thetacm = 0.0;
+   TFile *fileOut = TFile::Open("C15_dt_analysis.root", "RECREATE");
+   TTree *treeOut = new TTree("output", "output");
+   treeOut->Branch("_theta", &_theta, "_theta/D");
+   treeOut->Branch("_energy", &_energy, "_energy/D");
+   treeOut->Branch("_exEnergy", &_exEnergy, "_exEnergy/D");
+   treeOut->Branch("_exEnergyCorr", &_exEnergyCorr, "_exEnergyCorr/D");
+   treeOut->Branch("_zVertex", &_zVertex, "_zVertex/D");
+   treeOut->Branch("_thetacm", &_thetacm, "_thetacm/D");
+
    TH2F *Ang_Ener = new TH2F("Ang_Ener", "Ang_Ener", 720, 0, 179, 1000, 0, 200.0);
    TH2F *Ang_Ener_PRAC = new TH2F("Ang_Ener_PRAC", "Ang_Ener_PRAC", 1000, 0, 100, 1000, 0, 200.0);
    TH2F *ELossvsBrho = new TH2F("ELossvsBrho", "ELossvsBrho", 4000, 0, 25000, 1000, 0, 4);
@@ -221,7 +232,25 @@ void C16_dt_anaFit()
    cutt->SetVarY("");
    cutt->SetTitle("Graph");
    cutt->SetFillStyle(1000);
-   cutt->SetPoint(0, 165.5517, 2.378476);
+   cutt->SetPoint(0, 195.8704, 2.17006);
+   cutt->SetPoint(1, 168.9599, 1.823906);
+   cutt->SetPoint(2, 203.9435, 1.67006);
+   cutt->SetPoint(3, 308.8943, 1.443564);
+   cutt->SetPoint(4, 478.4301, 1.140145);
+   cutt->SetPoint(5, 677.5675, 0.9307436);
+   cutt->SetPoint(6, 1145.809, 0.7598034);
+   cutt->SetPoint(7, 1581.759, 0.6572393);
+   cutt->SetPoint(8, 1595.214, 0.7298889);
+   cutt->SetPoint(9, 1544.084, 0.798265);
+   cutt->SetPoint(10, 1342.256, 0.8538205);
+   cutt->SetPoint(11, 978.9645, 0.9307436);
+   cutt->SetPoint(12, 747.5346, 1.123051);
+   cutt->SetPoint(13, 618.3645, 1.349547);
+   cutt->SetPoint(14, 421.9182, 1.793991);
+   cutt->SetPoint(15, 273.9107, 2.110231);
+   cutt->SetPoint(16, 198.5614, 2.17006);
+   cutt->SetPoint(17, 195.8704, 2.17006);
+   /*cutt->SetPoint(0, 165.5517, 2.378476);
    cutt->SetPoint(1, 188.9105, 1.8812);
    cutt->SetPoint(2, 305.7046, 1.523348);
    cutt->SetPoint(3, 461.4301, 1.249149);
@@ -245,33 +274,7 @@ void C16_dt_anaFit()
    cutt->SetPoint(21, 227.8419, 2.596905);
    cutt->SetPoint(22, 162.9563, 2.564373);
    cutt->SetPoint(23, 165.5517, 2.378476);
-   cutt->SetPoint(24, 165.5517, 2.378476);
-
-   TCutG *cutd = new TCutG("CUTD", 20);
-   cutd->SetVarX("ELossvsBrho");
-   cutd->SetVarY("");
-   cutd->SetTitle("Graph");
-   cutd->SetFillStyle(1000);
-   cutd->SetPoint(0, 48.7938, 1.961132);
-   cutd->SetPoint(1, 923.042, 0.9194652);
-   cutd->SetPoint(2, 1360.166, 0.7639925);
-   cutd->SetPoint(3, 3737.028, 0.4841418);
-   cutd->SetPoint(4, 8053.629, 0.3364428);
-   cutd->SetPoint(5, 16905.39, 0.289801);
-   cutd->SetPoint(6, 22888.53, 0.2664801);
-   cutd->SetPoint(7, 24309.18, 0.2198383);
-   cutd->SetPoint(8, 24746.3, 0.1576492);
-   cutd->SetPoint(9, 24555.06, 0.04881838);
-   cutd->SetPoint(10, 10731.01, 0.04104475);
-   cutd->SetPoint(11, 8217.55, 0.04881838);
-   cutd->SetPoint(12, 6523.694, 0.1343283);
-   cutd->SetPoint(13, 3299.904, 0.2276119);
-   cutd->SetPoint(14, 1360.166, 0.4375);
-   cutd->SetPoint(15, 458.5976, 0.6707089);
-   cutd->SetPoint(16, 158.0748, 1.028296);
-   cutd->SetPoint(17, -33.16696, 1.510261);
-   cutd->SetPoint(18, 48.7938, 1.922264);
-   cutd->SetPoint(19, 48.7938, 1.961132);
+   cutt->SetPoint(24, 165.5517, 2.378476);*/
 
    // dedx cuts
    auto cuttdedx = new TCutG("CUTTDEDEX", 19);
@@ -396,6 +399,13 @@ void C16_dt_anaFit()
 
             Int_t maxAIndex = std::distance(fittedTracks.begin(), itMax);
 
+            _theta = 0.0;
+            _energy = 0.0;
+            _exEnergy = 0.0;
+            _exEnergyCorr = 0.0;
+            _zVertex = 0.0;
+            _thetacm = 0.0;
+
             for (auto index = 0; index < fittedTracks.size(); ++index) {
 
                if (index != maxAIndex)
@@ -449,7 +459,7 @@ void C16_dt_anaFit()
                // kinematicsFile << energy*Am << " " << theta << "\n";
 
                Double_t p0 = 2.92915;
-               Double_t p1 = -0.00977621;
+               Double_t p1 = -0.00177621;
                Double_t mFactor = 1.00;
                Double_t offSet = 0.0;
                Double_t QcorrZ = 0.0;
@@ -471,12 +481,26 @@ void C16_dt_anaFit()
                Double_t vy = TMath::Cos(theta * TMath::DegToRad()) * TMath::Sqrt(energy * Am);
 
                hVxVy->Fill(vx, vy);
+
+               // Tree
+               _theta = theta;
+               _energy = energy * Am;
+               _exEnergy = ex_energy;
+               _exEnergyCorr = QcorrZ;
+               _zVertex = iniPosXtr.Z();
+               _thetacm = theta_cm;
+
+               fileOut->cd();
+               treeOut->Fill();
             }
          }
 
       } // events
 
    } // Files
+
+   fileOut->cd();
+   treeOut->Write();
 
    kinematicsFile.close();
 
@@ -576,7 +600,7 @@ void C16_dt_anaFit()
    cpid->cd(1);
    ELossvsBrho->Draw("zcol");
    cutt->Draw("l");
-   cutd->Draw("l");
+   // cutd->Draw("l");
    cpid->cd(2);
    dedxvsBrho->Draw("zcol");
 

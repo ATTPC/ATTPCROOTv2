@@ -10,6 +10,7 @@ set(SRCS
 #Pythia8Generator.cxx
 AtReactionGenerator.cxx
 AtTPCIonDecay.cxx
+AtTPCReactionDecay.cxx
 AtTPCIonGenerator.cxx
 AtTPCIonGeneratorS800.cxx
 AtTPCIonGeneratorGaussian.cxx

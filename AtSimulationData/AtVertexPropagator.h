@@ -51,8 +51,10 @@ private:
    Int_t fAiso;
    Int_t fZiso;
    TVector3 fScatP;
+   TVector3 fRecP;
    TVector3 fd2HeVtx;
    Double_t fExEjectile;
+   Double_t fExRecoil;
 
 protected:
    AtVertexPropagator();
@@ -77,6 +79,8 @@ public:
    void SetAtomicNum(Int_t anum);
    void SetScatterP(TVector3 val);
    void SetScatterEx(Double_t val);
+   void SetRecoilP(TVector3 val);
+   void SetRecoilEx(Double_t val);
    void Setd2HeVtx(TVector3 val);
    void Setd2HeVtx(Double_t x0, Double_t y0, Double_t theta, Double_t phi);
    void SetIsBeamEvent(bool val) { kIsBeamEvent = val; };
@@ -104,6 +108,8 @@ public:
    Int_t GetAtomicNum();
    TVector3 GetScatterP();
    Double_t GetScatterEx();
+   TVector3 GetRecoilP();
+   Double_t GetRecoilEx();
    TVector3 Getd2HeVtx();
 
    /**

@@ -39,14 +39,14 @@ std::tuple<Double_t, Double_t> AtTools::AtKinematics::GetMomFromBrho(Double_t M,
    return std::make_tuple(p, E);
 }
 
-Double_t AtTools::AtKinematics::TwoBodyEx(Double_t m1, Double_t m2, Double_t m3, Double_t m4, Double_t K_proj,
-                                          Double_t thetalab, Double_t K_eject)
+std::tuple<double, double> AtTools::AtKinematics::TwoBodyEx(Double_t m1, Double_t m2, Double_t m3, Double_t m4,
+                                                            Double_t K_proj, Double_t thetalab, Double_t K_eject)
 {
    // in this definition: m1(projectile); m2(target); m3(ejectile); and m4(recoil);
    double Et1 = K_proj + m1;
    double Et2 = m2;
    double Et3 = K_eject + m3;
-   // double Et4 = Et1 + Et2 - Et3;
+   double Et4 = Et1 + Et2 - Et3;
    double m4_ex, Ex, theta_cm;
    double s, t, u; //---Mandelstam variables
 
@@ -59,17 +59,15 @@ Double_t AtTools::AtKinematics::TwoBodyEx(Double_t m1, Double_t m2, Double_t m3,
                 s + u - pow(m2, 2));
    Ex = m4_ex - m4;
 
-   // t = pow(m2, 2) + pow(m4_ex, 2) - 2 * m2 * Et4;
+   t = pow(m2, 2) + pow(m4_ex, 2) - 2 * m2 * Et4;
 
    // for inverse kinematics Note: this angle corresponds to the recoil
-   /*theta_cm = TMath::Pi() - acos((pow(s, 2) + s * (2 * t - pow(m1, 2) - pow(m2, 2) - pow(m3, 2) - pow(m4_ex, 2)) +
+   theta_cm = TMath::Pi() - acos((pow(s, 2) + s * (2 * t - pow(m1, 2) - pow(m2, 2) - pow(m3, 2) - pow(m4_ex, 2)) +
                                   (pow(m1, 2) - pow(m2, 2)) * (pow(m3, 2) - pow(m4_ex, 2))) /
                                  (omega(s, pow(m1, 2), pow(m2, 2)) * omega(s, pow(m3, 2), pow(m4_ex, 2))));
 
-
-    THcm = theta_cm*TMath::RadToDeg();
-   */
-   return Ex;
+   theta_cm = theta_cm * TMath::RadToDeg();
+   return std::make_tuple(Ex, theta_cm);
 }
 
 Double_t AtTools::AtKinematics::omega(Double_t x, Double_t y, Double_t z)

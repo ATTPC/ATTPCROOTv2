@@ -18,6 +18,7 @@
 // #pragma link C++ class  Pythia6Generator+;
 // #pragma link C++ class  Pythia8Generator+;
 #pragma link C++ class AtTPCIonDecay + ;
+#pragma link C++ class AtTPCReactionDecay + ;
 #pragma link C++ class AtTPCIonGenerator + ;
 #pragma link C++ class AtTPCIonGeneratorS800 + ;
 #pragma link C++ class AtTPCIonGeneratorGaussian + ;

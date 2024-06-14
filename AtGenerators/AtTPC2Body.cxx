@@ -478,6 +478,9 @@ Bool_t AtTPC2Body::GenerateReaction(FairPrimaryGenerator *primGen)
          }
 
          // For decay generators
+         TVector3 RecP(fPx.at(3), fPy.at(3), fPz.at(3));
+         AtVertexPropagator::Instance()->SetRecoilP(RecP);
+         AtVertexPropagator::Instance()->SetRecoilEx(fExEnergy.at(3));
          TVector3 ScatP(fPx.at(2), fPy.at(2), fPz.at(2));
          AtVertexPropagator::Instance()->SetScatterP(ScatP);
          AtVertexPropagator::Instance()->SetScatterEx(fExEnergy.at(2));

@@ -24,12 +24,15 @@ AtVertexPropagator *AtVertexPropagator::Instance()
 AtVertexPropagator::AtVertexPropagator()
    : fVx(0.), fVy(0.), fVz(0.), fPx(0.), fPy(0.), fPz(0.), fE(0.), fBeamMass(0), fRndELoss(0), fBeamNomE(0), fInVx(0),
      fInVy(0), fInVz(0), fRecoilE(0), fRecoilA(0), fScatterE(0), fScatterA(0), fBURes1E(0), fBURes1A(0), fBURes2E(0),
-     fBURes2A(0), fIsValidKine(false), fAiso(0), fZiso(0), fExEjectile(0), fIsd2HeEvt(false)
+     fBURes2A(0), fIsValidKine(false), fAiso(0), fZiso(0), fExEjectile(0), fExRecoil(0), fIsd2HeEvt(false)
 {
 
    fScatP(0) = 0.0;
    fScatP(1) = 0.0;
    fScatP(2) = 0.0;
+   fRecP(0) = 0.0;
+   fRecP(1) = 0.0;
+   fRecP(2) = 0.0;
    fd2HeVtx(0) = 0.0;
    fd2HeVtx(1) = 0.0;
    fd2HeVtx(2) = 0.0;
@@ -76,6 +79,9 @@ void AtVertexPropagator::ResetVertex()
    fScatP(0) = 0.0;
    fScatP(1) = 0.0;
    fScatP(2) = 0.0;
+   fRecP(0) = 0.0;
+   fRecP(1) = 0.0;
+   fRecP(2) = 0.0;
    fIsValidKine = kTRUE;
 
    fTrackAngle.clear();
@@ -128,6 +134,14 @@ void AtVertexPropagator::SetScatterP(TVector3 avec)
 void AtVertexPropagator::SetScatterEx(Double_t val)
 {
    fExEjectile = val;
+}
+void AtVertexPropagator::SetRecoilP(TVector3 avec)
+{
+   fRecP = avec;
+}
+void AtVertexPropagator::SetRecoilEx(Double_t val)
+{
+   fExRecoil = val;
 }
 void AtVertexPropagator::Setd2HeVtx(TVector3 avec)
 {
@@ -220,6 +234,14 @@ TVector3 AtVertexPropagator::GetScatterP()
 Double_t AtVertexPropagator::GetScatterEx()
 {
    return fExEjectile;
+}
+TVector3 AtVertexPropagator::GetRecoilP()
+{
+   return fRecP;
+}
+Double_t AtVertexPropagator::GetRecoilEx()
+{
+   return fExRecoil;
 }
 TVector3 AtVertexPropagator::Getd2HeVtx()
 {

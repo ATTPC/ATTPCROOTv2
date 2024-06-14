@@ -204,7 +204,25 @@ void C16_dd_anaFit()
    cutt->SetVarY("");
    cutt->SetTitle("Graph");
    cutt->SetFillStyle(1000);
-   cutt->SetPoint(0, 165.5517, 2.378476);
+   cutt->SetPoint(0, 195.8704, 2.17006);
+   cutt->SetPoint(1, 168.9599, 1.823906);
+   cutt->SetPoint(2, 203.9435, 1.67006);
+   cutt->SetPoint(3, 308.8943, 1.443564);
+   cutt->SetPoint(4, 478.4301, 1.140145);
+   cutt->SetPoint(5, 677.5675, 0.9307436);
+   cutt->SetPoint(6, 1145.809, 0.7598034);
+   cutt->SetPoint(7, 1581.759, 0.6572393);
+   cutt->SetPoint(8, 1595.214, 0.7298889);
+   cutt->SetPoint(9, 1544.084, 0.798265);
+   cutt->SetPoint(10, 1342.256, 0.8538205);
+   cutt->SetPoint(11, 978.9645, 0.9307436);
+   cutt->SetPoint(12, 747.5346, 1.123051);
+   cutt->SetPoint(13, 618.3645, 1.349547);
+   cutt->SetPoint(14, 421.9182, 1.793991);
+   cutt->SetPoint(15, 273.9107, 2.110231);
+   cutt->SetPoint(16, 198.5614, 2.17006);
+   cutt->SetPoint(17, 195.8704, 2.17006);
+   /*cutt->SetPoint(0, 165.5517, 2.378476);
    cutt->SetPoint(1, 188.9105, 1.8812);
    cutt->SetPoint(2, 305.7046, 1.523348);
    cutt->SetPoint(3, 461.4301, 1.249149);
@@ -228,14 +246,35 @@ void C16_dd_anaFit()
    cutt->SetPoint(21, 227.8419, 2.596905);
    cutt->SetPoint(22, 162.9563, 2.564373);
    cutt->SetPoint(23, 165.5517, 2.378476);
-   cutt->SetPoint(24, 165.5517, 2.378476);
+   cutt->SetPoint(24, 165.5517, 2.378476);*/
 
    TCutG *cutd = new TCutG("CUTD", 20);
    cutd->SetVarX("ELossvsBrho");
    cutd->SetVarY("");
    cutd->SetTitle("Graph");
    cutd->SetFillStyle(1000);
-   cutd->SetPoint(0, 48.7938, 1.961132);
+   cutd->SetPoint(0, 132.3103, 1.817738);
+   cutd->SetPoint(1, 191.8601, 1.676979);
+   cutd->SetPoint(2, 318.7288, 1.404543);
+   cutd->SetPoint(3, 488.0121, 1.113945);
+   cutd->SetPoint(4, 688.6722, 0.9005369);
+   cutd->SetPoint(5, 1197.102, 0.7325347);
+   cutd->SetPoint(6, 1883.43, 0.5736138);
+   cutd->SetPoint(7, 3924.598, 0.4510176);
+   cutd->SetPoint(8, 12408.35, 0.3011779);
+   cutd->SetPoint(9, 21374.5, 0.2239877);
+   cutd->SetPoint(10, 22365.46, 0.1059321);
+   cutd->SetPoint(11, 20990.52, 0.05598556);
+   cutd->SetPoint(12, 9892.469, 0.1195539);
+   cutd->SetPoint(13, 4415.379, 0.2058253);
+   cutd->SetPoint(14, 1783.738, 0.3147997);
+   cutd->SetPoint(15, 774.7924, 0.5100454);
+   cutd->SetPoint(16, 232.0857, 0.955024);
+   cutd->SetPoint(17, 114.4489, 1.218379);
+   cutd->SetPoint(18, 88.796, 1.663357);
+   cutd->SetPoint(19, 129.9334, 1.817738);
+   cutd->SetPoint(20, 132.3103, 1.817738);
+   /*cutd->SetPoint(0, 48.7938, 1.961132);
    cutd->SetPoint(1, 923.042, 0.9194652);
    cutd->SetPoint(2, 1360.166, 0.7639925);
    cutd->SetPoint(3, 3737.028, 0.4841418);
@@ -254,7 +293,7 @@ void C16_dd_anaFit()
    cutd->SetPoint(16, 158.0748, 1.028296);
    cutd->SetPoint(17, -33.16696, 1.510261);
    cutd->SetPoint(18, 48.7938, 1.922264);
-   cutd->SetPoint(19, 48.7938, 1.961132);
+   cutd->SetPoint(19, 48.7938, 1.961132);*/
 
    // dedx cuts
    auto cuttdedx = new TCutG("CUTTDEDEX", 19);
@@ -281,6 +320,26 @@ void C16_dd_anaFit()
    cuttdedx->SetPoint(16, 9084.64, 2.971289);
    cuttdedx->SetPoint(17, 9474.773, 2.866065);
    cuttdedx->SetPoint(18, 9474.773, 2.854373);
+
+   // Kinematics cut
+   auto *cutk = new TCutG("cutk", 13);
+   cutk->SetVarX("Ang_Ener");
+   cutk->SetVarY("");
+   cutk->SetTitle("Graph");
+   cutk->SetFillStyle(1000);
+   cutk->SetPoint(0, 48.55834, 3.726572);
+   cutk->SetPoint(1, 42.74863, 3.512897);
+   cutk->SetPoint(2, 39.03687, 2.421627);
+   cutk->SetPoint(3, 27.49815, 1.521139);
+   cutk->SetPoint(4, 16.84702, 1.025107);
+   cutk->SetPoint(5, 15.39459, 0.4222375);
+   cutk->SetPoint(6, 23.38294, 0.231456);
+   cutk->SetPoint(7, 37.66514, 0.3153999);
+   cutk->SetPoint(8, 48.80041, 1.055632);
+   cutk->SetPoint(9, 54.12597, 2.185058);
+   cutk->SetPoint(10, 53.56114, 3.428953);
+   cutk->SetPoint(11, 48.71972, 3.734203);
+   cutk->SetPoint(12, 48.55834, 3.726572);
 
    for (auto iFile : filepairs) {
 
@@ -396,10 +455,13 @@ void C16_dd_anaFit()
                /*if (!cutd->IsInside(eLossADC, brho))
                 continue;*/
 
-               if (!cutt->IsInside(eLossADC, brho))
-                  continue;
+               // if (!cutt->IsInside(eLossADC, brho))
+               // continue;
 
                /*if (cuttdedx->IsInside(dEdxADC, brho))
+                  continue;*/
+
+               /*if(!cutk->IsInside(theta, energy * Am))
                   continue;*/
 
                if (theta > 90.0 || theta < 10.0)

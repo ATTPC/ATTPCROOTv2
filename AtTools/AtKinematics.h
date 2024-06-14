@@ -52,7 +52,7 @@ public:
    std::tuple<Double_t, Double_t>
    GetMomFromBrho(Double_t A, Double_t Z,
                   Double_t brho); ///< Returns momentum (in GeV) from Brho assuming M (amu) and Z;
-   Double_t
+   std::tuple<double, double>
    TwoBodyEx(Double_t m1, Double_t m2, Double_t m3, Double_t m4, Double_t K_proj, Double_t thetalab, Double_t K_eject);
    Double_t omega(Double_t x, Double_t y, Double_t z);
 

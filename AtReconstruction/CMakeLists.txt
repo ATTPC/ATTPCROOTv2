@@ -94,6 +94,9 @@ set(SRCS
   AtPatternRecognition/triplclust/src/option.cxx
   AtPatternRecognition/triplclust/src/util.cxx
   AtPatternRecognition/triplclust/src/graph.cxx
+
+  AtPatternRecognition/triplclust/src/directedgraph.cxx
+  AtPatternRecognition/triplclust/src/postprocess.cxx
   AtPatternRecognition/AtTrackFinderTC.cxx
 
 
@@ -108,6 +111,11 @@ set(SRCS
 
 ### Add additional sources and libraries if we found certain modules ###
 
+if(TARGET EIGEN3::Eigen)
+  set(SRC ${SRC}
+  AtPatternRecognition/triplclust/src/orthogonallsq.cxx
+  )
+endif()
 
 if(GENFIT2_FOUND)
   set(SRCS ${SRCS}

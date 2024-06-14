@@ -1,13 +1,13 @@
-void O16He4_sim_C12alpha(Int_t nEvents = 1000, TString mcEngine = "TGeant4")
+void C12C12_decay(Int_t nEvents = 100, TString mcEngine = "TGeant4")
 {
 
    TString dir = getenv("VMCWORKDIR");
 
    // Output file name
-   TString outFile = "./data/attpcsim_O16_C12alpha.root";
+   TString outFile = "./data/attpcsim_C12C12.root";
 
    // Parameter file name
-   TString parFile = "./data/attpcpar_O16_C12alpha.root";
+   TString parFile = "./data/attpcpar_C12C12.root";
 
    // -----   Timer   --------------------------------------------------------
    TStopwatch timer;
@@ -47,7 +47,7 @@ void O16He4_sim_C12alpha(Int_t nEvents = 1000, TString mcEngine = "TGeant4")
    // -----   Magnetic field   -------------------------------------------
    // Constant Field
    AtConstField *fMagField = new AtConstField();
-   fMagField->SetField(0., 0., 30.);                      // values are in kG
+   fMagField->SetField(0., 0., 0.);                       // values are in kG
    fMagField->SetFieldRegion(-50, 50, -50, 50, -10, 230); // values are in cm
                                                           //  (xmin,xmax,ymin,ymax,zmin,zmax)
    run->SetField(fMagField);
@@ -57,16 +57,16 @@ void O16He4_sim_C12alpha(Int_t nEvents = 1000, TString mcEngine = "TGeant4")
    FairPrimaryGenerator *primGen = new FairPrimaryGenerator();
 
    // Beam Information
-   Int_t z = 8;  // Atomic number
-   Int_t a = 16; // Mass number
+   Int_t z = 6;  // Atomic number
+   Int_t a = 12; // Mass number
    Int_t q = 0;  // Charge State
    Int_t m = 1;  // Multiplicity  NOTE: Due the limitation of the TGenPhaseSpace accepting only pointers/arrays the
                  // maximum multiplicity has been set to 10 particles.
    Double_t px = 0.000 / a; // X-Momentum / per nucleon!!!!!!
    Double_t py = 0.000 / a; // Y-Momentum / per nucleon!!!!!!
-   Double_t pz = 2.189 / a; // Z-Momentum / per nucleon!!!!!!
+   Double_t pz = 1.189 / a; // Z-Momentum / per nucleon!!!!!!
    Double_t BExcEner = 0.0;
-   Double_t Bmass = 15.99491461956;
+   Double_t Bmass = 12.0;
    Double_t NomEnergy = 40.0;
 
    AtTPCIonGenerator *ionGen = new AtTPCIonGenerator("Ion", z, a, q, m, px, py, pz, BExcEner, Bmass, NomEnergy);
@@ -104,38 +104,38 @@ void O16He4_sim_C12alpha(Int_t nEvents = 1000, TString mcEngine = "TGeant4")
    Pxp.push_back(px);
    Pyp.push_back(py);
    Pzp.push_back(pz);
-   Mass.push_back(15.99491461956); // uma
+   Mass.push_back(12.0); // uma
    ExE.push_back(BExcEner);
 
    // ---- Target ----
-   Zp.push_back(2); // p
-   Ap.push_back(4); //
-   Qp.push_back(0); //
+   Zp.push_back(6);  // p
+   Ap.push_back(12); //
+   Qp.push_back(0);  //
    Pxp.push_back(0.0);
    Pyp.push_back(0.0);
    Pzp.push_back(0.0);
-   Mass.push_back(4.00260325415); // uma
-   ExE.push_back(0.0);            // In MeV
+   Mass.push_back(12.0); // uma
+   ExE.push_back(0.0);   // In MeV
 
    //--- Scattered -----
-   Zp.push_back(8);  //
-   Ap.push_back(16); //
+   Zp.push_back(6);  //
+   Ap.push_back(12); //
    Qp.push_back(0);
    Pxp.push_back(0.0);
    Pyp.push_back(0.0);
    Pzp.push_back(0.0);
-   Mass.push_back(15.99491461956); // uma
-   ExE.push_back(8.8719);
+   Mass.push_back(12.0); // uma
+   ExE.push_back(7.5);
 
    // ---- Recoil -----
-   Zp.push_back(2); //
-   Ap.push_back(4); //
-   Qp.push_back(0); //
+   Zp.push_back(6);  //
+   Ap.push_back(12); //
+   Qp.push_back(0);  //
    Pxp.push_back(0.0);
    Pyp.push_back(0.0);
    Pzp.push_back(0.0);
-   Mass.push_back(4.00260325415); // uma
-   ExE.push_back(0.0);            // In MeV
+   Mass.push_back(12.0); // uma
+   ExE.push_back(7.5);   // In MeV
 
    Double_t ThetaMinCMS = 20.0;
    Double_t ThetaMaxCMS = 80.0;
@@ -145,48 +145,41 @@ void O16He4_sim_C12alpha(Int_t nEvents = 1000, TString mcEngine = "TGeant4")
    TwoBody->SetSequentialDecay(kTRUE);
    primGen->AddGenerator(TwoBody);
 
-   // Setting decay
-   // Set the parameters of the decay generator
-
-   std::vector<std::vector<Int_t>> zDecay;
-   std::vector<std::vector<Int_t>> aDecay;
-   std::vector<std::vector<Int_t>> qDecay;
-   std::vector<std::vector<Double_t>> massDecay;
-
    Int_t zB;
    Int_t aB;
    Double_t massDecayB;
    Double_t massTarget;
-   Double_t exEnergy;
-   std::vector<Double_t> SepEne;
 
-   Int_t TotDecayCases = 1; // the number of decay channel (case) to be considered
-
-   zDecay.resize(TotDecayCases);
-   aDecay.resize(TotDecayCases);
-   qDecay.resize(TotDecayCases);
-   massDecay.resize(TotDecayCases);
-
-   zB = 8; // 16O
-   aB = 16;
-   massDecayB = 15.99491461956;
+   zB = 6; // 16O
+   aB = 12;
+   massDecayB = 12.0;
    massTarget = 0.0;
-   exEnergy = 0.0; // NB: Set to zero for sequential decay
 
-   zDecay.at(0).push_back(6);
-   aDecay.at(0).push_back(12);
-   qDecay.at(0).push_back(0);
-   massDecay.at(0).push_back(12.0);
+   DecayIon scatter;
+   scatter.multiplicity = 3;
+   scatter.exEnergy = 7.4;
+   scatter.trackID = 0;
+   DecayIon recoil;
+   recoil.multiplicity = 3;
+   recoil.exEnergy = 7.4;
+   recoil.trackID = 1;
 
-   zDecay.at(0).push_back(2);
-   aDecay.at(0).push_back(4);
-   qDecay.at(0).push_back(0);
-   massDecay.at(0).push_back(4.00260325415);
+   for (auto i = 0; i < scatter.multiplicity; i++) {
+      scatter.z.push_back(2);
+      scatter.a.push_back(4);
+      scatter.q.push_back(0);
+      scatter.mass.push_back(4.00260325415);
+   }
 
+   for (auto i = 0; i < recoil.multiplicity; i++) {
+      recoil.z.push_back(2);
+      recoil.a.push_back(4);
+      recoil.q.push_back(0);
+      recoil.mass.push_back(4.00260325415);
+   }
 
-   AtTPCIonDecay *decay =
-      new AtTPCIonDecay(&zDecay, &aDecay, &qDecay, &massDecay, zB, aB, massDecayB, massTarget, exEnergy, &SepEne);
-   decay->SetSequentialDecay(kTRUE);
+   AtTPCReactionDecay *decay = new AtTPCReactionDecay(scatter, recoil, zB, aB, massDecayB, massTarget);
+
    primGen->AddGenerator(decay);
 
    run->SetGenerator(primGen);
