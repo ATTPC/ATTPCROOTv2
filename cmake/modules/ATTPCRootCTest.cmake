@@ -1,9 +1,9 @@
 # This file is meant to be included once in the main CMakelists.txt file
 # It will download GoogleTest if needed and then add all registered tests
 FetchContent_Declare(
-  googletest
-  URL https://github.com/google/googletest/archive/a7f443b80b105f940225332ed3c31f2790092f47.zip
+  googletest  
   DOWNLOAD_EXTRACT_TIMESTAMP TRUE
+  URL https://github.com/google/googletest/archive/a7f443b80b105f940225332ed3c31f2790092f47.zip
 )
 FetchContent_MakeAvailable(googletest)
 
