@@ -77,13 +77,7 @@ Bool_t AtTPCFissionGeneratorV3::GenerateReaction(FairPrimaryGenerator *primeGen)
 {
    fPrimeGen = primeGen;
 
-   // If this is a beam-like event don't do anything
-   if (AtVertexPropagator::Instance()->IsBeamEvent()) {
-      LOG(debug) << "AtTPCFissionGeneratorV3: Skipping beam-like event";
-   } else {
-      LOG(debug) << "AtTPCFissionGeneratorV3: Runing reaction-like event";
-      generateEvent();
-   }
+   generateEvent();
 
    return true;
 }
