@@ -106,7 +106,7 @@ private:
    // Double_t fBeamMass;
    // Double_t fTargetMass;
 
-   ClassDefOverride(AtTPC_d2He, 2)
+   ClassDefOverride(AtTPC_d2He, 3)
 };
 
 #endif

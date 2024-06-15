@@ -73,7 +73,7 @@ private:
    Double_t fExEnergy{};
    std::vector<Double_t> fSepEne;
 
-   ClassDefOverride(AtTPCIonDecay, 3)
+   ClassDefOverride(AtTPCIonDecay, 5)
 };
 
 #endif

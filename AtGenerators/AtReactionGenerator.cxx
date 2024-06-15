@@ -8,7 +8,7 @@ Bool_t AtReactionGenerator::ReadEvent(FairPrimaryGenerator *primGen)
    if (kIsFinalGen)
       AtVertexPropagator::Instance()->EndEvent(); // End the event if this is the final generator
 
-   if (isBeamEvent)
-      return true;
-   return GenerateReaction(primGen);
+   if (!isBeamEvent || kAlwaysRun)
+      return GenerateReaction(primGen);
+   return true;
 }

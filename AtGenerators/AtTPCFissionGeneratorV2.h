@@ -48,7 +48,7 @@ private:
    Int_t Aout[100]{}, Zout[100]{}, Ntrack{};
    Double_t fOutPx[100]{}, fOutPy[100]{}, fOutPz[100]{};
 
-   ClassDefOverride(AtTPCFissionGeneratorV2, 1)
+   ClassDefOverride(AtTPCFissionGeneratorV2, 2)
 };
 
 #endif

@@ -1,6 +1,9 @@
+#include <FairLogger.h>
+
 void O16He4_sim(Int_t nEvents = 1000, TString mcEngine = "TGeant4")
 {
-
+   // fair::Logger::SetConsoleSeverity("debug");
+   // fair::Logger::SetVerbosity("veryhigh");
    TString dir = getenv("VMCWORKDIR");
 
    // Output file name

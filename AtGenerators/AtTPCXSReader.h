@@ -70,7 +70,7 @@ private:
 
    TH2F *fh_pdf{};
 
-   ClassDefOverride(AtTPCXSReader, 1)
+   ClassDefOverride(AtTPCXSReader, 2)
 };
 
 #endif

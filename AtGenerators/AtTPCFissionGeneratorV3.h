@@ -71,7 +71,7 @@ public:
 
    // Internal variables for tracking the physics
 
-   ClassDefOverride(AtTPCFissionGeneratorV3, 6)
+   ClassDefOverride(AtTPCFissionGeneratorV3, 7)
 };
 
 #endif // #ifndef AtTPCFISSIONGENERAtORV3_H

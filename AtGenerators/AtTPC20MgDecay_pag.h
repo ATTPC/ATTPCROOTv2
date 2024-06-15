@@ -22,7 +22,7 @@ public:
    virtual ~AtTPC20MgDecay_pag() = default;
 
    /** Initializer **/
-   virtual Bool_t Init();
+   virtual Bool_t Init() override;
 
    void SetXYZ(Double32_t x = 0, Double32_t y = 0, Double32_t z = 0)
    {

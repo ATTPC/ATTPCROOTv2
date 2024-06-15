@@ -87,7 +87,7 @@ private:
    Double_t random_r{};
    Double_t random_phi{};
 
-   ClassDefOverride(AtTPC_Background, 2)
+   ClassDefOverride(AtTPC_Background, 3)
 };
 
 #endif

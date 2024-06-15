@@ -11,8 +11,8 @@
  */
 class AtReactionGenerator : public FairGenerator {
 protected:
-   bool kIsFinalGen = true; ///< Flag to indicate if this generator is the final one in the chain
-
+   bool kIsFinalGen{true}; ///< Flag to indicate if this generator is the final one in the chain
+   bool kAlwaysRun{false}; ///< Flag to indicate if this generator should always run
 public:
    virtual Bool_t ReadEvent(FairPrimaryGenerator *primGen) final;
    void SetSequentialDecay(Bool_t var) { kIsFinalGen = !var; }

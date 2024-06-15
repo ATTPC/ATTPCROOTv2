@@ -76,12 +76,11 @@ private:
    // Double_t fBeamMass;
    // Double_t fTargetMass;
    Bool_t fNoSolution{};
-   std::vector<Double_t> fWm; // Total mass
+   std::vector<Double_t> fWm;      // Total mass
+   Bool_t kIsFixedTarget{false};   //
+   Bool_t fIsFixedMomentum{false}; //
 
-   Bool_t fIsFixedTargetPos{}; //
-   Bool_t fIsFixedMomentum{};  //
-
-   ClassDefOverride(AtTPC2Body, 3)
+   ClassDefOverride(AtTPC2Body, 4)
 };
 
 #endif

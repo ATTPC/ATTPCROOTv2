@@ -51,7 +51,7 @@ private:
    Int_t RegisterIons();
    std::map<TString, FairIon*> fIonMap;       //!*/
 
-   ClassDefOverride(AtTPCFissionGenerator, 5)
+   ClassDefOverride(AtTPCFissionGenerator, 6)
 };
 
 #endif

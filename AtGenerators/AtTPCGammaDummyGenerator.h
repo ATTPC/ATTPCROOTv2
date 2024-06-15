@@ -117,12 +117,12 @@ public:
    void SetDecayChainPoint(Double32_t gammaEnergy = 0, Double32_t branchingRatio = 0);
 
    /** Initializer **/
-   virtual Bool_t Init();
+   virtual Bool_t Init() override;
 
    /** Creates an event with given type and multiplicity.
     **@param primGen  pointer to the FairPrimaryGenerator
     **/
-   virtual Bool_t ReadEvent(FairPrimaryGenerator *primGen);
+   virtual Bool_t ReadEvent(FairPrimaryGenerator *primGen) override;
 
 private:
    Int_t fPDGType; // Particle type (PDG encoding)
@@ -159,7 +159,7 @@ private:
    Bool_t fLorentzBoostIsSet;      // True if Lorentz Boost is set
    Bool_t fNuclearDecayChainIsSet; // True if a nuclear decay chain is set
 
-   ClassDef(AtTPCGammaDummyGenerator, 1)
+   ClassDefOverride(AtTPCGammaDummyGenerator, 1)
 };
 
 #endif
