@@ -202,7 +202,7 @@ Double_t AtTPC_d2He::omega(Double_t x, Double_t y, Double_t z)
 }
 
 // -----   Public method ReadEvent   --------------------------------------
-Bool_t AtTPC_d2He::ReadEvent(FairPrimaryGenerator *primGen)
+Bool_t AtTPC_d2He::GenerateReaction(FairPrimaryGenerator *primGen)
 {
 
    std::vector<Double_t> Ang; // Lab Angle of the products
@@ -618,7 +618,7 @@ Bool_t AtTPC_d2He::ReadEvent(FairPrimaryGenerator *primGen)
       }
    }
 
-   AtVertexPropagator::Instance()->EndReactionEvt();
+   AtVertexPropagator::Instance()->EndEvent();
    AtVertexPropagator::Instance()->Getd2HeEvt();
 
    return kTRUE;

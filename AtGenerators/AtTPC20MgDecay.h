@@ -2,16 +2,17 @@
 #ifndef AtTPC20MGDECAY_H
 #define AtTPC20MGDECAY_H
 
+#include "AtReactionGenerator.h"
+
 #include <Rtypes.h> // for Double32_t, Bool_t, THashConsistencyHolder
 
 #include "FairGenerator.h"
-
 class TBuffer;
 class TClass;
 class TMemberInspector;
 class FairPrimaryGenerator;
 
-class AtTPC20MgDecay : public FairGenerator {
+class AtTPC20MgDecay : public AtReactionGenerator {
 private:
    Bool_t fOnlyAPBranch{false}; // True if only the beta-alpha-proton branch is visible
    Bool_t fBoxVtxIsSet{false};  // True if box vertex is set
@@ -52,13 +53,13 @@ public:
       fBoxVtxIsSet = kTRUE;
    }
 
-   virtual Bool_t ReadEvent(FairPrimaryGenerator *primGen);
+   virtual bool GenerateReaction(FairPrimaryGenerator *primGen) override;
 
    void ShowOnlyAlphaProtonBranch() { fOnlyAPBranch = kTRUE; };
    void SetNuclearDecayChain() { fNuclearDecayChainIsSet = kTRUE; };
    void SetDecayChainPoint(Double32_t ParticleEnergy = 0, Double32_t ParticleBranchingRatio = 0);
 
-   ClassDef(AtTPC20MgDecay, 1)
+   ClassDefOverride(AtTPC20MgDecay, 1)
 };
 
 #endif

@@ -66,7 +66,7 @@ AtTPCFissionGenerator::AtTPCFissionGenerator(const char *name, TString simfile)
 
 AtTPCFissionGenerator::~AtTPCFissionGenerator() = default;
 
-Bool_t AtTPCFissionGenerator::ReadEvent(FairPrimaryGenerator *primGen)
+Bool_t AtTPCFissionGenerator::GenerateReaction(FairPrimaryGenerator *primGen)
 {
 
    fVx = 0., fVy = 0., fVz = 0.;

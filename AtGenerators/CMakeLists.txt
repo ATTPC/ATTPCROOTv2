@@ -8,6 +8,7 @@ set(LINKDEF  GenLinkDef.h)
 set(SRCS
 #Pythia6Generator.cxx
 #Pythia8Generator.cxx
+AtReactionGenerator.cxx
 AtTPCIonDecay.cxx
 AtTPCIonGenerator.cxx
 AtTPCIonGeneratorS800.cxx

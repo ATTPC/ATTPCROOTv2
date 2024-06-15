@@ -1,6 +1,8 @@
 #ifndef AtTPCFISSIONGENERAtORV3_H
 #define AtTPCFISSIONGENERAtORV3_H
 
+#include "AtReactionGenerator.h"
+
 #include <FairGenerator.h>
 
 #include <Math/GenVector/Boost.h>
@@ -10,7 +12,6 @@
 #include <TString.h>
 
 #include <vector>
-
 class TFile;
 class TTree;
 class FairPrimaryGenerator;
@@ -21,7 +22,7 @@ class TMemberInspector;
 using VecPE = ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<>>;
 using Cartesian3D = ROOT::Math::Cartesian3D<>;
 
-class AtTPCFissionGeneratorV3 : public FairGenerator {
+class AtTPCFissionGeneratorV3 : public AtReactionGenerator {
 
 private:
    TFile *fEventFile{}; //!
@@ -63,7 +64,7 @@ public:
    AtTPCFissionGeneratorV3(AtTPCFissionGeneratorV3 &copy);
 
    // The main physics is here
-   Bool_t ReadEvent(FairPrimaryGenerator *primGen) override;
+   Bool_t GenerateReaction(FairPrimaryGenerator *primGen) override;
 
    /** Destructor **/
    virtual ~AtTPCFissionGeneratorV3();

@@ -150,7 +150,7 @@ AtTPCXSReader::AtTPCXSReader(const char *name, std::vector<Int_t> *z, std::vecto
    }
 }
 
-Bool_t AtTPCXSReader::ReadEvent(FairPrimaryGenerator *primGen)
+Bool_t AtTPCXSReader::GenerateReaction(FairPrimaryGenerator *primGen)
 {
    const Double_t rad2deg = 0.0174532925;
 
@@ -306,7 +306,7 @@ Bool_t AtTPCXSReader::ReadEvent(FairPrimaryGenerator *primGen)
       }
    } // if residual energy > 0
 
-   AtVertexPropagator::Instance()->EndReactionEvt();
+   AtVertexPropagator::Instance()->EndEvent();
 
    return kTRUE;
 }

@@ -6,6 +6,8 @@
 #ifndef AtTPCFISSIONGENERAtOR_H
 #define AtTPCFISSIONGENERAtOR_H
 
+#include "AtReactionGenerator.h"
+
 #include <FairGenerator.h>
 
 #include <Rtypes.h>
@@ -18,7 +20,7 @@ class TClass;
 class TMemberInspector;
 class TTree;
 
-class AtTPCFissionGenerator : public FairGenerator {
+class AtTPCFissionGenerator : public AtReactionGenerator {
 
 public:
    AtTPCFissionGenerator();
@@ -28,7 +30,7 @@ public:
 
    AtTPCFissionGenerator &operator=(const AtTPCFissionGenerator &) { return *this; }
 
-   virtual Bool_t ReadEvent(FairPrimaryGenerator *primGen);
+   virtual bool GenerateReaction(FairPrimaryGenerator *primGen) override;
 
    virtual ~AtTPCFissionGenerator();
 
@@ -49,7 +51,7 @@ private:
    Int_t RegisterIons();
    std::map<TString, FairIon*> fIonMap;       //!*/
 
-   ClassDef(AtTPCFissionGenerator, 5)
+   ClassDefOverride(AtTPCFissionGenerator, 5)
 };
 
 #endif

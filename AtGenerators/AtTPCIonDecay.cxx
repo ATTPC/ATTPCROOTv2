@@ -118,7 +118,7 @@ AtTPCIonDecay::AtTPCIonDecay(std::vector<std::vector<Int_t>> *z, std::vector<std
 }
 
 // -----   Public method ReadEvent   --------------------------------------
-Bool_t AtTPCIonDecay::ReadEvent(FairPrimaryGenerator *primGen)
+Bool_t AtTPCIonDecay::GenerateReaction(FairPrimaryGenerator *primGen)
 {
 
    Double_t ExEject = AtVertexPropagator::Instance()->GetScatterEx() / 1000.0; // in GeV
@@ -333,7 +333,7 @@ Bool_t AtTPCIonDecay::ReadEvent(FairPrimaryGenerator *primGen)
    } // if IsGoodCase
 
    if (!fIsSequentialDecay)
-      AtVertexPropagator::Instance()->EndReactionEvt();
+      AtVertexPropagator::Instance()->EndEvent();
 
    return kTRUE;
 }

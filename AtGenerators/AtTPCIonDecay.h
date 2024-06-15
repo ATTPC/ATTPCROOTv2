@@ -1,6 +1,8 @@
 #ifndef AtTPCIonDecay_H
 #define AtTPCIonDecay_H
 
+#include "AtReactionGenerator.h"
+
 #include <FairGenerator.h>
 #include <FairIon.h>
 #include <FairParticle.h>
@@ -16,7 +18,7 @@ class TBuffer;
 class TClass;
 class TMemberInspector;
 
-class AtTPCIonDecay : public FairGenerator {
+class AtTPCIonDecay : public AtReactionGenerator {
 
 public:
    /** Default constructor **/
@@ -42,7 +44,7 @@ public:
 
    AtTPCIonDecay &operator=(const AtTPCIonDecay &) { return *this; }
 
-   virtual Bool_t ReadEvent(FairPrimaryGenerator *primGen);
+   virtual bool GenerateReaction(FairPrimaryGenerator *primGen) override;
    void SetSequentialDecay(Bool_t var) { fIsSequentialDecay = var; }
 
    /** Destructor **/
@@ -73,7 +75,7 @@ private:
    std::vector<Double_t> fSepEne;
    Bool_t fIsSequentialDecay{}; //<! True if the decay generator is to be used after a reaction generator.
 
-   ClassDef(AtTPCIonDecay, 3)
+   ClassDefOverride(AtTPCIonDecay, 3)
 };
 
 #endif

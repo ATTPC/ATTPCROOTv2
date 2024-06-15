@@ -6,13 +6,14 @@
 #ifndef AtTPCXSREADER_H
 #define AtTPCXSREADER_H
 
+#include "AtReactionGenerator.h"
+
 #include <FairGenerator.h>
 
 #include <Rtypes.h>
 #include <TString.h>
 
 #include <vector>
-
 class FairPrimaryGenerator;
 class FairIon;
 class FairParticle;
@@ -21,7 +22,7 @@ class TClass;
 class TH2F;
 class TMemberInspector;
 
-class AtTPCXSReader : public FairGenerator {
+class AtTPCXSReader : public AtReactionGenerator {
 
 public:
    /** Default constructor **/
@@ -43,7 +44,7 @@ public:
     ** Generates particles according to the XS file and send them to the
     ** FairPrimaryGenerator.
     **/
-   virtual Bool_t ReadEvent(FairPrimaryGenerator *primGen);
+   virtual bool GenerateReaction(FairPrimaryGenerator *primGen) override;
 
    /** Modifiers **/
    void SetXSFileName(TString name = "xs_22Mgp_fusionEvaporation.txt") { fXSFileName = name; }
@@ -69,7 +70,7 @@ private:
 
    TH2F *fh_pdf{};
 
-   ClassDef(AtTPCXSReader, 1)
+   ClassDefOverride(AtTPCXSReader, 1)
 };
 
 #endif

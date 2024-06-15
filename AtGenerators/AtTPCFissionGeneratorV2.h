@@ -2,20 +2,21 @@
 #ifndef AtTPCFISSIONGENERAtORV2_H
 #define AtTPCFISSIONGENERAtORV2_H
 
+#include "AtReactionGenerator.h"
+
 #include <FairGenerator.h>
 
 #include <Rtypes.h>
 #include <TString.h>
 
 #include <vector>
-
 class FairPrimaryGenerator;
 class TBuffer;
 class TClass;
 class TMemberInspector;
 class TTree;
 
-class AtTPCFissionGeneratorV2 : public FairGenerator {
+class AtTPCFissionGeneratorV2 : public AtReactionGenerator {
 
 public:
    /** Default constructor **/
@@ -27,7 +28,7 @@ public:
 
    AtTPCFissionGeneratorV2 &operator=(const AtTPCFissionGeneratorV2 &) { return *this; }
 
-   virtual Bool_t ReadEvent(FairPrimaryGenerator *primGen);
+   virtual bool GenerateReaction(FairPrimaryGenerator *primGen) override;
 
    /** Destructor **/
    virtual ~AtTPCFissionGeneratorV2() = default;
@@ -47,7 +48,7 @@ private:
    Int_t Aout[100]{}, Zout[100]{}, Ntrack{};
    Double_t fOutPx[100]{}, fOutPy[100]{}, fOutPz[100]{};
 
-   ClassDef(AtTPCFissionGeneratorV2, 1)
+   ClassDefOverride(AtTPCFissionGeneratorV2, 1)
 };
 
 #endif

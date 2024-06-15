@@ -7,6 +7,8 @@
 #ifndef AtTPC_d2He_H
 #define AtTPC_d2He_H
 
+#include "AtReactionGenerator.h"
+
 #include <FairGenerator.h>
 
 #include <Rtypes.h>
@@ -21,7 +23,7 @@ class TBuffer;
 class TClass;
 class TMemberInspector;
 
-class AtTPC_d2He : public FairGenerator {
+class AtTPC_d2He : public AtReactionGenerator {
 
 public:
    /** Default constructor **/
@@ -36,7 +38,7 @@ public:
 
    AtTPC_d2He &operator=(const AtTPC_d2He &) { return *this; }
 
-   virtual Bool_t ReadEvent(FairPrimaryGenerator *primGen);
+   virtual bool GenerateReaction(FairPrimaryGenerator *primGen) override;
    virtual std::vector<Double_t>
    TRANSF(std::vector<Double_t> *from, std::vector<Double_t> *to, std::vector<Double_t> *vin);
    virtual Double_t omega(Double_t x, Double_t y, Double_t z);
@@ -104,7 +106,7 @@ private:
    // Double_t fBeamMass;
    // Double_t fTargetMass;
 
-   ClassDef(AtTPC_d2He, 2)
+   ClassDefOverride(AtTPC_d2He, 2)
 };
 
 #endif

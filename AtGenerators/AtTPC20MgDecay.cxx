@@ -19,7 +19,7 @@ Bool_t AtTPC20MgDecay::Init()
 }
 
 // -----   Public method ReadEvent   --------------------------------------
-Bool_t AtTPC20MgDecay::ReadEvent(FairPrimaryGenerator *primGen)
+Bool_t AtTPC20MgDecay::GenerateReaction(FairPrimaryGenerator *primGen)
 {
 
    if (fBoxVtxIsSet) {

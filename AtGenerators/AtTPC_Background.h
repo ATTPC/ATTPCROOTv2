@@ -7,6 +7,8 @@
 #ifndef AtTPC_Background_H
 #define AtTPC_Background_H
 
+#include "AtReactionGenerator.h"
+
 #include <FairGenerator.h>
 #include <FairIon.h>      // for FairIon
 #include <FairParticle.h> // for FairParticle
@@ -22,7 +24,7 @@ class TBuffer;
 class TClass;
 class TMemberInspector;
 
-class AtTPC_Background : public FairGenerator {
+class AtTPC_Background : public AtReactionGenerator {
 
 public:
    /** Default constructor **/
@@ -36,7 +38,7 @@ public:
 
    AtTPC_Background &operator=(const AtTPC_Background &) { return *this; }
 
-   virtual Bool_t ReadEvent(FairPrimaryGenerator *primGen);
+   virtual bool GenerateReaction(FairPrimaryGenerator *primGen) override;
 
    virtual Double_t omega(Double_t x, Double_t y, Double_t z);
 
@@ -85,7 +87,7 @@ private:
    Double_t random_r{};
    Double_t random_phi{};
 
-   ClassDef(AtTPC_Background, 2)
+   ClassDefOverride(AtTPC_Background, 2)
 };
 
 #endif

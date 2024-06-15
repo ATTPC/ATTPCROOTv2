@@ -264,7 +264,7 @@ std::vector<Double_t> AtTPC_Background::BreakUp(std::vector<Double_t> *Pdeuteron
 }
 
 // -----   Public method ReadEvent   --------------------------------------
-Bool_t AtTPC_Background::ReadEvent(FairPrimaryGenerator *primGen)
+bool AtTPC_Background::GenerateReaction(FairPrimaryGenerator *primGen)
 {
 
    fIsDecay = kFALSE;
@@ -453,9 +453,7 @@ fPz.at(3) = (Prec*cos(angrec) )/1000.0; // To GeV for FairRoot
       }
    }
 
-   AtVertexPropagator::Instance()->EndReactionEvt();
-
-   return kTRUE;
+     return kTRUE;
 }
 
 ClassImp(AtTPC_Background)

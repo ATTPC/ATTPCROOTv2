@@ -145,7 +145,7 @@ void AtTPC2Body::SetFixedBeamMomentum(double px, double py, double pz)
 }
 
 // -----   Public method ReadEvent   --------------------------------------
-Bool_t AtTPC2Body::ReadEvent(FairPrimaryGenerator *primGen)
+Bool_t AtTPC2Body::GenerateReaction(FairPrimaryGenerator *primGen)
 {
 
    std::vector<Double_t> Ang; // Lab Angle of the products
@@ -526,7 +526,7 @@ Bool_t AtTPC2Body::ReadEvent(FairPrimaryGenerator *primGen)
    } // if residual energy > 0
 
    if (kIsDecay == false) // Only increases the reaction counter if decay is not expected
-      AtVertexPropagator::Instance()->EndReactionEvt();
+      AtVertexPropagator::Instance()->EndEvent();
 
    return kTRUE;
 }

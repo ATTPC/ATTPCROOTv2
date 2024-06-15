@@ -1,8 +1,9 @@
 #ifndef AtVertexPropagator_H
 #define AtVertexPropagator_H
 
+#include <FairLogger.h>
+
 #include <Rtypes.h>
-#include <TObject.h>
 #include <TVector3.h>
 
 #include <map>
@@ -12,7 +13,7 @@ class TBuffer;
 class TClass;
 class TMemberInspector;
 
-class AtVertexPropagator : public TObject {
+class AtVertexPropagator {
 
 private:
    static std::unique_ptr<AtVertexPropagator> fInstance;
@@ -63,6 +64,7 @@ public:
    virtual ~AtVertexPropagator() = default;
 
    static AtVertexPropagator *Instance();
+   void ResetForTesting() { fInstance = nullptr; }
 
    void SetVertex(Double_t vx, Double_t vy, Double_t vz, Double_t invx, Double_t invy, Double_t invz, Double_t px,
                   Double_t py, Double_t pz, Double_t E);
@@ -80,13 +82,10 @@ public:
    void SetScatterEx(Double_t val);
    void Setd2HeVtx(TVector3 val);
    void Setd2HeVtx(Double_t x0, Double_t y0, Double_t theta, Double_t phi);
-
+   void SetIsBeamEvent(bool val) { kIsBeamEvent = val; };
    bool IsBeamEvent() { return kIsBeamEvent; };
    bool IsReactionEvent() { return !kIsBeamEvent; };
 
-   // Int_t GetGlobalEvtCnt();
-   // Int_t GetBeamEvtCnt();
-   // Int_t GetDecayEvtCnt();
    Double_t GetBeamMass();
    Double_t GetVx();
    Double_t GetVy();
@@ -110,16 +109,12 @@ public:
    Double_t GetScatterEx();
    TVector3 Getd2HeVtx();
 
-   // void IncGlobalEvtCnt();
-   /// Called after the last generator finished adding
-   /// particles to the stack in the beam-like event.
-   void EndBeamEvt() { kIsBeamEvent = false; }
-
-   /// Called after the last generator finished adding
-   /// particles to the stack in the reaction-like event.
-   void EndReactionEvt() { kIsBeamEvent = true; }
-   // void IncBeamEvtCnt() { kIsBeamEvent = !kIsBeamEvent; };
-   // void IncDecayEvtCnt() { kIsBeamEvent = !kIsBeamEvent; };
+   /**
+    * Called after the last generator finished adding particles to the stack
+    * must be called *once* per event. It is up to the user to make sure their
+    * chain of generators is set up correctly.
+    * */
+   void EndEvent() { kIsBeamEvent = !kIsBeamEvent; }
 
    void SetValidKine(Bool_t val);
    Bool_t GetValidKine();

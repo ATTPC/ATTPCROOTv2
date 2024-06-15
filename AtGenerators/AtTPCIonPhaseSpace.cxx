@@ -175,7 +175,7 @@ Bool_t AtTPCIonPhaseSpace::ReadEvent(FairPrimaryGenerator *primGen)
       }
    }
 
-   AtVertexPropagator::Instance()->EndReactionEvt();
+   AtVertexPropagator::Instance()->EndEvent();
 
    return kTRUE;
 }

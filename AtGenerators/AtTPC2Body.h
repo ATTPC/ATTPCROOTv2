@@ -8,13 +8,14 @@
 #ifndef AtTPC2Body_H
 #define AtTPC2Body_H
 
+#include "AtReactionGenerator.h"
+
 #include <FairGenerator.h>
 
 #include <Rtypes.h>
 #include <TString.h>
 
 #include <vector>
-
 class FairPrimaryGenerator;
 class FairIon;
 class FairParticle;
@@ -22,7 +23,7 @@ class TBuffer;
 class TClass;
 class TMemberInspector;
 
-class AtTPC2Body : public FairGenerator {
+class AtTPC2Body : public AtReactionGenerator {
 
 public:
    /** Default constructor **/
@@ -43,7 +44,7 @@ public:
 
    inline Bool_t GetIsDecay() { return kIsDecay; }
 
-   virtual Bool_t ReadEvent(FairPrimaryGenerator *primGen);
+   virtual bool GenerateReaction(FairPrimaryGenerator *primGen) override;
 
    /** Destructor **/
    virtual ~AtTPC2Body() = default;
@@ -82,7 +83,7 @@ private:
    Bool_t fIsFixedTargetPos{}; //
    Bool_t fIsFixedMomentum{};  //
 
-   ClassDef(AtTPC2Body, 3)
+   ClassDefOverride(AtTPC2Body, 3)
 };
 
 #endif

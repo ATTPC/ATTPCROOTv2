@@ -73,7 +73,7 @@ AtTPCFissionGeneratorV3::AtTPCFissionGeneratorV3(AtTPCFissionGeneratorV3 &rhs) {
 
 AtTPCFissionGeneratorV3::~AtTPCFissionGeneratorV3() = default;
 
-Bool_t AtTPCFissionGeneratorV3::ReadEvent(FairPrimaryGenerator *primeGen)
+Bool_t AtTPCFissionGeneratorV3::GenerateReaction(FairPrimaryGenerator *primeGen)
 {
    fPrimeGen = primeGen;
 
@@ -85,7 +85,7 @@ Bool_t AtTPCFissionGeneratorV3::ReadEvent(FairPrimaryGenerator *primeGen)
       generateEvent();
    }
 
-   AtVertexPropagator::Instance()->EndReactionEvt();
+   AtVertexPropagator::Instance()->EndEvent();
    return true;
 }
 
