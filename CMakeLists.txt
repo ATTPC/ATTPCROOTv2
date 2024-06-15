@@ -13,15 +13,18 @@ include(FairSoftCheckCompiler)
 attpcroot_sanity_checks()
 check_compiler()
 
+include(FetchContent)
 include(ATTPCRootUtils)
 include(ATTPCRootFindPackage2)
 include(ROOTTargetMacros)
 include(WriteConfigFile)
 include(GNUInstallDirs)
 include(PrintSummary)
-include(FetchContent)
+
 
 set_attpcroot_defaults()
+
+include(ATTPCRootCTest) # Must be included after setting defaults
 
 find_package2(PUBLIC FairRoot REQUIRED)
 #set(ROOT_NO_FIND_PACKAGE_CONFIG_FILE TRUE)
@@ -166,11 +169,6 @@ add_subdirectory (AtS800)
 add_subdirectory (AtAnalysis)
 add_subdirectory (AtTools)
 add_subdirectory (AtEventDisplay)
-
-
-if(BUILD_TESTS)
-  include(ATTPCRootCTest)
-endif(BUILD_TESTS)
 
 # Generate config file for build
 fairroot_generate_config_sh(${CMAKE_BINARY_DIR}/config.sh
