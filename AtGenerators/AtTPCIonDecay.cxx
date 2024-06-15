@@ -332,9 +332,6 @@ Bool_t AtTPCIonDecay::GenerateReaction(FairPrimaryGenerator *primGen)
       } // for fMult.at(Case)
    } // if IsGoodCase
 
-   if (kIsFinalGen)
-      AtVertexPropagator::Instance()->EndEvent();
-
    return kTRUE;
 }
 

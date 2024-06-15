@@ -525,10 +525,7 @@ Bool_t AtTPC2Body::GenerateReaction(FairPrimaryGenerator *primGen)
 
    } // if residual energy > 0
 
-   if (kIsFinalGen) // Only increases the reaction counter if decay is not expected
-      AtVertexPropagator::Instance()->EndEvent();
-
-   return kTRUE;
+      return kTRUE;
 }
 
 ClassImp(AtTPC2Body)

@@ -618,8 +618,7 @@ Bool_t AtTPC_d2He::GenerateReaction(FairPrimaryGenerator *primGen)
       }
    }
 
-   AtVertexPropagator::Instance()->EndEvent();
-   AtVertexPropagator::Instance()->Getd2HeEvt();
+     AtVertexPropagator::Instance()->Getd2HeEvt();
 
    return kTRUE;
 }

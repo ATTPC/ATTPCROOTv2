@@ -85,7 +85,6 @@ Bool_t AtTPCFissionGeneratorV3::GenerateReaction(FairPrimaryGenerator *primeGen)
       generateEvent();
    }
 
-   AtVertexPropagator::Instance()->EndEvent();
    return true;
 }
 

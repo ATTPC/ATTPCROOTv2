@@ -185,7 +185,6 @@ Bool_t AtTPCFissionGeneratorV2::GenerateReaction(FairPrimaryGenerator *primGen)
       }
    }
 
-   AtVertexPropagator::Instance()->EndEvent();
    std::cout << cRED << " Fission event : " << event << cNORMAL << std::endl;
    event++;
 

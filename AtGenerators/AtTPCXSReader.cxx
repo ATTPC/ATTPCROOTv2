@@ -306,8 +306,6 @@ Bool_t AtTPCXSReader::GenerateReaction(FairPrimaryGenerator *primGen)
       }
    } // if residual energy > 0
 
-   AtVertexPropagator::Instance()->EndEvent();
-
    return kTRUE;
 }
 
