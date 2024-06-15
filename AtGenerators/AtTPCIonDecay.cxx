@@ -72,7 +72,7 @@ AtTPCIonDecay::AtTPCIonDecay(std::vector<std::vector<Int_t>> *z, std::vector<std
    fTargetMass = TMass * amu / 1000.0;
    fSepEne = SepEne[0];
    fMasses = mass[0];
-   fIsSequentialDecay = kFALSE;
+
    fExEnergy = ExEnergy;
 
    FairRunSim *run = FairRunSim::Instance();
@@ -129,19 +129,19 @@ Bool_t AtTPCIonDecay::GenerateReaction(FairPrimaryGenerator *primGen)
    LOG(info) << cBLUE << " AtTPCIonDecay - Decay energy -  Excitation energy from reaction :  " << ExEject
              << " and from task : " << fExEnergy
              << ". Beam energy : " << AtVertexPropagator::Instance()->GetEnergy() / 1000.0 << " GeV . Is Sequential? "
-             << fIsSequentialDecay << cNORMAL << "\n";
+             << !kIsFinalGen << cNORMAL << "\n";
    LOG(info) << cORANGEWARNING
              << " AtTPCIonDecay - Warning: Temporary warning message to control the flow of generators.Please, check "
                 "that if the decay comes from beam fusion, the energy from reaction is 0"
              << cNORMAL << "\n";
 
-   if (ExEject > 0.0 && !fIsSequentialDecay) {
+   if (ExEject > 0.0 && kIsFinalGen) {
       LOG(info) << cBLINKINGRED
                 << " AtTPCIonDecay - Warning, Inconsistent variables: Recoil excitation energy from Vertex propagator "
                    "greater than 0 but sequential decay not enabled! Continue at your own risk!"
                 << cNORMAL << "\n";
 
-   } else if (fIsSequentialDecay && fExEnergy > 0.0) {
+   } else if (!kIsFinalGen && fExEnergy > 0.0) {
 
       LOG(info) << cBLINKINGRED
                 << " AtTPCIonDecay - Warning, Inconsistent variables: Sequential decay should take the Ex energy from "
@@ -199,7 +199,7 @@ Bool_t AtTPCIonDecay::GenerateReaction(FairPrimaryGenerator *primGen)
 
       fIsDecay = kFALSE;
 
-      if (fIsSequentialDecay) // NB: Decay modelled as two-step (coming from reaction generator)
+      if (!kIsFinalGen) // NB: Decay modelled as two-step (coming from reaction generator)
       {
          fBeamEnergy = AtVertexPropagator::Instance()->GetTrackEnergy(0) / 1000.0;
          TVector3 ScatP = AtVertexPropagator::Instance()->GetScatterP();
@@ -229,7 +229,7 @@ Bool_t AtTPCIonDecay::GenerateReaction(FairPrimaryGenerator *primGen)
       fEnergyImpulsionLab_beam = TLorentzVector(fImpulsionLab_beam, fBeamMass + fBeamEnergy + ExEject);
       fEnergyImpulsionLab_target = TLorentzVector(TVector3(0, 0, 0), fTargetMass);
 
-      if (fTargetMass > 0 && fIsSequentialDecay) {
+      if (fTargetMass > 0 && !kIsFinalGen) {
          LOG(info)
             << cBLINKINGRED
             << " AtTPCIonDecay - Warning, Inconsistent variables: Target Impulsion included in sequential decay. "
@@ -332,7 +332,7 @@ Bool_t AtTPCIonDecay::GenerateReaction(FairPrimaryGenerator *primGen)
       } // for fMult.at(Case)
    } // if IsGoodCase
 
-   if (!fIsSequentialDecay)
+   if (kIsFinalGen)
       AtVertexPropagator::Instance()->EndEvent();
 
    return kTRUE;

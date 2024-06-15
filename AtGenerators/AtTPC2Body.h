@@ -40,9 +40,8 @@ public:
 
    void SetFixedTargetPosition(double vx, double vy, double vz);
    void SetFixedBeamMomentum(double px, double py, double pz);
-   inline void SetSequentialDecay(Bool_t val) { kIsDecay = val; }
 
-   inline Bool_t GetIsDecay() { return kIsDecay; }
+   inline Bool_t GetIsDecay() { return !kIsFinalGen; }
 
    virtual bool GenerateReaction(FairPrimaryGenerator *primGen) override;
 
@@ -74,7 +73,6 @@ private:
    Double_t fPzBeam_buff{};
    Double_t fThetaCmsMax{};
    Double_t fThetaCmsMin{};
-   Bool_t kIsDecay{false};
    // Double_t fBeamMass;
    // Double_t fTargetMass;
    Bool_t fNoSolution{};

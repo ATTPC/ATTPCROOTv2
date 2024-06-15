@@ -45,7 +45,6 @@ public:
    AtTPCIonDecay &operator=(const AtTPCIonDecay &) { return *this; }
 
    virtual bool GenerateReaction(FairPrimaryGenerator *primGen) override;
-   void SetSequentialDecay(Bool_t var) { fIsSequentialDecay = var; }
 
    /** Destructor **/
    virtual ~AtTPCIonDecay() = default;
@@ -73,7 +72,6 @@ private:
    Double_t fTargetMass{};
    Double_t fExEnergy{};
    std::vector<Double_t> fSepEne;
-   Bool_t fIsSequentialDecay{}; //<! True if the decay generator is to be used after a reaction generator.
 
    ClassDefOverride(AtTPCIonDecay, 3)
 };

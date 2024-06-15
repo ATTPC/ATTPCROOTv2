@@ -286,7 +286,7 @@ Bool_t AtTPC2Body::GenerateReaction(FairPrimaryGenerator *primGen)
          } else {
 
             std::cout << cBLUE << " -I- ===== AtTPC2Body - Kinematics ====== " << std::endl;
-            std::cout << " Decay of scattered particle enabled : " << kIsDecay << "\n";
+            std::cout << " Decay of scattered particle enabled : " << !kIsFinalGen << "\n";
             std::cout << " Scattered energy:" << Ene.at(0) << " MeV" << std::endl;
             std::cout << " Scattered  angle:" << Ang.at(0) * 180 / TMath::Pi() << " deg" << std::endl;
             std::cout << " Recoil energy:" << Ene.at(1) << " MeV" << std::endl;
@@ -489,7 +489,7 @@ Bool_t AtTPC2Body::GenerateReaction(FairPrimaryGenerator *primGen)
 
          Int_t trackIdCut = 0;
 
-         if (kIsDecay)
+         if (!kIsFinalGen)
             trackIdCut = 2; // Remove beam and decaying particle
          else
             trackIdCut = 1; // Remove beam
@@ -525,7 +525,7 @@ Bool_t AtTPC2Body::GenerateReaction(FairPrimaryGenerator *primGen)
 
    } // if residual energy > 0
 
-   if (kIsDecay == false) // Only increases the reaction counter if decay is not expected
+   if (kIsFinalGen) // Only increases the reaction counter if decay is not expected
       AtVertexPropagator::Instance()->EndEvent();
 
    return kTRUE;
