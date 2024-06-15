@@ -64,7 +64,7 @@ private:
    Int_t fTrackPoints{0};
 
 public:
-   AtFittedTrack();
+   AtFittedTrack() = default;
    ~AtFittedTrack() = default;
 
    inline void SetTrackID(Int_t trackid) { fTrackID = trackid; }

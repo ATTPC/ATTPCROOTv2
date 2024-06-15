@@ -16,8 +16,8 @@
 struct AtPadReference;
 
 AtSCACorrect::AtSCACorrect(AtMapPtr map, TString filename, TString eventName, TString baselineAug, TString phaseAug)
-   : AtFilter(), fMap(std::move(map)), fDoBaseline(true), fDoPhase(true), fBaseAugName(baselineAug),
-     fPhaseAugName(phaseAug), fUseChanZero(false)
+   : AtFilter(), fMap(std::move(map)), fDoBaseline(true), fDoPhase(true), fBaseAugName(std::move(baselineAug)),
+     fPhaseAugName(std::move(phaseAug))
 {
    TFile f1(filename.Data());
    AtRawEvent *unownedEvent = nullptr;
@@ -30,7 +30,7 @@ AtSCACorrect::AtSCACorrect(AtMapPtr map, TString filename, TString eventName, TS
 
 AtSCACorrect::AtSCACorrect(AtMapPtr map, RawEventPtr rawEvent, TString baselineAug, TString phaseAug)
    : AtFilter(), fMap(std::move(map)), fRawEvent(std::move(rawEvent)), fDoBaseline(true), fDoPhase(true),
-     fBaseAugName(baselineAug), fPhaseAugName(phaseAug), fUseChanZero(false)
+     fBaseAugName(std::move(baselineAug)), fPhaseAugName(std::move(phaseAug))
 {
 }
 

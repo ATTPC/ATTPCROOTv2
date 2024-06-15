@@ -282,7 +282,7 @@ const std::tuple<Double_t, Double_t> AtTools::AtTrackTransformer::GetPIDFromHits
 
          if (((Float_t)cnt / (Float_t)hitArray->size()) > 0.8)
             break;
-         auto dir = (*it).get()->GetPosition() - (*std::next(it, 1)).get()->GetPosition();
+
          eloss += (*it).get()->GetCharge();
          dedx += (*it).get()->GetCharge();
          // std::cout<<(*it).GetCharge()<<"\n";
@@ -298,7 +298,7 @@ const std::tuple<Double_t, Double_t> AtTools::AtTrackTransformer::GetPIDFromHits
 
          if (((Float_t)cnt / (Float_t)hitArray->size()) > 0.8)
             break;
-         auto dir = hitArray->at(iHitClus).get()->GetPosition() - hitArray->at(iHitClus - 1).get()->GetPosition();
+
          eloss += hitArray->at(iHitClus).get()->GetCharge();
          dedx += hitArray->at(iHitClus).get()->GetCharge();
          // std::cout<<len<<" - "<<eloss<<" - "<<hitClusterArray->at(iHitClus).GetCharge()<<"\n";

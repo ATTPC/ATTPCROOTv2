@@ -27,13 +27,13 @@ const char *AtSiArrayGeo::getModuleName(Int_t m)
        ASCII file should start with AtSiArray otherwise they will
        not be constructed
    */
-   sprintf(modName, "AtSiArray%i", m + 1);
-   return modName;
+   modName = TString::Format("AtSiArray%i", m + 1);
+   return modName.Data();
 }
 
 const char *AtSiArrayGeo::getEleName(Int_t m)
 {
    /** Returns the element name of Det number m */
-   sprintf(eleName, "AtSiArray%i", m + 1);
-   return eleName;
+   eleName = TString::Format("AtSiArray%i", m + 1);
+   return eleName.Data();
 }

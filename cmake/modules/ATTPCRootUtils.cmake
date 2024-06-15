@@ -123,9 +123,13 @@ macro(set_attpcroot_defaults)
 	set(clang-tidy_path_and_args
 	  ${clang-tidy_path}
 	  #--fix
-	  --extra-arg=-nostdinc++
 	  --extra-arg=-Wno-deprecated-declarations
 	  )
+    
+    if(${CMAKE_CXX_COMPILER_VERSION} VERSION_LESS 11.0.0)
+      message(STATUS "Using clang-tidy with g++ before 11.0.0, adding -nostdinc++ to extra args")
+      set(clang-tidy_path_and_args ${clang-tidy_path_and_args} --extra-arg=-nostdinc++)
+    endif()
 	message(STATUS "Setting clang tidy to: ${clang-tidy_path_and_args}") 
 	set(CMAKE_CXX_CLANG_TIDY ${clang-tidy_path_and_args})
 

@@ -9,7 +9,6 @@ ClassImp(AtFittedTrack);
 
 using XYZVector = ROOT::Math::XYZVector;
 
-AtFittedTrack::AtFittedTrack() {}
 const std::tuple<Float_t, Float_t, Float_t, Float_t, Float_t, Float_t, Float_t> AtFittedTrack::GetEnergyAngles()
 {
    return std::forward_as_tuple(fEnergy, fEnergyXtr, fTheta, fPhi, fEnergyPRA, fThetaPRA, fPhiPRA);
