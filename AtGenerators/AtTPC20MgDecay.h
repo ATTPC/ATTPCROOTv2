@@ -59,7 +59,7 @@ public:
    void SetNuclearDecayChain() { fNuclearDecayChainIsSet = kTRUE; };
    void SetDecayChainPoint(Double32_t ParticleEnergy = 0, Double32_t ParticleBranchingRatio = 0);
 
-   ClassDefOverride(AtTPC20MgDecay, 1)
+   ClassDefOverride(AtTPC20MgDecay, 2)
 };
 
 #endif

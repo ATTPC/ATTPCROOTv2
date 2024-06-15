@@ -22,10 +22,9 @@ AtVertexPropagator *AtVertexPropagator::Instance()
 }
 
 AtVertexPropagator::AtVertexPropagator()
-   : fGlobalEvtCnt(0), fBeamEvtCnt(0), fDecayEvtCnt(0), fVx(0.), fVy(0.), fVz(0.), fPx(0.), fPy(0.), fPz(0.), fE(0.),
-     fBeamMass(0), fRndELoss(0), fBeamNomE(0), fInVx(0), fInVy(0), fInVz(0), fRecoilE(0), fRecoilA(0), fScatterE(0),
-     fScatterA(0), fBURes1E(0), fBURes1A(0), fBURes2E(0), fBURes2A(0), fIsValidKine(false), fAiso(0), fZiso(0),
-     fExEjectile(0), fIsd2HeEvt(false)
+   : fVx(0.), fVy(0.), fVz(0.), fPx(0.), fPy(0.), fPz(0.), fE(0.), fBeamMass(0), fRndELoss(0), fBeamNomE(0), fInVx(0),
+     fInVy(0), fInVz(0), fRecoilE(0), fRecoilA(0), fScatterE(0), fScatterA(0), fBURes1E(0), fBURes1A(0), fBURes2E(0),
+     fBURes2A(0), fIsValidKine(false), fAiso(0), fZiso(0), fExEjectile(0), fIsd2HeEvt(false)
 {
 
    fScatP(0) = 0.0;

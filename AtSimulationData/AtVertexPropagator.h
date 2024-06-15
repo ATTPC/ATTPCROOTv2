@@ -18,9 +18,6 @@ class AtVertexPropagator {
 private:
    static std::unique_ptr<AtVertexPropagator> fInstance;
 
-   Int_t fGlobalEvtCnt;
-   Int_t fBeamEvtCnt;
-   Int_t fDecayEvtCnt;
    Bool_t kIsBeamEvent{true};
 
    std::map<int, double> fTrackEn;

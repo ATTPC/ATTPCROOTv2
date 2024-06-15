@@ -114,6 +114,7 @@ AtTPCIonDecay::AtTPCIonDecay(std::vector<std::vector<Int_t>> *z, std::vector<std
          fIon.at(k).push_back(std::move(IonBuff));
          fParticle.at(k).push_back(std::move(ParticleBuff));
       } // for mult
+
    } // for case
 }
 
@@ -261,7 +262,8 @@ Bool_t AtTPCIonDecay::GenerateReaction(FairPrimaryGenerator *primGen)
          std::vector<Double_t> KineticEnergy;
          std::vector<Double_t> ThetaLab;
 
-         LOG(info) << cBLUE << " AtTPCIonDecay -  Phase Space Information " << "\n";
+         LOG(info) << cBLUE << " AtTPCIonDecay -  Phase Space Information ";
+
          for (Int_t i = 0; i < fMult.at(Case); i++) {
             p_vector.push_back(event1.GetDecay(i));
             fPx.at(i) = p_vector.at(i)->Px();
@@ -330,6 +332,7 @@ Bool_t AtTPCIonDecay::GenerateReaction(FairPrimaryGenerator *primGen)
          }
 
       } // for fMult.at(Case)
+
    } // if IsGoodCase
 
    return kTRUE;

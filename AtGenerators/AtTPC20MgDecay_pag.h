@@ -59,7 +59,7 @@ private:
    Int_t fParticlesDefinedInNuclearDecay;
    Double32_t fParticleEnergies[3] = {0, 0, 0};
    Double32_t fParticleBranchingRatios[3] = {0, 0, 0};
-   ClassDefOverride(AtTPC20MgDecay_pag, 1)
+   ClassDefOverride(AtTPC20MgDecay_pag, 2)
 };
 
 #endif

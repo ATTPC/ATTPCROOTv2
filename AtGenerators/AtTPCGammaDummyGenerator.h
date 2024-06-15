@@ -159,7 +159,7 @@ private:
    Bool_t fLorentzBoostIsSet;      // True if Lorentz Boost is set
    Bool_t fNuclearDecayChainIsSet; // True if a nuclear decay chain is set
 
-   ClassDefOverride(AtTPCGammaDummyGenerator, 1)
+   ClassDefOverride(AtTPCGammaDummyGenerator, 2)
 };
 
 #endif
