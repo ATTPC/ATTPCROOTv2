@@ -17,20 +17,35 @@ public:
    bool RanEvent() { return ranEvent; }
 };
 
-TEST(AtReactionGenerator, AtReactionGenerator_ReadEvent_BeamEvent)
+class AtReactionGeneratorTest : public ::testing::Test {
+protected:
+   FakeAtReactionGenerator generator;
+   void SetUp() override { AtVertexPropagator::Instance()->ResetForTesting(); }
+   void TearDown() override { AtVertexPropagator::Instance()->ResetForTesting(); }
+};
+
+TEST_F(AtReactionGeneratorTest, AtReactionGenerator_ReadEvent_BeamEvent)
 {
-   FakeAtReactionGenerator reactionImp;
+
    AtVertexPropagator::Instance()->ResetForTesting();
    AtVertexPropagator::Instance()->SetIsBeamEvent(true);
-   reactionImp.ReadEvent(nullptr);
-   EXPECT_FALSE(reactionImp.RanEvent());
+   generator.ReadEvent(nullptr);
+   EXPECT_FALSE(generator.RanEvent());
 }
 
-TEST(AtReactionGenerator, AtReactionGenerator_ReadEvent_NonBeamEvent)
+TEST_F(AtReactionGeneratorTest, AtReactionGenerator_ReadEvent_NonBeamEvent)
 {
-   FakeAtReactionGenerator reactionImp;
-   AtVertexPropagator::Instance()->ResetForTesting();
+
    AtVertexPropagator::Instance()->SetIsBeamEvent(false);
-   reactionImp.ReadEvent(nullptr);
-   EXPECT_TRUE(reactionImp.RanEvent());
+   generator.ReadEvent(nullptr);
+   EXPECT_TRUE(generator.RanEvent());
+}
+
+TEST_F(AtReactionGeneratorTest, AtReactionGenerator_ReadEvent_AlwaysNonBeamEvent)
+{
+
+   AtVertexPropagator::Instance()->SetIsBeamEvent(true);
+   generator.SetAlwaysRun(true);
+   generator.ReadEvent(nullptr);
+   EXPECT_TRUE(generator.RanEvent());
 }

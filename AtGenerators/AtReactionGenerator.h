@@ -16,6 +16,7 @@ protected:
 public:
    virtual Bool_t ReadEvent(FairPrimaryGenerator *primGen) final;
    void SetSequentialDecay(Bool_t var) { kIsFinalGen = !var; }
+   void SetAlwaysRun(Bool_t var) { kAlwaysRun = var; }
 
 protected:
    virtual bool GenerateReaction(FairPrimaryGenerator *primGen) = 0;
