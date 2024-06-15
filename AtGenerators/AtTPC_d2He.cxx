@@ -618,8 +618,7 @@ Bool_t AtTPC_d2He::ReadEvent(FairPrimaryGenerator *primGen)
       }
    }
 
-   AtVertexPropagator::Instance()
-      ->IncDecayEvtCnt(); // TODO: Okay someone should put a more suitable name but we are on a hurry...
+   AtVertexPropagator::Instance()->EndReactionEvt();
    AtVertexPropagator::Instance()->Getd2HeEvt();
 
    return kTRUE;

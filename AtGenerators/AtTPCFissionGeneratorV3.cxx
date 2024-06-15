@@ -85,7 +85,7 @@ Bool_t AtTPCFissionGeneratorV3::ReadEvent(FairPrimaryGenerator *primeGen)
       generateEvent();
    }
 
-   AtVertexPropagator::Instance()->IncDecayEvtCnt();
+   AtVertexPropagator::Instance()->EndReactionEvt();
    return true;
 }
 

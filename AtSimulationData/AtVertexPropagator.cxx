@@ -114,41 +114,6 @@ Double_t AtVertexPropagator::GetTrackEnergy(int trackID)
       return it->second;
 }
 
-/*
-void AtVertexPropagator::SetRecoilE(Double_t val)
-{
-   fRecoilE = val;
-}
-void AtVertexPropagator::SetRecoilA(Double_t val)
-{
-   fRecoilA = val;
-}
-void AtVertexPropagator::SetScatterE(Double_t val)
-{
-   fScatterE = val;
-}
-void AtVertexPropagator::SetScatterA(Double_t val)
-{
-   fScatterA = val;
-}
-void AtVertexPropagator::SetBURes1E(Double_t val)
-{
-   fBURes1E = val;
-}
-void AtVertexPropagator::SetBURes1A(Double_t val)
-{
-   fBURes1A = val;
-}
-void AtVertexPropagator::SetBURes2E(Double_t val)
-{
-   fBURes2E = val;
-}
-void AtVertexPropagator::SetBURes2A(Double_t val)
-{
-   fBURes2A = val;
-}
-*/
-
 void AtVertexPropagator::SetMassNum(Int_t mnum)
 {
    fAiso = mnum;
@@ -232,41 +197,6 @@ Double_t AtVertexPropagator::GetBeamNomE()
 {
    return fBeamNomE;
 }
-
-/*
-Double_t AtVertexPropagator::GetRecoilE()
-{
-   return fRecoilE;
-}
-Double_t AtVertexPropagator::GetRecoilA()
-{
-   return fRecoilA;
-}
-Double_t AtVertexPropagator::GetScatterE()
-{
-   return fScatterE;
-}
-Double_t AtVertexPropagator::GetScatterA()
-{
-   return fScatterA;
-}
-Double_t AtVertexPropagator::GetBURes1E()
-{
-   return fBURes1E;
-}
-Double_t AtVertexPropagator::GetBURes1A()
-{
-   return fBURes1A;
-}
-Double_t AtVertexPropagator::GetBURes2E()
-{
-   return fBURes2E;
-}
-Double_t AtVertexPropagator::GetBURes2A()
-{
-   return fBURes2A;
-}
-*/
 
 Bool_t AtVertexPropagator::Getd2HeEvt()
 {

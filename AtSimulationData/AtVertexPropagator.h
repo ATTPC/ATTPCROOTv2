@@ -111,8 +111,15 @@ public:
    TVector3 Getd2HeVtx();
 
    // void IncGlobalEvtCnt();
-   void IncBeamEvtCnt() { kIsBeamEvent = !kIsBeamEvent; };
-   void IncDecayEvtCnt() { kIsBeamEvent = !kIsBeamEvent; };
+   /// Called after the last generator finished adding
+   /// particles to the stack in the beam-like event.
+   void EndBeamEvt() { kIsBeamEvent = false; }
+
+   /// Called after the last generator finished adding
+   /// particles to the stack in the reaction-like event.
+   void EndReactionEvt() { kIsBeamEvent = true; }
+   // void IncBeamEvtCnt() { kIsBeamEvent = !kIsBeamEvent; };
+   // void IncDecayEvtCnt() { kIsBeamEvent = !kIsBeamEvent; };
 
    void SetValidKine(Bool_t val);
    Bool_t GetValidKine();

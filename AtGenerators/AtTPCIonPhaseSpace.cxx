@@ -72,32 +72,6 @@ AtTPCIonPhaseSpace::AtTPCIonPhaseSpace(const char *name, std::vector<Int_t> *z, 
 Bool_t AtTPCIonPhaseSpace::ReadEvent(FairPrimaryGenerator *primGen)
 {
 
-   /* for(Int_t i=0; i<fMult; i++){
-
-
-     TParticlePDG* thisPart =
-       TDatabasePDG::Instance()->GetParticle(fIon.at(i)->GetName());
-
-
-     if ( ! thisPart ) {
-       std::cout << "-W- FairIonGenerator: Ion " << fIon.at(i)->GetName()
-       << " not found in database!" << std::endl;
-       return kFALSE;
-     }
-
-        int pdgType = thisPart->PdgCode();
-
-    // std::cout << "-I- FairIonGenerator: Generating " << fMult << " ions of type "
-    //      << fIon.at(i)->GetName() << " (PDG code " << pdgType << ")" << std::endl;
-    // std::cout << "    Momentum (" << fPx.at(i) << ", " << fPy.at(i) << ", " << fPz.at(i)
-     //     << ") Gev from vertex (" << fVx << ", " << fVy
-     //     << ", " << fVz << ") cm" << std::endl;
-
-
-       //primGen->AddTrack(pdgType, fPx.at(i), fPy.at(i), fPz.at(i), fVx, fVy, fVz);
-
-     } */
-
    // === Phase Space Calculation
    TLorentzVector fEnergyImpulsionLab_beam;
    TLorentzVector fEnergyImpulsionLab_target;
@@ -121,39 +95,6 @@ Bool_t AtTPCIonPhaseSpace::ReadEvent(FairPrimaryGenerator *primGen)
 
    fIsDecay = kFALSE;
 
-   // AtVertexPropagator::Instance()->Test();
-
-   // FairMCEventHeader* MCEventHeader = primGen->GetEvent();
-   // std::cout<<" Event ID : "<<MCEventHeader->GetRunID()<<std::cout;
-
-   // gMC->CurrentMedium();
-   // TVgirtualMC* vMC =gMC->GetMC();
-   // if(!vMC->CurrentEvent()) std::cout<<" No events!"<<std::endl;
-
-   // std::cout<<" Current Track Number : "<<stack->GetCurrentTrackNumber()<<std::endl;
-   // stack->Print(1);
-
-   // TParticle* beam_part = stack->GetParticle(0);
-   /* TParticle* beam_part0 = stack->GetParticle(0);
-    std::cout<<" Beam particle 0 mass  "<<beam_part0->GetMass()<<std::endl;
-    std::cout<<" Beam particle 0 Energy  "<<beam_part0->Energy()<<std::endl;
-    std::cout<<" Beam particle 0 Pz  "<<beam_part0->Pz()<<std::endl;
-    stack->Print(1);*/
-
-   // std::cout<<" gMC Current Event : "<<gMC->CurrentEvent()<<std::cout;
-
-   /*  FairRootManager* ioMan = FairRootManager::Instance();
-
-     TClonesArray* fPointArray = (TClonesArray*) ioMan->GetObject("AtMCPoint"); // TODO: Why this confusing name? It
-     should be fEventArray if(fPointArray) LOG(info)<<"-I- AtTPCIonPhaseSpace : AtMCPoint Array Found with size :
-     "<<fPointArray->GetSize()<<FairLogger::endl;
-     if(fPointArray->IsEmpty()) std::cout<<" AtMCPoint TClonesArray Empty !!!"<<std::endl;*/
-
-   //  AtMCPoint* SimPoint = (AtMCPoint*) fPointArray->At(0);
-   // SimPoint->GetXIn();
-
-   // fBeamEnergy = fBeamEnergy_buff/1000.0; //GeV
-
    fBeamEnergy = AtVertexPropagator::Instance()->GetEnergy() / 1000.0;
    std::cout << " Residual energy in AtTPCIonPhaseSpace : " << AtVertexPropagator::Instance()->GetEnergy() << std::endl;
    fPxBeam = AtVertexPropagator::Instance()->GetPx();
@@ -167,18 +108,8 @@ Bool_t AtTPCIonPhaseSpace::ReadEvent(FairPrimaryGenerator *primGen)
 
    Double_t M_tot = 0;
 
-   /*    mass_1[0] = (fIon.at(0)->GetMass());
-       mass_1[1] = (fIon.at(1)->GetMass());
-  mass_1[2] = (fIon.at(2)->GetMass());*/
-
-   // std::cout<<" Beam Z momentum : "<<fABeam*fPzBeam<<std::endl;
-
-   // fImpulsionLab_beam = TVector3(fABeam*fPxBeam,fABeam*fPyBeam,fABeam*fPzBeam);
    fImpulsionLab_beam = TVector3(fPxBeam, fPyBeam, fPzBeam);
-   // fEnergyImpulsionLab_beam = TLorentzVector(fImpulsionLab_beam,9327.55/1000.0+fBeamEnergy);
    fEnergyImpulsionLab_beam = TLorentzVector(fImpulsionLab_beam, fBeamMass + fBeamEnergy);
-
-   // fEnergyImpulsionLab_target = TLorentzVector(TVector3(0,0,0),3728.40/1000.0);
    fEnergyImpulsionLab_target = TLorentzVector(TVector3(0, 0, 0), fTargetMass);
 
    fEnergyImpulsionLab_Total = fEnergyImpulsionLab_beam + fEnergyImpulsionLab_target;
@@ -192,12 +123,6 @@ Bool_t AtTPCIonPhaseSpace::ReadEvent(FairPrimaryGenerator *primGen)
       mass_1[i] = Masses.at(i) / 1000.0;
    }
 
-   /* mass_1[1] = Masses.at(1)/1000.0;
-    mass_1[2] = Masses.at(2)/1000.0;*/
-
-   // std::cout<<" Mass 1 : "<<mass_1[0]<<" Mass 2 : "<<mass_1[1]<<"  Mass 3 : "<<mass_1[2]<<std::endl;
-
-   // std::cout<<" S : "<<s<<" Pow(M) "<<pow(mass_1[0]+mass_1[1]+mass_1[2],2)<<std::endl;
    std::cout << " S : " << s << " Pow(M) " << pow(M_tot, 2) << std::endl;
 
    if (s > pow(M_tot, 2)) {
@@ -205,12 +130,6 @@ Bool_t AtTPCIonPhaseSpace::ReadEvent(FairPrimaryGenerator *primGen)
       fIsDecay = kTRUE;
 
       event1.SetDecay(fEnergyImpulsionLab_Total, fMult, mass_1);
-      // Double_t weight1 = event1.Generate();
-
-      /* p1  = event1.GetDecay(0);
-       p2  = event1.GetDecay(1);
-  p3  = event1.GetDecay(2);*/
-
       std::vector<Double_t> KineticEnergy;
       std::vector<Double_t> ThetaLab;
 
@@ -226,32 +145,6 @@ Bool_t AtTPCIonPhaseSpace::ReadEvent(FairPrimaryGenerator *primGen)
          std::cout << " Particle " << i << " - TKE (MeV) : " << KineticEnergy.at(i)
                    << " - Lab Angle (deg) : " << ThetaLab.at(i) << std::endl;
       }
-
-      /*  fPx.at(0) = p1->Px();
-             fPy.at(0) = p1->Py();
-        fPz.at(0) = p1->Pz();
-
-             fPx.at(1) = p2->Px();
-             fPy.at(1) = p2->Py();
-        fPz.at(1) = p2->Pz();
-
-        fPx.at(2) = p3->Px();
-             fPy.at(2) = p3->Py();
-        fPz.at(2) = p3->Pz();
-
-    Double_t  KineticEnergy_P1  = (p1->E() - mass_1[0])*1000; //MeV
-     Double_t  ThetaLab_P1     = p1->Theta()*180./TMath::Pi();
-
-     Double_t  KineticEnergy_P2  = (p2->E() - mass_1[1])*1000; //MeV
-     Double_t  ThetaLab_P2     = p2->Theta()*180./TMath::Pi();
-
-     Double_t  KineticEnergy_P3  = (p3->E() - mass_1[2])*1000; //MeV
-     Double_t  ThetaLab_P3     = p3->Theta()*180./TMath::Pi();
-
-      std::cout<<"  ==== Phase Space Information ==== "<<std::endl;
-         std::cout<<" Particle 1 - TKE : "<<KineticEnergy_P1<<"  Angle (Lab) : "<<ThetaLab_P1<<std::endl;
-    std::cout<<" Particle 2 - TKE : "<<KineticEnergy_P2<<"  Angle (Lab) : "<<ThetaLab_P2<<std::endl;
-    std::cout<<" Particle 3 - TKE : "<<KineticEnergy_P3<<"  Angle (Lab) : "<<ThetaLab_P3<<std::endl;*/
 
    } // if kinematics condition
 
@@ -282,7 +175,7 @@ Bool_t AtTPCIonPhaseSpace::ReadEvent(FairPrimaryGenerator *primGen)
       }
    }
 
-   AtVertexPropagator::Instance()->IncDecayEvtCnt();
+   AtVertexPropagator::Instance()->EndReactionEvt();
 
    return kTRUE;
 }

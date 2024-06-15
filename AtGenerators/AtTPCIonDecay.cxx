@@ -332,8 +332,8 @@ Bool_t AtTPCIonDecay::ReadEvent(FairPrimaryGenerator *primGen)
       } // for fMult.at(Case)
    } // if IsGoodCase
 
-   // if (!fIsSequentialDecay)
-   AtVertexPropagator::Instance()->IncDecayEvtCnt(); // Increase count only if no other generator is meant to do it.
+   if (!fIsSequentialDecay)
+      AtVertexPropagator::Instance()->EndReactionEvt();
 
    return kTRUE;
 }

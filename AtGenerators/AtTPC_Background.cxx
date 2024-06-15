@@ -453,8 +453,7 @@ fPz.at(3) = (Prec*cos(angrec) )/1000.0; // To GeV for FairRoot
       }
    }
 
-   AtVertexPropagator::Instance()
-      ->IncDecayEvtCnt(); // TODO: Okay someone should put a more suitable name but we are on a hurry...
+   AtVertexPropagator::Instance()->EndReactionEvt();
 
    return kTRUE;
 }

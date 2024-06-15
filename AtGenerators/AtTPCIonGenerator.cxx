@@ -138,7 +138,8 @@ void AtTPCIonGenerator::SetVertexCoordinates()
 
 Bool_t AtTPCIonGenerator::ReadEvent(FairPrimaryGenerator *primGen)
 {
-
+   LOG(info) << cGREEN << "AtTPCIonGenerator ReadEvent"
+             << (AtVertexPropagator::Instance()->IsBeamEvent() ? " Beam Event " : " Reaction Event ") << cNORMAL;
    // if ( ! fIon ) {
    //   cout << "-W- FairIonGenerator: No ion defined! " << endl;
    //   return kFALSE;
@@ -157,7 +158,7 @@ Bool_t AtTPCIonGenerator::ReadEvent(FairPrimaryGenerator *primGen)
       if (fDoReact) {
          Double_t Er = gRandom->Uniform(0., fMaxEnLoss);
          AtVertexPropagator::Instance()->SetRndELoss(Er);
-         // std::cout << cGREEN << " Random Energy AtTPCIonGenerator : " << Er << cNORMAL << std::endl;
+         LOG(info) << cGREEN << " Random Energy AtTPCIonGenerator : " << Er << cNORMAL << std::endl;
       } else
          AtVertexPropagator::Instance()->SetRndELoss(std::numeric_limits<double>::max());
    }
@@ -168,7 +169,7 @@ Bool_t AtTPCIonGenerator::ReadEvent(FairPrimaryGenerator *primGen)
       for (Int_t i = 0; i < fMult; i++)
          primGen->AddTrack(pdgType, fPx, fPy, fPz, fVx, fVy, fVz);
 
-   AtVertexPropagator::Instance()->IncBeamEvtCnt();
+   AtVertexPropagator::Instance()->EndBeamEvt();
    return kTRUE;
 }
 

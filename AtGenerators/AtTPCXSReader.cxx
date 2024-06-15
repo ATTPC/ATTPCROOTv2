@@ -306,8 +306,7 @@ Bool_t AtTPCXSReader::ReadEvent(FairPrimaryGenerator *primGen)
       }
    } // if residual energy > 0
 
-   AtVertexPropagator::Instance()
-      ->IncDecayEvtCnt(); // TODO: Okay someone should put a more suitable name but we are on a hurry...
+   AtVertexPropagator::Instance()->EndReactionEvt();
 
    return kTRUE;
 }

@@ -525,8 +525,8 @@ Bool_t AtTPC2Body::ReadEvent(FairPrimaryGenerator *primGen)
 
    } // if residual energy > 0
 
-   if (kIsDecay == kFALSE) // Only increases the reaction counter if decay is not expected
-      AtVertexPropagator::Instance()->IncDecayEvtCnt();
+   if (kIsDecay == false) // Only increases the reaction counter if decay is not expected
+      AtVertexPropagator::Instance()->EndReactionEvt();
 
    return kTRUE;
 }

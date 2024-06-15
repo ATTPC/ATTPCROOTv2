@@ -185,8 +185,7 @@ Bool_t AtTPCFissionGeneratorV2::ReadEvent(FairPrimaryGenerator *primGen)
       }
    }
 
-   AtVertexPropagator::Instance()
-      ->IncDecayEvtCnt(); // TODO: Okay someone should put a more suitable name but we are on a hurry...
+   AtVertexPropagator::Instance()->EndReactionEvt();
    std::cout << cRED << " Fission event : " << event << cNORMAL << std::endl;
    event++;
 
