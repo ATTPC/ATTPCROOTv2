@@ -172,7 +172,7 @@ add_subdirectory (AtDeGAi)
 add_subdirectory (AtAnalysis)
 add_subdirectory (AtTools)
 add_subdirectory (AtEventDisplay)
-add_subdirectory(AtPxCT)
+
 
 if(BUILD_TESTS)
   include(ATTPCRootCTest)

@@ -33,8 +33,8 @@ function(generate_target_and_root_library target)
     1
     HT
     ""
-    "LINKDEF"
-    "SRCS;HDRS;INCLUDE_DIR;LIBRARY_DIR;DEPS_PUBLIC;DEPS_PRIVATE"
+    ""
+    "SRCS;HDRS;INCLUDE_DIR;LIBRARY_DIR;DEPS_PUBLIC;DEPS_PRIVATE;LINKDEF"
     )
 
   # Check for required and set defaults
@@ -110,11 +110,11 @@ function(generate_target_and_root_library target)
 
   
   # Make the dictionary
-  if(HT_LINKDEF)
+  foreach(h ${HT_LINKDEF})
     make_target_root_dictionary( ${target}
       HEADERS ${HT_HDRS}
-      LINKDEF ${HT_LINKDEF})
-  endif()
+      LINKDEF ${h})
+  endforeach()
 
   install(FILES ${headers} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
   install(TARGETS ${target}
@@ -216,7 +216,7 @@ function(make_target_root_dictionary target)
   set(lib_output_dir ${CMAKE_BINARY_DIR}/lib)
 
   # Define the names of generated files
-  get_property(basename TARGET ${target} PROPERTY OUTPUT_NAME)
+  get_filename_component(basename "${A_LINKDEF}" NAME_WE)
   if(NOT basename)
     set(basename ${target})
   endif()
@@ -246,6 +246,7 @@ function(make_target_root_dictionary target)
   # add a custom command to generate the dictionary using rootcling
   # cmake-format: off
   set(space " ")
+  #message(STATUS " Adding dictionary ${dictionaryFile} to target ${target}")
   add_custom_command(
     OUTPUT ${dictionaryFile} ${pcmFile} ${rootmapFile}
     VERBATIM
