@@ -158,8 +158,6 @@ add_subdirectory (AtUnpack)
 add_subdirectory (AtGenerators)
 add_subdirectory (AtDetectors)
 
-add_subdirectory (AtPassive)
-add_subdirectory (AtField)
 add_subdirectory (AtMap)
 add_subdirectory (AtReconstruction)
 add_subdirectory (AtParameter)

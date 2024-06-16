@@ -6,6 +6,8 @@ AtSiArray/AtSiArrayLinkDef.h
 AtSeGA/AtSeGALinkDef.h
 AtDeGAi/AtDeGAiLinkDef.h
 AtApollo/AtApolloLinkDef.h
+AtField/AtFieldLinkDef.h
+AtPassive/AtPassiveLinkDef.h
 )
 
 set(SRCS
@@ -42,6 +44,15 @@ AtApollo/AtApolloPoint.cxx
 AtApollo/AtApolloCrystalCalData.cxx
 AtApollo/AtApolloDigitizer.cxx
 
+AtField/AtConstField.cxx   
+AtField/AtFieldCreator.cxx 
+AtField/AtFieldPar.cxx
+
+AtPassive/AtCave.cxx           
+AtPassive/AtPipe.cxx 
+AtPassive/AtGeoCave.cxx        
+AtPassive/AtMagnet.cxx         
+AtPassive/AtPassiveContFact.cxx
 )
 
 Set(DEPENDENCIES
