@@ -9,7 +9,7 @@
 #
 
 if(NOT DEFINED ENV{GENFIT} AND NOT DEFINED GENFIT)
-  message(WARNING "Looking for GENFIT but did not set enviroment or cmake variable GENFIT")
+  message(STATUS "Looking for GENFIT but did not set enviroment or cmake variable GENFIT")
 endif()
 
 if(DEFINED ENV{GENFIT})
