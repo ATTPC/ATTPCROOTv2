@@ -35,6 +35,8 @@ set(SRCS
   ElectronicResponse/AtElectronicResponse.cxx
   ElectronicResponse/AtROOTresponse.cxx
   AtHitSampling/AtWeightedGaussianTrunc.cxx
+
+  DataCleaning/AtDataCleaner.cxx
   )
 
 Set(DEPENDENCIES
