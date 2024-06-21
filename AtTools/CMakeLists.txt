@@ -37,6 +37,7 @@ set(SRCS
   AtHitSampling/AtWeightedGaussianTrunc.cxx
 
   DataCleaning/AtDataCleaner.cxx
+  DataCleaning/AtkNN.cxx
   )
 
 Set(DEPENDENCIES
@@ -61,7 +62,17 @@ endif()
 Set(INCLUDE_DIR
   ${CMAKE_SOURCE_DIR}/AtTools/AtHitSampling
   ${CMAKE_SOURCE_DIR}/AtTools/ElectronicResponse
+  ${CMAKE_SOURCE_DIR}/AtTools/DataCleaning
   )
+
+set(TEST_SRCS
+  DataCleaning/AtkNNTest.cxx
+)
+
+attpcroot_generate_tests(${LIBRARY_NAME}Tests
+  SRCS ${TEST_SRCS}
+  DEPS ${LIBRARY_NAME}
+)
 
 generate_target_and_root_library(${LIBRARY_NAME}
   LINKDEF ${LINKDEF}
