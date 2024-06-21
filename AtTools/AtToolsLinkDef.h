@@ -69,4 +69,7 @@
 #pragma link C++ function AtTools::Kinematics::AtoE;
 #pragma link C++ function AtTools::Kinematics::EtoA;
 
+#pragma link C++ class AtTools::DataCleaning::AtkNN + ;
+#pragma link C++ class AtTools::DataCleaning::AtDataCleaner + ;
+
 #endif

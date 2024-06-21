@@ -3,8 +3,8 @@
  * modifying the position values of hits in AtEvent
  *
  */
-#ifndef _ATSPACECHARGECORRECTIONTASK_H_
-#define _ATSPACECHARGECORRECTIONTASK_H_
+#ifndef ATDATACLEANINGTASK_H
+#define ATDATACLEANINGTASK_H
 
 #include "AtDataCleaner.h" // IWYU pragma: keep
 

@@ -89,15 +89,22 @@ void run_unpack_attpc(int runNumber = 174)
    psa->SetThreshold(threshold);
 
    AtPSAtask *psaTask = new AtPSAtask(std::move(psa));
-   psaTask->SetInputBranch("AtRawEventFiltered");
-   psaTask->SetOutputBranch("AtEventFiltered");
+   psaTask->SetInputBranch("AtRawEvent");
+   psaTask->SetOutputBranch("AtEventH");
    psaTask->SetPersistence(kTRUE);
+
+   auto cleaner = std::make_unique<AtTools::DataCleaning::AtkNN>(3, 20);
+   AtDataCleaningTask *cleaningTask = new AtDataCleaningTask(std::move(cleaner));
+   cleaningTask->SetInputBranch("AtEventH");
+   cleaningTask->SetOutputBranch("AtEventCleaned");
+   cleaningTask->SetPersistence(kTRUE);
 
    // Add unpacker to the run
    run->AddTask(unpackTask);
    run->AddTask(reduceTask);
-   run->AddTask(filterTask);
+   // run->AddTask(filterTask);
    run->AddTask(psaTask);
+   run->AddTask(cleaningTask);
 
    std::cout << "***** Starting Init ******" << std::endl;
    run->Init();

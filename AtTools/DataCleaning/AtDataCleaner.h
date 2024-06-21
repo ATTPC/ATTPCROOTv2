@@ -19,6 +19,7 @@ using HitCloud = std::vector<std::unique_ptr<AtHit>>;
  */
 class AtDataCleaner {
 public:
+   virtual ~AtDataCleaner() = default;
    /**
     * @brief Clean the data.
     * @param hits The input hit cloud.

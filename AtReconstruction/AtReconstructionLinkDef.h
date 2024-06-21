@@ -61,6 +61,7 @@
 #pragma link C++ class AtSampleConsensusTask + ;
 #pragma link C++ class AtDataReductionTask + ;
 #pragma link C++ class AtSpaceChargeCorrectionTask + ;
+#pragma link C++ class AtDataCleaningTask + ;
 #pragma link C++ class AtFilterTask + ;
 #pragma link C++ class AtHDF5WriteTask + ;
 #pragma link C++ class AtHDF5ReadTask + ;
