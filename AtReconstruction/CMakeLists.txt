@@ -68,6 +68,7 @@ set(SRCS
   AtAuxFilterTask.cxx
   AtDataReductionTask.cxx
   AtSpaceChargeCorrectionTask.cxx
+  AtDataCleaningTask.cxx
   AtHDF5ReadTask.cxx
   AtHDF5WriteTask.cxx
   AtMacroTask.cxx
