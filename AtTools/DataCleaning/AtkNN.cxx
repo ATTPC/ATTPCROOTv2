@@ -1,7 +1,9 @@
 #include "AtkNN.h"
 
+#include "AtHit.h"
 namespace AtTools {
 namespace DataCleaning {
+
 HitCloud AtkNN::CleanData(const HitCloud &hits)
 {
    HitCloud ret;

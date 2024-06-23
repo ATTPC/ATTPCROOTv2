@@ -1,11 +1,10 @@
-#ifndef ATKNN_H
-#define ATKNN_H
+#ifndef _ATDATACLEANER_H
+#define _ATDATACLEANER_H
 
-#include "AtHit.h"
+class AtHit;
 
 #include <memory>
 #include <vector>
-class AtHit;
 
 namespace AtTools {
 
@@ -32,4 +31,4 @@ public:
 
 } // namespace AtTools
 
-#endif // ATKNN_H
+#endif // _ATDATACLEANER_H

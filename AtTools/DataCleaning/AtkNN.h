@@ -1,3 +1,6 @@
+#ifndef ATKNN_H
+#define ATKNN_H
+
 #include "AtDataCleaner.h"
 
 namespace AtTools {
@@ -23,3 +26,5 @@ public:
 } // namespace DataCleaning
 
 } // namespace AtTools
+
+#endif // ATKNN_HH
