@@ -261,6 +261,12 @@ void AtHDFUnpacker::setFirstAndLastEventNum()
    }
    LOG(info) << "Events: " << fFirstEvent << " to " << fLastEvent;
 }
+
+/**
+ * @brief Open the file and sets the first/last event number in the file
+ *
+ * @return the number of events in the file
+ */
 std::size_t AtHDFUnpacker::open(char const *file)
 {
    auto f = open_file(file, AtHDFUnpacker::IO_MODE::READ);
