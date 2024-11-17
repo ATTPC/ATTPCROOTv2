@@ -76,7 +76,7 @@ void run_unpack_linked(int runNumber = 25)
    std::cout << "Unpacking " << numEvents << " events. " << std::endl;
 
    // return;
-   run->Run(0, numEvents);
+   run->Run(0, 1);
 
    std::cout << std::endl << std::endl;
    std::cout << "Done unpacking events" << std::endl << std::endl;
