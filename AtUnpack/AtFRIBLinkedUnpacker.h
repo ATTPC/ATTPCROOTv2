@@ -15,7 +15,7 @@ protected:
    std::string fFribPath = "/frib_physics/1903";
 
 public:
-   AtFRIBLinkedHDFUnpacker(mapPtr map) : AtHDFUnpacker(map) {};
+   AtFRIBLinkedHDFUnpacker(mapPtr map) : AtHDFUnpacker(map){};
    ~AtFRIBLinkedHDFUnpacker() = default;
 
 protected:
