@@ -22,6 +22,7 @@ private:
 
    std::vector<Double_t> fParameters;
    std::vector<Double_t> fTofObjCorr;
+   std::vector<Double_t> fE1dECorr;
    std::vector<Double_t> fMTDCObjRange;
    std::vector<Double_t> fMTDCXfRange;
 
@@ -32,6 +33,7 @@ private:
    Double_t fXfObj_ToF;
    Double_t fObjCorr_ToF;
    Double_t fICSum_E;
+   Double_t fE1_dE;
    Double_t fX0;
    Double_t fX1;
    Double_t fY0{0};
@@ -48,6 +50,7 @@ public:
    void SetPID3cut(std::vector<TString> file);
    void SetParameters(std::vector<Double_t> vec);
    void SetTofObjCorr(std::vector<Double_t> vec);
+   void SetE1dECorr(std::vector<Double_t> vec);
    void SetMTDCObjRange(std::vector<Double_t> vec);
    void SetMTDCXfRange(std::vector<Double_t> vec);
 
@@ -58,6 +61,7 @@ public:
    Double_t GetXfObj_ToF();
    Double_t GetObjCorr_ToF();
    Double_t GetICSum_E();
+   Double_t GetE1_dE();
    std::vector<Double_t> GetFpVariables();
 
    Bool_t isInPID(S800Calc *s800calc);

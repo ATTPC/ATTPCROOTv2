@@ -26,7 +26,7 @@ ClassImp(S800Ana);
 
 S800Ana::S800Ana()
    : fLogger(FairLogger::GetLogger()), fXfObj_ToF(-999), fObjCorr_ToF(-999), fICSum_E(-999), fX0(-999), fX1(-999),
-     fAfp(-999)
+     fAfp(-999), fE1_dE(-999)
 {
    fcutPID1.clear();
    fcutPID2.clear();
@@ -34,6 +34,7 @@ S800Ana::S800Ana()
 
    fParameters.clear();
    fTofObjCorr.clear();
+   fE1dECorr.clear();
    fMTDCObjRange.clear();
    fMTDCXfRange.clear();
 }
@@ -43,6 +44,7 @@ void S800Ana::Reset()
    fXfObj_ToF = -999;
    fObjCorr_ToF = -999;
    fICSum_E = -999;
+   fE1_dE = -999;
    fX0 = -999;
    fX1 = -999;
    fY0 = -999;
@@ -99,6 +101,10 @@ void S800Ana::SetTofObjCorr(std::vector<Double_t> vec)
 {
    fTofObjCorr = vec;
 }
+void S800Ana::SetE1dECorr(std::vector<Double_t> vec)
+{
+   fE1dECorr = vec;
+}
 void S800Ana::SetMTDCObjRange(std::vector<Double_t> vec)
 {
    fMTDCObjRange = vec;
@@ -136,6 +142,10 @@ Double_t S800Ana::GetICSum_E()
 {
    return fICSum_E;
 }
+Double_t S800Ana::GetE1_dE()
+{
+   return fE1_dE;
+}
 std::vector<Double_t> S800Ana::GetFpVariables()
 {
    std::vector<Double_t> result;
@@ -172,8 +182,8 @@ void S800Ana::Calc(S800Calc *s800calc)
    fX1 = s800calc->GetCRDC(1)->GetX();
    fY0 = s800calc->GetCRDC(0)->GetY();
    fY1 = s800calc->GetCRDC(1)->GetY();
-   // Double_t S800_E1up = s800calc->GetSCINT(0)->GetDEup();
-   // Double_t S800_E1down = s800calc->GetSCINT(0)->GetDEdown();
+   Double_t S800_E1up = s800calc->GetSCINT(0)->GetDEup();
+   Double_t S800_E1down = s800calc->GetSCINT(0)->GetDEdown();
 
    fICSum_E = s800calc->GetIC()->GetSum();
 
@@ -182,6 +192,7 @@ void S800Ana::Calc(S800Calc *s800calc)
    // Double_t S800_tofCorr = S800_tof + x0_corr_tof*fX0 + afp_corr_tof*fAfp;// - rf_offset;
    // Double_t S800_dE = s800calc->GetSCINT(0)->GetDE();//check if is this scint (0)
    // Double_t S800_dE = sqrt( (corrGainE1up*S800_E1up) * (corrGainE1down* S800_E1down ) );
+   fE1_dE = sqrt(fE1dECorr.at(0) * S800_E1up * fE1dECorr.at(1) * S800_E1down);
    // Double_t S800_dECorr = S800_dE + afp_corr_dE*fAfp + x0_corr_dE*fabs(fX0);
 
    for (float k : S800_timeMTDCXf) {
@@ -200,7 +211,7 @@ void S800Ana::Calc(S800Calc *s800calc)
       CondMTDCXfObj = 1;
    }
 
-   if (CondMTDCXfObj && std::isnan(fX0) == 0 && std::isnan(fAfp) == 0 && std::isnan(fICSum_E) == 0) {
+   if (CondMTDCXfObj && std::isnan(fX0) == 0 && std::isnan(fAfp) == 0 && std::isnan(fE1_dE) == 0) {
       fObjCorr_ToF = S800_timeObjSelect + fTofObjCorr.at(0) * fAfp + fTofObjCorr.at(1) * fX0;
    }
 

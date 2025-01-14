@@ -1,0 +1,37 @@
+mkdir temp
+
+root -b -q -l "ana_1track.C(7,\"eLossTables/p_in_H2_600torr_SRIM.txt\")"  >& "logAna1Track/run_0007.log"
+root -b -q -l "ana_1track.C(8,\"eLossTables/p_in_H2_600torr_SRIM.txt\")"  >& "logAna1Track/run_0008.log"
+root -b -q -l "ana_1track.C(9,\"eLossTables/p_in_H2_600torr_SRIM.txt\")"  >& "logAna1Track/run_0009.log"
+root -b -q -l "ana_1track.C(10,\"eLossTables/p_in_H2_600torr_SRIM.txt\")" >& "logAna1Track/run_0010.log"
+mv temp/* /media/aurio/Cris/11Li/rootAna1Track/
+root -b -q -l "ana_1track.C(11,\"eLossTables/p_in_H2_600torr_SRIM.txt\")" >& "logAna1Track/run_0011.log"
+root -b -q -l "ana_1track.C(12,\"eLossTables/p_in_H2_600torr_SRIM.txt\")" >& "logAna1Track/run_0012.log"
+root -b -q -l "ana_1track.C(13,\"eLossTables/p_in_H2_600torr_SRIM.txt\")" >& "logAna1Track/run_0013.log"
+root -b -q -l "ana_1track.C(14,\"eLossTables/p_in_H2_600torr_SRIM.txt\")" >& "logAna1Track/run_0014.log"
+mv temp/* /media/aurio/Cris/11Li/rootAna1Track/
+root -b -q -l "ana_1track.C(15,\"eLossTables/p_in_H2_600torr_SRIM.txt\")" >& "logAna1Track/run_0015.log"
+root -b -q -l "ana_1track.C(16,\"eLossTables/p_in_H2_600torr_SRIM.txt\")" >& "logAna1Track/run_0016.log"
+root -b -q -l "ana_1track.C(17,\"eLossTables/p_in_H2_600torr_SRIM.txt\")" >& "logAna1Track/run_0017.log"
+mv temp/* /media/aurio/Cris/11Li/rootAna1Track/
+
+#root -b -q -l "ana_1track.C(55,\"eLossTables/p_in_H2CF4_699torr_SRIM.txt\")" >& "logAna1Track/run_0055.log"
+#root -b -q -l "ana_1track.C(56,\"eLossTables/p_in_H2CF4_699torr_SRIM.txt\")" >& "logAna1Track/run_0056.log"
+#root -b -q -l "ana_1track.C(57,\"eLossTables/p_in_H2CF4_699torr_SRIM.txt\")" >& "logAna1Track/run_0057.log"
+#root -b -q -l "ana_1track.C(58,\"eLossTables/p_in_H2CF4_699torr_SRIM.txt\")" >& "logAna1Track/run_0058.log"
+#mv temp/* /media/aurio/Cris/11Li/rootAna1Track/
+#root -b -q -l "ana_1track.C(59,\"eLossTables/p_in_H2CF4_699torr_SRIM.txt\")" >& "logAna1Track/run_0059.log"
+#root -b -q -l "ana_1track.C(60,\"eLossTables/p_in_H2CF4_699torr_SRIM.txt\")" >& "logAna1Track/run_0060.log"
+#root -b -q -l "ana_1track.C(61,\"eLossTables/p_in_H2CF4_699torr_SRIM.txt\")" >& "logAna1Track/run_0061.log"
+#root -b -q -l "ana_1track.C(62,\"eLossTables/p_in_H2CF4_699torr_SRIM.txt\")" >& "logAna1Track/run_0062.log"
+#mv temp/* /media/aurio/Cris/11Li/rootAna1Track/
+#root -b -q -l "ana_1track.C(63,\"eLossTables/p_in_H2CF4_699torr_SRIM.txt\")" >& "logAna1Track/run_0063.log"
+#root -b -q -l "ana_1track.C(64,\"eLossTables/p_in_H2CF4_699torr_SRIM.txt\")" >& "logAna1Track/run_0064.log"
+#root -b -q -l "ana_1track.C(65,\"eLossTables/p_in_H2CF4_699torr_SRIM.txt\")" >& "logAna1Track/run_0065.log"
+#root -b -q -l "ana_1track.C(66,\"eLossTables/p_in_H2CF4_699torr_SRIM.txt\")" >& "logAna1Track/run_0066.log"
+#mv temp/* /media/aurio/Cris/11Li/rootAna1Track/
+#root -b -q -l "ana_1track.C(67,\"eLossTables/p_in_H2CF4_699torr_SRIM.txt\")" >& "logAna1Track/run_0067.log"
+#root -b -q -l "ana_1track.C(68,\"eLossTables/p_in_H2CF4_699torr_SRIM.txt\")" >& "logAna1Track/run_0068.log"
+#mv temp/* /media/aurio/Cris/11Li/rootAna1Track/
+
+rm -r temp

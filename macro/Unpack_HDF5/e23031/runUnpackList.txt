@@ -1,0 +1,37 @@
+mkdir temp
+
+root -b -q -l "unpack.C(7,7,\"ATTPC_e23031_H2_600Torr.par\")"      >& "logUnpack/run_0007.log"
+root -b -q -l "unpack.C(8,8,\"ATTPC_e23031_H2_600Torr.par\")"      >& "logUnpack/run_0008.log"
+root -b -q -l "unpack.C(9,9,\"ATTPC_e23031_H2_600Torr.par\")"      >& "logUnpack/run_0009.log"
+root -b -q -l "unpack.C(10,10,\"ATTPC_e23031_H2_600Torr.par\")"    >& "logUnpack/run_0010.log"
+mv temp/* /media/aurio/Cris/11Li/unpack/
+root -b -q -l "unpack.C(11,11,\"ATTPC_e23031_H2_600Torr.par\")"    >& "logUnpack/run_0011.log"
+root -b -q -l "unpack.C(12,12,\"ATTPC_e23031_H2_600Torr.par\")"    >& "logUnpack/run_0012.log"
+root -b -q -l "unpack.C(13,13,\"ATTPC_e23031_H2_600Torr.par\")"    >& "logUnpack/run_0013.log"
+root -b -q -l "unpack.C(14,14,\"ATTPC_e23031_H2_600Torr.par\")"    >& "logUnpack/run_0014.log"
+mv temp/* /media/aurio/Cris/11Li/unpack/
+root -b -q -l "unpack.C(15,15,\"ATTPC_e23031_H2_600Torr.par\")"    >& "logUnpack/run_0015.log"
+root -b -q -l "unpack.C(16,16,\"ATTPC_e23031_H2_600Torr.par\")"    >& "logUnpack/run_0016.log"
+root -b -q -l "unpack.C(17,17,\"ATTPC_e23031_H2_600Torr.par\")"    >& "logUnpack/run_0017.log"
+mv temp/* /media/aurio/Cris/11Li/unpack/
+
+#root -b -q -l "unpack.C(55,55,\"ATTPC_e23031_H2CF4_699Torr.par\")" >& "logUnpack/run_0055.log"
+#root -b -q -l "unpack.C(56,56,\"ATTPC_e23031_H2CF4_699Torr.par\")" >& "logUnpack/run_0056.log"
+#root -b -q -l "unpack.C(57,57,\"ATTPC_e23031_H2CF4_699Torr.par\")" >& "logUnpack/run_0057.log"
+#root -b -q -l "unpack.C(58,58,\"ATTPC_e23031_H2CF4_699Torr.par\")" >& "logUnpack/run_0058.log"
+#mv temp/* /media/aurio/Cris/11Li/unpack/
+#root -b -q -l "unpack.C(59,59,\"ATTPC_e23031_H2CF4_699Torr.par\")" >& "logUnpack/run_0059.log"
+#root -b -q -l "unpack.C(60,60,\"ATTPC_e23031_H2CF4_699Torr.par\")" >& "logUnpack/run_0060.log"
+#root -b -q -l "unpack.C(61,61,\"ATTPC_e23031_H2CF4_699Torr.par\")" >& "logUnpack/run_0061.log"
+#root -b -q -l "unpack.C(62,62,\"ATTPC_e23031_H2CF4_699Torr.par\")" >& "logUnpack/run_0062.log"
+#mv temp/* /media/aurio/Cris/11Li/unpack/
+#root -b -q -l "unpack.C(63,63,\"ATTPC_e23031_H2CF4_699Torr.par\")" >& "logUnpack/run_0063.log"
+#root -b -q -l "unpack.C(64,64,\"ATTPC_e23031_H2CF4_699Torr.par\")" >& "logUnpack/run_0064.log"
+#root -b -q -l "unpack.C(65,65,\"ATTPC_e23031_H2CF4_699Torr.par\")" >& "logUnpack/run_0065.log"
+#root -b -q -l "unpack.C(66,66,\"ATTPC_e23031_H2CF4_699Torr.par\")" >& "logUnpack/run_0066.log"
+#mv temp/* /media/aurio/Cris/11Li/unpack/
+#root -b -q -l "unpack.C(67,67,\"ATTPC_e23031_H2CF4_699Torr.par\")" >& "logUnpack/run_0067.log"
+#root -b -q -l "unpack.C(68,68,\"ATTPC_e23031_H2CF4_699Torr.par\")" >& "logUnpack/run_0068.log"
+#mv temp/* /media/aurio/Cris/11Li/unpack/
+
+rm -r temp
