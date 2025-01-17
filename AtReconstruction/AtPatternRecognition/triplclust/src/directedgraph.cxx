@@ -9,6 +9,8 @@
 /** @file */
 
 #include "directedgraph.h"
+#include "orthogonallsq.h"
+#include "pointcloud.h"
 
 #include "util.h"
 #include <assert.h> /* assert */
@@ -41,17 +43,17 @@ Graph::Graph(PointCloud &cloud, std::vector<size_t> _indices)
    assert(std::set<size_t>(_indices.begin(), _indices.end()).size() == _indices.size()); // indices are unique
    assert((indices.back() < cloud.size()));                                              // checks range of indices
 
-   this->indices = indices;
-
+   this->indices = _indices;
+  
    // insert Nodes without Edges. Nodes have x,y,z Coordinates and the corresponding index
    for (unsigned int i = 0; i < indices.size(); i++) {
       graph.insert(std::pair<size_t, Node>(
          indices[i], Node(indices[i], cloud[indices[i]].x, cloud[indices[i]].y, cloud[indices[i]].z)));
    }
-
+    
    // Add first subtree: the first Point by time and the last Point by Index
    this->subtree_roots.push_back(&graph.at(indices[indices.size() - 1]));
-
+   
    // construct MST by adding Edges
    constructMST();
 }

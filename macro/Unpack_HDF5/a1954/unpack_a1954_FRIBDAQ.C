@@ -8,7 +8,7 @@ bool reduceFunc(AtRawEvent *evt)
    return (evt->GetNumPads() > 0) && evt->IsGood();
 }
 
-void unpack_a1954_FRIBDAQ(TString fileName = "run_0065")
+void unpack_a1954_FRIBDAQ(TString fileName = "run_0064")
 {
 
    // Load the library for unpacking and reconstruction
@@ -17,9 +17,9 @@ void unpack_a1954_FRIBDAQ(TString fileName = "run_0065")
    TStopwatch timer;
    timer.Start();
 
-   TString parameterFile = "ATTPC.a1954.par";
+   TString parameterFile = "ATTPC.e22502.par";
    TString mappath = "";
-   TString filepath = "/media/yassid/bdcb3c81-adb9-4a9d-9172-0bd5935c1dd5/data/a1954_full/h5/";
+   TString filepath = "/media/david/TOSHIBA EXT/e22502/e22502/h5/";
    TString fileExt = ".h5";
    TString inputFile = filepath + fileName + fileExt;
    TString scriptfile = "ANL2023.xml";
@@ -32,7 +32,7 @@ void unpack_a1954_FRIBDAQ(TString fileName = "run_0065")
    TString outputFile = fileName + "_FRIB.root";
    TString loggerFile = dataDir + "ATTPCLog.log";
    TString digiParFile = dir + "/parameters/" + parameterFile;
-   TString geoManFile = dir + "/geometry/ATTPC_H1bar.root";
+   TString geoManFile = dir + "/geometry/ATTPC_He300torr_v2.root";
 
    FairRunAna *run = new FairRunAna();
    run->SetOutputFile(outputFile);

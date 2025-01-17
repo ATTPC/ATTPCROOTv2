@@ -1,14 +1,14 @@
 void rundigi_sim(
    TString mcFile = "./data/attpcsim.root",
    TString mapParFile =
-      "/mnt/simulations/attpcroot/fair_install_2020/yassid/ATTPCROOTv2/scripts/scripts/Lookup20150611.xml",
+      "/home/david/PhD/PhD-14-02/attpcroot/ATTPCROOTv2/scripts/ANL2023.xml",
    TString trigParFile = "/mnt/simulations/attpcroot/fair_install_2020/yassid/ATTPCROOTv2/parameters/AT.trigger.par")
 {
    // -----   Timer   --------------------------------------------------------
    TStopwatch timer;
    timer.Start();
 
-   TString scriptfile = "Lookup20150611.xml";
+   TString scriptfile = "ANL2023.xml";
    TString dir = getenv("VMCWORKDIR");
    TString scriptdir = dir + "/scripts/" + scriptfile;
    TString dataDir = dir + "/macro/data/";
@@ -20,7 +20,7 @@ void rundigi_sim(
    FairRunAna *fRun = new FairRunAna();
    fRun->SetInputFile(mcFile);
    fRun->SetGeomFile(
-      "/mnt/simulations/attpcroot/fair_install_2020/ATTPCROOTv2_develop/geometry/ATTPC_He1bar_v2_geomanager.root");
+      "/home/david/PhD/PhD-14-02/attpcroot/ATTPCROOTv2/geometry/ATTPC_He1bar_v2_geomanager.root");
    fRun->SetOutputFile("output_digi.root");
 
    TString parameterFile = "ATTPC.e20020_sim.par";

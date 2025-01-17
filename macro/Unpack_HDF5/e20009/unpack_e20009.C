@@ -9,7 +9,7 @@ bool reduceFunc(AtRawEvent *evt)
 }
 
 
-void unpack_e20009(TString fileName = "run_0260")
+void unpack_e20009(TString fileName = "run_0017")
 {
 
    // Load the library for unpacking and reconstruction
@@ -21,7 +21,7 @@ void unpack_e20009(TString fileName = "run_0260")
   
    TString parameterFile = "ATTPC.e20009.par";
    TString mappath = "";
-   TString filepath = "/mnt/daqtesting/e20009_attpc_transfer/h5/";
+   TString filepath = "/media/david/TOSHIBA EXT/e22502/e22502/h5/";
    TString fileExt = ".h5";
    TString inputFile = filepath + fileName + fileExt;
    TString scriptfile = "e12014_pad_mapping.xml";

@@ -1,13 +1,14 @@
 void run_eve(TString InputDataFileName = "run_0062")
 {
 
-   TString InputDataFile = InputDataFileName + ".root";
+   TString InputDir = "/media/david/EXTERNAL_USB/e22502/low_energy/";
+   TString InputDataFile = InputDir + InputDataFileName + ".root";
 
    TString OutputDataFile = InputDataFileName + ".reco_display.root";
    TString unpackDir = "/macro/Unpack_HDF5/a1954/";
 
    TString dir = getenv("VMCWORKDIR");
-   TString geoFile = "ATTPC_H1bar_geomanager.root";
+   TString geoFile = "ATTPC_He300torr_v2_geomanager.root";
    TString mapFile = "e12014_pad_mapping.xml";
 
    TString InputDataPath = InputDataFile;

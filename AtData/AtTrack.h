@@ -80,7 +80,7 @@ public:
    const HitVector &GetHitArray() const { return fHitArray; }
 
    std::vector<AtHit> GetHitArrayObject() { return ContainerManip::GetObjectVector(fHitArray); }
-   // const std::vector<AtHit> &GetHitArrayConst() const { return fHitArray; }
+   //const std::vector<AtHit> &GetHitArrayConst() const { return fHitArray; }
    const AtPatterns::AtPattern *GetPattern() const { return fPattern.get(); }
 
    Double_t GetGeoTheta() const { return fGeoThetaAngle; }

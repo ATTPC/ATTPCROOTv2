@@ -40,7 +40,7 @@ void AtTools::AtTrackTransformer::ClusterizeSmooth3D(AtTrack &track, Float_t rad
        }*/
 
    // Diffusion coefficients (TODO: Get them from the parameter file)
-   Double_t driftVel = 1.0;       // cm/us
+   Double_t driftVel = 1.00;       // cm/us
    Double_t samplingRate = 0.320; // us
    Double_t d_t = 0.0009;         // cm^2/us
    Double_t d_l = 0.0009;         // cm^2/us

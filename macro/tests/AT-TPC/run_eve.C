@@ -7,13 +7,13 @@
 #include "FairRunAna.h"
 */
 
-void run_eve(int runNum = 174, TString OutputDataFile = "./data/output.reco_display.root")
+void run_eve(int runNum = 100, TString OutputDataFile = "/media/david/EXTERNAL_USB/e22502/low_energy/output.reco_display.root")
 {
-   TString InputDataFile = TString::Format("./data/run_%04d.root", runNum);
+   TString InputDataFile = TString::Format("/media/david/EXTERNAL_USB/e22502/low_energy/run_%04d.root", runNum);
    std::cout << "Opening: " << InputDataFile << std::endl;
 
    TString dir = getenv("VMCWORKDIR");
-   TString geoFile = "ATTPC_v1.1_geomanager.root";
+   TString geoFile = "ATTPC_He300torr_v2_geomanager.root";
    TString mapFile = "e12014_pad_mapping.xml";
 
    TString InputDataPath = InputDataFile;

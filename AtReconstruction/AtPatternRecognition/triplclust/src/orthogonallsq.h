@@ -13,6 +13,8 @@
 
 #include "pointcloud.h"
 
+class PointCloud;
+
 //
 // orthogonal least squares fit with libeigen
 //   pc: points

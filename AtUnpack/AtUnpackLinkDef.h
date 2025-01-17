@@ -20,7 +20,9 @@
 #pragma link C++ class AtUnpacker + ;
 #pragma link C++ class AtHDFUnpacker + ;
 #pragma link C++ class AtFRIBHDFUnpacker + ;
+#pragma link C++ class AtFRIBLinkedHDFUnpacker + ;
 #pragma link C++ class AtROOTUnpacker + ;
 #pragma link C++ class AtGRAWUnpacker + ;
 #pragma link C++ class AtUnpackTask + ;
+
 #endif

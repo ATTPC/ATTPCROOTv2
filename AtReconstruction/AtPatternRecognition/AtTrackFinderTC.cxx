@@ -4,7 +4,9 @@
 #include "AtHit.h"              // for AtHit
 #include "AtPatternEvent.h"     // for AtPatternEvent
 #include "AtTrack.h"            // for AtTrack
-#include "AtTrackTransformer.h" // for AtTrackTransformer
+#include "AtTrackTransformer.h"
+#include "AtFitter.h" // for AtTrackTransformer
+#include "AtTrackFinder.h"
 
 #include <Math/Point3D.h> // for PositionVector3D
 
@@ -25,6 +27,11 @@ constexpr auto cRED = "\033[1;31m";
 constexpr auto cYELLOW = "\033[1;33m";
 constexpr auto cNORMAL = "\033[0m";
 constexpr auto cGREEN = "\033[1;32m";
+std::vector<AtTrack *> candTrackPool;
+std::vector<AtTrack> mergedTrackPool;
+Bool_t fEnableSingleVertexTrack = kTRUE;
+Double_t fClusterSize = 20.0;
+
 
 AtPATTERN::AtTrackFinderTC::AtTrackFinderTC() : AtPATTERN::AtPRA() {}
 
@@ -87,10 +94,22 @@ std::unique_ptr<AtPatternEvent> AtPATTERN::AtTrackFinderTC::FindTracks(AtEvent &
    add_clusters(cloud_xyz, cl_group, opt_params.is_gnuplot());
 
    // Post processing
-   // process_pointcloud(cloud_xyz, 25, 0);
+   //process_pointcloud(cloud_xyz, 25, 0);
 
    // Adapt clusters to AtTrack
    return clustersToTrack(cloud_xyz, cl_group, event);
+}
+
+const double tolerance = 3.0;
+Bool_t SameTrack(AtTrack *trA, AtTrack *trB)
+{
+   auto theta0 = trA->GetGeoTheta();
+   auto theta = trB->GetGeoTheta();
+
+   if (std::abs((theta0 * TMath::RadToDeg()) - (theta * TMath::RadToDeg())) <= tolerance)
+      return true;
+   else
+      return false;
 }
 
 void AtPATTERN::AtTrackFinderTC::eventToClusters(AtEvent &event, PointCloud &cloud)
@@ -112,7 +131,6 @@ void AtPATTERN::AtTrackFinderTC::eventToClusters(AtEvent &event, PointCloud &clo
 std::unique_ptr<AtPatternEvent>
 AtPATTERN::AtTrackFinderTC::clustersToTrack(PointCloud &cloud, const std::vector<cluster_t> &clusters, AtEvent &event)
 {
-
    std::vector<AtTrack> tracks;
    // std::vector<Point> points = cloud;
    auto points = cloud;
@@ -163,8 +181,194 @@ AtPATTERN::AtTrackFinderTC::clustersToTrack(PointCloud &cloud, const std::vector
    for (auto &track : tracks) {
       if (track.GetHitArray().size() > 0)
          SetTrackInitialParameters(track);
+      //retEvent->AddTrack(std::move(track));
+   }
+
+   bool kMergeTracks = false;
+
+   std::vector<AtTrack> mergedTracks;
+   if(tracks.size() > 2){
+
+      //const double tolerance = 2.0;
+      std::vector<bool> processed(tracks.size(), false);
+
+      for(Int_t numtr = 0; numtr < tracks.size(); numtr++){
+         std::cout << "Theta " << tracks.at(numtr).GetGeoTheta() << std::endl;
+         if (processed[numtr]) continue;
+       
+         auto track0 = tracks.at(numtr);  
+         auto hitArray0 = track0.GetHitArrayObject();
+         auto theta0 = track0.GetGeoTheta();
+
+         AtTrack newTrack;
+
+         for(auto &hit : hitArray0){
+            newTrack.AddHit(hit);
+                           
+         }
+                     
+         if (numtr + 1 < tracks.size()) {
+                           
+            for (size_t tr = numtr + 1; tr < tracks.size(); ++tr) {
+               if (processed[tr]) continue;
+
+               auto track = tracks.at(tr);
+               auto hitArray = track.GetHitArrayObject();
+               auto theta = track.GetGeoTheta();
+
+               if (std::abs((theta0 * TMath::RadToDeg()) - (theta * TMath::RadToDeg())) <= tolerance) {
+                  for(auto &hit : hitArray){
+                     newTrack.AddHit(hit);
+                                 
+                  }
+                  processed[tr] = true;
+               }
+
+            }  
+         }
+                        
+         processed[numtr] = true;
+         fTrackTransformer->ClusterizeSmooth3D(newTrack, fClusterRadius, fClusterDistance);             
+         mergedTracks.push_back(newTrack);
+
+      }
+
+      kMergeTracks = true;  
+   }
+
+   if(kMergeTracks){
+    std::swap(tracks, mergedTracks);
+   }
+
+   for (auto &track : tracks) {
+      if (track.GetHitArray().size() > 0)
+         SetTrackInitialParameters(track);
       retEvent->AddTrack(std::move(track));
    }
 
+
+
    return retEvent;
 }
+
+
+
+
+
+//First try of merging tracks
+ /*  bool kMergeTracks = false;
+
+   if(tracks.size() > 2){
+
+      const double tolerance = 2.0;
+      std::vector<bool> processed(tracks.size(), false);
+
+      for(Int_t numtr = 0; numtr < tracks.size(); numtr++){
+         std::cout << "Theta " << tracks.at(numtr).GetGeoTheta() << std::endl;
+         if (processed[numtr]) continue;
+       
+         auto track0 = tracks.at(numtr);  
+         auto hitArray0 = track0.GetHitArrayObject();
+         auto theta0 = track0.GetGeoTheta();
+
+         AtTrack newTrack;
+
+         for(auto &hit : hitArray0){
+            newTrack.AddHit(hit);
+                           
+         }
+                     
+         if (numtr + 1 < tracks.size()) {
+                           
+            for (size_t tr = numtr + 1; tr < tracks.size(); ++tr) {
+               if (processed[tr]) continue;
+
+               auto track = tracks.at(tr);
+               auto hitArray = track.GetHitArrayObject();
+               auto theta = track.GetGeoTheta();
+
+               if (std::abs((theta0 * TMath::RadToDeg()) - (theta * TMath::RadToDeg())) <= tolerance) {
+                  for(auto &hit : hitArray){
+                     newTrack.AddHit(hit);
+                                 
+                  }
+                  processed[tr] = true;
+               }
+
+            }  
+         }
+                        
+         processed[numtr] = true;
+         //fTrackTransformer->ClusterizeSmooth3D(newTrack, fClusterRadius, fClusterDistance);             
+         mergedTracks.push_back(newTrack);
+
+      }
+
+      kMergeTracks = true;  
+   }
+
+   if(kMergeTracks){
+    std::swap(tracks, mergedTracks);
+   }
+   */
+
+  /*
+   auto sp = std::unique_ptr<AtTrack[]>(new AtTrack[tracks.size()]);
+
+
+   for (auto iTrack = 0; iTrack < tracks.size(); ++iTrack) {
+      sp[iTrack] = tracks.at(iTrack);
+      candTrackPool.push_back(std::move(&sp[iTrack]));
+      
+   }
+   
+   std::vector<AtTrack *> candToMergePool;
+   AtTrackFinder merger;
+   for (auto itA = candTrackPool.begin(); itA != candTrackPool.end(); ++itA) {
+      if(candTrackPool.size() == 0) break;
+      AtTrack *trA = *(itA);
+      if(candTrackPool.size() == 1){
+         mergedTrackPool.push_back(*trA);
+         break;   
+      } 
+      candToMergePool.clear();
+      
+      auto itB = std::copy_if(itA + 1, candTrackPool.end(), std::back_inserter(candToMergePool),
+                                 [&trA, this](AtTrack *track) { return SameTrack(trA, track); });
+      
+                                std::cout << "candToMergePool size after copy_if: " << candToMergePool.size() << std::endl;  
+      
+      if (candToMergePool.size() > 0) { // Merge if matches are found
+         candToMergePool.push_back(trA);
+         Bool_t merged = merger.MergeTracks(&candToMergePool, &mergedTrackPool, fEnableSingleVertexTrack, fClusterRadius,
+                                        fClusterSize);
+
+            std::cout << "Merged: " << merged << std::endl;
+            std::cout << "candTrackPool size before erase: " << candTrackPool.size() << std::endl;
+
+         itA = candTrackPool.erase(std::remove_if(itA, candTrackPool.end(),
+                  [&trA, this](AtTrack *track) { return SameTrack(trA, track); }),
+         candTrackPool.end());
+
+         } else {
+            mergedTrackPool.push_back(*trA);
+                    itA = candTrackPool.erase(itA); // Erase the track from the pool
+         }
+
+   }
+   
+   std::swap(tracks, mergedTrackPool);
+
+   candToMergePool.clear();
+   candTrackPool.clear();
+   //mergedTrackPool.clear();
+
+ /*  for (auto &track : tracks) {
+      if (track.GetHitArray().size() > 0)
+         SetTrackInitialParameters(track);
+      retEvent->AddTrack(std::move(track));
+   }*/
+   //std::cout << "Number of tracks: " << tracks.size() << std::endl;
+
+  
+  

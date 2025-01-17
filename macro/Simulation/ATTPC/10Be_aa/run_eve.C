@@ -1,36 +1,48 @@
-void run_eve(TString InputDataFile = "output_digi.root", TString OutputDataFile = "output.reco_display.root",
-             TString unpackDir = "/Simulation/ATTPC/10Be_aa/")
+/*#include "TString.h"
+#include "AtEventDrawTask.h"
+#include "AtEventManager.h"
+
+#include "FairLogger.h"
+#include "FairParRootFileIo.h"
+#include "FairRunAna.h"
+*/
+
+void run_eve(TString OutputDataFile = "./data/output.reco_display.root")
 {
-  FairLogger *fLogger = FairLogger::GetLogger();
-  fLogger -> SetLogToScreen(kTRUE);
-  fLogger->SetLogVerbosityLevel("MEDIUM");
-  TString dir = getenv("VMCWORKDIR");
-  TString geoFile = "ATTPC_He1bar_v2_geomanager.root";
+   TString InputDataFile = "./data/output_H_digi_0.root";
+   std::cout << "Opening: " << InputDataFile << std::endl;
 
+   TString dir = getenv("VMCWORKDIR");
+   TString geoFile = "ATTPC_He300torr_v2_geomanager.root";
+   TString mapFile = "ANL2023.xml";
 
-  TString InputDataPath = dir + "/macro/"+ unpackDir + InputDataFile;
-  TString OutputDataPath = dir + "/macro/"+ unpackDir + OutputDataFile;
-  TString GeoDataPath = dir + "/geometry/" + geoFile;
+   TString InputDataPath = InputDataFile;
+   TString OutputDataPath = OutputDataFile;
+   TString GeoDataPath = dir + "/geometry/" + geoFile;
+   TString mapDir = dir + "/scripts/" + mapFile;
 
-  FairRunAna *fRun= new FairRunAna();
-  fRun -> SetInputFile(InputDataPath);
-  fRun -> SetOutputFile(OutputDataPath);
-  fRun -> SetGeomFile(GeoDataPath);
+   FairRunAna *fRun = new FairRunAna();
+   FairRootFileSink *sink = new FairRootFileSink(OutputDataFile);
+   FairFileSource *source = new FairFileSource(InputDataFile);
+   fRun->SetSource(source);
+   fRun->SetSink(sink);
+   fRun->SetGeomFile(GeoDataPath);
 
-  FairRuntimeDb* rtdb = fRun->GetRuntimeDb();
-  FairParRootFileIo* parIo1 = new FairParRootFileIo();
-  //parIo1->open("param.dummy.root");
-  rtdb->setFirstInput(parIo1);
+   FairRuntimeDb *rtdb = fRun->GetRuntimeDb();
+   FairParRootFileIo *parIo1 = new FairParRootFileIo();
+   // parIo1->open("param.dummy.root");
+   rtdb->setFirstInput(parIo1);
 
-  FairRootManager* ioman = FairRootManager::Instance();
+   auto fMap = std::make_shared<AtTpcMap>();
+   fMap->ParseXMLMap(mapDir.Data());
+   AtViewerManager *eveMan = new AtViewerManager(fMap);
 
-  AtEventManager *eveMan = new AtEventManager();
-  AtEventDrawTask *eve = new AtEventDrawTask();
-  eve->Set3DHitStyleBox();
-  eve->SetMultiHit(100); //Set the maximum number of multihits in the visualization
-  eve->SetSaveTextData();
-  eve->UnpackHoughSpace();
+   auto tabMain = std::make_unique<AtTabMain>();
+   tabMain->SetMultiHit(100); // Set the maximum number of multihits in the visualization
+   eveMan->AddTab(std::move(tabMain));
 
-  eveMan->AddTask(eve);
-  eveMan->Init();
+   eveMan->Init();
+
+   std::cout << "Finished init" << std::endl;
+   // eveMan->RunEvent(27);
 }

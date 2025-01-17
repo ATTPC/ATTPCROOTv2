@@ -14,6 +14,8 @@
 #include <fstream>
 #include <set>
 #include <vector>
+//#include <iostream>
+//#include "orthogonallsq.h"
 // 3D point class.
 class Point {
 public:

@@ -407,7 +407,7 @@ void C16_dd_anaFit()
                getDTS = getTS - getTSRef;
             }
 
-            if (fribDTS > (getDTS + 5) && fribDTS < (getDTS - 5)) {
+            if (fribDTS > (getDTS + 5) || fribDTS < (getDTS - 5)) {
                std::cerr << i << "  " << fribDTS << "  " << getDTS << "\n";
                std::exit(0);
             }

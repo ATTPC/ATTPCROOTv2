@@ -1,34 +1,73 @@
-Bool_t compareEventName(std::string &getname, std::string &fribname)
-{
-   // Parsing FRIB event number
-   std::regex fribregex("evt(\\d+)_\\d+");
-   std::string result = std::regex_replace(fribname, fribregex, "$1\n");
-
-   int fribnumber;
-   std::istringstream iss(result);
-   while (iss >> fribnumber) {
-      // std::cout << fribnumber << std::endl;
-   }
-
-   // Parsing GET event name
-   std::regex getregex("evt(\\d+)_data");
-   result = std::regex_replace(getname, getregex, "$1\n");
-
-   int getnumber;
-   std::istringstream isss(result);
-   while (isss >> getnumber) {
-      // std::cout << getnumber << std::endl;
-   }
-
-   return (fribnumber == getnumber) ? 1 : 0;
-
-   return 0;
-}
+#include <TMath.h>
+#include <TGraph2D.h>
+#include <TRandom2.h>
+#include <TStyle.h>
+#include <TCanvas.h>
+#include <TF2.h>
+#include <TH1.h>
+#include <Math/Functor.h>
+#include <TPolyLine3D.h>
+#include <Math/Vector3D.h>
+#include <Fit/Fitter.h>
+#include "AtTrackTransformer.h"
+#include <cassert>
+ 
+using namespace ROOT::Math;
 
 Double_t omega(Double_t x, Double_t y, Double_t z)
 {
    return sqrt(x * x + y * y + z * z - 2 * x * y - 2 * y * z - 2 * x * z);
 }
+
+void line(double t, const double *p, double &x, double &y, double &z) {
+   // a parametric line is define from 6 parameters but 4 are independent
+   // x0,y0,z0,z1,y1,z1 which are the coordinates of two points on the line
+   // can choose z0 = 0 if line not parallel to x-y plane and z1 = 1;
+   x = p[0] + p[1]*t;
+   y = p[2] + p[3]*t;
+   z = t;
+}
+
+ 
+bool first = true;
+struct SumDistance2 {
+   // the TGraph is a data member of the object
+   TGraph2D *fGraph;
+ 
+   SumDistance2(TGraph2D *g) : fGraph(g) {}
+ 
+   // calculate distance line-point
+   double distance2(double x,double y,double z, const double *p) {
+      // distance line point is D= | (xp-x0) cross  ux |
+      // where ux is direction of line and x0 is a point in the line (like t = 0)
+      XYZVector xp(x,y,z);
+      XYZVector x0(p[0], p[2], 0. );
+      XYZVector x1(p[0] + p[1], p[2] + p[3], 1. );
+      XYZVector u = (x1-x0).Unit();
+      double d2 = ((xp-x0).Cross(u)).Mag2();
+      return d2;
+   }
+ 
+   // implementation of the function to be minimized
+   double operator() (const double *par) {
+      assert(fGraph != nullptr);
+      double * x = fGraph->GetX();
+      double * y = fGraph->GetY();
+      double * z = fGraph->GetZ();
+      int npoints = fGraph->GetN();
+      double sum = 0;
+      for (int i  = 0; i < npoints; ++i) {
+         double d = distance2(x[i],y[i],z[i],par);
+         sum += d;
+      }
+      if (first) {
+         std::cout << "Total Initial distance square = " << sum << std::endl;
+      }
+      first = false;
+      return sum;
+   }
+ 
+};
 
 std::tuple<double, double>
 kine_2b(Double_t m1, Double_t m2, Double_t m3, Double_t m4, Double_t K_proj, Double_t thetalab, Double_t K_eject)
@@ -61,92 +100,161 @@ kine_2b(Double_t m1, Double_t m2, Double_t m3, Double_t m4, Double_t K_proj, Dou
    theta_cm = theta_cm * TMath::RadToDeg();
    return std::make_tuple(Ex, theta_cm);
 }
-
+double_t npointsinside = 0;
+double_t convert = 0.0065688;
 void GetEnergy(Double_t M, Double_t IZ, Double_t BRO, Double_t &E);
 
 void C14_pp_ana_IC()
 {
+   std::ifstream file("/home/david/PhD/PhD-14-02/attpcroot/ATTPCROOTv2/be10_range.csv");
+    if (!file.is_open()) {
+        std::cerr << "Failed to open the file." << std::endl;
+        return 1;
+    }
+
+    std::string line;
+    std::vector<std::string> ener;
+    std::vector<std::string> range;
+    std::vector<std::string> stopping_power;
+    vector<double> Ebeam_tb_all;
+    vector<double> Ebeam_a_all;
+    // Skip the header row
+    std::getline(file, line);
+
+    while (std::getline(file, line)) {
+        std::stringstream ss(line);
+        std::string cell;
+        std::vector<std::string> row;
+
+        // Read each cell in the row
+        while (std::getline(ss, cell, '\t')) {
+            row.push_back(cell);
+        }
+
+        // Ensure the row has at least 4 columns
+        if (row.size() >= 4) {
+            ener.push_back(row[0]);
+            double stopping_pwr = (std::stod(row[1]) + std::stod(row[2]))*convert;
+            stopping_power.push_back(std::to_string(stopping_pwr));
+            range.push_back(row[3]);
+        }
+    }
+    
+
+    file.close();  
+
+    int n = range.size();
+    std::vector<double> x(n), y(n), y2(n);
+    for (int i = 0; i < n; ++i) {
+        x[i] = std::stod(range[i]);
+        y[i] = std::stod(ener[i]);
+        y2[i] = std::stod(stopping_power[i]);
+    }
+   
+    // Create TGraph
+    TGraph *interpsrim = new TGraph(n, x.data(), y.data()); 
+    TGraph *stopping_power_vs_energy = new TGraph(n, y.data(), y2.data());
+    TGraph *interpsrimenergy = new TGraph(n, y.data(), x.data());
+    double_t ener_0 = 18.1; //MeV
+    double_t energy_i = ener_0;
+    std::vector<double> energy_vs_distance;
+    energy_vs_distance.push_back(energy_i);
+
+    while(energy_i > 0.01){
+      double_t stp = stopping_power_vs_energy->Eval(energy_i);
+      energy_i = energy_i - stp;
+      energy_vs_distance.push_back(energy_i);
+    }
+
+   std::vector<double> distances(energy_vs_distance.size());
+    for (size_t i = 0; i < distances.size(); ++i) {
+        distances[i] = static_cast<double>(i);
+    }
+
+   TGraph *energy_vs_distance_gr = new TGraph(distances.size(), distances.data(), energy_vs_distance.data());
+
+   energy_vs_distance_gr->Draw("AP");
+   double_t tb_entrance = 290.0;
+   double_t max_range = 1000 - 651.01; //beam max range in mm with this conditions (pressure, energy...)
    FairRunAna *run = new FairRunAna(); // Forcing a dummy run
 
-   TH2F *bro_vs_eloss = new TH2F("bro_vs_eloss", "bro_vs_eloss", 4000, 0, 25000.0, 1000, 0, 3);
-   TH2F *bro_vs_dedx = new TH2F("bro_vs_dedx", "bro_vs_dedx", 4000, 0, 4000.0, 1000, 0, 3);
+   TH2F *bro_vs_eloss = new TH2F("bro_vs_eloss", "bro_vs_eloss", 4000, 0, 25000.0, 500, 0, 3);
+   TH2F *bro_vs_dedx = new TH2F("bro_vs_dedx", "bro_vs_dedx", 4000, 0, 4000.0, 500, 0, 3);
    TH2F *angle_vs_energy = new TH2F("angle_vs_energy", "angle_vs_energy", 720, 0, 179, 500, 0, 80.0);
-   TH2F *angle_vs_energy_lr = new TH2F("angle_vs_energy_lr", "angle_vs_energy_lr", 720, 0, 179, 500, 0, 100.0);
+   TH2F *angle_vs_energy_lr = new TH2F("angle_vs_energy_lr", "angle_vs_energy_lr", 1000, 0, 90., 1000, 0, 20.0);
    TH2F *angle_vs_energy_t = new TH2F("angle_vs_energy_t", "angle_vs_energy_t", 720, 0, 179, 500, 0, 80.0);
    TH2F *angle_vs_momentum = new TH2F("angle_vs_momentum", "angle_vs_momentum", 720, 0, 179, 1000, 0, 2.0);
+   TH2F *angle_vs_angle = new TH2F("angle_vs_angle", "angle_vs_angle", 720, 0, 179, 720, 0, 179);
+   TH1F *vertex_distribution = new TH1F("vertex_distribution", "Vertex", 200, -1000, 2000);
+   TH1F *IC_higher_banana = new TH1F("IC_higher_banana", "IC_higher_banana", 1500, 0, 1500);
+   TH1F *IC_lower_banana = new TH1F("IC_lower_banana", "IC_lower_banana", 1500, 0, 1500);
+   TH1F *vertex_energy = new TH1F("vertex_energy", "Vertex Energy", 400, -20., 20.);
+   TH1F *vertex_energy_tb = new TH1F("vertex_energy_tb", "Vertex Energy using TB", 600, -20, 40);
+   TH2F *vertex_vs_beamenergy = new TH2F("vertex_vs_beamenergy", "Vertex and beam energy",1000, 0., 1000, 600, -20., 40.);
+   TH2F *vertex_vs_vertex = new TH2F("vertex_vs_vertex", "Vertex TB vs Vertex alpha",600, -20., 40., 600, -20., 40.);
+
 
    TH1F *HQval = new TH1F("HQval", "HQval", 600, -5, 55);
-   TH1F *HQvalp = new TH1F("HQvalp", "HQvalp", 600, -5, 55);
    TH2F *QvsEb = new TH2F("QvsEb", "QvsEb", 1000, -5, 15, 300, 0, 300);
    TH2F *QvsZpos = new TH2F("QvsZpos", "QvsZpos", 1000, -10, 50, 200, -100, 100);
 
-   TH1F *henergyIC = new TH1F("henergyIC", "henergyIC", 2048, 0, 2047);
-
-   TCutG *cutg = new TCutG("CUTG", 21);
-   cutg->SetVarX("bro_vs_eloss");
+   TCutG *cutg = new TCutG("CUTG",14);
+   cutg->SetVarX("angle_vs_angle");
    cutg->SetVarY("");
    cutg->SetTitle("Graph");
    cutg->SetFillStyle(1000);
-   cutg->SetLineColor(2);
-   cutg->SetLineWidth(3);
-   cutg->SetPoint(0, 52.08005, 0.9308778);
-   cutg->SetPoint(1, 122.0385, 0.200136);
-   cutg->SetPoint(2, 2073.101, 0.1172459);
-   cutg->SetPoint(3, 4179.627, 0.05398763);
-   cutg->SetPoint(4, 8206.124, 0.01908653);
-   cutg->SetPoint(5, 10841.22, 0.02235851);
-   cutg->SetPoint(6, 13639.56, 0.03435576);
-   cutg->SetPoint(7, 14222.55, 0.05616895);
-   cutg->SetPoint(8, 14323.6, 0.104158);
-   cutg->SetPoint(9, 13608.47, 0.1314244);
-   cutg->SetPoint(10, 10685.76, 0.1346964);
-   cutg->SetPoint(11, 5485.518, 0.1914107);
-   cutg->SetPoint(12, 3837.608, 0.2339464);
-   cutg->SetPoint(13, 1855.453, 0.3375591);
-   cutg->SetPoint(14, 1008.179, 0.4117239);
-   cutg->SetPoint(15, 743.8912, 0.5829574);
-   cutg->SetPoint(16, 440.738, 0.7738228);
-   cutg->SetPoint(17, 355.2333, 0.8807074);
-   cutg->SetPoint(18, 191.9969, 0.936331);
-   cutg->SetPoint(19, 106.4922, 0.9243338);
-   cutg->SetPoint(20, 52.08005, 0.9308778);
+   cutg->SetPoint(0,39.625,23.4881);
+   cutg->SetPoint(1,44.3098,24.2644);
+   cutg->SetPoint(2,49.0539,23.0445);
+   cutg->SetPoint(3,56.5258,20.383);
+   cutg->SetPoint(4,65.5989,17.0561);
+   cutg->SetPoint(5,71.7069,13.3964);
+   cutg->SetPoint(6,70.7581,11.4003);
+   cutg->SetPoint(7,66.5477,10.2913);
+   cutg->SetPoint(8,59.0165,13.2855);
+   cutg->SetPoint(9,51.4259,17.6105);
+   cutg->SetPoint(10,45.3179,19.3849);
+   cutg->SetPoint(11,39.6843,23.1554);
+   cutg->SetPoint(12,39.8622,24.0426);
+   cutg->SetPoint(13,39.625,23.4881);
 
-   // protons
-   TCutG *cutp = new TCutG("CUTP", 30);
-   cutp->SetVarX("bro_vs_eloss");
-   cutp->SetVarY("");
-   cutp->SetTitle("Graph");
-   cutp->SetFillStyle(1000);
-   cutp->SetPoint(0, 4232.583, 0.1645176);
-   cutp->SetPoint(1, 5277.039, 0.1217023);
-   cutp->SetPoint(2, 6554.724, 0.106717);
-   cutp->SetPoint(3, 8106.198, 0.09922434);
-   cutp->SetPoint(4, 9302.759, 0.09815395);
-   cutp->SetPoint(5, 10509.46, 0.08209824);
-   cutp->SetPoint(6, 10468.9, 0.06390175);
-   cutp->SetPoint(7, 8197.461, 0.05426832);
-   cutp->SetPoint(8, 5895.601, 0.06497214);
-   cutp->SetPoint(9, 4415.109, 0.07460557);
-   cutp->SetPoint(10, 3188.127, 0.09280205);
-   cutp->SetPoint(11, 2204.513, 0.1377581);
-   cutp->SetPoint(12, 1231.039, 0.1827141);
-   cutp->SetPoint(13, 287.9859, 0.2854707);
-   cutp->SetPoint(14, 176.4421, 0.3197229);
-   cutp->SetPoint(15, 105.4596, 0.4032126);
-   cutp->SetPoint(16, 85.17888, 0.426761);
-   cutp->SetPoint(17, 166.3017, 0.4417463);
-   cutp->SetPoint(18, 450.2316, 0.4331833);
-   cutp->SetPoint(19, 663.179, 0.3957199);
-   cutp->SetPoint(20, 815.2843, 0.3507639);
-   cutp->SetPoint(21, 1018.091, 0.3154413);
-   cutp->SetPoint(22, 1190.477, 0.291893);
-   cutp->SetPoint(23, 1606.232, 0.2555);
-   cutp->SetPoint(24, 2295.776, 0.2265997);
-   cutp->SetPoint(25, 2620.267, 0.2126847);
-   cutp->SetPoint(26, 3127.285, 0.1955586);
-   cutp->SetPoint(27, 3644.443, 0.1784325);
-   cutp->SetPoint(28, 4303.566, 0.1623768);
-   cutp->SetPoint(29, 4232.583, 0.1645176);
+  /* TCutG *high_banana = new TCutG("CUTG_1",11);
+   high_banana->SetVarX("angle_vs_energy_lr");
+   high_banana->SetVarY("");
+   high_banana->SetTitle("Graph");
+   high_banana->SetFillStyle(1000);
+   high_banana->SetPoint(0,36.547,5.23974);
+   high_banana->SetPoint(1,41.7693,4.97808);
+   high_banana->SetPoint(2,48.5848,4.0868);
+   high_banana->SetPoint(3,53.3645,3.48171);
+   high_banana->SetPoint(4,54.3381,3.12193);
+   high_banana->SetPoint(5,49.5584,2.93386);
+   high_banana->SetPoint(6,45.0443,3.38359);
+   high_banana->SetPoint(7,37.7862,4.38117);
+   high_banana->SetPoint(8,35.0423,4.84725);
+   high_banana->SetPoint(9,36.724,5.23157);
+   high_banana->SetPoint(10,36.547,5.23974);*/
+
+
+   TCutG *lower_banana = new TCutG("CUTG_1",12);
+   lower_banana->SetVarX("angle_vs_energy_lr");
+   lower_banana->SetVarY("");
+   lower_banana->SetTitle("Graph");
+   lower_banana->SetFillStyle(1000);
+   lower_banana->SetPoint(0,33.6261,4.79819);
+   lower_banana->SetPoint(1,37.1666,4.35664);
+   lower_banana->SetPoint(2,39.645,3.90691);
+   lower_banana->SetPoint(3,42.6544,3.33453);
+   lower_banana->SetPoint(4,45.7524,2.86845);
+   lower_banana->SetPoint(5,43.8936,2.61497);
+   lower_banana->SetPoint(6,38.7598,3.04834);
+   lower_banana->SetPoint(7,34.0686,3.72702);
+   lower_banana->SetPoint(8,30.9707,4.4057);
+   lower_banana->SetPoint(9,31.4133,4.99444);
+   lower_banana->SetPoint(10,33.272,4.84725);
+   lower_banana->SetPoint(11,33.6261,4.79819);
+
+
 
    // NB: Not used
    // Q-value calculation
@@ -160,66 +268,50 @@ void C14_pp_ana_IC()
    Double_t m_beam = m_Be10;
    Float_t aMass = 4.00260325415;
    Float_t O16Mass = 15.99491461956;
+   Float_t Be10Mass = 10.013533818;
    Double_t m_C14 = 14.003242 * 931.49401;
    Double_t m_C13 = 13.00335484 * 931.49401;
    Double_t m_C12 = 12.00 * 931.49401;
-   Double_t m_C16 = 16.0147 * 931.49401;
-   Double_t m_C17 = 17.0226 * 931.49401;
 
    Double_t m_a = 4.00260325415 * 931.49401;
    Double_t m_O16 = 15.99491461956 * 931.49401;
 
-   Double_t Ebeam_buff = 161.0; // 192.0;
+   Double_t Ebeam_buff = 18.1;
    Double_t m_b;
    Double_t m_B;
 
-   m_b = m_p;
-   m_B = m_C14;
-
-   std::ofstream outputFileEvents("list_of_events.txt");
-
-   std::ofstream kineFile("kinematics_14C_p.dat");
-   if (!kineFile.good())
-      std::cout << "Failed to open file" << std::endl;
-
-   TString FileName = "run_0006.root";
+   m_b = m_a;
+   m_B = m_Be10;
+   AtTools::AtTrackTransformer transformer;
+   //TString FileName = "run_0062.root";
    // std::cout << " Opening File : " << FileName.Data() << std::endl;
    // TFile *file = new TFile(FileName.Data(), "READ");
 
-   TString dir = "/home/yassid/fair_install/data/a1954/";
+   TString dir = "/media/david/EXTERNAL_USB/e22502/low_energy/";
 
    std::vector<std::pair<TString, TString>> filepairs;
-   filepairs.push_back(std::make_pair("run_0055.root", "run_0055_FRIB_sorted.root"));
-   filepairs.push_back(std::make_pair("run_0056.root", "run_0056_FRIB_sorted.root"));
-   filepairs.push_back(std::make_pair("run_0057.root", "run_0057_FRIB_sorted.root"));
-   filepairs.push_back(std::make_pair("run_0058.root", "run_0058_FRIB_sorted.root"));
-   filepairs.push_back(std::make_pair("run_0059.root", "run_0059_FRIB_sorted.root"));
-   filepairs.push_back(std::make_pair("run_0060.root", "run_0060_FRIB_sorted.root"));
-   filepairs.push_back(std::make_pair("run_0061.root", "run_0061_FRIB_sorted.root"));
-   filepairs.push_back(std::make_pair("run_0062.root", "run_0062_FRIB_sorted.root"));
-   filepairs.push_back(std::make_pair("run_0063.root", "run_0063_FRIB_sorted.root"));
-   filepairs.push_back(std::make_pair("run_0064.root", "run_0064_FRIB_sorted.root"));
-   filepairs.push_back(std::make_pair("run_0065.root", "run_0065_FRIB_sorted.root"));
-   filepairs.push_back(std::make_pair("run_0066.root", "run_0066_FRIB_sorted.root"));
-   filepairs.push_back(std::make_pair("run_0067.root", "run_0067_FRIB_sorted.root"));
-   filepairs.push_back(std::make_pair("run_0068.root", "run_0068_FRIB_sorted.root"));
-   filepairs.push_back(std::make_pair("run_0069.root", "run_0069_FRIB_sorted.root"));
-
+   filepairs.push_back(std::make_pair("run_0100.root", "run_0100.root_sorted.root"));
+   filepairs.push_back(std::make_pair("run_0101.root", "run_0101.root_sorted.root"));
+   filepairs.push_back(std::make_pair("run_0102.root", "run_0102.root_sorted.root"));
+   filepairs.push_back(std::make_pair("run_0103.root", "run_0103.root_sorted.root"));
+   filepairs.push_back(std::make_pair("run_0104.root", "run_0104.root_sorted.root"));
    for (auto iFile : filepairs) {
 
-      // GET Data
-      TFile *file = new TFile(iFile.first.Data(), "READ");
+// GET Data
+      TFile *file = new TFile((dir + iFile.first).Data(), "READ");
       TTree *tree = (TTree *)file->Get("cbmsim");
       Int_t nEvents = tree->GetEntries();
       std::cout << " Processing file : " << iFile.first.Data() << "\n";
       std::cout << " Number of events : " << nEvents << std::endl;
 
-      TTreeReader Reader1("cbmsim", file);
-      TTreeReaderValue<TClonesArray> eventArray(Reader1, "AtPatternEvent");
-      TTreeReaderValue<TClonesArray> eventHArray(Reader1, "AtEventH");
+      TTreeReader ReaderTracking("cbmsim", file);
+      //TTreeReaderValue<TClonesArray> trackingArray(ReaderTracking, "AtTrackingEvent");
+      TTreeReaderValue<TClonesArray> eventArray(ReaderTracking, "AtEventH");
+      TTreeReaderValue<TClonesArray> eventArray1(ReaderTracking, "AtPatternEvent");
+
 
       // FRIB data
-      TFile *fileFRIB = new TFile(iFile.second.Data(), "READ");
+      TFile *fileFRIB = new TFile((dir + iFile.second).Data(), "READ");
       TTree *treeFRIB = (TTree *)fileFRIB->Get("FRIB_output_tree");
       Int_t nEventsFRIB = treeFRIB->GetEntries();
       std::cout << " Number of FRIB DAQ events : " << nEventsFRIB << std::endl;
@@ -238,68 +330,67 @@ void C14_pp_ana_IC()
       }
 
       ULong64_t fribTSRef = 0;
-      ULong64_t getTSRef = 0;
+      ULong64_t getTSRef_0 = 0;
+      ULong64_t getTSRef_1 = 0;
 
       ULong64_t fribDTS = 0;
-      ULong64_t getDTS = 0;
-
+      ULong64_t getDTS_0 = 0;
+      ULong64_t getDTS_1 = 0;
       for (Int_t i = 0; i < nEvents; i++) {
 
          // eventArray->Clear();
-         if (i % 10000 == 0)
+         if (i % 1000 == 0)
             std::cout << " Event Number : " << i << "\n";
 
-         Reader1.Next();
+         //Reader1.Next();
+         ReaderTracking.Next();
          Reader2.Next();
 
-         AtPatternEvent *patternEvent = (AtPatternEvent *)eventArray->At(0);
-         AtEvent *event = (AtEvent *)eventHArray->At(0);
+         AtPatternEvent *patternEvent = (AtPatternEvent *)eventArray1->At(0);
+         AtEvent *event = (AtEvent *)eventArray->At(0);
+         auto getTS_0 = event->GetTimestamp(0);
+         auto getTS_1 = event->GetTimestamp(1);
 
-         if (patternEvent && event) {
-            std::vector<AtTrack> &patternTrackCand = patternEvent->GetTrackCand();
-            auto eventName = event->GetEventName();
-            auto getTS = event->GetTimestamp(1);
-
-            if (i == 0) {
+        /* if (i == 0) {
                fribDTS = 0;
-               getDTS = 0;
+               getDTS_0 = 0;
+               getDTS_1 = 0;
             } else {
 
                fribDTS = *ts - fribTSRef;
-               getDTS = getTS - getTSRef;
-            }
+               std::cout << " FRIB DTS : " << fribDTS << "\n";
+               //std::cout << " FRIB TS : " << *ts << "\n";
+               //std::cout << "Event name : " << *fribEvName << "\n";
+               getDTS_0 = getTS_0 - getTSRef_0;
+               getDTS_1 = getTS_1 - getTSRef_1;
+               std::cout << " GET DTS 0 : " << getDTS_0 << "\n";
+               std::cout << " GET DTS 1 : " << getDTS_1 << "\n";
+              // std::cout << "Event name : " << event->GetEventName() << "\n";
 
-            if (fribDTS > (getDTS + 5) && fribDTS < (getDTS - 5)) {
-               std::cerr << i << "  " << fribDTS << "  " << getDTS << "\n";
-               std::exit(0);
-            }
+              
+            }*/
 
-            getTSRef = getTS;
+            getTSRef_0 = getTS_0;
+            getTSRef_1 = getTS_1;
             fribTSRef = *ts;
 
-            // 900 - 1300
+
+         if (patternEvent) {
             Bool_t goodBeam = false;
-            for (auto ener : *energyIC) {
-               if (ener > 900 && ener < 1300) {
+            
+            for (auto enerIC : *energyIC) {
+               if (enerIC > 1 && enerIC < 1400) {
                   goodBeam = true;
-                  henergyIC->Fill(ener);
+                  //henergyIC->Fill(ener);
                }
             }
             if (!goodBeam)
                continue;
+            if (*multIC != 1)
+               continue;
 
-            // if(*multIC!=1)
-            // continue;
-
-            /*std::string str2 = "evt2_data";
-
-            if(!compareEventName(eventName,*fribEvName)){
-              std::cerr<< " Error, Mismatching event names! Exiting... "<<"\n";
-              //if(eventName.compare(str2) == 0)
-               std::cout<<eventName <<" "<<*fribEvName<<"\n";
-               std::exit(0);
-             }*/
-
+            std::vector<AtTrack> &patternTrackCand = patternEvent->GetTrackCand();
+            std::vector<AtTrack> newTracks;  
             // std::cout << " Number of pattern tracks " << patternTrackCand.size() << "\n";
 
             // Find track with largets angle
@@ -308,31 +399,207 @@ void C14_pp_ana_IC()
                                 [](const auto &a, const auto &b) { return b.GetGeoTheta() > a.GetGeoTheta(); });
             Int_t maxAIndex = std::distance(patternTrackCand.begin(), itMax);
 
+            std::sort(patternTrackCand.begin(), patternTrackCand.end(),
+              [](const AtTrack &a, const AtTrack &b) {
+                  return a.GetHitArray().size() > b.GetHitArray().size();
+              });
             // for (auto track : patternTrackCand) {
+                     if (patternTrackCand.size() > 1){
+                     auto track1 = patternTrackCand.at(0);
+                     auto track2 = patternTrackCand.at(1);
+
+                     Double_t theta1 = track1.GetGeoTheta();
+                     if(theta1 * TMath::RadToDeg() > 90.0) 
+                        theta1 = TMath::Pi() - theta1;
+                     Double_t theta2 = track2.GetGeoTheta();  
+                     if(theta2 * TMath::RadToDeg() > 90.0) 
+                        theta2 = TMath::Pi() - theta2;     
+                     //std::cout << "Theta 1: " << theta1 << " Theta 2: " << theta2 << std::endl;
+                     auto hitArray1 = track1.GetHitArrayObject();
+                     auto hitArray2 = track2.GetHitArrayObject(); 
+
+                     //auto firstPoint1 = hitArray1(0);
+                     //auto firstPoint2 = hitArray2(0);
+                  
+                  
+
+                     //std::cout << "First Z track 1: " << firstPoint1.GetPosition().Z() << std::endl;
+                     //std::cout << "First Z track 2: " << firstPoint2.GetPosition().Z() << std::endl;
+
+                     auto hitClusterArray1 = track1.GetHitClusterArray();
+                     auto firstCluster1 = hitClusterArray1->back();
+                     auto zpos1 = firstCluster1.GetPosition().Z();
+
+                     auto hitClusterArray2 = track2.GetHitClusterArray();
+                     auto firstCluster2 = hitClusterArray2->back();
+                     auto zpos2 = firstCluster2.GetPosition().Z();               
+
+                     //std::cout << "First hit in track 1: " << hitArray1[0].GetPosition().Z() << std::endl;
+                     //std::cout << "First hit in track 2: " << hitArray2[0].GetPosition().Z() << std::endl;
+                   
+
+                     if(theta1 >= theta2) 
+                     angle_vs_angle->Fill(theta1 * TMath::RadToDeg(), theta2 * TMath::RadToDeg());
+
+                     if(theta1 < theta2)
+                     angle_vs_angle->Fill(theta2 * TMath::RadToDeg(), theta1 * TMath::RadToDeg());
+
+                     if(cutg->IsInside(theta1 * TMath::RadToDeg(), theta2 * TMath::RadToDeg()))
+                        npointsinside++;
+
+
+                     vector<double> p1_line1;
+                     vector<double> p2_line1;
+                     vector<double> p1_line2;
+                     vector<double> p2_line2;
+                     if (hitClusterArray1->size() > 1 && hitClusterArray2->size() > 1) {
+                        auto onep = hitClusterArray1->at(hitClusterArray1->size() - 1);
+                        auto twop = hitClusterArray1->at(hitClusterArray1->size() - 2);
+
+                        auto onep2 = hitClusterArray2->at(hitClusterArray2->size() - 1);
+                        auto twop2 = hitClusterArray2->at(hitClusterArray2->size() - 2);
+
+                        p1_line1 = {onep.GetPosition().X(), onep.GetPosition().Y(), onep.GetPosition().Z()};
+                        p2_line1 = {twop.GetPosition().X(), twop.GetPosition().Y(), twop.GetPosition().Z()};
+
+                        p1_line2 = {onep2.GetPosition().X(), onep2.GetPosition().Y(), onep2.GetPosition().Z()};
+                        p2_line2 = {twop2.GetPosition().X(), twop2.GetPosition().Y(), twop2.GetPosition().Z()};
+                  
+                        vector<double> dirvec1 = {p2_line1[0] - p1_line1[0], p2_line1[1] - p1_line1[1], p2_line1[2] - p1_line1[2]};
+                        vector<double> dirvec2 = {p2_line2[0] - p1_line2[0], p2_line2[1] - p1_line2[1], p2_line2[2] - p1_line2[2]};
+
+                        double s = ((dirvec1[0]*dirvec1[0] + dirvec1[1]*dirvec1[1] + dirvec1[2]*dirvec1[2])*(p1_line1[0]*dirvec2[0] - p1_line2[0]*dirvec2[0] + p1_line1[1]*dirvec2[1]-p1_line2[1]*dirvec2[1] + p1_line1[2]*dirvec2[2] - p1_line2[2]*dirvec2[2]) + (dirvec1[0]*dirvec2[0] + dirvec1[1]*dirvec2[1] + dirvec1[2]*dirvec2[2])*(p1_line2[0]*dirvec1[0] - p1_line1[0]*dirvec1[0] + p1_line2[1]*dirvec1[1] - p1_line1[1]*dirvec1[1] + p1_line2[2]*dirvec1[2] - p1_line1[2]*dirvec1[2]))/((dirvec2[0]*dirvec2[0] + dirvec2[1]*dirvec2[1] + dirvec2[2]*dirvec2[2])*(dirvec1[0]*dirvec1[0] + dirvec1[1]*dirvec1[1] + dirvec1[2]*dirvec1[2]) - (dirvec1[0]*dirvec2[0] + dirvec1[1]*dirvec2[1] + dirvec1[2]*dirvec2[2])*(dirvec1[0]*dirvec2[0] + dirvec1[1]*dirvec2[1] + dirvec1[2]*dirvec2[2]));
+                        double t = (s*(dirvec2[0]*dirvec2[0] + dirvec2[1]*dirvec2[1] + dirvec2[2]*dirvec2[2]) + p1_line2[0]*dirvec2[0] - p1_line1[0]*dirvec2[0] + p1_line2[1]*dirvec2[1] - p1_line1[1]*dirvec2[1] + p1_line2[2]*dirvec2[2] - p1_line1[2]*dirvec2[2])/(dirvec1[0]*dirvec2[0] + dirvec1[1]*dirvec2[1] + dirvec1[2]*dirvec2[2]);
+
+                        double z1 = p1_line1[2] + t*dirvec1[2];
+                        double z2 = p1_line2[2] + s*dirvec2[2];
+
+                        double finalz = (z1 + z2)/2.0;   
+
+                        /*
+                        double a = dirvec1[0], b = -dirvec2[0], c = p1_line2[0] - p1_line1[0];
+                        double d = dirvec1[1], e = -dirvec2[1], f = p1_line2[1] - p1_line1[1];
+                        double g = dirvec1[2], h = -dirvec2[2], I = p1_line2[2] - p1_line1[2];
+
+    
+                        double denominator = a * (e * I - f * h) - b * (d * I - f * g) + c * (d * h - e * g);
+
+
+                        double t = (c * (e * I - f * h) - b * (f * I - c * h) + a * (f * h - e * I)) / denominator;
+                        double s = (a * (f * I - c * h) - c * (d * I - f * g) + b * (d * h - e * g)) / denominator;
+
+    
+                        vector<double> vertex = {p1_line1[0] + t * dirvec1[0], p1_line1[1] + t * dirvec1[1], p1_line1[2] + t * dirvec1[2]};*/
+                        //if(vertex[2] > 1800.0 && vertex[2] < 1850.0)
+                        //std::cout << "Check this event: " << i << std::endl;
+                        if(cutg->IsInside(theta1 * TMath::RadToDeg(), theta2 * TMath::RadToDeg()))
+                              //vertex_distribution->Fill(vertex[2]);
+
+                        vertex_distribution->Fill(finalz);      
+
+                        //double_t covered_range = max_range - vertex[2];     
+                        double_t covered_range = 1000 - finalz;
+
+                        //std::cout << "Vertex: " << vertex[2] << " Covered range: " << covered_range << std::endl;
+                        
+                       /* if(cutg->IsInside(theta1 * TMath::RadToDeg(), theta2 * TMath::RadToDeg())){           
+                        Double_t rad1 = track1.GetGeoRadius();
+                        Double_t rad2 = track2.GetGeoRadius();
+
+                        Double_t B_f = 2.0;
+
+                        double bro1 = B_f * rad1 / TMath::Sin(theta1) / 1000.0;
+                        double bro2 = B_f * rad2 / TMath::Sin(theta2) / 1000.0;
+                        double ener1 = 0;
+                        double ener2 = 0;
+                        Double_t Am = 4.0;
+
+                        GetEnergy(Am, 2.0, bro1, ener1);
+                        angle_vs_energy_lr->Fill(theta1 * TMath::RadToDeg(), ener1 * Am);
+                        GetEnergy(Am, 2.0, bro2, ener2);
+                        angle_vs_energy_lr->Fill(theta2 * TMath::RadToDeg(), ener2 * Am);
+                        }*/
+                        if(covered_range > 0){
+                        double_t Ebeam_tb = energy_vs_distance_gr->Eval(covered_range);
+                        Ebeam_tb_all.push_back(Ebeam_tb);
+
+                        //std::cout << "Ebeam: " << Ebeam_tb << std::endl;
+                        if(cutg->IsInside(theta1 * TMath::RadToDeg(), theta2 * TMath::RadToDeg())){
+                        vertex_energy_tb->Fill(Ebeam_tb);
+                        //vertex_vs_beamenergy->Fill(vertex[2],Ebeam_tb);
+                        vertex_vs_beamenergy->Fill(finalz,Ebeam_tb);
+                        
+                        }
+                        }
+                     }
+
+                     auto alphatrack = track1;
+                     auto anglealpha = theta1;
+                     auto radalpha = track1.GetGeoRadius();
+                     double Ebeam;
+
+                     if(theta1 < theta2){
+
+                     alphatrack = track2;
+                     anglealpha = theta2;
+                     //auto anglealpha = 10. * TMath::Pi() / 180.;
+                     //auto anglealpha = 20. * TMath::DegToRad();
+                     //auto anglealpha = 50. * TMath::Pi() / 180.;
+                     //auto anglealpha = 70. * TMath::Pi() / 180.;
+                     radalpha = track2.GetGeoRadius();
+                     }
+
+
+                     
+
+                     if (anglealpha * TMath::RadToDeg() > 90.0)
+                        anglealpha = TMath::Pi()  - anglealpha;
+
+                     double broalpha = 2.0 * radalpha / TMath::Sin(anglealpha) / 1000.0;
+                     double eneralpha = 0; //14.35, 13.06, 6.1, 1.73
+
+                     GetEnergy(4.0, 2.0, broalpha, eneralpha);
+                     double a = (m_a*(eneralpha + m_a) - m_a*m_a)/(1 - TMath::Cos(2*(TMath::Pi()/2 - anglealpha)));
+                                     
+                        Ebeam = ((TMath::Sqrt(a + m_Be10*m_Be10) + TMath::Sqrt(a + m_a*m_a))*(TMath::Sqrt(a + m_Be10*m_Be10) + TMath::Sqrt(a + m_a*m_a)) - (m_a + m_Be10)*(m_a + m_Be10))/(2*m_a);
+                       // std::cout << "Ebeam: " << Ebeam << std::endl;
+                       if(cutg->IsInside(theta1 * TMath::RadToDeg(), theta2 * TMath::RadToDeg())){
+                       vertex_energy->Fill(Ebeam);
+                       Ebeam_a_all.push_back(Ebeam);
+                       }
+                  }
             for (auto index = 0; index < patternTrackCand.size(); ++index) {
 
-               if (index != maxAIndex)
-                  continue;
+               //if (index != maxAIndex)
+                 // continue;
+                  
+
+
+
 
                auto track = patternTrackCand.at(index);
 
                Double_t theta = track.GetGeoTheta();
                Double_t rad = track.GetGeoRadius();
 
-               // if (theta * TMath::RadToDeg() > 90.0)
-               //  continue;
-
-               Double_t B_f = 2.85;
+               Double_t B_f = 2.0;
 
                double bro = B_f * rad / TMath::Sin(theta) / 1000.0;
                double ener = 0;
-               Double_t Am = 1.0;
+               Double_t Am = 4.0;
 
-               GetEnergy(Am, 1.0, bro, ener);
+               GetEnergy(Am, 2.0, bro, ener);
+               angle_vs_energy_lr->Fill(theta * TMath::RadToDeg(), ener * Am);
 
-               // if (ener * Am > 6.0)
-               //  continue;
+               for (auto enerIC : *energyIC) {
+               
+               //if(high_banana->IsInside(theta * TMath::RadToDeg(), ener * Am))
+                 // IC_higher_banana->Fill(enerIC);
 
+               //if(lower_banana->IsInside(theta * TMath::RadToDeg(), ener * Am))
+                  IC_lower_banana->Fill(enerIC);
+
+               }
                // if (track.GetHitArray()->size() > 80)
                // angle_vs_energy->Fill(theta * TMath::RadToDeg(), ener * Am);
 
@@ -354,104 +621,69 @@ void C14_pp_ana_IC()
 
                // Energy loss from ADC
                auto hitClusterArray = track.GetHitClusterArray();
+               auto firstCluster = hitClusterArray->back();
+               auto zpos = firstCluster.GetPosition().Z();
                std::size_t cnt = 0;
-               Double_t zpos = 0;
 
-               if (theta * TMath::RadToDeg() < 90) {
-                  auto firstCluster = hitClusterArray->back();
-                  zpos = firstCluster.GetPosition().Z();
-                  auto it = hitClusterArray->rbegin();
-                  while (it != hitClusterArray->rend()) {
+               auto it = hitClusterArray->rbegin();
+               while (it != hitClusterArray->rend()) {
 
-                     if (((Float_t)cnt / (Float_t)hitClusterArray->size()) > 0.5)
-                        break;
-                     auto dir = (*it).GetPosition() - (*std::next(it, 1)).GetPosition();
-                     eloss += (*it).GetCharge();
-                     len += std::sqrt(dir.Mag2());
-                     dedx += (*it).GetCharge();
-                     // std::cout<<(*it).GetCharge()<<"\n";
-                     it++;
-                     ++cnt;
-                  }
-               } else if (theta * TMath::RadToDeg() > 90) {
-
-                  auto firstCluster = hitClusterArray->front();
-                  zpos = firstCluster.GetPosition().Z();
-                  eloss += hitClusterArray->at(0).GetCharge();
-
-                  cnt = 1;
-                  for (auto iHitClus = 1; iHitClus < hitClusterArray->size(); ++iHitClus) {
-
-                     if (((Float_t)cnt / (Float_t)hitClusterArray->size()) > 0.5)
-                        break;
-                     auto dir =
-                        hitClusterArray->at(iHitClus).GetPosition() - hitClusterArray->at(iHitClus - 1).GetPosition();
-                     len += std::sqrt(dir.Mag2());
-                     eloss += hitClusterArray->at(iHitClus).GetCharge();
-                     dedx += hitClusterArray->at(iHitClus).GetCharge();
-                     // std::cout<<len<<" - "<<eloss<<" - "<<hitClusterArray->at(iHitClus).GetCharge()<<"\n";
-                     ++cnt;
-                  }
+                  if (((Float_t)cnt / (Float_t)hitClusterArray->size()) > 0.5)
+                     break;
+                  auto dir = (*it).GetPosition() - (*std::next(it, 1)).GetPosition();
+                  eloss += (*it).GetCharge();
+                  len += std::sqrt(dir.Mag2());
+                  dedx += (*it).GetCharge();
+                  // std::cout<<(*it).GetCharge()<<"\n";
+                  it++;
+                  ++cnt;
                }
-
                eloss /= cnt;
                dedx /= len;
 
                /*std::cout << " Brho : " << bro << " - Angle : " << theta * TMath::RadToDeg() << " - Radius : " << rad
                          << " - Energy :" << ener * Am << " - dE     :" << eloss << "\n";*/
 
-               // if(eloss<1500)
-               //        continue;
-
                // Selection of events
                if (zpos < 500.0 || zpos > 950)
                   continue;
 
-               // if(theta * TMath::RadToDeg()<13.0)
-               //  continue;
+               if (theta * TMath::RadToDeg() < 13.0)
+                  continue;
 
-               // if(ener*Am>8.0)
-               //  continue;
+              /* if (cutg->IsInside(eloss, bro)) { // Selection of protons
 
-               // if (cutp->IsInside(eloss, bro)) {
-               if (theta * TMath::RadToDeg() > 100.0) {
-                  angle_vs_energy_t->Fill(theta * TMath::RadToDeg(), ener * Am);
-                  auto [ex_energy_exp, theta_cm] = kine_2b(m_C14, m_p, m_d, m_C13, Ebeam_buff, theta, ener * Am);
-                  HQvalp->Fill(ex_energy_exp);
-               }
-               // }
-
-               if (cutg->IsInside(eloss, bro)) { // Selection of protons
-
-                  angle_vs_energy->Fill(theta * TMath::RadToDeg(), ener * Am);
-                  auto [ex_energy_exp, theta_cm] = kine_2b(m_C14, m_p, m_b, m_B, Ebeam_buff, theta, ener * Am);
+                 
+                  auto [ex_energy_exp, theta_cm] = kine_2b(m_Be10, m_a, m_a, m_Be10, Ebeam_buff, theta, ener);
 
                   HQval->Fill(ex_energy_exp);
 
                   // Excitation energy vs Beam energy
                   for (auto iEb = 0; iEb < 300; ++iEb) {
-                     auto [Qdep, theta_cm_qdep] = kine_2b(m_C14, m_p, m_b, m_B, iEb, theta, ener * Am);
+                     auto [Qdep, theta_cm_qdep] = kine_2b(m_Be10, m_a, m_a, m_Be10, iEb, theta, ener);
                      QvsEb->Fill(Qdep, iEb);
-                     //  }
+                  }
 
-                     // Rough vertex
-                     QvsZpos->Fill(ex_energy_exp, zpos / 10.0);
+                  // Rough vertex
+                  QvsZpos->Fill(ex_energy_exp, zpos / 10.0);
 
-                  } // deuterons
+               }*/ // protons
 
-                  bro_vs_eloss->Fill(eloss, bro);
-                  bro_vs_dedx->Fill(dedx, bro);
+               bro_vs_eloss->Fill(eloss, bro);
+               bro_vs_dedx->Fill(dedx, bro);
 
-                  angle_vs_energy_lr->Fill(theta * TMath::RadToDeg(), ener * Am);
-
-                  kineFile << theta * TMath::RadToDeg() << "  " << ener * Am << "\n";
-
-                  // List of events
-                  if (ex_energy_exp > 9.0 && ex_energy_exp < 9.4)
-                     outputFileEvents << iFile.first.Data() << " - Ev. : " << i << "\n";
-
-               } // protons
+               
             }
+
+
+
+
+
+
+
+
+
+
          }
 
       } // nEvents
@@ -467,7 +699,7 @@ void C14_pp_ana_IC()
    Double_t *EnerLabSca = new Double_t[20000];
    Double_t *MomLabRec = new Double_t[20000];
 
-   TString fileKine = "C16_dd_gs.txt";
+   TString fileKine = "10Be_a_gs.txt";
    std::ifstream *kineStr = new std::ifstream(fileKine.Data());
    Int_t numKin = 0;
 
@@ -486,8 +718,9 @@ void C14_pp_ana_IC()
       std::cout << " Warning : No Kinematics file found for this reaction!" << std::endl;
 
    TGraph *Kine_AngRec_EnerRec = new TGraph(numKin, ThetaLabRec, EnerLabRec);
+   TGraph *Kine_AngRec_AngSca = new TGraph(numKin, ThetaLabRec, ThetaLabSca);
 
-   TString fileKine2 = "C16_dd_1.766.txt";
+   TString fileKine2 = "10Be_a_1s.txt";
    std::ifstream *kineStr2 = new std::ifstream(fileKine2.Data());
    numKin = 0;
 
@@ -501,7 +734,8 @@ void C14_pp_ana_IC()
       std::cout << " Warning : No Kinematics file found for this reaction!" << std::endl;
 
    TGraph *Kine_1m1 = new TGraph(numKin, ThetaLabRec, EnerLabRec);
-
+   TGraph *Kine_1m1_ang_ang = new TGraph(numKin, ThetaLabRec, ThetaLabSca);
+   
    TCanvas *c_kn_el_lr = new TCanvas();
    angle_vs_energy_lr->Draw("ZCOL");
    Kine_AngRec_EnerRec->Draw("SAME");
@@ -513,14 +747,44 @@ void C14_pp_ana_IC()
    TCanvas *cQZ = new TCanvas();
    QvsZpos->Draw();
 
+   TCanvas *angle_angle = new TCanvas();
+   angle_vs_angle->Draw("colz");
+   Kine_AngRec_AngSca->SetLineColor(kRed);
+   Kine_AngRec_AngSca->Draw("SAME");
+   Kine_1m1_ang_ang->SetLineColor(kBlack);
+   Kine_1m1_ang_ang->Draw("SAME");
+
+   TCanvas *c_vertex = new TCanvas();
+   vertex_distribution->Draw();
+
+    TCanvas *c_vertex_ebeam = new TCanvas();
+   vertex_energy->Draw();
+   vertex_energy_tb->Draw("SAME");
+
+   TCanvas *c_vertex_ebeam_tb = new TCanvas();
+   vertex_energy_tb->Draw();
+
+   for(int i=0; i<Ebeam_tb_all.size(); i++){
+      vertex_vs_vertex->Fill(Ebeam_tb_all[i],Ebeam_a_all[i]);
+   }
+
+   TCanvas *c_vertex_vs_vertex = new TCanvas();
+   vertex_vs_vertex->Draw();   
+
+   TCanvas *c_vertex_vs_beamenergy = new TCanvas();
+   vertex_vs_beamenergy->Draw();
+
+   std::cout<<"Points inside the banana: "<<npointsinside<<std::endl;
    TCanvas *c_kn_el = new TCanvas();
-   c_kn_el->Divide(2, 1);
+   c_kn_el->Divide(3, 1);
    c_kn_el->cd(1);
    angle_vs_energy->Draw("colz");
    Kine_AngRec_EnerRec->SetLineColor(kRed);
    Kine_AngRec_EnerRec->Draw("SAME");
    Kine_1m1->Draw("SAME");
    c_kn_el->cd(2);
+   bro_vs_dedx->Draw("colz");
+   c_kn_el->cd(3);
    angle_vs_energy_t->Draw("colz");
 
    TCanvas *c_PID_eloss = new TCanvas();
@@ -528,17 +792,16 @@ void C14_pp_ana_IC()
    c_PID_eloss->cd();
    bro_vs_eloss->Draw("colz");
    cutg->Draw("l");
-   cutp->Draw("l");
    c_PID_dedx->cd();
    bro_vs_dedx->Draw("colz");
 
    angle_vs_energy->GetXaxis()->SetTitle("#theta (deg)");
    angle_vs_energy->GetYaxis()->SetTitle("E (MeV)");
-   angle_vs_energy->SetTitle("gate on d");
+   angle_vs_energy->SetTitle("gate on p");
 
    angle_vs_energy_t->GetXaxis()->SetTitle("#theta (deg)");
    angle_vs_energy_t->GetYaxis()->SetTitle("E (MeV)");
-   angle_vs_energy_t->SetTitle("gate on p");
+   angle_vs_energy_t->SetTitle("gate on d");
 
    bro_vs_dedx->GetXaxis()->SetTitle("Brho ");
    bro_vs_dedx->GetYaxis()->SetTitle("dE/dx (au)");
@@ -548,15 +811,14 @@ void C14_pp_ana_IC()
    angle_vs_energy_t->SetStats(0);
    bro_vs_dedx->SetStats(0);
 
-   TCanvas *c_ExEner = new TCanvas();
-   c_ExEner->Divide(2, 1);
-   c_ExEner->cd(1);
-   HQval->Draw();
-   c_ExEner->cd(2);
-   HQvalp->Draw();
+   //TCanvas *c_ExEner = new TCanvas();
+   //HQval->Draw();
 
-   TCanvas *c_IC = new TCanvas();
-   henergyIC->Draw();
+   TCanvas *c_high_banana = new TCanvas();
+   IC_higher_banana->Draw();
+
+   TCanvas *c_low_banana = new TCanvas();
+   IC_lower_banana->Draw();
 }
 
 void GetEnergy(Double_t M, Double_t IZ, Double_t BRO, Double_t &E)

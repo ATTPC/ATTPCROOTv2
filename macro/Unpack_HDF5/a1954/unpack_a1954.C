@@ -8,18 +8,19 @@ bool reduceFunc(AtRawEvent *evt)
    return (evt->GetNumPads() > 0) && evt->IsGood();
 }
 
-void unpack_a1954(TString fileName = "run_0033")
+void unpack_a1954(TString fileName = "run_0099")
 {
-
+  
    // Load the library for unpacking and reconstruction
    gSystem->Load("libAtReconstruction.so");
 
    TStopwatch timer;
    timer.Start();
 
-   TString parameterFile = "ATTPC.a1954.par";
+   TString parameterFile = "ATTPC.e22502.par";
    TString mappath = "";
-   TString filepath = "/media/yassid/bdcb3c81-adb9-4a9d-9172-0bd5935c1dd5/a1954/h5/";
+   TString filepath = "/media/david/TOSHIBA EXT/e22502/e22502/h5/";
+   TString filepathout = "/media/david/EXTERNAL_USB/e22502/low_energy/";
    TString fileExt = ".h5";
    TString inputFile = filepath + fileName + fileExt;
    TString scriptfile = "ANL2023.xml";
@@ -29,10 +30,10 @@ void unpack_a1954(TString fileName = "run_0033")
    TString dataDir = dir + "/macro/data/";
    TString geomDir = dir + "/geometry/";
    gSystem->Setenv("GEOMPATH", geomDir.Data());
-   TString outputFile = fileName + ".root";
+   TString outputFile = filepathout + fileName + ".root";
    TString loggerFile = dataDir + "ATTPCLog.log";
    TString digiParFile = dir + "/parameters/" + parameterFile;
-   TString geoManFile = dir + "/geometry/ATTPC_H1bar.root";
+   TString geoManFile = dir + "/geometry/ATTPC_He300torr_v2.root";
 
    // Specific paths for three LUT for electric field correction
    TString zlutFile = dir + "/resources/corrections/a1954/zLUT.txt";
@@ -74,7 +75,7 @@ void unpack_a1954(TString fileName = "run_0033")
    filterTask->SetPersistence(false);
    filterTask->SetFilterAux(false);
 
-   auto threshold = 20;
+   auto threshold = 60;
 
    // auto psa = new AtPSASimple2();
    auto psa = new AtPSAMax();
@@ -96,6 +97,9 @@ void unpack_a1954(TString fileName = "run_0033")
    praTask->SetInputBranch("AtEventCorrected");
    praTask->SetOutputBranch("AtPatternEvent");
    praTask->SetPersistence(kTRUE);
+   praTask->SetTcluster(8.5);
+   praTask->SetMcluster(25);
+
    // praTask->SetMaxNumHits(3000);
    // praTask->SetMinNumHits(100);
 

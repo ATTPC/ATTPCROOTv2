@@ -5,17 +5,17 @@ void run_digi_12c12c_rcnp_attpc(int subnum=0)
    TString inOutDir = "./data/";
    //   TString outputFile = inOutDir + "output_digi.root";
    //   TString outputFile = inOutDir + "output_digi_rcnp_12c.root";
-   TString outputFile = "./data/output_digi_rcnp_12c_" + std::to_string(subnum) + ".root";
+   TString outputFile = "./data/output_digi_" + std::to_string(subnum) + ".root";
    TString scriptfile = "Lookup20150611.xml";
 
-      TString paramFile = "ATTPC.e20009_sim.par";
+      TString paramFile = "ATTPC.e22502_sim.par";
    //TString paramFile = "rcnp_attpc.par";
 
    TString dir = getenv("VMCWORKDIR");
 
    // TString mcFile = "./data/sim_attpc.root";
    //   TString mcFile = inOutDir + "attpcsim.root";
-      TString mcFile = inOutDir + "attpcsim_C12C12.root";
+      TString mcFile = inOutDir + "attpcsim.root";
    //TString mcFile = "./data1/attpcsim_12c12c_" + std::to_string(subnum) + ".root";
 
    // Create the full parameter file paths

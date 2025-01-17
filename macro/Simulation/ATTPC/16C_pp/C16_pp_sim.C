@@ -4,10 +4,10 @@ void C16_pp_sim(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
    TString dir = getenv("VMCWORKDIR");
 
    // Output file name
-   TString outFile = "./data/attpcsim.root";
+   TString outFile = "./data/attpcsim_16C.root";
 
    // Parameter file name
-   TString parFile = "./data/attpcpar.root";
+   TString parFile = "./data/attpcpar_16C.root";
 
    // -----   Timer   --------------------------------------------------------
    TStopwatch timer;
@@ -49,7 +49,7 @@ void C16_pp_sim(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
    // -----   Magnetic field   -------------------------------------------
    // Constant Field
    AtConstField *fMagField = new AtConstField();
-   fMagField->SetField(0., 0., 28.5);                     // values are in kG
+   fMagField->SetField(0., 0., 20.0);                     // values are in kG
    fMagField->SetFieldRegion(-50, 50, -50, 50, -10, 230); // values are in cm
                                                           //  (xmin,xmax,ymin,ymax,zmin,zmax)
    run->SetField(fMagField);
@@ -66,10 +66,10 @@ void C16_pp_sim(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
                  // maximum multiplicity has been set to 10 particles.
    Double_t px = 0.000 / a; // X-Momentum / per nucleon!!!!!!
    Double_t py = 0.000 / a; // Y-Momentum / per nucleon!!!!!!
-   Double_t pz = 2.297 / a; // Z-Momentum / per nucleon!!!!!!
+   Double_t pz = 0.297 / a; // Z-Momentum / per nucleon!!!!!!
    Double_t BExcEner = 0.0;
    Double_t Bmass = 16.014701;
-   Double_t NomEnergy = 0;
+   Double_t NomEnergy = 100.0;
 
    AtTPCIonGenerator *ionGen = new AtTPCIonGenerator("Ion", z, a, q, m, px, py, pz, BExcEner, Bmass, NomEnergy);
    ionGen->SetSpotRadius(0, -100, 0);
@@ -140,7 +140,7 @@ void C16_pp_sim(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
    ExE.push_back(0.0);           // In MeV
 
    Double_t ThetaMinCMS = 20.0;
-   Double_t ThetaMaxCMS = 20.0;
+   Double_t ThetaMaxCMS = 80.0;
 
    AtTPC2Body *TwoBody =
       new AtTPC2Body("TwoBody", &Zp, &Ap, &Qp, mult, &Pxp, &Pyp, &Pzp, &Mass, &ExE, ResEner, ThetaMinCMS, ThetaMaxCMS);

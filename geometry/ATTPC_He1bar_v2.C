@@ -23,13 +23,13 @@
 #include <iostream>
 
 // Name of geometry version and output file
-const TString geoVersion = "ATTPC_He1bar_v2";
+const TString geoVersion = "ATTPC_He300torr_v2";
 const TString FileName = geoVersion + ".root";
 const TString FileName1 = geoVersion + "_geomanager.root";
 
 // Names of the different used materials which are used to build the modules
 // The materials are defined in the global media.geo file
-const TString MediumGas = "He_1bar";
+const TString MediumGas = "He_300torr";
 const TString MediumVacuum = "vacuum4";
 const TString MediumWindow = "aramid";
 const TString CylinderVolumeMedium = "steel";

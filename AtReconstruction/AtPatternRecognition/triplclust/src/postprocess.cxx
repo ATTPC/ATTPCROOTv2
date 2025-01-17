@@ -8,8 +8,6 @@
 //
 
 #include "postprocess.h"
-
-#include "orthogonallsq.h"
 #include "util.h"
 #include <math.h> /* sqrt */
 
@@ -39,10 +37,11 @@ int expandStart(PointCloud &cloud, std::vector<std::vector<size_t>> &assignedIds
 int process_pointcloud(PointCloud &cloud, int min_depth /*=25*/, int verbose /*=0*/)
 {
    int nchanged = 0;
-
+   
    // collect all cluster labels in cloud
    std::set<size_t> ids;
    Point p;
+
    // for(Point p : cloud) {
    for (std::vector<Point>::iterator iterator = cloud.begin(); iterator != cloud.end(); ++iterator) {
       p = *iterator;
@@ -51,25 +50,35 @@ int process_pointcloud(PointCloud &cloud, int min_depth /*=25*/, int verbose /*=
       ids.insert(p.cluster_ids.begin(), p.cluster_ids.end());
    }
 
+   if (ids.empty()) {
+      std::cerr << "No cluster IDs found in the point cloud." << std::endl;
+      return nchanged; // Return early if there are no cluster IDs
+   }
+
    size_t last_label_begin = *ids.rbegin();
    size_t next_label = *ids.rbegin() + 1;
-
+   
    PointCloud temp;
    std::vector<size_t> temp_ids;
-
+   
    // for each cluster label, call process_cluster
    size_t id;
+   
    for (std::set<long unsigned int>::iterator iterator = ids.begin(); iterator != ids.end(); ++iterator) {
       id = *iterator;
       temp_ids.clear();
+      //std::cout << "Processing point cloud with " << id << " points." << std::endl;
       for (unsigned int index = 0; index < cloud.size(); ++index) {
          // check if id is in Point in cloud
+         //std::cout << "Processing point cloud with " << cloud.size() << " points." << std::endl;
          if (cloud[index].cluster_ids.find(id) != cloud[index].cluster_ids.end()) {
             temp_ids.push_back(index);
          }
       }
+      
       // call process_cluster with the cloud subset with cluster=id
       nchanged += process_cluster(cloud, temp_ids, id, &next_label, min_depth, verbose);
+      
    }
 
    nchanged = (next_label - 1) - last_label_begin;
@@ -89,20 +98,23 @@ int process_pointcloud(PointCloud &cloud, int min_depth /*=25*/, int verbose /*=
 int process_cluster(PointCloud &cloud, std::vector<size_t> indexes, size_t cluster_id, size_t *next_label,
                     size_t min_depth, int verbose)
 {
+   
    int nchanged = 0;
    bool compound = false; // is trajectory made of many trajectories
+   
 
+   
    Graph graph(cloud, indexes); // Constructor constructs MST
-
+   
    std::vector<std::vector<size_t>> segments; // will contain all segments in a trajectory
-
+         
    // remove edges at branches with depth min_depth
    if (graph.removeBranches(min_depth)) { // is compound trajectory
       compound = true;
       // remove edges considerably longer than neighborhood edges
       graph.removeLongEdges();
    }
-
+   
    // if (verbose > 1): visualize MST with removed edges in different color
    if (verbose > 1) {
       graph.generateGnuplot(true, "debug-cluster-" + std::to_string(cluster_id));
@@ -120,6 +132,7 @@ int process_cluster(PointCloud &cloud, std::vector<size_t> indexes, size_t clust
       // adjust cluster id labels
       writeIDsInCloud(cloud, segments, next_label, cluster_id);
    }
+   
    return nchanged;
 }
 

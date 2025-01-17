@@ -1,4 +1,4 @@
-void O16He4_sim_el(Int_t nEvents = 300, TString mcEngine = "TGeant4")
+void O16He4_sim_el(Int_t nEvents = 1000, TString mcEngine = "TGeant4")
 {
 
    TString dir = getenv("VMCWORKDIR");
@@ -16,7 +16,7 @@ void O16He4_sim_el(Int_t nEvents = 300, TString mcEngine = "TGeant4")
 
    // gSystem->Load("libAtGen.so");
 
-   AtVertexPropagator *vertex_prop = new AtVertexPropagator();
+   //AtVertexPropagator *vertex_prop = new AtVertexPropagator();
 
    // -----   Create simulation run   ----------------------------------------
    FairRunSim *run = new FairRunSim();
@@ -42,7 +42,7 @@ void O16He4_sim_el(Int_t nEvents = 300, TString mcEngine = "TGeant4")
    run->AddModule(pipe);*/
 
    FairDetector *ATTPC = new AtTpc("ATTPC", kTRUE);
-   ATTPC->SetGeometryFileName("ATTPC_He1bar_v2.root");
+   ATTPC->SetGeometryFileName("ATTPC_He300torr_v2.root");
    // ATTPC->SetModifyGeometry(kTRUE);
    run->AddModule(ATTPC);
 
@@ -51,7 +51,7 @@ void O16He4_sim_el(Int_t nEvents = 300, TString mcEngine = "TGeant4")
    // -----   Magnetic field   -------------------------------------------
    // Constant Field
    AtConstField *fMagField = new AtConstField();
-   fMagField->SetField(0., 0., 30.);                      // values are in kG
+   fMagField->SetField(0., 0., 20.);                      // values are in kG
    fMagField->SetFieldRegion(-50, 50, -50, 50, -10, 230); // values are in cm
                                                           //  (xmin,xmax,ymin,ymax,zmin,zmax)
    run->SetField(fMagField);
@@ -61,17 +61,17 @@ void O16He4_sim_el(Int_t nEvents = 300, TString mcEngine = "TGeant4")
    FairPrimaryGenerator *primGen = new FairPrimaryGenerator();
 
    // Beam Information
-   Int_t z = 8;  // Atomic number
-   Int_t a = 16; // Mass number
+   Int_t z = 4;  // Atomic number
+   Int_t a = 10; // Mass number
    Int_t q = 0;  // Charge State
    Int_t m = 1;  // Multiplicity  NOTE: Due the limitation of the TGenPhaseSpace accepting only pointers/arrays the
                  // maximum multiplicity has been set to 10 particles.
    Double_t px = 0.000 / a; // X-Momentum / per nucleon!!!!!!
    Double_t py = 0.000 / a; // Y-Momentum / per nucleon!!!!!!
-   Double_t pz = 2.189 / a; // Z-Momentum / per nucleon!!!!!!
+   Double_t pz = 0.443 / a; // Z-Momentum / per nucleon!!!!!!
    Double_t BExcEner = 0.0;
-   Double_t Bmass = 15.99491461956;
-   Double_t NomEnergy = 5.0;
+   Double_t Bmass = 10.013534;
+   Double_t NomEnergy = 10.5;
 
    AtTPCIonGenerator *ionGen = new AtTPCIonGenerator("Ion", z, a, q, m, px, py, pz, BExcEner, Bmass, NomEnergy);
    ionGen->SetSpotRadius(0, -100, 0);
@@ -108,7 +108,7 @@ void O16He4_sim_el(Int_t nEvents = 300, TString mcEngine = "TGeant4")
    Pxp.push_back(px);
    Pyp.push_back(py);
    Pzp.push_back(pz);
-   Mass.push_back(15.99491461956); // uma
+   Mass.push_back(Bmass); // uma
    ExE.push_back(BExcEner);
 
    // ---- Target ----
@@ -122,13 +122,13 @@ void O16He4_sim_el(Int_t nEvents = 300, TString mcEngine = "TGeant4")
    ExE.push_back(0.0);            // In MeV
 
    //--- Scattered -----
-   Zp.push_back(8);  //
-   Ap.push_back(16); //
+   Zp.push_back(4);  //
+   Ap.push_back(10); //
    Qp.push_back(0);
    Pxp.push_back(0.0);
    Pyp.push_back(0.0);
    Pzp.push_back(0.0);
-   Mass.push_back(15.99491461956); // uma
+   Mass.push_back(Bmass); // uma
    ExE.push_back(0.0);
 
    // ---- Recoil -----
@@ -141,8 +141,8 @@ void O16He4_sim_el(Int_t nEvents = 300, TString mcEngine = "TGeant4")
    Mass.push_back(4.00260325415); // uma
    ExE.push_back(0.0);            // In MeV
 
-   Double_t ThetaMinCMS = 20.0;
-   Double_t ThetaMaxCMS = 60.0;
+   Double_t ThetaMinCMS = 55.0;
+   Double_t ThetaMaxCMS = 120.0;
 
    AtTPC2Body *TwoBody =
       new AtTPC2Body("TwoBody", &Zp, &Ap, &Qp, mult, &Pxp, &Pyp, &Pzp, &Mass, &ExE, ResEner, ThetaMinCMS, ThetaMaxCMS);

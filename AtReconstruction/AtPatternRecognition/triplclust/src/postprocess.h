@@ -12,6 +12,7 @@
 
 #include "directedgraph.h"
 #include "pointcloud.h"
+#include "orthogonallsq.h"
 
 /** @file */
 

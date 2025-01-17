@@ -18,7 +18,7 @@ GatingWirePlaneY:Double_t      -14   # mm
 EField:Double_t               5000   # V/m
 NumTbs:Int_t                   512
 SamplingRate:Int_t             3.0   #
-DriftVelocity:Double_t         1.0   # cm/us
+DriftVelocity:Double_t         1.32   # cm/us
 DriftLength:Double_t          1000   # mm //ATTPC : 1000 - Prototype : 500
 YDivider:Int_t                1000   # Full drift length will be divided by this number when finding cluster
 GasFile:Int_t                    2
@@ -30,10 +30,10 @@ TB0:Int_t                       98   # Time Bucket reference for micromegas posi
 LorentzAngle:Double_t          0.0   # Lorentz Angle
 TBEntrance:Int_t               350   # Beam position at detector entrance in TB
 ZPadPlane:Double_t          1000.0   # Position of the micromegas pad plane
-Density:Double_t             0.197   # Gas density (kg/m3 or mg/cm3)
+Density:Double_t             0.066   # Gas density (kg/m3 or mg/cm3)
 ThetaPad:Double_t            110.9   # AT-TPC pad plane rotation
 ThetaRot:Double_t              0.0   # Second Lorentz Angle
-GasPressure:Double_t           600   # Gas pressure in torr
+GasPressure:Double_t           300   # Gas pressure in torr
 EIonize:Double_t            15.603   # Ionization energy of gas in eV
 Fano:Double_t                 0.24   # Fano factor of the gas
 CoefL:Double_t           0.0000009   # Longitudal coefficient of diffusion [cm^2/us]

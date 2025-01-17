@@ -1,19 +1,31 @@
-void run_eve(TString InputDataFile = "output_digi.root", TString OutputDataFile = "output.reco_display.root",
-             TString unpackDir = "/Simulation/ATTPC/16O_aa/")
-{
-   FairLogger *fLogger = FairLogger::GetLogger();
-   fLogger->SetLogToScreen(kTRUE);
-   fLogger->SetLogVerbosityLevel("MEDIUM");
-   TString dir = getenv("VMCWORKDIR");
-   TString geoFile = "ATTPC_He1bar_v2_geomanager.root";
+/*#include "TString.h"
+#include "AtEventDrawTask.h"
+#include "AtEventManager.h"
 
-   TString InputDataPath = dir + "/macro/" + unpackDir + InputDataFile;
-   TString OutputDataPath = dir + "/macro/" + unpackDir + OutputDataFile;
+#include "FairLogger.h"
+#include "FairParRootFileIo.h"
+#include "FairRunAna.h"
+*/
+
+void run_eve(TString OutputDataFile = "./data/output.reco_display.root")
+{
+   TString InputDataFile = "./data/output_digi.root";
+   std::cout << "Opening: " << InputDataFile << std::endl;
+
+   TString dir = getenv("VMCWORKDIR");
+   TString geoFile = "ATTPC_He300torr_v2_geomanager.root";
+   TString mapFile = "ANL2023.xml";
+
+   TString InputDataPath = InputDataFile;
+   TString OutputDataPath = OutputDataFile;
    TString GeoDataPath = dir + "/geometry/" + geoFile;
+   TString mapDir = dir + "/scripts/" + mapFile;
 
    FairRunAna *fRun = new FairRunAna();
-   fRun->SetInputFile(InputDataPath);
-   fRun->SetOutputFile(OutputDataPath);
+   FairRootFileSink *sink = new FairRootFileSink(OutputDataFile);
+   FairFileSource *source = new FairFileSource(InputDataFile);
+   fRun->SetSource(source);
+   fRun->SetSink(sink);
    fRun->SetGeomFile(GeoDataPath);
 
    FairRuntimeDb *rtdb = fRun->GetRuntimeDb();
@@ -21,15 +33,16 @@ void run_eve(TString InputDataFile = "output_digi.root", TString OutputDataFile 
    // parIo1->open("param.dummy.root");
    rtdb->setFirstInput(parIo1);
 
-   FairRootManager *ioman = FairRootManager::Instance();
+   auto fMap = std::make_shared<AtTpcMap>();
+   fMap->ParseXMLMap(mapDir.Data());
+   AtViewerManager *eveMan = new AtViewerManager(fMap);
 
-   AtEventManager *eveMan = new AtEventManager();
-   AtEventDrawTask *eve = new AtEventDrawTask();
-   eve->Set3DHitStyleBox();
-   eve->SetMultiHit(100); // Set the maximum number of multihits in the visualization
-   eve->SetSaveTextData();
-   eve->UnpackHoughSpace();
+   auto tabMain = std::make_unique<AtTabMain>();
+   tabMain->SetMultiHit(100); // Set the maximum number of multihits in the visualization
+   eveMan->AddTab(std::move(tabMain));
 
-   eveMan->AddTask(eve);
    eveMan->Init();
+
+   std::cout << "Finished init" << std::endl;
+   // eveMan->RunEvent(27);
 }
