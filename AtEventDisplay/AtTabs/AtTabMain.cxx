@@ -252,10 +252,12 @@ void AtTabMain::UpdatePatternEventElements()
       if (projection != nullptr) {
          projection->SetLineColor(GetTrackColor(i));
          projection->SetFillStyle(0);
-         fCvsPadPlane->cd();
-         projection->Draw();
-         fCvsPadPlane->Update();
-         fCvsPadPlane->Modified();
+         if (fDrawProjection) {
+            fCvsPadPlane->cd();
+            projection->Draw();
+            fCvsPadPlane->Update();
+            fCvsPadPlane->Modified();
+         }
          fPatternLines.push_back(std::move(projection));
       }
    }

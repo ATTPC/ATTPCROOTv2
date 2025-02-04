@@ -49,6 +49,7 @@ protected:
 
    Int_t fThreshold{0};    //< Min charge to draw hit
    Int_t fMaxHitMulti{10}; //< Max hits in a pad for hit to be drawn
+   Bool_t fDrawProjection{false};
 
    TAttMarker fHitAttr{kPink, kFullDotMedium, 1};
 
@@ -76,6 +77,7 @@ public:
    void SetThreshold(Int_t val) { fThreshold = val; }
    void SetHitAttributes(TAttMarker attr) { fHitAttr = std::move(attr); }
    void SetMultiHit(Int_t hitMax) { fMaxHitMulti = hitMax; }
+   void SetDrawProjection(Bool_t draw = true) { fDrawProjection = draw; }
 
    /**
     * This function is responsible for selecting the pad we are currently examining and passing
