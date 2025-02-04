@@ -20,6 +20,7 @@ public:
    virtual void SetLineColor(Color_t color) = 0;
    virtual void SetLineWidth(Width_t width) = 0;
    virtual void SetLineStyle(Style_t style) = 0;
+   virtual void SetFillStyle(Style_t style) = 0;
 };
 
 class AtPadPlaneCircle : public AtPadPlaneElement {
@@ -34,6 +35,7 @@ public:
    virtual void SetLineColor(Color_t color) override { fCircle->SetLineColor(color); }
    virtual void SetLineWidth(Width_t width) override { fCircle->SetLineWidth(width); }
    virtual void SetLineStyle(Style_t style) override { fCircle->SetLineStyle(style); }
+   virtual void SetFillStyle(Style_t style) override { fCircle->SetFillStyle(style); }
 };
 
 #endif // #ifndef ATPADPLANELEMENT_H

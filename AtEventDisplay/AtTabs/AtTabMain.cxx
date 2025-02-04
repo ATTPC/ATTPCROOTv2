@@ -251,9 +251,11 @@ void AtTabMain::UpdatePatternEventElements()
       auto projection = tracks[i].GetPattern()->GetPadPlaneProjection();
       if (projection != nullptr) {
          projection->SetLineColor(GetTrackColor(i));
-         LOG(info) << "Adding projection of pattern " << i << " to pad plane";
+         projection->SetFillStyle(0);
          fCvsPadPlane->cd();
          projection->Draw();
+         fCvsPadPlane->Update();
+         fCvsPadPlane->Modified();
          fPatternLines.push_back(std::move(projection));
       }
    }
