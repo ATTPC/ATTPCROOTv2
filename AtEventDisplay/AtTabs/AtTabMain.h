@@ -69,7 +69,7 @@ public:
    ~AtTabMain();
    void InitTab() override;
 
-   void Exec() override {};
+   void Exec() override {}
    void Update(DataHandling::AtSubject *sub) override;
 
    void DumpEvent(std::string file);

@@ -28,7 +28,7 @@ protected:
    std::unique_ptr<TArc> fCircle;
 
 public:
-   AtPadPlaneCircle(float x, float y, float r) : fCircle(std::make_unique<TArc>(x, y, r)) {};
+   AtPadPlaneCircle(float x, float y, float r) : fCircle(std::make_unique<TArc>(x, y, r)) {}
    virtual ~AtPadPlaneCircle() = default;
 
    virtual void Draw() const override { fCircle->Draw("SAME"); }
