@@ -52,6 +52,7 @@ set(SRCS
   AtPattern/AtPatternFission.cxx
   AtPattern/AtPatternRay.cxx
   AtPattern/AtPatternTypes.cxx
+  AtPattern/AtPadPlaneElement.cxx
 
   AtFittedTrack.cxx
   

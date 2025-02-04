@@ -36,6 +36,7 @@ public:
    virtual XYZPoint GetPointAt(double theta) const override;
    virtual TEveElement *GetEveElement() const override;
    virtual std::unique_ptr<AtPattern> Clone() const override { return std::make_unique<AtPatternCircle2D>(*this); }
+   virtual std::unique_ptr<AtPadPlaneElement> GetPadPlaneProjection() const override;
 
 protected:
    virtual void FitPattern(const std::vector<XYZPoint> &points, const std::vector<double> &charge) override;

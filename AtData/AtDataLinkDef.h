@@ -38,6 +38,8 @@
 #pragma link C++ class AtPatterns::AtPatternCircle2D + ;
 #pragma link C++ class AtPatterns::AtPatternY + ;
 #pragma link C++ class AtPatterns::AtPatternFission + ;
+#pragma link C++ class AtPadPlaneElement + ;
+#pragma link C++ class AtPadPlaneCircle + ;
 #pragma link C++ enum AtPatterns::PatternType;
 #pragma link C++ function AtPatterns::CreatePattern;
 

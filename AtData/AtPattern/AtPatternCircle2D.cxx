@@ -1,5 +1,7 @@
 #include "AtPatternCircle2D.h"
 
+#include "AtPadPlaneElement.h"
+
 #include <Math/Point2D.h>
 #include <Math/Point2Dfwd.h> // for XYPoint
 #include <Math/Point3D.h>
@@ -20,6 +22,11 @@ AtPatternCircle2D::AtPatternCircle2D() : AtPattern(3) {}
 TEveElement *AtPatternCircle2D::GetEveElement() const
 {
    return AtPattern::GetEveLine(0, 2 * M_PI, 1000);
+}
+
+std::unique_ptr<AtPadPlaneElement> AtPatterns::AtPatternCircle2D::GetPadPlaneProjection() const
+{
+   return std::make_unique<AtPadPlaneCircle>(GetCenter().X(), GetCenter().Y(), GetRadius());
 }
 
 void AtPatternCircle2D::DefinePattern(const std::vector<XYZPoint> &points)

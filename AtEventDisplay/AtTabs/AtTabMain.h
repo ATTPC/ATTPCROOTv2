@@ -1,6 +1,7 @@
 #ifndef ATTABMAIN_H
 #define ATTABMAIN_H
 #include "AtDataObserver.h"         // for Observer
+#include "AtPadPlaneElement.h"      // for AtPadPlaneElement
 #include "AtTabBase.h"              // for AtTabBase
 #include "AtViewerManagerSubject.h" // for AtPadNum
 
@@ -35,6 +36,7 @@ class AtTabMain : public AtTabBase, public DataHandling::AtObserver {
 protected:
    using TEvePointSetPtr = std::unique_ptr<TEvePointSet>;
    using TEveEventManagerPtr = std::unique_ptr<TEveEventManager>;
+   using AtPadPlaneElementPtr = std::unique_ptr<AtPadPlaneElement>;
 
    TEveEventManagerPtr fEveEvent{std::make_unique<TEveEventManager>("AtEvent")};
    TEvePointSetPtr fHitSet{std::make_unique<TEvePointSet>("Hits")}; //< AtEvent Hit Set
@@ -43,6 +45,7 @@ protected:
    TEvePointSetPtr fNoiseHitSet{std::make_unique<TEvePointSet>("Noise")}; //< AtPatternEvent Noise Set
    std::vector<TEvePointSetPtr> fPatternHitSets;
    std::vector<TEveElement> fPatterns;
+   std::vector<AtPadPlaneElementPtr> fPatternLines; /// Projection of AtPattern shape on pad plane.
 
    Int_t fThreshold{0};    //< Min charge to draw hit
    Int_t fMaxHitMulti{10}; //< Max hits in a pad for hit to be drawn
@@ -65,7 +68,7 @@ public:
    ~AtTabMain();
    void InitTab() override;
 
-   void Exec() override{};
+   void Exec() override {};
    void Update(DataHandling::AtSubject *sub) override;
 
    void DumpEvent(std::string file);

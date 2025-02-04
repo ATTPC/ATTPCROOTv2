@@ -21,6 +21,7 @@
 #include <TEveBrowser.h>         // for TEveBrowser
 #include <TEveEventManager.h>    // for TEveEventManager
 #include <TEveGeoNode.h>         // for TEveGeoTopNode
+#include <TEveLine.h>            // for TEveLine
 #include <TEveManager.h>         // for TEveManager, gEve
 #include <TEvePointSet.h>        // for TEvePointSet
 #include <TEveViewer.h>          // for TEveViewer
@@ -124,6 +125,8 @@ void AtTabMain::ExpandNumPatterns(int num)
 
       fPatternHitSets.push_back(std::move(trackSet));
    }
+
+   fPatternLines.resize(num);
 }
 
 Color_t AtTabMain::GetTrackColor(int i)
@@ -226,6 +229,7 @@ void AtTabMain::UpdatePatternEventElements()
 
    // Remove all the elements, and re-add them
    fEvePatternEvent->RemoveElements();
+   fPatternLines.clear();
    for (int i = 0; i < tracks.size(); ++i) {
       if (tracks[i].GetPattern() == nullptr)
          continue;
@@ -242,6 +246,16 @@ void AtTabMain::UpdatePatternEventElements()
       pattern->SetDestroyOnZeroRefCnt(false);
       pattern->SetMainColor(GetTrackColor(i));
       fEvePatternEvent->AddElement(pattern);
+
+      // Get the projection of the pattern on the pad plane
+      auto projection = tracks[i].GetPattern()->GetPadPlaneProjection();
+      if (projection != nullptr) {
+         projection->SetLineColor(GetTrackColor(i));
+         LOG(info) << "Adding projection of pattern " << i << " to pad plane";
+         fCvsPadPlane->cd();
+         projection->Draw();
+         fPatternLines.push_back(std::move(projection));
+      }
    }
 }
 

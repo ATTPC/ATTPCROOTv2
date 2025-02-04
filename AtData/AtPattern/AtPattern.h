@@ -1,6 +1,8 @@
 #ifndef ATPATTERN_H
 #define ATPATTERN_H
 
+#include "AtPadPlaneElement.h"
+
 #include <Math/Point3D.h>
 #include <Math/Point3Dfwd.h> // for XYZPoint
 #include <Rtypes.h>          // for Double_t, Int_t, THashConsistencyHolder, ClassDef
@@ -18,7 +20,6 @@ class TMemberInspector;
 class TEveLine;
 class TEveElement;
 class AtHit;
-
 /**
  * @defgroup AtPattern Track Patterns
  * @brief Track shapes in 3D space.
@@ -119,6 +120,13 @@ public:
     * Calls GetEveLine(double tMin, double tMax, int n) with reasonable defaults for the shape
     */
    virtual TEveElement *GetEveElement() const = 0;
+
+   /**
+    *  @brief Get visual representation of pattern on pad plane
+    *
+    * @return Representation of pattern on pad plane
+    */
+   virtual std::unique_ptr<AtPadPlaneElement> GetPadPlaneProjection() const { return nullptr; };
 
    virtual std::unique_ptr<AtPattern> Clone() const = 0;
 
