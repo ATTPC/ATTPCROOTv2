@@ -151,6 +151,11 @@ void AtPSA::Analyze(AtRawEvent *rawEvent, AtEvent *event)
       // Update AtEvent with hits
       for (auto &&hit : hits) {
          auto pos = hit->GetPosition();
+         double x = pos.X();
+         double y = pos.Y();
+         if ((x * x + y * y) <= (30.0 * 30.0)) {
+            continue; // Skip this hit if it is within the 3 cm radius
+         }
          QEventTot += hit->GetTraceIntegral();
          Rho2 += pos.Mag2();
          RhoMean += pos.Rho();

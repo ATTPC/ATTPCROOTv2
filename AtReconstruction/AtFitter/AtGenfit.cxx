@@ -81,7 +81,7 @@ AtFITTER::AtGenfit::AtGenfit(Float_t magfield, Float_t minbrho, Float_t maxbrho,
    std::cout << " AtFITTER::AtGenfit::AtGenfit(): Checking materials that GENFIT will use "
              << "\n";
 
-   auto *gGeoMan = dynamic_cast<TGeoManager *>(gROOT->FindObject("FAIRGeom"));
+   /*auto *gGeoMan = dynamic_cast<TGeoManager *>(gROOT->FindObject("FAIRGeom"));
    TObjArray *volume_list = gGeoMan->GetListOfVolumes();
    if (!volume_list) {
       std::cout << cRED << " Warning! Null list of geometry volumes." << cNORMAL << "\n";
@@ -105,7 +105,7 @@ AtFITTER::AtGenfit::AtGenfit(Float_t magfield, Float_t minbrho, Float_t maxbrho,
       // Int_t mat_indx = mat->GetIndex();
       std::cout << cYELLOW << " - Material : " << mat->GetName() << cNORMAL << "\n";
    }
-
+   */
    // PDG definitions
    const Double_t kAu2Gev = 0.9314943228;
    const Double_t khSlash = 1.0545726663e-27;
@@ -609,7 +609,7 @@ std::vector<std::unique_ptr<AtFittedTrack>> AtFITTER::AtGenfit::ProcessTracks(st
                   // Backward extrapolation
                   try {
 
-                     for (auto iStep = 0; iStep < 200; ++iStep) {
+                     for (auto iStep = 0; iStep < 600; ++iStep) {
 
                         trackRep->extrapolateBy(fitState, stepXtr * iStep);
                         mom_ext_buff = fitState.getMom();

@@ -8,7 +8,7 @@ bool reduceFunc(AtRawEvent *evt)
    return (evt->GetNumPads() > 0) && evt->IsGood();
 }
 
-void unpack_a1954(TString fileName = "run_0099")
+void unpack_a1954(TString fileName = "run_0065")
 {
   
    // Load the library for unpacking and reconstruction
@@ -20,7 +20,7 @@ void unpack_a1954(TString fileName = "run_0099")
    TString parameterFile = "ATTPC.e22502.par";
    TString mappath = "";
    TString filepath = "/media/david/TOSHIBA EXT/e22502/e22502/h5/";
-   TString filepathout = "/media/david/EXTERNAL_USB/e22502/low_energy/";
+   TString filepathout = "/home/david/PhD/PhD-14-02/attpcroot/ATTPCROOTv2/macro/Unpack_HDF5/a1954/";
    TString fileExt = ".h5";
    TString inputFile = filepath + fileName + fileExt;
    TString scriptfile = "ANL2023.xml";

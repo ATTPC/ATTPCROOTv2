@@ -88,7 +88,7 @@ public:
    Double_t GetTimeStampCorrInter() const { return fTimeStampCorrInter; }
    const std::vector<AtHit::MCSimPoint> &GetMCSimPointArray() const { return fMCSimPointArray; }
 
-   static Bool_t SortHit(const AtHit &lhs, const AtHit &rhs) { return lhs.GetPadNum() < rhs.GetPadNum(); }
+   static Bool_t SortHit(const AtHit &lhs, const AtHit &rhs) { return lhs.GetPadNum() > rhs.GetPadNum(); }
    static Bool_t SortHit(const std::unique_ptr<AtHit> &lhs, const std::unique_ptr<AtHit> &rhs)
    {
       return SortHit(*lhs, *rhs);

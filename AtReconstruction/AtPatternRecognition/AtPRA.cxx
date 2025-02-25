@@ -48,7 +48,28 @@ std::cout << " Processing track with " << track.GetHitArray().size() << " points
    RansacSmoothRadius.SetMinHitsPattern(0.1 * track.GetHitArray().size());
    RansacSmoothRadius.SetDistanceThreshold(6.0);
    RansacSmoothRadius.SetNumIterations(1000);
-   auto circularTracks = RansacSmoothRadius.Solve(ContainerManip::GetConstPointerVector(track.GetHitArray()))
+   track.SortHitArrayTime();
+   auto &hitArray = track.GetHitArray();
+   size_t numHits = hitArray.size();
+   size_t numHitsToUse;
+   if (numHits >= 50)
+   numHitsToUse = numHits * 10 / 10; // 50% of the hits
+
+   if (numHits < 50)
+   numHitsToUse = numHits; 
+
+   std::sort(hitArray.begin(), hitArray.end(), [](const std::unique_ptr<AtHit> &a, const std::unique_ptr<AtHit> &b) {
+        return a->GetTimeStamp() > b->GetTimeStamp();
+    });
+
+   std::vector<std::unique_ptr<AtHit>> first20PercentHits;
+   first20PercentHits.reserve(numHitsToUse);
+
+   for (size_t i = 0; i < numHitsToUse; ++i) {
+    first20PercentHits.push_back(std::make_unique<AtHit>(*hitArray[i]));
+   }
+
+   auto circularTracks = RansacSmoothRadius.Solve(ContainerManip::GetConstPointerVector(first20PercentHits)) // Only part of the spiral is used
                             .GetTrackCand(); // Only part of the spiral is used
                                              // This function also sets the coefficients
                                              // i.e. radius of curvature and center
@@ -60,7 +81,7 @@ std::cout << " Processing track with " << track.GetHitArray().size() << " points
       // auto circle = dynamic_cast<const AtPatterns::AtPatternCircle2D *>(circularTracks.at(0).GetPattern());
 
       auto circle = std::make_unique<AtPatterns::AtPatternCircle2D>();
-      circle->AtPattern::FitPattern(ContainerManip::GetConstPointerVector(track.GetHitArray()));
+      circle->AtPattern::FitPattern(ContainerManip::GetConstPointerVector(first20PercentHits));
 
       auto center = circle->GetCenter();
       auto radius = circle->GetRadius();

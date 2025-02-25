@@ -67,7 +67,7 @@ void run_sim_ana(Int_t num_ev=100000)
     c5->Divide(2,2);
     c5->Draw();
 
-    TString mcFileNameHead = "./data/attpcsim";
+    TString mcFileNameHead = "./data/attpcsim_300";
     TString mcFileNameTail = ".root";
     TString mcFileName     = mcFileNameHead + mcFileNameTail;
     std:cout << " Analysis of simulation file  " << mcFileName << endl;
@@ -158,10 +158,10 @@ void run_sim_ana(Int_t num_ev=100000)
 
                 Double_t A = ((EnergyRecoil + 931.5) * (EnergyRecoil + 931.5) - 931.5 * 931.5)/(2.0 * 931.5);
                 Bro = A * 4.0 * 0.1439/2.0;
-                if(iEvent == 15 ){
+                if(iEvent == 33 ){
                     std::cout << "Recoil energy = " << EnergyRecoil << std::endl;
                     std::cout << "Recoil angle = " << AngleRecoil << std::endl;
-                    std::cout << "Brho = " << Bro << std::endl;
+                   // std::cout << "Brho = " << Bro << std::endl;
                 }
                 //EnergyRecoil= pointMC->GetEIni();
                 //std::cout << "Recoil energy = " << EnergyRecoil << std::endl;

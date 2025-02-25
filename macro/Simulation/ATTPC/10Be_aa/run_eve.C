@@ -9,7 +9,7 @@
 
 void run_eve(TString OutputDataFile = "./data/output.reco_display.root")
 {
-   TString InputDataFile = "./data/output_H_digi_0.root";
+   TString InputDataFile = "./data/output_digi.root";
    std::cout << "Opening: " << InputDataFile << std::endl;
 
    TString dir = getenv("VMCWORKDIR");

@@ -354,13 +354,13 @@ void C14_pp_ana()
    // std::cout << " Opening File : " << FileName.Data() << std::endl;
    // TFile *file = new TFile(FileName.Data(), "READ");
 
-   TString dir = "/home/david/PhD/PhD-14-02/attpcroot/ATTPCROOTv2/macro/Simulation/ATTPC/16O_aa/data/";
+   TString dir = "/home/david/PhD/PhD-14-02/attpcroot/ATTPCROOTv2/macro/Unpack_HDF5/a1954/";
 
    //"/home/david/PhD/PhD-14-02/attpcroot/ATTPCROOTv2/macro/Simulation/ATTPC/10Be_aa/data/"
 
    //"/media/david/EXTERNAL_USB/e22502/low_energy/"
 
-   std::vector<TString> files{"output_digi.root"};
+   std::vector<TString> files{"run_0062.root","run_0063.root","run_0064.root","run_0065.root","run_0067.root"};
 
    //"output_lowener_digi_0.root"
 
@@ -423,15 +423,15 @@ void C14_pp_ana()
                                 [](const auto &a, const auto &b) { return b.GetGeoTheta() > a.GetGeoTheta(); });
             Int_t maxAIndex = std::distance(patternTrackCand.begin(), itMax);
 
-            /*std::sort(patternTrackCand.begin(), patternTrackCand.end(),
+            std::sort(patternTrackCand.begin(), patternTrackCand.end(),
               [](const AtTrack &a, const AtTrack &b) {
                   return a.GetHitArray().size() > b.GetHitArray().size();
-              });*/
+              });
 
-              std::sort(patternTrackCand.begin(), patternTrackCand.end(),
+              /*std::sort(patternTrackCand.begin(), patternTrackCand.end(),
               [](const AtTrack &a, const AtTrack &b) {
                   return a.GetHitArray().at(0)->GetTimeStamp() > b.GetHitArray().at(0)->GetTimeStamp();
-              });
+              });*/
                //std::cout << "PatterTrackCand Size = "<< patternTrackCand.size() << std::endl;
             
               
@@ -447,6 +447,7 @@ void C14_pp_ana()
                      bool skiptrack2 = false;
                      
                      
+                     
 
                      Double_t theta1 = track1.GetGeoTheta();
                      if(theta1 * TMath::RadToDeg() > 90.0) 
@@ -456,9 +457,9 @@ void C14_pp_ana()
                         theta2 = TMath::Pi() - theta2;     
                      //std::cout << "Theta 1: " << theta1 << " Theta 2: " << theta2 << std::endl;
                      auto hitArray1 = track1.GetHitArrayObject();
-                    // std::cout << "Number of Hits in Track 1: " << hitArray1.size() << std::endl;
+                     //std::cout << "Number of Hits in Track 1: " << hitArray1.size() << std::endl;
                      auto hitArray2 = track2.GetHitArrayObject(); 
-                    // std::cout << "Number of Hits in Track 2: " << hitArray2.size() << std::endl;
+                     //std::cout << "Number of Hits in Track 2: " << hitArray2.size() << std::endl;
                      
                      for (const auto &hit : hitArray1) {
                       if (hit.GetTimeStamp() < 60) {
@@ -503,18 +504,64 @@ void C14_pp_ana()
                      
                      //auto firstPoint1 = hitArray1(0);
                      //auto firstPoint2 = hitArray2(0);
-                  
-                  
+                     Double_t radius1 = track1.GetGeoRadius();
+                        Double_t radius2 = track2.GetGeoRadius(); 
+                        radius->Fill(radius1);
+                        radius->Fill(radius2);
+                        Double_t B_f = 2.00;
 
+                        double brotrack1 = 2.00 * radius1 / TMath::Sin(theta1) / 1000.0;
+                        double brotrack2 = 2.00 * radius2 / TMath::Sin(theta2) / 1000.0;
+                       
+                        bro_vs_angle->Fill(theta1 * TMath::RadToDeg(), brotrack1);
+                        bro_vs_angle->Fill(theta2 * TMath::RadToDeg(), brotrack2);
+                        double enertrack1 = 0;
+                        double enertrack2 = 0;
+                        Double_t Am = 4.0;
+
+                        GetEnergy(Am, 2.0, brotrack1, enertrack1);
+                        GetEnergy(Am, 2.0, brotrack2, enertrack2);
+                        Double_t p_ej1 = brotrack1 * 2.0 * 2.99792458 / 10 * 1000;
+                        Double_t p_ej2 = brotrack2 * 2.0 * 2.99792458 / 10 * 1000;
+                        Double_t E_ej1 = TMath::Sqrt(p_ej1 * p_ej1 + m_a * m_a) - m_a;
+                        Double_t E_ej2 = TMath::Sqrt(p_ej2 * p_ej2 + m_a * m_a) - m_a;
+                           //std::cout << "Check " << std::endl;
+                         if(theta1 >= theta2){
+                           
+                        bro_vs_alphaenergy->Fill(E_ej1, brotrack1);
+                        radius_vs_alphaenergy->Fill(E_ej1, radius1);
+                        bro_vs_radius->Fill(radius1, brotrack1);
+                        if(i == 9){
+                       // std::cout << "Event: " << i << " Ener: " << E_ej1 << " Bro: " << brotrack1 << " Radius: " << radius1 << "Angle: " << (theta1 * TMath::RadToDeg()) << std::endl;
+                        }
+                        //angle_vs_alphaenergy->Fill(E_ej1, theta1 * TMath::RadToDeg());
+                         }
+                        if(theta1 < theta2){
+                        if(i == 9) {                       
+                        //std::cout << "Event: " << i << " Ener: " << E_ej2 << " Bro: " << brotrack2 << " Radius: " << radius2 << "Angle: " << (theta2 * TMath::RadToDeg()) << std::endl;
+                        }
+                        bro_vs_alphaenergy->Fill(E_ej2, brotrack2);
+                        radius_vs_alphaenergy->Fill(E_ej2, radius2);
+                        bro_vs_radius->Fill(radius2, brotrack2);
+                        }
+                  
+                     if(theta1 >= theta2) 
+                     angle_vs_angle->Fill(theta1 * TMath::RadToDeg(), theta2 * TMath::RadToDeg());
+                     
+                     
+                     if(theta1 < theta2)
+                     angle_vs_angle->Fill(theta2 * TMath::RadToDeg(), theta1 * TMath::RadToDeg());
                      //std::cout << "First Z track 1: " << firstPoint1.GetPosition().Z() << std::endl;
                      //std::cout << "First Z track 2: " << firstPoint2.GetPosition().Z() << std::endl;
 
                      auto hitClusterArray1 = track1.GetHitClusterArray();
+                     //std::cout << "Number of Hits in Track 1: " << hitClusterArray1->size() << std::endl;
                      
                      //std::cout << "Number of Hits in Track 1: " << hitClusterArray1->size() << std::endl;
+                  
                      auto firstCluster1 = hitClusterArray1->back();
                      auto zpos1 = firstCluster1.GetPosition().Z();
-                     
+                     //std::cout << "Checking track 1" << std::endl;
                      auto hitClusterArray2 = track2.GetHitClusterArray();
                      //std::cout << "Number of Hits in Track 2: " << hitClusterArray2->size() << std::endl;
                      auto firstCluster2 = hitClusterArray2->back();
@@ -524,14 +571,14 @@ void C14_pp_ana()
                      //std::cout << "First hit in track 1: " << hitArray1[0].GetPosition().Z() << std::endl;
                      //std::cout << "First hit in track 2: " << hitArray2[0].GetPosition().Z() << std::endl;
                      
-                     if(hitClusterArray1->size() > 20 && hitClusterArray2->size() > 20){
+                     /*if(hitClusterArray1->size() > 20 && hitClusterArray2->size() > 20){
                      if(theta1 >= theta2) 
                      angle_vs_angle->Fill(theta1 * TMath::RadToDeg(), theta2 * TMath::RadToDeg());
                      
                      
                      if(theta1 < theta2)
                      angle_vs_angle->Fill(theta2 * TMath::RadToDeg(), theta1 * TMath::RadToDeg());
-                     }
+                     }*/
                      
                      if(cutg_lowener->IsInside(theta1 * TMath::RadToDeg(), theta2 * TMath::RadToDeg()))
                         npointsinside++;
@@ -541,7 +588,9 @@ void C14_pp_ana()
                      vector<double> p2_line1;
                      vector<double> p1_line2;
                      vector<double> p2_line2;
-                     if (hitClusterArray1->size() > 20 && hitClusterArray2->size() > 20) {
+                     
+                     if (hitClusterArray1->size() > 3 && hitClusterArray2->size() > 3) {
+                        //std::cout << "Track 1: " << hitClusterArray1->size() << " Track 2: " << hitClusterArray2->size() << std::endl;
                         
                         auto onep = hitClusterArray1->at(hitClusterArray1->size() - 1);
                         auto twop = hitClusterArray1->at(hitClusterArray1->size() - 2);
@@ -587,10 +636,10 @@ void C14_pp_ana()
                         Double_t radius2 = track2.GetGeoRadius(); 
                         radius->Fill(radius1);
                         radius->Fill(radius2);
-                        Double_t B_f = 2.0;
+                        Double_t B_f = 2.00;
 
-                        double brotrack1 = 2.0 * radius1 / TMath::Sin(theta1) / 1000.0;
-                        double brotrack2 = 2.0 * radius2 / TMath::Sin(theta2) / 1000.0;
+                        double brotrack1 = 2.00 * radius1 / TMath::Sin(theta1) / 1000.0;
+                        double brotrack2 = 2.00 * radius2 / TMath::Sin(theta2) / 1000.0;
                        
                         bro_vs_angle->Fill(theta1 * TMath::RadToDeg(), brotrack1);
                         bro_vs_angle->Fill(theta2 * TMath::RadToDeg(), brotrack2);
@@ -604,19 +653,19 @@ void C14_pp_ana()
                         Double_t p_ej2 = brotrack2 * 2.0 * 2.99792458 / 10 * 1000;
                         Double_t E_ej1 = TMath::Sqrt(p_ej1 * p_ej1 + m_a * m_a) - m_a;
                         Double_t E_ej2 = TMath::Sqrt(p_ej2 * p_ej2 + m_a * m_a) - m_a;
+                           //std::cout << "Check " << std::endl;
+                         if(theta2 >= theta1){
                            
-                         if(theta1 >= theta2){
-                           std::cout << "Check" << std::endl;
                         bro_vs_alphaenergy->Fill(E_ej1, brotrack1);
                         radius_vs_alphaenergy->Fill(E_ej1, radius1);
                         bro_vs_radius->Fill(radius1, brotrack1);
-                        if(i == 15){
+                        if(i == 9){
                         std::cout << "Event: " << i << " Ener: " << E_ej1 << " Bro: " << brotrack1 << " Radius: " << radius1 << "Angle: " << (theta1 * TMath::RadToDeg()) << std::endl;
                         }
                         //angle_vs_alphaenergy->Fill(E_ej1, theta1 * TMath::RadToDeg());
                          }
-                        if(theta1 < theta2){
-                        if(i == 15) {                       
+                        if(theta2 < theta1){
+                        if(i == 9) {                       
                         std::cout << "Event: " << i << " Ener: " << E_ej2 << " Bro: " << brotrack2 << " Radius: " << radius2 << "Angle: " << (theta2 * TMath::RadToDeg()) << std::endl;
                         }
                         bro_vs_alphaenergy->Fill(E_ej2, brotrack2);

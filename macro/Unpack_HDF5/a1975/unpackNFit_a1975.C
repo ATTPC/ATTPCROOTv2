@@ -7,7 +7,7 @@ bool reduceFunc(AtRawEvent *evt)
 {
    return (evt->GetNumPads() > 0) && evt->IsGood();
 }
-void unpackNFit_a1975(TString fileName = "run_0106")
+void unpackNFit_a1975(TString fileName = "run_0065")
 {
 
    // Load the library for unpacking and reconstruction
@@ -16,9 +16,10 @@ void unpackNFit_a1975(TString fileName = "run_0106")
    TStopwatch timer;
    timer.Start();
 
-   TString parameterFile = "ATTPC.a1954.par";
+   TString parameterFile = "ATTPC.e22502.par";
    TString mappath = "";
-   TString filepath = "/media/yassid/bdcb3c81-adb9-4a9d-9172-0bd5935c1dd5/data/a1975/";
+   TString filepath = "/media/david/TOSHIBA EXT/e22502/e22502/h5/";
+   TString filepathout = "/home/david/PhD/PhD-14-02/attpcroot/ATTPCROOTv2/macro/Unpack_HDF5/a1975/";
    TString fileExt = ".h5";
    TString inputFile = filepath + fileName + fileExt;
    TString scriptfile = "ANL2023.xml";
@@ -28,10 +29,10 @@ void unpackNFit_a1975(TString fileName = "run_0106")
    TString dataDir = dir + "/macro/data/";
    TString geomDir = dir + "/geometry/";
    gSystem->Setenv("GEOMPATH", geomDir.Data());
-   TString outputFile = fileName + ".root";
+   TString outputFile = filepathout + fileName + "_try.root";
    TString loggerFile = dataDir + "ATTPCLog.log";
    TString digiParFile = dir + "/parameters/" + parameterFile;
-   TString geoManFile = dir + "/geometry/ATTPC_H1bar_geomanager.root";
+   TString geoManFile = dir + "/geometry/ATTPC_He300torr_v2_geomanager.root";
 
    // Specific paths for three LUT for electric field correction
    TString zlutFile = dir + "/resources/corrections/a1954/zLUT.txt";
@@ -73,17 +74,17 @@ void unpackNFit_a1975(TString fileName = "run_0106")
    filterTask->SetPersistence(false);
    filterTask->SetFilterAux(false);
 
-   auto threshold = 35;
+   auto threshold = 60;
 
-   Double_t clusterRadius = 15.0;
-   Double_t clusterDistance = 7.5;
+   //Double_t clusterRadius = 15.0;
+   //Double_t clusterDistance = 8.5;
 
    auto psa = new AtPSAMax();
    psa->SetThreshold(threshold);
 
    // Create PSA task
    AtPSAtask *psaTask = new AtPSAtask(psa);
-   psaTask->SetPersistence(true);
+   psaTask->SetPersistence(false);
    // psaTask->SetInputBranch("AtRawEventFiltered");
    psaTask->SetOutputBranch("AtEventH");
 
@@ -96,24 +97,29 @@ void unpackNFit_a1975(TString fileName = "run_0106")
    praTask->SetInputBranch("AtEventCorrected");
    praTask->SetOutputBranch("AtPatternEvent");
    praTask->SetPersistence(true);
-   praTask->SetClusterRadius(clusterRadius);
-   praTask->SetClusterDistance(clusterDistance);
+   //praTask->SetClusterRadius(clusterRadius);
+   //praTask->SetClusterDistance(clusterDistance);
    // praTask->SetMaxNumHits(3000);
    // praTask->SetMinNumHits(100);
-   // praTask->SetTcluster(8.0);
+    praTask->SetTcluster(8.5);
+    praTask->SetMcluster(25);
 
    // Fitting task
-   Float_t gasMediumDensity = 0.083147;
-   Float_t magneticField = 2.85;
-   Int_t pdg = 1000010020; // 1000010020; 2212;
+   Float_t gasMediumDensity = 0.0657;
+   Float_t magneticField = 2.00;
+   Int_t pdg = 1000020040; // 1000010020; 2212;
    Bool_t noMatEffects = 1;
+   
    AtFITTER::AtGenfit::Exp exp = AtFITTER::AtGenfit::a1975;
-   std::string elossFile = (std::string)dir.Data() + "/resources/energy_loss/proton_D2_600torr.txt";
+   
+   std::string elossFile = (std::string)dir.Data() + "/resources/energy_loss/alpha_He_300torr.txt";
+   
    auto fitter = std::make_unique<AtFITTER::AtGenfit>(magneticField, 0.00001, 1000.0, elossFile, gasMediumDensity, pdg,
                                                       5, 20, noMatEffects);
-   fitter->SetIonName("deuteron"); // deuteron proton
-   fitter->SetMass(2.0135532);     // 2.0135532 1.00727646
-   fitter->SetAtomicNumber(1);
+   std::cout << "***** Setting up fitter ******" << std::endl;
+   fitter->SetIonName("alpha"); // deuteron proton
+   fitter->SetMass(4.002603);     // 2.0135532 1.00727646
+   fitter->SetAtomicNumber(2);
    fitter->SetNumFitPoints(1.0);
    fitter->SetVerbosityLevel(1);
    fitter->SetSimulationConvention(0);
@@ -141,7 +147,7 @@ void unpackNFit_a1975(TString fileName = "run_0106")
    auto numEvents = unpackTask->GetNumEvents();
    std::cout << "Unpacking " << numEvents << " events. " << std::endl;
 
-   run->Run(0, numEvents);
+   run->Run(0, 570);
 
    std::cout << std::endl << std::endl;
    std::cout << "Done unpacking events" << std::endl << std::endl;

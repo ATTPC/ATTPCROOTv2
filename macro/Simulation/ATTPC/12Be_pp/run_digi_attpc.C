@@ -1,3 +1,4 @@
+
 bool reduceFunc(AtRawEvent *evt);
 
 void run_digi_attpc()
@@ -63,7 +64,7 @@ void run_digi_attpc()
    fRun->Init();
 
    timer.Start();
-   fRun->Run(0, 20);
+   fRun->Run(0, 50);
    timer.Stop();
 
    std::cout << std::endl << std::endl;

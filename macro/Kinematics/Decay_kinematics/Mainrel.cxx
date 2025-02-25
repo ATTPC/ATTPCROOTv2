@@ -29,7 +29,7 @@ int Mainrel()
 {
 
    std::ofstream kineStr;
-   kineStr.open("10Be_a_gs_lowener.txt");
+   kineStr.open("10Be_a_gs_highener_2.txt");
 
    Int_t a = 1;
    int A1 = 10.; // mass0 of the incident particle
@@ -77,7 +77,7 @@ int Mainrel()
    double ex3 = 0.0;  // excitation energy of the scattered particle
    double ex4 = 0.0;  // excitation energy of the recoil
 
-   double tbt = 1.05; // incident energy (total Lab energy in MeV)
+   double tbt = 4.00; // incident energy (total Lab energy in MeV)
 
    double Energyrdec, Anglerdec;
 

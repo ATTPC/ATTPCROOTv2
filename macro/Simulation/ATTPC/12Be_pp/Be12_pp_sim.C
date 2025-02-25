@@ -1,4 +1,4 @@
-void Be12_pp_sim(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
+void Be12_pp_sim(Int_t nEvents = 1000, TString mcEngine = "TGeant4")
 {
 
    TString dir = getenv("VMCWORKDIR");
@@ -40,7 +40,7 @@ void Be12_pp_sim(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
    run->AddModule(pipe);*/
 
    FairDetector *ATTPC = new AtTpc("ATTPC", kTRUE);
-   ATTPC->SetGeometryFileName("ATTPC_He300torr_v2.root");
+   ATTPC->SetGeometryFileName("ATTPC_H300torr.root");
    // ATTPC->SetModifyGeometry(kTRUE);
    run->AddModule(ATTPC);
 
@@ -49,7 +49,7 @@ void Be12_pp_sim(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
    // -----   Magnetic field   -------------------------------------------
    // Constant Field
    AtConstField *fMagField = new AtConstField();
-   fMagField->SetField(0., 0., 20.0);                     // values are in kG
+   fMagField->SetField(0., 0., 28.5);                     // values are in kG
    fMagField->SetFieldRegion(-50, 50, -50, 50, -10, 230); // values are in cm
                                                           //  (xmin,xmax,ymin,ymax,zmin,zmax)
    run->SetField(fMagField);
@@ -60,14 +60,14 @@ void Be12_pp_sim(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
 
    // Beam Information
    Int_t z = 4;  // Atomic number
-   Int_t a = 10; // Mass number
+   Int_t a = 12; // Mass number
    Int_t q = 0;  // Charge State
    Int_t m = 1;
    Double_t px = 0.000 / a;    // X-Momentum / per nucleon!!!!!!
    Double_t py = 0.000 / a;    // Y-Momentum / per nucleon!!!!!!
-   Double_t pz = 0.443 / a;    // Z-Momentum / per nucleon!!!!!!
+   Double_t pz = .016 / a;    // Z-Momentum / per nucleon!!!!!!
    Double_t BExcEner = 0.0;    //
-   Double_t Bmass = 10.013534; // Mass in amu
+   Double_t Bmass = 12.026922; // Mass in amu
    Double_t NomEnergy = 9.0;
 
    AtTPCIonGenerator *ionGen = new AtTPCIonGenerator("Ion", z, a, q, m, px, py, pz, BExcEner, Bmass, NomEnergy);
@@ -109,33 +109,33 @@ void Be12_pp_sim(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
    ExE.push_back(BExcEner);
 
    // ---- Target ----
-   Zp.push_back(2); // p
-   Ap.push_back(4); //
+   Zp.push_back(1); // p
+   Ap.push_back(1); //
    Qp.push_back(0); //
    Pxp.push_back(0.0);
    Pyp.push_back(0.0);
    Pzp.push_back(0.0);
-   Mass.push_back(4.002603);
+   Mass.push_back(1.0078250322);
    ExE.push_back(0.0); // In MeV
 
    //--- Scattered -----
-   Zp.push_back(2);  // 12Be TRACKID=1
-   Ap.push_back(4); //
+   Zp.push_back(4);  // 12Be TRACKID=1
+   Ap.push_back(12); //
    Qp.push_back(0);
    Pxp.push_back(0.0);
    Pyp.push_back(0.0);
    Pzp.push_back(0.0);
-   Mass.push_back(4.002603);
+   Mass.push_back(12.026922);
    ExE.push_back(0.0);
 
    // ---- Recoil -----
-   Zp.push_back(4); // p  TRACKID=2
-   Ap.push_back(10); //
+   Zp.push_back(1); // p  TRACKID=2
+   Ap.push_back(1); //
    Qp.push_back(0); //
    Pxp.push_back(0.0);
    Pyp.push_back(0.0);
    Pzp.push_back(0.0);
-   Mass.push_back(10.013534);
+   Mass.push_back(1.0078250322);
    ExE.push_back(0.0); // In MeV
 
    Double_t ThetaMinCMS = 103.0;

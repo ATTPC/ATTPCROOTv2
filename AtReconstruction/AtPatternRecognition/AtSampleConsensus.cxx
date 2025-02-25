@@ -60,6 +60,8 @@ AtSampleConsensus::GeneratePatternFromHits(const std::vector<const AtHit *> &hit
 AtPatternEvent AtSampleConsensus::Solve(AtEvent *event)
 {
    auto hitVec = ContainerManip::GetConstPointerVector(event->GetHits());
+      std::cout<<"AtSampleConsensus::Solve"<<std::endl;
+
    return Solve(hitVec, event);
 }
 
@@ -71,6 +73,7 @@ AtPatternEvent AtSampleConsensus::Solve(const std::vector<AtHit> &hitArray, AtBa
 
 AtPatternEvent AtSampleConsensus::Solve(const std::vector<const AtHit *> &hitArray, AtBaseEvent *event)
 {
+   
    // Return early if we were passed an event and it is marked bad
    if (event != nullptr && !event->IsGood())
       return {*event};

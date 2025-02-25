@@ -1,13 +1,13 @@
-void Be10He4_sim(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
+void Be10He4_sim(Int_t nEvents = 50000, TString mcEngine = "TGeant4")
 {
 
    TString dir = getenv("VMCWORKDIR");
 
    // Output file name
-   TString outFile = "./data/attpcsim_H.root";
+   TString outFile = "./data/attpcsim.root";
 
    // Parameter file name
-   TString parFile = "./data/attpcpar_H.root";
+   TString parFile = "./data/attpcpar.root";
 
    // -----   Timer   --------------------------------------------------------
    TStopwatch timer;
@@ -40,7 +40,7 @@ void Be10He4_sim(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
    run->AddModule(pipe);*/
 
    FairDetector *ATTPC = new AtTpc("ATTPC", kTRUE);
-   ATTPC->SetGeometryFileName("ATTPC_H300torr.root");
+   ATTPC->SetGeometryFileName("ATTPC_He300torr_v2.root");
    // ATTPC->SetModifyGeometry(kTRUE);
    run->AddModule(ATTPC);
 
@@ -110,13 +110,13 @@ void Be10He4_sim(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
    ExE.push_back(BExcEner);
 
    // ---- Target ----
-   Zp.push_back(1); // p
-   Ap.push_back(1); //
+   Zp.push_back(2); // p
+   Ap.push_back(4); //
    Qp.push_back(0); //
    Pxp.push_back(0.0);
    Pyp.push_back(0.0);
    Pzp.push_back(0.0);
-   Mass.push_back(1.007825); // uma
+   Mass.push_back(4.002603); // uma
    ExE.push_back(0.0);            // In MeV
 
    //--- Scattered -----
@@ -130,17 +130,17 @@ void Be10He4_sim(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
    ExE.push_back(0.0);
 
    // ---- Recoil -----
-   Zp.push_back(1); //
-   Ap.push_back(1); //
+   Zp.push_back(2); //
+   Ap.push_back(4); //
    Qp.push_back(0); //
    Pxp.push_back(0.0);
    Pyp.push_back(0.0);
    Pzp.push_back(0.0);
-   Mass.push_back(1.007825); // uma
+   Mass.push_back(4.002603); // uma
    ExE.push_back(0.0);            // In MeV
 
-   Double_t ThetaMinCMS = 55.0;
-   Double_t ThetaMaxCMS = 120.0;
+   Double_t ThetaMinCMS = 68.0;
+   Double_t ThetaMaxCMS = 68.0;
 
    AtTPC2Body *TwoBody =
       new AtTPC2Body("TwoBody", &Zp, &Ap, &Qp, mult, &Pxp, &Pyp, &Pzp, &Mass, &ExE, ResEner, ThetaMinCMS, ThetaMaxCMS);

@@ -1,7 +1,7 @@
 
 
 // Requires the TPC run number
-void run_unpack_linked(TString fileName = "run_0104")
+void run_unpack_linked(TString fileName)
 {
    // Load the library for unpacking and reconstruction
    gSystem->Load("libAtReconstruction.so");
@@ -12,8 +12,8 @@ void run_unpack_linked(TString fileName = "run_0104")
    // Set the input/output directories
    TString parameterFile = "ATTPC.e22502.par";
    TString mappath = "";
-   TString filepath = "/media/david/EXTERNAL_USB/e22502/fix/";
-   TString filepathout = "/media/david/EXTERNAL_USB/e22502/low_energy/";
+   TString filepath = "/media/david/cd93e27e-bbe0-4296-a341-7957f4adbda6/";
+   TString filepathout = "/media/david/cd93e27e-bbe0-4296-a341-7957f4adbda6/";
    TString fileExt = ".h5";
    TString inputFile = filepath + fileName + fileExt;
    TString scriptfile = "ANL2023.xml";
@@ -80,7 +80,7 @@ void run_unpack_linked(TString fileName = "run_0104")
 
    // Create PSA task
    AtPSAtask *psaTask = new AtPSAtask(psa);
-   psaTask->SetPersistence(kTRUE);
+   psaTask->SetPersistence(kFALSE);
    // psaTask->SetInputBranch("AtRawEventFiltered");
    psaTask->SetOutputBranch("AtEventH");
 
@@ -96,6 +96,33 @@ void run_unpack_linked(TString fileName = "run_0104")
    praTask->SetTcluster(8.5);
    praTask->SetMcluster(25);
 
+Float_t gasMediumDensity = 0.13;
+   Float_t magneticField = 2.00;
+   Int_t pdg = 1000020040; // 1000010020; 2212;
+   Bool_t noMatEffects = 1;
+   
+   AtFITTER::AtGenfit::Exp exp = AtFITTER::AtGenfit::a1975;
+   
+   std::string elossFile = (std::string)dir.Data() + "/resources/energy_loss/alpha_He_300torr.txt";
+   
+   auto fitter = std::make_unique<AtFITTER::AtGenfit>(magneticField, 0.00001, 1000.0, elossFile, gasMediumDensity, pdg,
+                                                      5, 20, noMatEffects);
+   std::cout << "***** Setting up fitter ******" << std::endl;
+   fitter->SetIonName("alpha"); // deuteron proton
+   fitter->SetMass(4.002603);     // 2.0135532 1.00727646
+   fitter->SetAtomicNumber(2);
+   fitter->SetNumFitPoints(1.0);
+   fitter->SetVerbosityLevel(1);
+   fitter->SetSimulationConvention(0);
+   // fitter->SetExpNum(exp);
+   fitter->SetFitDirection(0);
+   fitter->EnableMerging(1);
+   fitter->EnableSingleVertexTrack(1);
+   fitter->EnableReclustering(1, 15.0, 7.5);
+
+   AtFitterTask *fitterTask = new AtFitterTask(std::move(fitter));
+   fitterTask->SetPersistence(true);
+
 
    // Add unpacker to the run
    run->AddTask(unpackTask);
@@ -103,6 +130,7 @@ void run_unpack_linked(TString fileName = "run_0104")
    run->AddTask(psaTask);
    run->AddTask(SCTask);
    run->AddTask(praTask);
+   run->AddTask(fitterTask);
 
    std::cout << "***** Starting Init ******" << std::endl;
    run->Init();

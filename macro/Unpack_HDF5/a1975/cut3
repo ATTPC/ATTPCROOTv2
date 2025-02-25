@@ -1,0 +1,20 @@
+{
+//========= Macro generated from object: CUTG/Graph
+//========= by ROOT version6.26/10
+   
+   cutg = new TCutG("CUTG",9);
+   cutg->SetVarX("ecm_anglecm_nocoin_cut");
+   cutg->SetVarY("");
+   cutg->SetTitle("Graph");
+   cutg->SetFillStyle(1000);
+   cutg->SetPoint(0,73.5413,0.94254);
+   cutg->SetPoint(1,81.1575,0.866935);
+   cutg->SetPoint(2,85.2883,0.740927);
+   cutg->SetPoint(3,80.8993,0.539314);
+   cutg->SetPoint(4,76.3812,0.677923);
+   cutg->SetPoint(5,71.0886,0.728327);
+   cutg->SetPoint(6,70.3141,0.854335);
+   cutg->SetPoint(7,73.9286,0.929939);
+   cutg->SetPoint(8,73.5413,0.94254);
+   cutg->Draw("");
+}

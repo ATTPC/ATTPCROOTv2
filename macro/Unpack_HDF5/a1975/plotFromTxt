@@ -1,0 +1,49 @@
+#include <iostream>
+#include <fstream>
+#include <vector>
+#include <string>
+#include <sstream>
+#include <TGraph.h>
+#include <TCanvas.h>
+
+void plotFromTxt()
+{
+    std::string filename = "energy_angle_cm.txt"; // Hardcoded filename
+
+    std::ifstream infile(filename);
+    if (!infile.is_open()) {
+        std::cerr << "Error: Could not open file " << filename << std::endl;
+        return;
+    }
+
+    std::string line;
+    std::vector<double> x, y;
+
+    // Skip the first line (header)
+    std::getline(infile, line);
+
+    // Read the rest of the file
+    while (std::getline(infile, line)) {
+        std::istringstream iss(line);
+        double xVal, yVal;
+        if (!(iss >> yVal >> xVal)) {
+            std::cerr << "Error: Invalid line format: " << line << std::endl;
+            continue;
+        }
+        x.push_back(xVal);
+        y.push_back(yVal);
+    }
+
+    infile.close();
+
+    // Create a TGraph
+    TGraph *graph = new TGraph(x.size(), x.data(), y.data());
+    graph->SetTitle("Plot from TXT;X axis;Y axis");
+ graph->SetMinimum(0);
+    graph->SetMaximum(7);
+    // Draw the graph
+    graph->SetMarkerStyle(20); // 20 is the marker style for solid circles
+    graph->SetMarkerSize(0.7);
+    TCanvas *c1 = new TCanvas("c1", "Plot from TXT", 800, 600);
+    graph->Draw("AP");
+}

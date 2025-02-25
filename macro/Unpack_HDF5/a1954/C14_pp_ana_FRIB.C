@@ -18,10 +18,10 @@ Double_t GetNPeaksHRS(std::vector<Int_t> *timeMax, std::vector<Float_t> *adcMax,
    return nfound;
 }
 
-void C14_pp_ana_FRIB(TString fileName = "run_0101")
+void C14_pp_ana_FRIB(TString fileName = "run_0120")
 {
 
-   TString baseDir = "/media/david/EXTERNAL_USB/e22502/low_energy/";
+   TString baseDir = "/media/david/cd93e27e-bbe0-4296-a341-7957f4adbda6/";
    TString inputFile = baseDir + fileName + ".root";
 
 
@@ -174,8 +174,8 @@ void C14_pp_ana_FRIB(TString fileName = "run_0101")
    hmultiplicity->Draw("histo");
    c->cd(3);
    henergy->Draw("histo");
-   henergy_2->SetLineColor(kRed);
-   henergy_2->Draw("histo SAME");
+   //henergy_2->SetLineColor(kRed);
+   //henergy_2->Draw("histo SAME");
    c->cd(4);
    htime->Draw("histo");
 }

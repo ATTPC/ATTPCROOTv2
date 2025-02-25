@@ -1,11 +1,11 @@
-void run_eve(TString InputDataFileName = "run_0062")
+void run_eve(TString InputDataFileName = "output_digi")
 {
 
-   TString InputDir = "/media/david/EXTERNAL_USB/e22502/low_energy/";
+   TString InputDir = "/home/david/PhD/PhD-14-02/attpcroot/ATTPCROOTv2/macro/Simulation/ATTPC/10Be_aa/data/";
    TString InputDataFile = InputDir + InputDataFileName + ".root";
 
    TString OutputDataFile = InputDataFileName + ".reco_display.root";
-   TString unpackDir = "/macro/Unpack_HDF5/a1954/";
+   TString unpackDir = "/macro/Simulation/ATTPC/10Be_aa/data/";
 
    TString dir = getenv("VMCWORKDIR");
    TString geoFile = "ATTPC_He300torr_v2_geomanager.root";

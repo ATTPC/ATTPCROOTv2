@@ -181,13 +181,13 @@ void C14_pp_ana_IC()
    TH2F *bro_vs_eloss = new TH2F("bro_vs_eloss", "bro_vs_eloss", 4000, 0, 25000.0, 500, 0, 3);
    TH2F *bro_vs_dedx = new TH2F("bro_vs_dedx", "bro_vs_dedx", 4000, 0, 4000.0, 500, 0, 3);
    TH2F *angle_vs_energy = new TH2F("angle_vs_energy", "angle_vs_energy", 720, 0, 179, 500, 0, 80.0);
-   TH2F *angle_vs_energy_lr = new TH2F("angle_vs_energy_lr", "angle_vs_energy_lr", 1000, 0, 90., 1000, 0, 20.0);
+   TH2F *angle_vs_energy_lr = new TH2F("angle_vs_energy_lr", "angle_vs_energy_lr", 1000, 0, 90., 1000, 0, 30.0);
    TH2F *angle_vs_energy_t = new TH2F("angle_vs_energy_t", "angle_vs_energy_t", 720, 0, 179, 500, 0, 80.0);
    TH2F *angle_vs_momentum = new TH2F("angle_vs_momentum", "angle_vs_momentum", 720, 0, 179, 1000, 0, 2.0);
    TH2F *angle_vs_angle = new TH2F("angle_vs_angle", "angle_vs_angle", 720, 0, 179, 720, 0, 179);
    TH1F *vertex_distribution = new TH1F("vertex_distribution", "Vertex", 200, -1000, 2000);
-   TH1F *IC_higher_banana = new TH1F("IC_higher_banana", "IC_higher_banana", 1500, 0, 1500);
-   TH1F *IC_lower_banana = new TH1F("IC_lower_banana", "IC_lower_banana", 1500, 0, 1500);
+   TH1F *IC_higher_banana = new TH1F("IC_higher_banana", "IC_higher_banana", 2500, 0, 2500);
+   TH1F *IC_lower_banana = new TH1F("IC_lower_banana", "IC_lower_banana", 2500, 0, 2500);
    TH1F *vertex_energy = new TH1F("vertex_energy", "Vertex Energy", 400, -20., 20.);
    TH1F *vertex_energy_tb = new TH1F("vertex_energy_tb", "Vertex Energy using TB", 600, -20, 40);
    TH2F *vertex_vs_beamenergy = new TH2F("vertex_vs_beamenergy", "Vertex and beam energy",1000, 0., 1000, 600, -20., 40.);
@@ -218,7 +218,7 @@ void C14_pp_ana_IC()
    cutg->SetPoint(12,39.8622,24.0426);
    cutg->SetPoint(13,39.625,23.4881);
 
-  /* TCutG *high_banana = new TCutG("CUTG_1",11);
+   TCutG *high_banana = new TCutG("CUTG_1",11);
    high_banana->SetVarX("angle_vs_energy_lr");
    high_banana->SetVarY("");
    high_banana->SetTitle("Graph");
@@ -233,7 +233,7 @@ void C14_pp_ana_IC()
    high_banana->SetPoint(7,37.7862,4.38117);
    high_banana->SetPoint(8,35.0423,4.84725);
    high_banana->SetPoint(9,36.724,5.23157);
-   high_banana->SetPoint(10,36.547,5.23974);*/
+   high_banana->SetPoint(10,36.547,5.23974);
 
 
    TCutG *lower_banana = new TCutG("CUTG_1",12);
@@ -287,14 +287,14 @@ void C14_pp_ana_IC()
    // std::cout << " Opening File : " << FileName.Data() << std::endl;
    // TFile *file = new TFile(FileName.Data(), "READ");
 
-   TString dir = "/media/david/EXTERNAL_USB/e22502/low_energy/";
+   TString dir = "/media/david/cd93e27e-bbe0-4296-a341-7957f4adbda6/";
 
    std::vector<std::pair<TString, TString>> filepairs;
-   filepairs.push_back(std::make_pair("run_0100.root", "run_0100.root_sorted.root"));
-   filepairs.push_back(std::make_pair("run_0101.root", "run_0101.root_sorted.root"));
-   filepairs.push_back(std::make_pair("run_0102.root", "run_0102.root_sorted.root"));
-   filepairs.push_back(std::make_pair("run_0103.root", "run_0103.root_sorted.root"));
-   filepairs.push_back(std::make_pair("run_0104.root", "run_0104.root_sorted.root"));
+   filepairs.push_back(std::make_pair("run_0116.root", "run_0116.root_sorted.root"));
+   filepairs.push_back(std::make_pair("run_0117.root", "run_0117.root_sorted.root"));
+   filepairs.push_back(std::make_pair("run_0118.root", "run_0118.root_sorted.root"));
+   filepairs.push_back(std::make_pair("run_0119.root", "run_0119.root_sorted.root"));
+   filepairs.push_back(std::make_pair("run_0120.root", "run_0120.root_sorted.root"));
    for (auto iFile : filepairs) {
 
 // GET Data
@@ -306,7 +306,7 @@ void C14_pp_ana_IC()
 
       TTreeReader ReaderTracking("cbmsim", file);
       //TTreeReaderValue<TClonesArray> trackingArray(ReaderTracking, "AtTrackingEvent");
-      TTreeReaderValue<TClonesArray> eventArray(ReaderTracking, "AtEventH");
+     // TTreeReaderValue<TClonesArray> eventArray(ReaderTracking, "AtEventH");
       TTreeReaderValue<TClonesArray> eventArray1(ReaderTracking, "AtPatternEvent");
 
 
@@ -347,9 +347,9 @@ void C14_pp_ana_IC()
          Reader2.Next();
 
          AtPatternEvent *patternEvent = (AtPatternEvent *)eventArray1->At(0);
-         AtEvent *event = (AtEvent *)eventArray->At(0);
-         auto getTS_0 = event->GetTimestamp(0);
-         auto getTS_1 = event->GetTimestamp(1);
+         //AtEvent *event = (AtEvent *)eventArray->At(0);
+         //auto getTS_0 = event->GetTimestamp(0);
+         //auto getTS_1 = event->GetTimestamp(1);
 
         /* if (i == 0) {
                fribDTS = 0;
@@ -368,18 +368,18 @@ void C14_pp_ana_IC()
               // std::cout << "Event name : " << event->GetEventName() << "\n";
 
               
-            }*/
+            }
 
             getTSRef_0 = getTS_0;
             getTSRef_1 = getTS_1;
             fribTSRef = *ts;
 
-
+*/
          if (patternEvent) {
             Bool_t goodBeam = false;
             
             for (auto enerIC : *energyIC) {
-               if (enerIC > 1 && enerIC < 1400) {
+               if (enerIC > 500 && enerIC < 1600) {
                   goodBeam = true;
                   //henergyIC->Fill(ener);
                }
@@ -492,7 +492,7 @@ void C14_pp_ana_IC()
                         vector<double> vertex = {p1_line1[0] + t * dirvec1[0], p1_line1[1] + t * dirvec1[1], p1_line1[2] + t * dirvec1[2]};*/
                         //if(vertex[2] > 1800.0 && vertex[2] < 1850.0)
                         //std::cout << "Check this event: " << i << std::endl;
-                        if(cutg->IsInside(theta1 * TMath::RadToDeg(), theta2 * TMath::RadToDeg()))
+                        //if(cutg->IsInside(theta1 * TMath::RadToDeg(), theta2 * TMath::RadToDeg()))
                               //vertex_distribution->Fill(vertex[2]);
 
                         vertex_distribution->Fill(finalz);      
@@ -559,7 +559,7 @@ void C14_pp_ana_IC()
                      double eneralpha = 0; //14.35, 13.06, 6.1, 1.73
 
                      GetEnergy(4.0, 2.0, broalpha, eneralpha);
-                     double a = (m_a*(eneralpha + m_a) - m_a*m_a)/(1 - TMath::Cos(2*(TMath::Pi()/2 - anglealpha)));
+                     double a = (m_a*(eneralpha*4 + m_a) - m_a*m_a)/(1 - TMath::Cos(2*(TMath::Pi()/2 - anglealpha)));
                                      
                         Ebeam = ((TMath::Sqrt(a + m_Be10*m_Be10) + TMath::Sqrt(a + m_a*m_a))*(TMath::Sqrt(a + m_Be10*m_Be10) + TMath::Sqrt(a + m_a*m_a)) - (m_a + m_Be10)*(m_a + m_Be10))/(2*m_a);
                        // std::cout << "Ebeam: " << Ebeam << std::endl;
@@ -645,11 +645,11 @@ void C14_pp_ana_IC()
                          << " - Energy :" << ener * Am << " - dE     :" << eloss << "\n";*/
 
                // Selection of events
-               if (zpos < 500.0 || zpos > 950)
-                  continue;
+               //if (zpos < 500.0 || zpos > 950)
+                 // continue;
 
-               if (theta * TMath::RadToDeg() < 13.0)
-                  continue;
+             //  if (theta * TMath::RadToDeg() < 13.0)
+               //   continue;
 
               /* if (cutg->IsInside(eloss, bro)) { // Selection of protons
 
@@ -699,7 +699,7 @@ void C14_pp_ana_IC()
    Double_t *EnerLabSca = new Double_t[20000];
    Double_t *MomLabRec = new Double_t[20000];
 
-   TString fileKine = "10Be_a_gs.txt";
+   TString fileKine = "10Be_a_gs_highener.txt";
    std::ifstream *kineStr = new std::ifstream(fileKine.Data());
    Int_t numKin = 0;
 
@@ -720,7 +720,7 @@ void C14_pp_ana_IC()
    TGraph *Kine_AngRec_EnerRec = new TGraph(numKin, ThetaLabRec, EnerLabRec);
    TGraph *Kine_AngRec_AngSca = new TGraph(numKin, ThetaLabRec, ThetaLabSca);
 
-   TString fileKine2 = "10Be_a_1s.txt";
+   TString fileKine2 = "10Be_a_1st_highener.txt";
    std::ifstream *kineStr2 = new std::ifstream(fileKine2.Data());
    numKin = 0;
 

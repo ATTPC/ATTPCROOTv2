@@ -9,6 +9,7 @@
 
 void run_sim_ana(Int_t num_ev=100000)
 {
+    std::ofstream energyRecoilFile("alphaenergy_sim.txt");
 
     TH2D *Eloss_vs_Range_Sca = new TH2D("Eloss_vs_Range_Sca","ELoss_vs_Range_Sca",100,0,1000,300,0,300);
     Eloss_vs_Range_Sca->SetMarkerStyle(20);
@@ -67,7 +68,7 @@ void run_sim_ana(Int_t num_ev=100000)
     c5->Divide(2,2);
     c5->Draw();
 
-    TString mcFileNameHead = "./data/attpcsim_H";
+    TString mcFileNameHead = "./data/attpcsim";
     TString mcFileNameTail = ".root";
     TString mcFileName     = mcFileNameHead + mcFileNameTail;
     std:cout << " Analysis of simulation file  " << mcFileName << endl;
@@ -94,6 +95,7 @@ void run_sim_ana(Int_t num_ev=100000)
 
     for(Int_t iEvent=0; iEvent<nEvents; iEvent++)
     {
+        Double_t energyLoss=0.0;
         Double_t energyLoss_sca=0.0;
         Double_t range_sca=0.0;
         Double_t energyLoss_rec=0.0;
@@ -116,7 +118,7 @@ void run_sim_ana(Int_t num_ev=100000)
         // tree -> GetEntry(iEvent);
         Int_t n = pointArray -> GetEntries();
         Int_t nMC = pointMCArray -> GetEntries();
-        std::cout<<" Event Number : "<<iEvent<<std::endl;
+        //std::cout<<" Event Number : "<<iEvent<<std::endl;
 	rad->Reset();
 
         for(Int_t i=0; i<n; i++) {
@@ -158,10 +160,11 @@ void run_sim_ana(Int_t num_ev=100000)
 
                 Double_t A = ((EnergyRecoil + 931.5) * (EnergyRecoil + 931.5) - 931.5 * 931.5)/(2.0 * 931.5);
                 Bro = A * 0.1439;
-                if(iEvent == 15 ){
+                if(iEvent == 77 ){
+                    //std::cout << "Total Energy Loss = " << energyLoss_rec << std::endl;
                     std::cout << "Recoil energy = " << EnergyRecoil << std::endl;
                     std::cout << "Recoil angle = " << AngleRecoil << std::endl;
-                    std::cout << "Brho = " << Bro << std::endl;
+                    //std::cout << "Brho = " << Bro << std::endl;
                 }
                 //EnergyRecoil= pointMC->GetEIni();
                 //std::cout << "Recoil energy = " << EnergyRecoil << std::endl;
@@ -263,6 +266,8 @@ void run_sim_ana(Int_t num_ev=100000)
             ELossRatio->Fill(energyLoss_sca/energyLoss_rec);
 
             HKineRecoil->Fill(AngleRecoil,EnergyRecoil);
+            energyRecoilFile << EnergyRecoil << std::endl;
+
             //std::cout << "Filling Kine Recoil with energy-angle = " << Bro << "  -  " << AngleRecoil << std::endl;
 
 

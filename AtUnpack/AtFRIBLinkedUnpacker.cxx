@@ -121,8 +121,9 @@ void AtFRIBLinkedHDFUnpacker::processAux(std::size_t padIndex)
       trace->SetRawADC(iTb, rawadc.at(iTb));
       trace->SetADC(iTb, rawadc.at(iTb) - baseline);
 
-      if (padIndex == 0 && iTb > 2000)
+      if (padIndex == 0 && iTb > 2000){
          //std::cout << "Aux trace " << iTb << " " << rawadc.at(iTb);
+      }
    }
 };
 
