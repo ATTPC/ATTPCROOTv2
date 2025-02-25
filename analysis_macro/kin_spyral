@@ -1,0 +1,707 @@
+#include <TFile.h>
+#include <TTree.h>
+#include <TH1F.h>
+#include <TCanvas.h>
+#include "TMath.h"
+//#include "AtTools.h"
+
+Double_t omega(Double_t x, Double_t y, Double_t z)
+{
+   return sqrt(x * x + y * y + z * z - 2 * x * y - 2 * y * z - 2 * x * z);
+}
+
+std::tuple<double, double>
+kine_2b(Double_t m1, Double_t m2, Double_t m3, Double_t m4, Double_t K_proj, Double_t thetalab, Double_t K_eject)
+{
+
+   // in this definition: m1(projectile); m2(target); m3(ejectile); and m4(recoil);
+   double Et1 = K_proj + m1;
+   double Et2 = m2;
+   double Et3 = K_eject + m3;
+   double Et4 = Et1 + Et2 - Et3;
+   double m4_ex, Ex, theta_cm;
+   double s, t, u; //---Mandelstam variables
+
+   s = pow(m1, 2) + pow(m2, 2) + 2 * m2 * Et1;
+   u = pow(m2, 2) + pow(m3, 2) - 2 * m2 * Et3;
+
+   m4_ex = sqrt((cos(thetalab) * omega(s, pow(m1, 2), pow(m2, 2)) * omega(u, pow(m2, 2), pow(m3, 2)) -
+                 (s - pow(m1, 2) - pow(m2, 2)) * (pow(m2, 2) + pow(m3, 2) - u)) /
+                   (2 * pow(m2, 2)) +
+                s + u - pow(m2, 2));
+   Ex = m4_ex - m4;
+
+   t = pow(m2, 2) + pow(m4_ex, 2) - 2 * m2 * Et4;
+
+   // for inverse kinematics Note: this angle corresponds to the recoil
+   theta_cm = TMath::Pi() - acos((pow(s, 2) + s * (2 * t - pow(m1, 2) - pow(m2, 2) - pow(m3, 2) - pow(m4_ex, 2)) +
+                                  (pow(m1, 2) - pow(m2, 2)) * (pow(m3, 2) - pow(m4_ex, 2))) /
+                                 (omega(s, pow(m1, 2), pow(m2, 2)) * omega(s, pow(m3, 2), pow(m4_ex, 2))));
+
+   theta_cm = theta_cm * TMath::RadToDeg();
+   return std::make_tuple(Ex, theta_cm);
+}
+
+void kin_spyral() {
+    
+    string base_path = "/home/david/PhD/PhD-14-02/attpcroot/spyral_fit/lowener/";
+    string base_path_cluster = "/home/david/PhD/PhD-14-02/attpcroot/spyral_fit/lowener/Cluster/";
+    string base_path_estimate = "/home/david/PhD/PhD-14-02/attpcroot/spyral_fit/lowener/Estimation/";
+    AtTools::AtELossTable *elossTableHe4 = new AtTools::AtELossTable();
+    AtTools::AtELossTable *elossTableHe4_lowpressure = new AtTools::AtELossTable();
+    AtTools::AtELossTable *elossTableN14 = new AtTools::AtELossTable();
+    elossTableHe4->LoadSrimTable("/home/david/PhD/SRIM/SRIM-2013-Pro/SRIM Outputs/Be10_He_600torr.txt");
+    elossTableN14->LoadSrimTable("/home/david/PhD/SRIM/SRIM-2013-Pro/SRIM Outputs/N14_He_600torr.txt");
+    elossTableHe4_lowpressure->LoadSrimTable("/home/david/PhD/SRIM/SRIM-2013-Pro/SRIM Outputs/Be10_He_300torr.txt");    
+
+
+   TCutG *cutalpha = new TCutG("CUTG",8);
+    cutalpha->SetVarX("brho_vs_dEdx");
+    cutalpha->SetVarY("");
+    cutalpha->SetTitle("Graph");
+    cutalpha->SetFillStyle(1000);
+    cutalpha->SetPoint(0,29.2596,0.65499);
+    cutalpha->SetPoint(1,45.318,0.322329);
+    cutalpha->SetPoint(2,68.1543,0.260585);
+    cutalpha->SetPoint(3,67.7894,0.138357);
+    cutalpha->SetPoint(4,42.7633,0.203881);
+    cutalpha->SetPoint(5,22.0125,0.49244);
+    cutalpha->SetPoint(6,29.4161,0.65373);
+    cutalpha->SetPoint(7,29.2596,0.65499);
+
+   /*TCutG *cuthe6 = new TCutG("CUTG",11);
+    cuthe6->SetVarX("brho_vs_dEdx");
+    cuthe6->SetVarY("");
+    cuthe6->SetTitle("Graph");
+    cuthe6->SetFillStyle(1000);
+    cuthe6->SetPoint(0,40.8893,0.642389);
+    cuthe6->SetPoint(1,49.1509,0.450857);
+    cuthe6->SetPoint(2,54.1997,0.384073);
+    cuthe6->SetPoint(3,65.6741,0.290827);
+    cuthe6->SetPoint(4,65.1004,0.236643);
+    cuthe6->SetPoint(5,47.8887,0.293347);
+    cuthe6->SetPoint(6,38.7091,0.464718);
+    cuthe6->SetPoint(7,34.0046,0.623488);
+    cuthe6->SetPoint(8,35.5536,0.695313);
+    cuthe6->SetPoint(9,40.6598,0.64869);
+    cuthe6->SetPoint(10,40.8893,0.642389);*/
+
+    /*TCutG *cutbe10 = new TCutG("CUTG",10);
+    cutbe10->SetVarX("brho_vs_dEdx");
+    cutbe10->SetVarY("");
+    cutbe10->SetTitle("Graph");
+    cutbe10->SetFillStyle(1000);
+    cutbe10->SetPoint(0,55.4618,0.764617);
+    cutbe10->SetPoint(1,65.8462,0.546623);
+    cutbe10->SetPoint(2,77.2633,0.467238);
+    cutbe10->SetPoint(3,75.1406,0.34123);
+    cutbe10->SetPoint(4,65.7315,0.34375);
+    cutbe10->SetPoint(5,58.1583,0.424395);
+    cutbe10->SetPoint(6,50.241,0.639869);
+    cutbe10->SetPoint(7,51.9621,0.792339);
+    cutbe10->SetPoint(8,55.6913,0.759577);
+    cutbe10->SetPoint(9,55.4618,0.764617);*/
+
+    // List of ROOT files
+    Double_t m_p = 1.007825 * 931.49401;
+   Double_t m_d = 2.0135532 * 931.49401;
+   Double_t m_t = 3.016049281 * 931.49401;
+   Double_t m_He3 = 3.016029 * 931.49401;
+   Double_t m_Be10 = 10.013533818 * 931.49401;
+   Double_t m_Be11 = 11.021657749 * 931.49401;
+   Double_t m_Li9 = 9.026790 * 931.49401;
+   Double_t m_N14 = 14.00307400443 * 931.49401;
+   Double_t m_N15 = 15.00010889888 * 931.49401;
+   Double_t m_beam = m_Be10;
+   Float_t aMass = 4.00260325415;
+   Float_t O16Mass = 15.99491461956;
+   Double_t m_C14 = 14.003242 * 931.49401;
+   Double_t m_C13 = 13.00335484 * 931.49401;
+   Double_t m_C12 = 12.00 * 931.49401;
+   Double_t m_he6 = 6.018885889 * 931.49401;
+   Double_t m_a = 4.00260325415 * 931.49401;
+   Double_t m_O16 = 15.99491461956 * 931.49401;
+   std::vector<std::tuple<TString, TString, TString>> filepairs;
+  /* filepairs.push_back(std::make_pair("run_0062_4He.root", "run_0062.root"));
+   filepairs.push_back(std::make_pair("run_0063_4He.root", "run_0063.root"));
+   filepairs.push_back(std::make_pair("run_0064_4He.root", "run_0064.root"));
+   filepairs.push_back(std::make_pair("run_0065_4He.root", "run_0065.root"));
+   filepairs.push_back(std::make_pair("run_0066_4He.root", "run_0066.root"));
+   filepairs.push_back(std::make_pair("run_0067_4He.root", "run_0067.root"));
+   filepairs.push_back(std::make_pair("run_0070_4He.root", "run_0070.root"));
+   filepairs.push_back(std::make_pair("run_0071_4He.root", "run_0071.root"));
+   filepairs.push_back(std::make_pair("run_0072_4He.root", "run_0072.root"));
+   filepairs.push_back(std::make_pair("run_0073_4He.root", "run_0073.root"));
+   filepairs.push_back(std::make_pair("run_0074_4He.root", "run_0074.root"));
+   filepairs.push_back(std::make_pair("run_0075_4He.root", "run_0075.root"));
+   filepairs.push_back(std::make_pair("run_0076_4He.root", "run_0076.root"));
+   filepairs.push_back(std::make_pair("run_0077_4He.root", "run_0077.root"));
+   filepairs.push_back(std::make_pair("run_0078_4He.root", "run_0078.root"));
+   filepairs.push_back(std::make_pair("run_0079_4He.root", "run_0079.root"));
+   filepairs.push_back(std::make_pair("run_0080_4He.root", "run_0080.root"));
+   filepairs.push_back(std::make_pair("run_0081_4He.root", "run_0081.root"));
+   filepairs.push_back(std::make_pair("run_0082_4He.root", "run_0082.root"));
+   filepairs.push_back(std::make_pair("run_0084_4He.root", "run_0084.root"));
+   filepairs.push_back(std::make_pair("run_0085_4He.root", "run_0085.root"));
+   filepairs.push_back(std::make_pair("run_0086_4He.root", "run_0086.root"));
+   filepairs.push_back(std::make_pair("run_0087_4He.root", "run_0087.root"));
+   filepairs.push_back(std::make_pair("run_0089_4He.root", "run_0089.root"));
+   filepairs.push_back(std::make_pair("run_0090_4He.root", "run_0090.root"));
+   filepairs.push_back(std::make_pair("run_0091_4He.root", "run_0091.root"));
+   filepairs.push_back(std::make_pair("run_0092_4He.root", "run_0092.root"));
+   filepairs.push_back(std::make_pair("run_0093_4He.root", "run_0093.root"));
+   filepairs.push_back(std::make_pair("run_0094_4He.root", "run_0094.root"));
+   filepairs.push_back(std::make_pair("run_0095_4He.root", "run_0095.root"));
+   filepairs.push_back(std::make_pair("run_0096_4He.root", "run_0096.root"));
+   filepairs.push_back(std::make_pair("run_0097_4He.root", "run_0097.root"));
+   filepairs.push_back(std::make_pair("run_0098_4He.root", "run_0098.root"));
+   filepairs.push_back(std::make_pair("run_0099_4He.root", "run_0099.root"));
+   filepairs.push_back(std::make_pair("run_0100_4He.root", "run_0100.root"));
+   filepairs.push_back(std::make_pair("run_0101_4He.root", "run_0101.root"));
+   filepairs.push_back(std::make_pair("run_0102_4He.root", "run_0102.root"));
+   filepairs.push_back(std::make_pair("run_0104_4He.root", "run_0104.root"));*/
+
+   /*filepairs.push_back(std::make_tuple("run_0116_4He.root", "run_0116_cluster.root", "run_0116.root"));
+   filepairs.push_back(std::make_tuple("run_0117_4He.root", "run_0117_cluster.root", "run_0117.root"));
+   filepairs.push_back(std::make_tuple("run_0118_4He.root", "run_0118_cluster.root", "run_0118.root"));
+   filepairs.push_back(std::make_tuple("run_0119_4He.root", "run_0119_cluster.root", "run_0119.root"));
+   filepairs.push_back(std::make_tuple("run_0120_4He.root", "run_0120_cluster.root", "run_0120.root"));
+   filepairs.push_back(std::make_tuple("run_0134_4He.root", "run_0134_cluster.root", "run_0134.root"));
+   filepairs.push_back(std::make_tuple("run_0135_4He.root", "run_0135_cluster.root", "run_0135.root"));
+   filepairs.push_back(std::make_tuple("run_0136_4He.root", "run_0136_cluster.root", "run_0136.root"));
+   filepairs.push_back(std::make_tuple("run_0137_4He.root", "run_0137_cluster.root", "run_0137.root"));
+   filepairs.push_back(std::make_tuple("run_0138_4He.root", "run_0138_cluster.root", "run_0138.root"));
+   filepairs.push_back(std::make_tuple("run_0139_4He.root", "run_0139_cluster.root", "run_0139.root"));
+   filepairs.push_back(std::make_tuple("run_0140_4He.root", "run_0140_cluster.root", "run_0140.root"));
+   filepairs.push_back(std::make_tuple("run_0141_4He.root", "run_0141_cluster.root", "run_0141.root"));
+   filepairs.push_back(std::make_tuple("run_0143_4He.root", "run_0143_cluster.root", "run_0143.root"));
+   filepairs.push_back(std::make_tuple("run_0144_4He.root", "run_0144_cluster.root", "run_0144.root"));
+   filepairs.push_back(std::make_tuple("run_0145_4He.root", "run_0145_cluster.root", "run_0145.root"));
+   filepairs.push_back(std::make_tuple("run_0146_4He.root", "run_0146_cluster.root", "run_0146.root"));
+   filepairs.push_back(std::make_tuple("run_0147_4He.root", "run_0147_cluster.root", "run_0147.root"));
+   filepairs.push_back(std::make_tuple("run_0148_4He.root", "run_0148_cluster.root", "run_0148.root"));
+   filepairs.push_back(std::make_tuple("run_0149_4He.root", "run_0149_cluster.root", "run_0149.root"));
+   filepairs.push_back(std::make_tuple("run_0150_4He.root", "run_0150_cluster.root", "run_0150.root"));
+   filepairs.push_back(std::make_tuple("run_0153_4He.root", "run_0153_cluster.root", "run_0153.root"));
+   filepairs.push_back(std::make_tuple("run_0156_4He.root", "run_0156_cluster.root", "run_0156.root"));
+   filepairs.push_back(std::make_tuple("run_0157_4He.root", "run_0157_cluster.root", "run_0157.root"));
+   filepairs.push_back(std::make_tuple("run_0158_4He.root", "run_0158_cluster.root", "run_0158.root"));
+   filepairs.push_back(std::make_tuple("run_0159_4He.root", "run_0159_cluster.root", "run_0159.root"));
+   filepairs.push_back(std::make_tuple("run_0160_4He.root", "run_0160_cluster.root", "run_0160.root"));
+   filepairs.push_back(std::make_tuple("run_0161_4He.root", "run_0161_cluster.root", "run_0161.root"));
+   filepairs.push_back(std::make_tuple("run_0162_4He.root", "run_0162_cluster.root", "run_0162.root"));
+   filepairs.push_back(std::make_tuple("run_0163_4He.root", "run_0163_cluster.root", "run_0163.root"));
+   filepairs.push_back(std::make_tuple("run_0164_4He.root", "run_0164_cluster.root", "run_0164.root"));
+   filepairs.push_back(std::make_tuple("run_0165_4He.root", "run_0165_cluster.root", "run_0165.root"));
+   filepairs.push_back(std::make_tuple("run_0166_4He.root", "run_0166_cluster.root", "run_0166.root"));
+   filepairs.push_back(std::make_tuple("run_0167_4He.root", "run_0167_cluster.root", "run_0167.root"));
+   filepairs.push_back(std::make_tuple("run_0168_4He.root", "run_0168_cluster.root", "run_0168.root"));
+   filepairs.push_back(std::make_tuple("run_0169_4He.root", "run_0169_cluster.root", "run_0169.root"));
+   filepairs.push_back(std::make_tuple("run_0170_4He.root", "run_0170_cluster.root", "run_0170.root"));
+   filepairs.push_back(std::make_tuple("run_0171_4He.root", "run_0171_cluster.root", "run_0171.root"));
+   filepairs.push_back(std::make_tuple("run_0172_4He.root", "run_0172_cluster.root", "run_0172.root"));
+   filepairs.push_back(std::make_tuple("run_0173_4He.root", "run_0173_cluster.root", "run_0173.root"));
+   filepairs.push_back(std::make_tuple("run_0174_4He.root", "run_0174_cluster.root", "run_0174.root"));
+   filepairs.push_back(std::make_tuple("run_0175_4He.root", "run_0175_cluster.root", "run_0175.root"));*/
+
+   filepairs.push_back(std::make_tuple("run_0062_4He.root", "run_0062_cluster.root", "run_0062.root"));
+   filepairs.push_back(std::make_tuple("run_0063_4He.root", "run_0063_cluster.root", "run_0063.root"));
+   filepairs.push_back(std::make_tuple("run_0064_4He.root", "run_0064_cluster.root", "run_0064.root"));
+   filepairs.push_back(std::make_tuple("run_0065_4He.root", "run_0065_cluster.root", "run_0065.root"));
+   filepairs.push_back(std::make_tuple("run_0066_4He.root", "run_0066_cluster.root", "run_0066.root"));
+   filepairs.push_back(std::make_tuple("run_0079_4He.root", "run_0079_cluster.root", "run_0079.root"));
+   filepairs.push_back(std::make_tuple("run_0080_4He.root", "run_0080_cluster.root", "run_0080.root"));
+   filepairs.push_back(std::make_tuple("run_0081_4He.root", "run_0081_cluster.root", "run_0081.root"));
+   filepairs.push_back(std::make_tuple("run_0082_4He.root", "run_0082_cluster.root", "run_0082.root"));
+   filepairs.push_back(std::make_tuple("run_0084_4He.root", "run_0084_cluster.root", "run_0084.root"));
+   filepairs.push_back(std::make_tuple("run_0085_4He.root", "run_0085_cluster.root", "run_0085.root"));
+   filepairs.push_back(std::make_tuple("run_0086_4He.root", "run_0086_cluster.root", "run_0086.root"));
+   filepairs.push_back(std::make_tuple("run_0087_4He.root", "run_0087_cluster.root", "run_0087.root"));
+   filepairs.push_back(std::make_tuple("run_0089_4He.root", "run_0089_cluster.root", "run_0089.root"));
+   filepairs.push_back(std::make_tuple("run_0090_4He.root", "run_0090_cluster.root", "run_0090.root"));
+   filepairs.push_back(std::make_tuple("run_0091_4He.root", "run_0091_cluster.root", "run_0091.root"));
+   filepairs.push_back(std::make_tuple("run_0092_4He.root", "run_0092_cluster.root", "run_0092.root"));
+   filepairs.push_back(std::make_tuple("run_0093_4He.root", "run_0093_cluster.root", "run_0093.root"));
+   filepairs.push_back(std::make_tuple("run_0094_4He.root", "run_0094_cluster.root", "run_0094.root"));
+   filepairs.push_back(std::make_tuple("run_0095_4He.root", "run_0095_cluster.root", "run_0095.root"));
+   filepairs.push_back(std::make_tuple("run_0096_4He.root", "run_0096_cluster.root", "run_0096.root"));
+   //filepairs.push_back(std::make_tuple("run_0097_4He.root", "run_0097_cluster.root", "run_0097.root"));
+   //filepairs.push_back(std::make_tuple("run_0098_4He.root", "run_0098_cluster.root", "run_0098.root"));
+   //filepairs.push_back(std::make_tuple("run_0099_4He.root", "run_0099_cluster.root", "run_0099.root"));
+   filepairs.push_back(std::make_tuple("run_0100_4He.root", "run_0100_cluster.root", "run_0100.root"));
+   filepairs.push_back(std::make_tuple("run_0101_4He.root", "run_0101_cluster.root", "run_0101.root"));
+   filepairs.push_back(std::make_tuple("run_0102_4He.root", "run_0102_cluster.root", "run_0102.root"));
+   filepairs.push_back(std::make_tuple("run_0104_4He.root", "run_0104_cluster.root", "run_0104.root"));
+
+
+
+   
+
+
+
+    
+    
+    
+   /* const char* root_files[] = {
+        //"run_0062_4He.root",
+        // "run_0063_4He.root",
+        // "run_0064_4He.root",
+        // "run_0065_4He.root",
+        // "run_0066_4He.root",
+        // "run_0067_4He.root",
+        // "run_0070_4He.root",
+        // "run_0071_4He.root",
+        // "run_0072_4He.root",
+        // "run_0073_4He.root",
+        // "run_0074_4He.root",
+        // "run_0075_4He.root",
+        // "run_0076_4He.root",
+        // "run_0077_4He.root",
+        // "run_0078_4He.root",
+        // "run_0079_4He.root",
+        // "run_0080_4He.root",
+        // "run_0081_4He.root",
+        // "run_0082_4He.root",
+        // "run_0084_4He.root",
+        // "run_0085_4He.root",
+        // "run_0086_4He.root",
+        // "run_0087_4He.root",
+        // "run_0089_4He.root",
+        // "run_0090_4He.root",
+        // "run_0091_4He.root",
+        // "run_0092_4He.root",
+        // "run_0093_4He.root",
+        // "run_0094_4He.root",
+        // "run_0095_4He.root",
+        // "run_0096_4He.root",
+        // "run_0097_4He.root",
+        // "run_0098_4He.root",
+        // "run_0099_4He.root",
+        // "run_0100_4He.root",
+        // "run_0101_4He.root",
+        // "run_0102_4He.root",
+        // "run_0104_4He.root",
+
+        "run_0116_4He.root",
+        "run_0117_4He.root",
+        "run_0118_4He.root",
+        "run_0119_4He.root",
+        "run_0120_4He.root",
+         "run_0134_4He.root",
+         "run_0135_4He.root",
+         "run_0136_4He.root",
+         "run_0137_4He.root",
+         "run_0138_4He.root",
+         "run_0139_4He.root",
+         "run_0140_4He.root",
+         "run_0141_4He.root",
+         "run_0143_4He.root",
+         "run_0144_4He.root",
+         "run_0145_4He.root",
+         "run_0146_4He.root",
+         "run_0147_4He.root",
+         "run_0148_4He.root",
+         "run_0149_4He.root",
+         "run_0150_4He.root",
+         "run_0153_4He.root",
+         "run_0156_4He.root",
+         "run_0157_4He.root",
+         "run_0158_4He.root",
+         "run_0159_4He.root",
+         "run_0160_4He.root",
+         "run_0161_4He.root",
+         "run_0162_4He.root",
+         "run_0163_4He.root",
+         "run_0164_4He.root",
+         "run_0165_4He.root",
+         "run_0166_4He.root",
+         "run_0167_4He.root",
+         "run_0168_4He.root",
+         "run_0169_4He.root",
+         "run_0170_4He.root",
+         "run_0171_4He.root",
+         "run_0172_4He.root",
+         "run_0173_4He.root",
+         "run_0174_4He.root",
+         "run_0175_4He.root",
+    };*/
+
+    // Create histograms for ke and polar
+   TH2F* Ang_ener_gs = new TH2F("ang_ener_gs", "Ang_ener_gs", 720, 0, 90,10000,0,30);
+   TH2F* Ang_ener_1st = new TH2F("ang_ener_1st", "Ang_ener_1st", 720, 0, 90,10000,0,30);
+   TH2F* Ang_energy = new TH2F("ang_energy", "Ang_energy", 720, 0, 90,10000,0,40);
+   TH2F* Ang_energy_150170 = new TH2F("ang_energy_150170", "Ang_energy_150170", 720, 0, 90,10000,0,30);
+   TH2F* Ang_energy_170190 = new TH2F("ang_energy_170190", "Ang_energy_170190", 720, 0, 90,10000,0,30);
+   TH2F* Ang_energy_190210 = new TH2F("ang_energy_190210", "Ang_energy_190210", 720, 0, 90,10000,0,30);
+   TH2F* Ang_energy_210230 = new TH2F("ang_energy_210230", "Ang_energy_210230", 720, 0, 90,10000,0,30);
+   TH2F* Ang_energy_230250 = new TH2F("ang_energy_230250", "Ang_energy_230250", 720, 0, 90,10000,0,30);
+   TH2F* Ang_energy_250270 = new TH2F("ang_energy_250270", "Ang_energy_250270", 720, 0, 90,10000,0,30);
+   TH2F* Ang_energy_270290 = new TH2F("ang_energy_270290", "Ang_energy_270290", 720, 0, 90,10000,0,30);
+   TH2F* Ang_energy_290310 = new TH2F("ang_energy_290310", "Ang_energy_290310", 720, 0, 90,10000,0,30);
+   TH2F* Ang_energy_310330 = new TH2F("ang_energy_310330", "Ang_energy_310330", 720, 0, 90,10000,0,30);
+   TH2F* Ang_energy_330350 = new TH2F("ang_energy_330350", "Ang_energy_330350", 720, 0, 90,10000,0,30);
+   TH2F* Ang_energy_350370 = new TH2F("ang_energy_350370", "Ang_energy_350370", 720, 0, 90,10000,0,30);
+   TH2F* Ang_energy_370390 = new TH2F("ang_energy_370390", "Ang_energy_370390", 720, 0, 90,10000,0,30);
+   TH2F* Ang_energy_390410 = new TH2F("ang_energy_390410", "Ang_energy_390410", 720, 0, 90,10000,0,30);
+   TH2F* Ang_energy_410430 = new TH2F("ang_energy_410430", "Ang_energy_410430", 720, 0, 90,10000,0,30);
+   TH2F* Ang_energy_430450 = new TH2F("ang_energy_430450", "Ang_energy_430450", 720, 0, 90,10000,0,30);
+   TH2F* vertex_vs_ex = new TH2F("vertex_vs_ex", "vertex_vs_ex", 100, -5, 10, 1000, 0, 1000);
+   TH2F* kin_vs_ebeam = new TH2F("kin_vs_ebeam", "kin_vs_ebeam", 1000, 0, 50, 1000, 0, 10);
+   TH2F* brho_vs_dEdx = new TH2F("brho_vs_dEdx", "brho_vs_dEdx", 1000, 0, 80, 1000, 0, 2);
+
+   TH2F* ecm_thetacm = new TH2F("ecm_thetacm", "ecm_thetacm", 720, 0,180, 100, 0, 5);
+   TH2F* ecm_thetacm_150170 = new TH2F("ecm_thetacm_150170", "ecm_thetacm_150170", 720, 0,180, 100, 0, 10);
+   TH2F* ecm_thetacm_170190 = new TH2F("ecm_thetacm_170190", "ecm_thetacm_170190", 720, 0,180, 100, 0, 10);
+   TH2F* ecm_thetacm_190210 = new TH2F("ecm_thetacm_190210", "ecm_thetacm_190210", 720, 0,180, 100, 0, 10);
+   TH2F* ecm_thetacm_210230 = new TH2F("ecm_thetacm_210230", "ecm_thetacm_210230", 720, 0,180, 100, 0, 10);
+   TH2F* ecm_thetacm_230250 = new TH2F("ecm_thetacm_230250", "ecm_thetacm_230250", 720, 0,180, 100, 0, 10);
+   TH2F* ecm_thetacm_250270 = new TH2F("ecm_thetacm_250270", "ecm_thetacm_250270", 720, 0,180, 100, 0, 10);
+   TH2F* ecm_thetacm_270290 = new TH2F("ecm_thetacm_270290", "ecm_thetacm_270290", 720, 0,180, 100, 0, 10);
+   TH2F* ecm_thetacm_290310 = new TH2F("ecm_thetacm_290310", "ecm_thetacm_290310", 720, 0,180, 100, 0, 10);
+   TH2F* ecm_thetacm_310330 = new TH2F("ecm_thetacm_310330", "ecm_thetacm_310330", 720, 0,180, 100, 0, 10);
+   TH2F* ecm_thetacm_330350 = new TH2F("ecm_thetacm_330350", "ecm_thetacm_330350", 720, 0,180, 100, 0, 10);
+   TH2F* ecm_thetacm_350370 = new TH2F("ecm_thetacm_350370", "ecm_thetacm_350370", 720, 0,180, 100, 0, 10);
+   TH2F* ecm_thetacm_370390 = new TH2F("ecm_thetacm_370390", "ecm_thetacm_370390", 720, 0,180, 100, 0, 10);
+   TH2F* ecm_thetacm_390410 = new TH2F("ecm_thetacm_390410", "ecm_thetacm_390410", 720, 0,180, 100, 0, 10);
+   TH2F* ecm_thetacm_410430 = new TH2F("ecm_thetacm_410430", "ecm_thetacm_410430", 720, 0,180, 100, 0, 10);
+   TH2F* ecm_thetacm_430450 = new TH2F("ecm_thetacm_430450", "ecm_thetacm_430450", 720, 0,180, 100, 0, 10);
+    TH2F* ecm_thetacm_gs = new TH2F("ecm_thetacm_gs", "ecm_thetacm_gs", 720, 0,180, 100, 0, 15);
+    TH2F* ecm_thetacm_gs_alpha = new TH2F("ecm_thetacm_gs_alpha", "ecm_thetacm_gs_alpha", 720, 0,180, 100, 0, 15);
+    TH2F* ecm_thetacm_1st = new TH2F("ecm_thetacm_1st", "ecm_thetacm_1st", 720, 0,180, 100, 0, 12); 
+    TH2F* kin_vs_vertex = new TH2F("kin_vs_vertex", "kin_vs_vertex", 100000, -1000, 1000, 100, 0, 10);   
+    TH2F* arclength_vs_zpos = new TH2F("arclength_vs_zpos", "arclength_vs_zpos", 1000, -10, 1000, 1000, 0, 3000);
+    TH1F *ex_energy = new TH1F("ex_energy", "ex_energy", 100, -10, 15);
+    TH1F *ex_energy_cut = new TH1F("ex_energy_cut", "ex_energy_cut", 100, -10, 10);
+    TH1F *ex_energy_cut_2 = new TH1F("ex_energy_cut_2", "ex_energy_cut_2", 100, -10, 10);
+    TH1F *clustersize = new TH1F("clustersize", "clustersize", 50, 0, 400);
+    
+
+    // Loop over the ROOT files
+    for (auto file_name : filepairs) {
+      std::cout << "Processing file: " << std::get<0>(file_name) << std::endl;
+        // Open the ROOT file
+        auto full_path_solver = base_path + std::get<0>(file_name);
+        auto full_path_cluster = base_path_cluster + std::get<1>(file_name);
+        auto full_path_estimate = base_path_estimate + std::get<2>(file_name);
+        //auto full_path = base_path + file_name;
+        TFile *file_solver= new TFile(full_path_solver, "READ");
+        
+        //TFile* file_solver = TFile::Open(full_path.c_str(), "READ");
+        
+        // Get the tree from the file
+        TTree* tree_solver= (TTree*)file_solver->Get("parquettree");
+
+        TFile *file_cluster= new TFile(full_path_cluster, "READ");
+        TTree* tree_cluster = (TTree*)file_cluster->Get("ClusterTree");
+
+        TFile *file_estimate= new TFile(full_path_estimate, "READ");
+         TTree* tree_est = (TTree*)file_estimate->Get("parquettree");
+        
+        // Variables to hold the data
+        Double_t ke, polar, zpos, brho, sqrt_dEdx;
+        Int_t cluster_size;
+        Long64_t cluster_index_solver;
+        Long64_t event_solver;
+        Long64_t event_est;
+        Int_t event_cluster;
+        Long64_t cluster_index_est;
+        Int_t cluster_index_cluster;
+        Double_t arclength;
+        // Set branch addresses
+        tree_solver->SetBranchAddress("ke", &ke);
+        tree_solver->SetBranchAddress("polar", &polar);
+        tree_solver->SetBranchAddress("vertex_z", &zpos);
+        tree_solver->SetBranchAddress("cluster_index", &cluster_index_solver);
+        tree_solver->SetBranchAddress("event", &event_solver);
+        tree_cluster->SetBranchAddress("event_id", &event_cluster);
+        tree_cluster->SetBranchAddress("cluster_id", &cluster_index_cluster);
+        tree_cluster->SetBranchAddress("cluster_size", &cluster_size);
+        tree_est->SetBranchAddress("event", &event_est);
+        tree_est->SetBranchAddress("cluster_index", &cluster_index_est);
+        tree_est->SetBranchAddress("arclength", &arclength);
+        tree_est->SetBranchAddress("brho", &brho);
+        tree_est->SetBranchAddress("sqrt_dEdx", &sqrt_dEdx);
+
+
+        
+        // Loop over the entries in the tree
+        Long64_t nentries = tree_solver->GetEntries();
+        Long64_t nentries_cluster = tree_cluster->GetEntries();
+        Long64_t nentries_est = tree_est->GetEntries(); 
+        tree_solver->GetEntry(nentries-1);
+
+        //std::cout << "Last event solver index: " << event_solver << std::endl;
+        Int_t j = 0;
+        Int_t k = 0;
+        //tree_cluster->GetEntry(j);
+        
+        tree_est->GetEntry(k);
+        for(int ji = 0; ji < nentries_est; ji++){
+            tree_est->GetEntry(ji);
+            
+            brho_vs_dEdx->Fill(sqrt_dEdx,brho);
+        }
+        
+        tree_est->GetEntry(j);
+        tree_cluster->GetEntry(j);
+        //std::cout << "Number of entries: " << nentries << std::endl;
+        for (int i = 0; i < nentries; i++) {
+            tree_solver->GetEntry(i);
+            
+             
+            while(event_solver != event_cluster){
+               //   break;
+                j++;
+                tree_cluster->GetEntry(j);
+            }
+            while(cluster_index_solver != cluster_index_cluster){
+                  //if(j == nentries_cluster)
+                  //   break;
+                 j++;
+                tree_cluster->GetEntry(j);
+            }
+            while(event_solver != event_est){
+                //if(k == nentries_est)
+                    //break;
+                k++;
+                tree_est->GetEntry(k);
+            }
+            while(cluster_index_solver != cluster_index_est){
+                //if(k == nentries_est)
+                  //  break;
+                k++;
+                tree_est->GetEntry(k);
+            }
+            
+            //if(event_cluster > event_solver || event_est > event_solver)
+              //  continue;
+              //std::cout << "Brho and dEdx: " << brho << " " << sqrt_dEdx << std::endl;
+            
+            // Fill the histograms with the ke and polar variables
+           // std::cout << "Cluster size: " << cluster_size << std::endl;
+           //if(arclength < 250)
+             // continue;
+            //if(cluster_size < 30)
+              // continue;
+            
+            //arclength_vs_zpos->Fill(zpos*1000,arclength);
+            //clustersize->Fill(cluster_size);
+            kin_vs_vertex->Fill(zpos*1000,ke);
+            
+            //std::cout << i << std::endl;
+
+            //double_t ex, theta_cm;
+//
+            auto[ex,thetacm] = kine_2b(m_Be10, m_a,m_a,m_Be10, elossTableHe4_lowpressure->GetEnergy(10.5,zpos*1000), polar, ke);
+            //if(ex > 5.0)
+              //  continue;
+            //if(cutbe10->IsInside(sqrt_dEdx,brho)){
+                ex_energy->Fill(ex);
+            
+               // brho_vs_dEdx->Fill(sqrt_dEdx,brho);
+            vertex_vs_ex->Fill(ex,zpos*1000);
+            double a = (m_a*(ke + m_a) - m_a*m_a)/(1 - TMath::Cos(2*(TMath::Pi()/2 - polar)));
+            thetacm = (2*(TMath::Pi()/2 - polar))*TMath::RadToDeg();             
+            double Ebeam = ((TMath::Sqrt(a + m_Be10*m_Be10) + TMath::Sqrt(a + m_a*m_a))*(TMath::Sqrt(a + m_Be10*m_Be10) + TMath::Sqrt(a + m_a*m_a)) - (m_a + m_Be10)*(m_a + m_Be10))/(2*m_a);
+            ecm_thetacm->Fill(thetacm,Ebeam*2.0/7.0);
+            //ecm_thetacm->Fill((2*(TMath::Pi()/2 - polar))*TMath::RadToDeg(),elossTableHe4->GetEnergy(10.5,zpos*1000)*2.0/7.0);
+            if(ex > 2.0 && ex < 4.0){
+            Ang_ener_1st->Fill(polar*TMath::RadToDeg(),ke);
+            ecm_thetacm_1st->Fill(thetacm,elossTableHe4->GetEnergy(10.5,zpos*1000)*2.0/7.0);
+            kin_vs_ebeam->Fill(elossTableHe4->GetEnergy(10.5,zpos*1000),ke);
+            }   
+            
+            
+            if(ex > -2.0 && ex < 1.0){
+            
+            Ang_ener_gs->Fill(polar*TMath::RadToDeg(),ke);
+            ecm_thetacm_gs_alpha->Fill(thetacm,Ebeam*2.0/7.0);
+            ecm_thetacm_gs->Fill(thetacm,elossTableHe4->GetEnergy(10.5,zpos*1000)*2.0/7.0);
+
+            }
+            
+            //if((polar*TMath::RadToDeg() > 60.0 && polar*TMath::RadToDeg() < 75.0) && (ke > 3.0 && ke < 5.0))
+            //ex_energy_cut->Fill(ex);
+
+            //if((polar*TMath::RadToDeg() > 40.0 && polar*TMath::RadToDeg() < 60.0) && (ke > 8.0 && ke < 13.0))
+            //ex_energy_cut_2->Fill(ex);  
+
+            Ang_energy->Fill(polar*TMath::RadToDeg(),ke);
+          //  std::cout << ex << " " << thetacm << std::endl;
+        //}  
+      
+      }
+        // Close the ROOT file
+         file_solver->Close();
+         //file_est->Close();
+        //root_file->Close();
+    }
+   // }
+
+    Double_t *ThetaCMS = new Double_t[20000];
+   Double_t *ThetaLabRec = new Double_t[20000];
+   Double_t *EnerLabRec = new Double_t[20000];
+   Double_t *ThetaLabSca = new Double_t[20000];
+   Double_t *EnerLabSca = new Double_t[20000];
+   Double_t *MomLabRec = new Double_t[20000];
+
+    TString fileKine = "10Be_a_gs_lowener.txt";
+   std::ifstream *kineStr = new std::ifstream(fileKine.Data());
+   Int_t numKin = 0;
+
+   if (!kineStr->fail()) {
+      while (!kineStr->eof()) {
+         *kineStr >> ThetaCMS[numKin] >> ThetaLabRec[numKin] >> EnerLabRec[numKin] >> ThetaLabSca[numKin] >>
+            EnerLabSca[numKin];
+         // numKin++;
+
+         // MomLabRec[numKin] =( pow(EnerLabRec[numKin] + M_Ener,2) - TMath::Power(M_Ener, 2))/1000.0;
+         // std::cout<<" Momentum : " <<MomLabRec[numKin]<<"\n";
+         // Double_t E = TMath::Sqrt(TMath::Power(p, 2) + TMath::Power(M_Ener, 2)) - M_Ener;
+         numKin++;
+      }
+   } else if (kineStr->fail())
+      std::cout << " Warning : No Kinematics file found for this reaction!" << std::endl;
+
+   TGraph *kine_gs = new TGraph(numKin, ThetaLabRec, EnerLabRec);
+   kine_gs->SetLineColor(kRed);
+    // Draw the histograms
+    TCanvas* canvas = new TCanvas("canvas", "Canvas", 800, 600);
+    Ang_ener_gs->Draw("colz");
+
+    TCanvas* canvas1 = new TCanvas("canvas1", "Canvas1", 800, 600);
+    Ang_ener_1st->Draw("colz");
+
+    TCanvas* canvas2 = new TCanvas("canvas2", "Canvas2", 800, 600);
+    ex_energy->Draw();
+    //ex_energy_cut->SetLineColor(kRed);
+    //ex_energy_cut->Draw("same");
+    //ex_energy_cut_2->SetLineColor(kGreen);
+    //ex_energy_cut_2->Draw("same");
+
+    TCanvas* canvas3 = new TCanvas("canvas3", "Canvas3", 800, 600);
+    Ang_energy->Draw("colz");
+    kine_gs->Draw("same");
+
+    TCanvas* canvas4 = new TCanvas("canvas4", "Canvas4", 800, 600);
+    ecm_thetacm_gs->Draw("colz");
+
+    TCanvas* canvas6 = new TCanvas("canvas6", "Canvas6", 800, 600);
+    ecm_thetacm_gs_alpha->Draw("colz");
+
+    TCanvas* canvas5 = new TCanvas("canvas5", "Canvas5", 800, 600);
+    ecm_thetacm_1st->Draw("colz");
+
+    TCanvas* canvas7 = new TCanvas("canvas7", "Canvas7", 800, 600);
+      ecm_thetacm->Draw("colz");
+
+    TCanvas* canvas8 = new TCanvas("canvas8", "Canvas8", 800, 600);
+      kin_vs_vertex->Draw("colz");
+    //TCanvas* canvas3 = new TCanvas("canvas3", "Canvas3", 800, 600);
+    //ex_energy_cut->Draw();
+
+   /* TCanvas* canvas9 = new TCanvas("canvas9", "Canvas9", 800, 600);
+    canvas9->Divide(2,2);
+      canvas9->cd(1);
+      Ang_energy_150170->Draw("colz");
+      canvas9->cd(2);
+      Ang_energy_170190->Draw("colz");
+      canvas9->cd(3);
+      Ang_energy_190210->Draw("colz");
+      canvas9->cd(4);
+      Ang_energy_210230->Draw("colz");
+
+    TCanvas* canvas10 = new TCanvas("canvas10", "Canvas10", 800, 600);
+      canvas10->Divide(2,2);
+         canvas10->cd(1);
+         Ang_energy_230250->Draw("colz");
+         canvas10->cd(2);
+         Ang_energy_250270->Draw("colz");
+         canvas10->cd(3);
+         Ang_energy_270290->Draw("colz");
+         canvas10->cd(4);
+         Ang_energy_290310->Draw("colz");
+
+    TCanvas* canvas11 = new TCanvas("canvas11", "Canvas11", 800, 600);
+      canvas11->Divide(2,2);
+         canvas11->cd(1);
+         Ang_energy_310330->Draw("colz");
+         canvas11->cd(2);
+         Ang_energy_330350->Draw("colz");
+         canvas11->cd(3);
+         Ang_energy_350370->Draw("colz");
+         canvas11->cd(4);
+         Ang_energy_370390->Draw("colz");
+
+   TCanvas* canvas12 = new TCanvas("canvas12", "Canvas12", 800, 600);
+      canvas12->Divide(2,2);
+         canvas12->cd(1);
+         Ang_energy_390410->Draw("colz");
+         canvas12->cd(2);
+         Ang_energy_410430->Draw("colz");
+         canvas12->cd(3);
+         Ang_energy_430450->Draw("colz");        
+
+      TCanvas* canvas13 = new TCanvas("canvas13", "Canvas13", 800, 600);
+      canvas13->Divide(2,2);
+         canvas13->cd(1);
+         ecm_thetacm_150170->Draw("colz");
+         canvas13->cd(2);
+         ecm_thetacm_170190->Draw("colz");
+         canvas13->cd(3);
+         ecm_thetacm_190210->Draw("colz");
+         canvas13->cd(4);
+         ecm_thetacm_210230->Draw("colz");
+
+      TCanvas* canvas14 = new TCanvas("canvas14", "Canvas14", 800, 600);
+      canvas14->Divide(2,2);
+         canvas14->cd(1);
+         ecm_thetacm_230250->Draw("colz");
+         canvas14->cd(2);
+         ecm_thetacm_250270->Draw("colz");
+         canvas14->cd(3);
+         ecm_thetacm_270290->Draw("colz");
+         canvas14->cd(4);
+         ecm_thetacm_290310->Draw("colz");
+
+      TCanvas* canvas15 = new TCanvas("canvas15", "Canvas15", 800, 600);
+      canvas15->Divide(2,2);
+         canvas15->cd(1);
+         ecm_thetacm_310330->Draw("colz");
+         canvas15->cd(2);
+         ecm_thetacm_330350->Draw("colz");
+         canvas15->cd(3);
+         ecm_thetacm_350370->Draw("colz");
+         canvas15->cd(4);
+         ecm_thetacm_370390->Draw("colz");
+
+      TCanvas* canvas16 = new TCanvas("canvas16", "Canvas16", 800, 600);
+      canvas16->Divide(2,2);
+         canvas16->cd(1);
+         ecm_thetacm_390410->Draw("colz");
+         canvas16->cd(2);
+         ecm_thetacm_410430->Draw("colz");
+         canvas16->cd(3);
+         ecm_thetacm_430450->Draw("colz");     
+
+      TCanvas* canvas17 = new TCanvas("canvas17", "Canvas17", 800, 600);
+      canvas17->Draw();
+      arclength_vs_zpos->Draw("colz");   */
+
+      TCanvas* canvas18 = new TCanvas("canvas18", "Canvas18", 800, 600);
+      canvas18->Draw();
+      vertex_vs_ex->Draw("colz");
+
+      TCanvas* canvas19 = new TCanvas("canvas19", "Canvas19", 800, 600);
+      canvas19->Draw();
+      kin_vs_ebeam->Draw("colz");
+      TCanvas* canvas20 = new TCanvas("canvas20", "Canvas20", 800, 600);
+      canvas20->Draw();
+      brho_vs_dEdx->Draw("colz");
+      //cutalpha->Draw("same");
+
+      TCanvas* canvas21 = new TCanvas("canvas21", "Canvas21", 800, 600);
+      canvas21->Draw();
+      clustersize->Draw();
+}
+
