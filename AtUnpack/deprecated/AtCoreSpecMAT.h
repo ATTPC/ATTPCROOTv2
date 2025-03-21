@@ -96,7 +96,10 @@ public:
    void SetIsPadPlaneCobo(Bool_t *IsPadPlane); // Sets whether cobo belongs reads out padplane
                                                // signals or scintillator signals
 
-   void SetMap(std::shared_ptr<AtSpecMATMap> map) { fMap = map; }
+   void SetMap(std::shared_ptr<AtSpecMATMap> map)
+   {
+      fMap = map;
+   }
 
    void GetFPNChannelsFromROOTFILE(Long64_t EventNr);
    void ProcessROOTFILE(Long64_t EventNr);
@@ -109,7 +112,10 @@ public:
    Int_t GetEventID();                             ///< Returns the current event ID
    Int_t GetNumTbs(Int_t coboIdx = 0);             ///< Returns the number of time buckets of the data
    Int_t GetFPNChannel(Int_t chIdx);
-   TString GetFileName() const { return fFileName; }
+   TString GetFileName() const
+   {
+      return fFileName;
+   }
 
    ClassDef(AtCoreSpecMAT, 2);
 };

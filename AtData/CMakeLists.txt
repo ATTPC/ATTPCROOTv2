@@ -44,6 +44,7 @@ set(SRCS
   AtMCResult.cxx
   AtFissionEvent.cxx
   
+  At3DBraggFitResult.cxx
 
   AtPattern/AtPattern.cxx
   AtPattern/AtPatternLine.cxx

@@ -85,6 +85,9 @@ void AtPulseTask::Exec(Option_t *option)
    LOG(debug) << "Exec of AtPulseTask";
    reset();
 
+   std::cout << std::endl;
+   std::cout << "AtPulseTask Event ID : " << fEventID << std::endl;
+
    Int_t nMCPoints = fSimulatedPointArray->GetEntries();
    LOG(info) << "AtPulseTask: Number of Points " << nMCPoints;
 
@@ -98,7 +101,7 @@ void AtPulseTask::Exec(Option_t *option)
    }
    auto rawEvent = fPulse->GenerateEvent(simPoints);
 
-   LOG(info) << "...End of collection of electrons in this event." << std::endl;
+   LOG(info) << "...End of collection of electrons in this event.";
 
    rawEvent.SetEventID(fEventID);
    if (fSaveMCInfo)
@@ -107,7 +110,6 @@ void AtPulseTask::Exec(Option_t *option)
 
    new (fRawEventArray[0]) AtRawEvent(std::move(rawEvent));
 
-   std::cout << "AtPulseTask Event ID : " << fEventID << "\n";
    ++fEventID;
 }
 

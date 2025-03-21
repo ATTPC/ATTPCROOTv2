@@ -6,6 +6,7 @@
 #include "AtHit.h"   // for AtHit
 #include "AtPattern.h"
 #include "AtPatternEvent.h"
+#include "AtPatternLine.h"
 #include "AtPatternTypes.h"
 #include "AtSample.h" // for AtSample
 #include "AtSampleEstimator.h"
@@ -133,6 +134,14 @@ AtTrack AtSampleConsensus::CreateTrack(AtPattern *pattern, std::vector<const AtH
       pattern->FitPattern(inliers, fChargeThres);
 
    track.SetPattern(pattern->Clone());
+
+   if (auto patternLine = dynamic_cast<AtPatterns::AtPatternLine *>(pattern)) {
+      track.SetGeoTheta(TMath::ATan2(
+         std::abs(patternLine->GetDirection().Z()),
+         TMath::Sqrt(std::pow(patternLine->GetDirection().X(), 2) + std::pow(patternLine->GetDirection().Y(), 2))));
+      track.SetGeoPhi(TMath::ATan2(patternLine->GetDirection().Y(), patternLine->GetDirection().X()));
+   }
+
    return track;
 }
 /**

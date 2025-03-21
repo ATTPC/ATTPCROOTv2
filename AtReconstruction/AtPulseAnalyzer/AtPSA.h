@@ -8,6 +8,7 @@
 #include <cstddef>
 #include <map>
 #include <memory>
+#include <random>
 #include <utility>
 #include <vector>
 
@@ -49,6 +50,9 @@ protected:
 
    using HitVector = std::vector<std::unique_ptr<AtHit>>;
 
+   std::uniform_real_distribution<double> fUniform{-0.5, 0.5};
+   std::mt19937_64 fRNG;
+
 public:
    AtPSA() = default;
    virtual ~AtPSA() = default;
@@ -81,7 +85,7 @@ protected:
 
    virtual double getZhitVariance(double zLoc, double zLocVar) const;
    virtual std::pair<double, double> getXYhitVariance() const;
-   ClassDef(AtPSA, 5)
+   ClassDef(AtPSA, 6)
 };
 
 #endif

@@ -21,6 +21,7 @@
 #include <cmath> // for pow
 #include <iostream>
 #include <iterator>
+#include <random>
 #include <utility> // for pair
 
 using std::distance;
@@ -62,6 +63,10 @@ void AtPSA::Init()
    std::cout << " ==== Entrance TB : " << fEntTB << std::endl;
    std::cout << " ==== Pad plane TB : " << fTB0 << std::endl;
    std::cout << " ==== NumTbs : " << fNumTbs << std::endl;
+
+   uint64_t timeSeed = std::chrono::high_resolution_clock::now().time_since_epoch().count();
+   std::seed_seq ss{uint32_t(timeSeed & 0xffffffff), uint32_t(timeSeed >> 32)};
+   fRNG.seed(ss);
 }
 
 void AtPSA::SetSimulatedEvent(TClonesArray *MCSimPointArray)

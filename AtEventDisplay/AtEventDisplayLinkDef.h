@@ -20,6 +20,7 @@
 #pragma link C++ class AtTabMacro + ;
 #pragma link C++ class AtTabEnergyLoss + ;
 #pragma link C++ class AtTabFF + ;
+#pragma link C++ class AtTab3DBraggCurve + ;
 
 #pragma link C++ class AtTabInfoBase - !;
 #pragma link C++ class AtTabInfo - !;

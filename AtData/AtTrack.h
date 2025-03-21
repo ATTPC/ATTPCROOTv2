@@ -1,6 +1,7 @@
 #ifndef ATTRACK_H
 #define ATTRACK_H
 
+#include "At3DBraggFitResult.h"
 #include "AtContainerManip.h"
 #include "AtHit.h"
 #include "AtHitCluster.h"
@@ -44,6 +45,11 @@ protected:
    std::pair<Double_t, Double_t> fGeoCenter; //< Center of the spiral track
    std::vector<AtHitCluster> fHitClusterArray; //< Clusterized hits container. Can also be stored in fHitArray
 
+   // Stuff related to the 3DBragg curve. May be moved to a child class in the future.
+   // Vector of pair of values for the 3DBragg curve of the track (archLength[mm], eLoss[a.u.]).
+   std::vector<std::pair<Double_t, Double_t>> f3DBraggCurveValues;
+   std::unique_ptr<At3DBraggFitResult> fFitResult{};
+
 public:
    AtTrack() = default;
    AtTrack(const AtTrack &obj);
@@ -72,6 +78,9 @@ public:
       swap(a.fGeoPhiAngle, b.fGeoPhiAngle);
       swap(a.fGeoRadius, b.fGeoRadius);
       swap(a.fGeoCenter, b.fGeoCenter);
+
+      swap(a.f3DBraggCurveValues, b.f3DBraggCurveValues);
+      swap(a.fFitResult, b.fFitResult);
    };
 
    // Getters
@@ -89,6 +98,9 @@ public:
    std::pair<Double_t, Double_t> GetGeoCenter() const { return fGeoCenter; }
    std::vector<AtHitCluster> *GetHitClusterArray() { return &fHitClusterArray; }
 
+   std::vector<std::pair<Double_t, Double_t>> *Get3DBraggCurveValues() { return &f3DBraggCurveValues; }
+   const At3DBraggFitResult *Get3DBraggFitResult() const { return fFitResult.get(); }
+
    Bool_t GetIsMerged() const { return fIsMerged; }
    Double_t GetVertexToZDist() const { return fVertexToZDist; }
 
@@ -103,6 +115,12 @@ public:
    void SetGeoRadius(Double_t radius) { fGeoRadius = radius; }
    void SetGeoCenter(std::pair<Double_t, Double_t> center) { fGeoCenter = center; }
    void AddClusterHit(std::shared_ptr<AtHitCluster> hitCluster);
+
+   void Add3DBraggCurvePair(std::pair<Double_t, Double_t> pair3DBraggCurve)
+   {
+      f3DBraggCurveValues.push_back(pair3DBraggCurve);
+   }
+   void Set3DBraggFitResult(std::unique_ptr<At3DBraggFitResult> result) { fFitResult = std::move(result); }
 
    void SetIsMerged(bool val) { fIsMerged = val; }
    void SetVertexToZDist(Double_t val) { fVertexToZDist = val; }
@@ -139,7 +157,7 @@ protected:
       return o;
    }
 
-   ClassDef(AtTrack, 3);
+   ClassDef(AtTrack, 4);
 };
 
 #endif

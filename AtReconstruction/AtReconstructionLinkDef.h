@@ -16,6 +16,7 @@
 #pragma link C++ class AtPSA + ;
 #pragma link C++ class AtPSASpectrum + ;
 #pragma link C++ class AtPSAHitPerTB + ;
+#pragma link C++ class AtPSAHitPerTBInRegion + ;
 #pragma link C++ class AtPSAFull + ;
 #pragma link C++ class AtPSATBAvg + ;
 #pragma link C++ class AtPSAMax + ;
@@ -37,6 +38,8 @@
 #pragma link C++ class SampleConsensus::AtEstimator - !;
 #pragma link C++ enum SampleConsensus::Estimators;
 
+#pragma link C++ class At3DBraggCurveHandler + ;
+
 #pragma link C++ class AtMacroTask + ;
 
 #pragma link C++ namespace kf;
@@ -57,6 +60,8 @@
 #pragma link C++ class MCFitter::AtMCFission - !;
 #pragma link C++ class AtMCFitterTask + ;
 
+#pragma link C++ class AtFITTER::At3DBraggFitter + ;
+
 /* Tasks in AtReconstruction */
 #pragma link C++ class AtPSAtask + ;
 #pragma link C++ class AtPRAtask + ;
@@ -71,5 +76,6 @@
 #pragma link C++ class AtCopyTreeTask + ;
 #pragma link C++ class AtLinkDAQTask + ;
 #pragma link C++ class AtCopyAuxTreeTask + ;
+#pragma link C++ class At3DBraggCurveTask + ;
 
 #endif

@@ -18,7 +18,8 @@ class TMemberInspector;
 
 class [[deprecated(
    "AtClusterizeLineTask is deprecated. Use AtClusterizeTask with AtClusterizeLine instead.")]] AtClusterizeLineTask
-   : public AtClusterizeTask {
+   : public AtClusterizeTask
+{
    AtClusterizeLineTask() : AtClusterizeTask(std::make_shared<AtClusterizeLine>()) {}
 
    ClassDefOverride(AtClusterizeLineTask, 2);

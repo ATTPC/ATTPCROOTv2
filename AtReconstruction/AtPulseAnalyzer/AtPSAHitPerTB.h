@@ -21,7 +21,7 @@ protected:
 public:
    virtual HitVector AnalyzePad(AtPad *pad) override;
    std::unique_ptr<AtPSA> Clone() override { return std::make_unique<AtPSAHitPerTB>(*this); }
-   void SetTBLimits(std::pair<Int_t, Int_t> limits);
+   virtual void SetTBLimits(std::pair<Int_t, Int_t> limits);
 
    ClassDefOverride(AtPSAHitPerTB, 1)
 };

@@ -47,6 +47,7 @@ set(SRCS
   AtPulseAnalyzer/AtPSASpectrum.cxx
   AtPulseAnalyzer/AtPSAMax.cxx
   AtPulseAnalyzer/AtPSAHitPerTB.cxx
+  AtPulseAnalyzer/AtPSAHitPerTBInRegion.cxx
   AtPulseAnalyzer/AtPSAFull.cxx
   AtPulseAnalyzer/AtPSATBAvg.cxx
   AtPulseAnalyzer/AtCalibration.cxx
@@ -85,6 +86,7 @@ set(SRCS
   AtSampleConsensusTask.cxx
   AtPRAtask.cxx
   AtCopyTreeTask.cxx
+  At3DBraggCurveTask.cxx
   
   AtPatternRecognition/triplclust/src/cluster.cxx
   AtPatternRecognition/triplclust/src/triplet.cxx
@@ -100,12 +102,14 @@ set(SRCS
   AtPatternRecognition/triplclust/src/directedgraph.cxx
   AtPatternRecognition/triplclust/src/postprocess.cxx
   AtPatternRecognition/AtTrackFinderTC.cxx
+  AtPatternRecognition/At3DBraggCurveHandler.cxx
 
 
   AtFitter/ParameterDistributions/AtParameterDistribution.cxx
   AtFitter/ParameterDistributions/AtUniformDistribution.cxx
   AtFitter/ParameterDistributions/AtStudentDistribution.cxx
 
+  AtFitter/AtFitter.cxx
   AtFitter/AtMCFitter.cxx
   AtFitter/AtMCFitterTask.cxx
   AtFitter/AtMCFission.cxx
@@ -148,7 +152,6 @@ endif()
 
 if(GENFIT2_FOUND)
   set(SRCS ${SRCS}
-    AtFitter/AtFitter.cxx
     AtFitter/AtGenfit.cxx
     AtFitter/AtSpacePointMeasurement.cxx
     AtFitterTask.cxx
@@ -167,8 +170,14 @@ if(HiRAEVT_FOUND)
     )
 endif()
 
-
-
+if(CATIMA_FOUND)
+  set(SRCS ${SRCS}
+    AtFitter/At3DBraggFitter.cxx
+    )
+  set(DEPENDENCIES ${DEPENDENCIES}
+    CATIMA::catima
+    )
+endif()
 
 generate_target_and_root_library(${LIBRARY_NAME}
   LINKDEF ${LINKDEF}

@@ -16,7 +16,8 @@ class TBuffer;
 class TClass;
 class TMemberInspector;
 
-class [[deprecated("Use AtPSASpectrum or AtPSAMax instead")]] AtPSASimple2 : public AtPSA {
+class [[deprecated("Use AtPSASpectrum or AtPSAMax instead")]] AtPSASimple2 : public AtPSA
+{
 private:
    AtCalibration fCalibration;
 
@@ -28,12 +29,24 @@ private:
    Bool_t fIsTimeCorr{false};
 
 public:
-   void Analyze(AtRawEvent *rawEvent, AtEvent *event) override;
-   HitVector AnalyzePad(AtPad *pad) override { return {}; };
-   std::unique_ptr<AtPSA> Clone() override { return std::make_unique<AtPSASimple2>(*this); }
+   void Analyze(AtRawEvent * rawEvent, AtEvent * event) override;
+   HitVector AnalyzePad(AtPad * pad) override
+   {
+      return {};
+   };
+   std::unique_ptr<AtPSA> Clone() override
+   {
+      return std::make_unique<AtPSASimple2>(*this);
+   }
 
-   void SetGainCalibration(TString gainFile) { fCalibration.SetGainFile(gainFile); }
-   void SetJitterCalibration(TString jitterFile) { fCalibration.SetJitterFile(jitterFile); }
+   void SetGainCalibration(TString gainFile)
+   {
+      fCalibration.SetGainFile(gainFile);
+   }
+   void SetJitterCalibration(TString jitterFile)
+   {
+      fCalibration.SetJitterFile(jitterFile);
+   }
    void SetBackGroundSuppression();
    void SetBackGroundInterpolation();
    void SetPeakFinder();

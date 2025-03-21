@@ -18,10 +18,6 @@ class TBuffer;
 class TClass;
 class TMemberInspector;
 
-namespace genfit {
-class Track;
-} // namespace genfit
-
 namespace AtFITTER {
 
 class AtFitter : public TObject {
