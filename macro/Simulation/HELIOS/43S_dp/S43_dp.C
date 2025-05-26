@@ -14,7 +14,7 @@ void S43_dp(Int_t nEvents = 20000, TString mcEngine = "TGeant4")
   timer.Start();
   // ------------------------------------------------------------------------
 
-  ATVertexPropagator* vertex_prop = new ATVertexPropagator();
+  //ATVertexPropagator* vertex_prop = new ATVertexPropagator();
 
   Bool_t fApolloDigitizer = true; // Apply hit digitizer task for Apollo
 

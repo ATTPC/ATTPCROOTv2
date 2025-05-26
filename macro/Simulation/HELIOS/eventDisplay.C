@@ -1,9 +1,9 @@
 void eventDisplay()
 {
   //-----User Settings:-----------------------------------------------
-  TString  InputFile     ="heliossim.root";
+  TString  InputFile     ="test_rcnp.root";
   TString  ParFile       ="heliospar.root";
-  TString  OutFile	 ="heliostest.root";
+  TString  OutFile	 ="rcnptest.root";
 
 
   // -----   Reconstruction run   -------------------------------------------

@@ -55,7 +55,7 @@ double AtELossTable::GetEnergy(double energyIni, double distance) const
    if (energyIni < 1e-6 || GetRange(energyIni) < distance)
       return 0.;
 
-   int maxIt = 100;
+   int maxIt = 10000;
 
    double guessEnergy = energyIni - GetdEdx(energyIni) * distance;
    for (int i = 0; i < maxIt; ++i) {
