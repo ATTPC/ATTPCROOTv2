@@ -2,7 +2,7 @@ void eventDisplay()
 {
   //-----User Settings:-----------------------------------------------
   TString  InputDataFile     ="test_rcnp.root";
-  TString  ParFile       ="heliospar.root";
+  TString  ParFile       ="./data/attpcpar.root";
   TString  OutputDataFile	 ="rcnptest.root";
 
 
