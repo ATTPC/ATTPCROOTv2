@@ -70,13 +70,12 @@ Once a PR is created, one of the maintainers will review it (hopefully quickly).
 
 As you contribute code, this code will likely fix an issue or add a feature. 
 Whatever it is: this requires you to add a new test, or to extend an existing test. Depending on the size and complexity
-of this test, it exists either in the `test/` subdirectory of each part of ATTPCROOT (see for instance
-[`AtData/test`](https://github.com/ATTPC/ATTPCROOTv2/tree/develop/AtData/test)), or in
+of this test, it exists either in the source folders, or in
 [`macro/tests`](https://github.com/ATTPC/ATTPCROOTv2/tree/develop/macro/tests). 
 We are just expanding out our coverage of tests, so you may need to add the `test/` subdirectory to whatever part of the code you are working in. 
 
-Tests in `test/` subdirectories are unit tests, mostly based on
-[Google Test](https://github.com/google/googletest) and easily extended. These unit tests should define the expected behavior of your code. They should not depend on any external resource (access to a file on the HD or network, etc.) Unit tests are only helpful if they are *fast*.
+The tests that exist along side the code are unit tests, mostly based on
+[Google Test](https://github.com/google/googletest) and easily extended. These unit tests should define the expected behavior of your code. They should not depend on any external resource (access to a file on the HD or network, etc.) Unit tests are only helpful if they are *fast*. For details and naming conventions see the [wiki](https://github.com/ATTPC/ATTPCROOTv2/wiki/Coding-conventions#test-names)
 
 Tests in
 [macro/tests](https://github.com/ATTPC/ATTPCROOTv2/tree/develop/macro/tests) are more involved (e.g., tests with
