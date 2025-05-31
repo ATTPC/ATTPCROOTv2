@@ -135,19 +135,19 @@ unsigned short *S800::DecodeS800TimeOfFlight(unsigned short *p)
       int tmp = *p;
       ++p;
       if (ch == 12)
-         rf = (tmp)&0xfff;
+         rf = (tmp) & 0xfff;
       else if (ch == 13)
-         obj = (tmp)&0xfff;
+         obj = (tmp) & 0xfff;
       else if (ch == 14)
-         xfp = (tmp)&0xfff;
+         xfp = (tmp) & 0xfff;
       else if (ch == 15)
-         si = (tmp)&0xfff;
+         si = (tmp) & 0xfff;
       else if (ch == 5)
-         tac_obj = (tmp)&0xfff;
+         tac_obj = (tmp) & 0xfff;
       else if (ch == 4)
-         tac_xfp = (tmp)&0xfff;
+         tac_xfp = (tmp) & 0xfff;
       else if (ch > 0 && ch < 8)
-         dum = (tmp)&0xfff; // NOLINT
+         dum = (tmp) & 0xfff; // NOLINT
       words--;
    }
    this->GetTimeOfFlight()->Set(rf, obj, xfp, si);

@@ -22,6 +22,7 @@
 # LINKDEF: Name of the linkdef file (will skip dictionary generation of not present)
 # HDRS: List of all header files to use in library generation.
 #     - Will use all SRCS renamed from .cxx to .h if empty
+# HDRS_ADD: List of additional header files to use in library generation.
 # INCLUDE_DIR: List of include directories in addition to:
 #     -CMAKE_CURRENT_SOURCE_DIR
 # LIBRARY_DIR: List of link directories in addition to ROOT_LIBRARY_DIR
@@ -34,7 +35,7 @@ function(generate_target_and_root_library target)
     HT
     ""
     ""
-    "SRCS;HDRS;INCLUDE_DIR;LIBRARY_DIR;DEPS_PUBLIC;DEPS_PRIVATE;LINKDEF"
+    "SRCS;HDRS;HDRS_ADD;INCLUDE_DIR;LIBRARY_DIR;DEPS_PUBLIC;DEPS_PRIVATE;LINKDEF"
     )
 
   # Check for required and set defaults
@@ -52,6 +53,11 @@ function(generate_target_and_root_library target)
       FILES "${HT_SRCS}"
       OUTVAR HT_HDRS)
   endif()
+
+  set(DICT_HDRS ${HT_HDRS})
+
+
+  list(APPEND HT_HDRS ${HT_HDRS_ADD})
 
   # Add defaults to include directories
   list(APPEND HT_INCLUDE_DIR 
@@ -112,7 +118,7 @@ function(generate_target_and_root_library target)
   # Make the dictionary
   foreach(h ${HT_LINKDEF})
     make_target_root_dictionary( ${target}
-      HEADERS ${HT_HDRS}
+      HEADERS ${DICT_HDRS}
       LINKDEF ${h})
   endforeach()
 

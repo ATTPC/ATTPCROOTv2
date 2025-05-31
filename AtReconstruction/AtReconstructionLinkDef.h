@@ -39,6 +39,9 @@
 
 #pragma link C++ class AtMacroTask + ;
 
+#pragma link C++ namespace kf;
+#pragma link C++ namespace kf::util;
+
 /* Classes that depend on Genfit2 */
 #pragma link C++ class genfit::AtSpacepointMeasurement + ;
 #pragma link C++ class AtFITTER::AtFitter + ;

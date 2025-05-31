@@ -11,6 +11,9 @@ ${CMAKE_SOURCE_DIR}/AtReconstruction/AtPatternRecognition
 #${CMAKE_SOURCE_DIR}/AtReconstruction/AtPatternRecognition/trackfinder
 ${CMAKE_SOURCE_DIR}/AtReconstruction/AtFitter
 ${CMAKE_SOURCE_DIR}/AtReconstruction/AtFitter/ParameterDistributions
+${CMAKE_SOURCE_DIR}/AtReconstruction/AtFitter/OpenKF
+${CMAKE_SOURCE_DIR}/AtReconstruction/AtFitter/OpenKF/kalman_filter
+
 ${CMAKE_SOURCE_DIR}/AtReconstruction/AtFilter
 ${CMAKE_SOURCE_DIR}/AtReconstruction/AtPatternRecognition/triplclust/src
 ${CMAKE_SOURCE_DIR}/AtReconstruction/AtPatternRecognition/triplclust/src/hclust
@@ -85,7 +88,6 @@ set(SRCS
   
   AtPatternRecognition/triplclust/src/cluster.cxx
   AtPatternRecognition/triplclust/src/triplet.cxx
-  AtPatternRecognition/triplclust/src/main.cxx
   AtPatternRecognition/triplclust/src/dnn.cxx
   AtPatternRecognition/triplclust/src/hclust/fastcluster.cxx
   AtPatternRecognition/triplclust/src/kdtree/kdtree.cxx
@@ -109,12 +111,39 @@ set(SRCS
   AtFitter/AtMCFission.cxx
   )
 
-### Add additional sources and libraries if we found certain modules ###
 
-if(TARGET EIGEN3::Eigen)
-  set(SRC ${SRC}
+### Add additional sources and libraries if we found certain modules ###
+if(TARGET Eigen3::Eigen)
+
+  message(STATUS "EIGEN3::Eigen target found. Enabling Eigen-dependent sources.")
+
+  set(SRCS ${SRCS}
   AtPatternRecognition/triplclust/src/orthogonallsq.cxx
+  AtFitter/AtOpenKFTest.cxx
   )
+  message(STATUS "Current sources: ${SRCS}")
+
+  set(HDRS_ADD
+    AtFitter/OpenKF/kalman_filter/kalman_filter.h
+    #AtFitter/OpenKF/kalman_filter/square_root_ukf.h
+    AtFitter/OpenKF/kalman_filter/unscented_kalman_filter.h
+    #AtFitter/OpenKF/kalman_filter/unscented_transform.h
+    AtFitter/OpenKF/types.h
+    AtFitter/OpenKF/kf_util.h
+    )
+  set(DEPENDENCIES ${DEPENDENCIES}
+    Eigen3::Eigen
+   )
+
+   set(TEST_SRCS_OPENKF
+    AtFitter/OpenKF/kalman_filter/kalman_filter_test.cxx
+    AtFitter/OpenKF/kalman_filter/unscented_kalman_filter_test.cxx
+    )
+ 
+ attpcroot_generate_tests(OpenKFTests
+   SRCS ${TEST_SRCS_OPENKF}
+   DEPS ${LIBRARY_NAME}
+   )
 endif()
 
 if(GENFIT2_FOUND)
@@ -129,15 +158,6 @@ if(GENFIT2_FOUND)
    )
 endif()
 
-if(TARGET OpenKF)
-  set(SRCS ${SRCS}
-    AtFitter/AtOpenKFTest.cxx
-    )
-  set(DEPENDENCIES ${DEPENDENCIES}
-    OpenKF
-    )
-endif()
-
 if(HiRAEVT_FOUND)
   set(SRCS ${SRCS}
     AtLinkDAQTask.cxx
@@ -147,9 +167,13 @@ if(HiRAEVT_FOUND)
     )
 endif()
 
+
+
+
 generate_target_and_root_library(${LIBRARY_NAME}
   LINKDEF ${LINKDEF}
   SRCS ${SRCS}
+  HDRS_ADD ${HDRS_ADD}
   INCLUDE_DIR ${INCLUDE_DIRECTORIES}
   LIBRARY_DIR ${LINK_DIRECTORIES}
   DEPS_PUBLIC ${DEPENDENCIES}

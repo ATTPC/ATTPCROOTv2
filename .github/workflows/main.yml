@@ -16,4 +16,4 @@ jobs:
         source: '.'
         exclude: './macro ./scripts ./compiled ./resources ./include ./geometry'
         extensions: 'h,cxx,C'
-        clangFormatVersion: 16
+        clangFormatVersion: 17
