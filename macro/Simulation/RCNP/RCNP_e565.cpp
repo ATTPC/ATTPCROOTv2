@@ -1,13 +1,16 @@
-void RCNP_simtest(Int_t nEvents = 500, TString mcEngine = "TGeant4")
+// 12Be (d,p) 13Be
+// Beam energy 18 MeV/u
+
+void RCNP_e565(Int_t nEvents = 500, TString mcEngine = "TGeant4")
 {
 
   TString dir = getenv("VMCWORKDIR");
 
   // Output file name
-  TString outFile ="test_rcnp.root";
+  TString outFile ="rcnp_e565.root";
 
   // Parameter file name
-  TString parFile="./data/attpcpar.root";
+  TString parFile="./data/attpcpar_e565.root";
 
   // -----   Timer   --------------------------------------------------------
   TStopwatch timer;
@@ -231,7 +234,7 @@ void RCNP_simtest(Int_t nEvents = 500, TString mcEngine = "TGeant4")
   run->Run(nEvents);
 
   //You can export your ROOT geometry ot a separate file
-  run->CreateGeometryFile("./data/RCNP_geo.root");
+  run->CreateGeometryFile("./data/RCNP_geo_e565.root");
   // ------------------------------------------------------------------------
 
   // -----   Finish   -------------------------------------------------------

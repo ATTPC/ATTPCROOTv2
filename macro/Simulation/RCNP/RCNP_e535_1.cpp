@@ -1,13 +1,20 @@
-void RCNP_simtest(Int_t nEvents = 500, TString mcEngine = "TGeant4")
+//13B (d, 3He) 12Be
+// Beam energy 32.7 MeV/u
+// Neutron separation energy 3.2 MeV
+// Alpha emission threshold 8.96 MeV
+// Proton separation energy 23.0 MeV
+// Possible decays: a + 8He, 6He + 6He, and both
+
+void RCNP_e535_1(Int_t nEvents = 500, TString mcEngine = "TGeant4")
 {
 
   TString dir = getenv("VMCWORKDIR");
 
   // Output file name
-  TString outFile ="test_rcnp.root";
+  TString outFile ="rcnp_e535_1.root";
 
   // Parameter file name
-  TString parFile="./data/attpcpar.root";
+  TString parFile="./data/attpcpar_e535_1.root";
 
   // -----   Timer   --------------------------------------------------------
   TStopwatch timer;
@@ -37,7 +44,7 @@ void RCNP_simtest(Int_t nEvents = 500, TString mcEngine = "TGeant4")
   run->AddModule(cave);
 
   FairDetector* ATTPC = new AtTpc("ATTPC", kTRUE);
-  ATTPC->SetGeometryFileName("RCNP_ATTPC_300torr.root");
+  ATTPC->SetGeometryFileName("RCNP_ATTPC_600torr.root");
   //HELIOS->SetModifyGeometry(kTRUE);
   run->AddModule(ATTPC);
   
@@ -73,16 +80,16 @@ void RCNP_simtest(Int_t nEvents = 500, TString mcEngine = "TGeant4")
 
 
                   // Beam Information
-                Int_t z = 4;  // Atomic number
-	        Int_t a = 12; // Mass number
+                Int_t z = 5;  // Atomic number
+	        Int_t a = 13; // Mass number
 	        Int_t q = 0;   // Charge State
 	        Int_t m = 1;   // Multiplicity  NOTE: Due the limitation of the TGenPhaseSpace accepting only pointers/arrays the maximum multiplicity has been set to 10 particles.
 	        Double_t px = 0.000/a;  // X-Momentum / per nucleon!!!!!!
 	        Double_t py = 0.000/a;  // Y-Momentum / per nucleon!!!!!!
-	        Double_t pz = 2.21/a;  // Z-Momentum / per nucleon!!!!!!
+	        Double_t pz = 3.240/a;  // Z-Momentum / per nucleon!!!!!!
   	        Double_t BExcEner = 0.0;
-                Double_t Bmass = 12.02473; //
-                Double_t NomEnergy = 110.0; //Used to force the beam to stop within a certain energy range.
+                Double_t Bmass = 13.01504; //
+                Double_t NomEnergy = 50.0; //Used to force the beam to stop within a certain energy range.
 
 
 
@@ -115,7 +122,7 @@ void RCNP_simtest(Int_t nEvents = 500, TString mcEngine = "TGeant4")
 
 
 	          mult = 4; //Number of Nuclei involved in the reaction (Should be always 4) THIS DEFINITION IS MANDATORY (and the number of particles must be the same)
-                  ResEner = 0.0; // For fixed target mode (Si Array) in MeV
+                  ResEner = 50.0; // For fixed target mode (Si Array) in MeV
 
                   // ---- Beam ----
                   Zp.push_back(z); //
@@ -139,23 +146,23 @@ void RCNP_simtest(Int_t nEvents = 500, TString mcEngine = "TGeant4")
 
                   //--- Scattered -----
                 Zp.push_back(4); //
-                Ap.push_back(13); //
+                Ap.push_back(12); //
                 Qp.push_back(0);
           	Pxp.push_back(0.0);
           	Pyp.push_back(0.0);
           	Pzp.push_back(0.0);
-          	Mass.push_back(13.03394);
-          	ExE.push_back(0.0);
+          	Mass.push_back(12.02473);
+          	ExE.push_back(11.8);
 
 
                  // ---- Recoil -----
-		 Zp.push_back(1); // p
-		 Ap.push_back(1); //
+		 Zp.push_back(2); // p
+		 Ap.push_back(3); //
 		 Qp.push_back(0); //
 		 Pxp.push_back(0.0);
                  Pyp.push_back(0.0);
 		 Pzp.push_back(0.0);
-                 Mass.push_back(1.00783);
+                 Mass.push_back(3.01493);
 		 ExE.push_back(0.0);//In MeV
 
 
@@ -166,7 +173,50 @@ void RCNP_simtest(Int_t nEvents = 500, TString mcEngine = "TGeant4")
         AtTPC2Body* TwoBody = new AtTPC2Body("TwoBody",&Zp,&Ap,&Qp,mult,&Pxp,&Pyp,&Pzp,&Mass,&ExE,ResEner, ThetaMinCMS,ThetaMaxCMS);
         //TwoBody->SetFixedTargetPosition(0.0,0.0,0.0);
         //TwoBody->SetFixedBeamMomentum(0.0,0.0,pz*a);
+        TwoBody->SetSequentialDecay(kTRUE);
         primGen->AddGenerator(TwoBody);
+
+// Setting decay
+   // Set the parameters of the decay generator
+
+   std::vector<std::vector<Int_t>> zDecay;
+   std::vector<std::vector<Int_t>> aDecay;
+   std::vector<std::vector<Int_t>> qDecay;
+   std::vector<std::vector<Double_t>> massDecay;
+
+   Int_t zB;
+   Int_t aB;
+   Double_t massDecayB;
+   Double_t massTarget;
+   Double_t exEnergy;
+   std::vector<Double_t> SepEne;
+
+   Int_t TotDecayCases = 1; // the number of decay channel (case) to be considered
+
+   zDecay.resize(TotDecayCases);
+   aDecay.resize(TotDecayCases);
+   qDecay.resize(TotDecayCases);
+   massDecay.resize(TotDecayCases);
+
+   zB = 5; // 12Be
+   aB = 13;
+   massDecayB = 13.01504;
+   massTarget = 0.0;
+   exEnergy = 0.0; // NB: Set to zero for sequential decay
+
+   for (auto i = 0; i < 2; ++i) {
+      zDecay.at(0).push_back(2);
+      aDecay.at(0).push_back(6);
+      qDecay.at(0).push_back(0);
+      massDecay.at(0).push_back(6.01779);
+   }
+   
+
+   AtTPCIonDecay *decay =
+      new AtTPCIonDecay(&zDecay, &aDecay, &qDecay, &massDecay, zB, aB, massDecayB, massTarget, exEnergy, &SepEne);
+   decay->SetSequentialDecay(kTRUE);
+   primGen->AddGenerator(decay);
+
 
 
         // -----   Create GammaDummyGenerator
@@ -231,7 +281,7 @@ void RCNP_simtest(Int_t nEvents = 500, TString mcEngine = "TGeant4")
   run->Run(nEvents);
 
   //You can export your ROOT geometry ot a separate file
-  run->CreateGeometryFile("./data/RCNP_geo.root");
+  run->CreateGeometryFile("./data/RCNP_geo_e565.root");
   // ------------------------------------------------------------------------
 
   // -----   Finish   -------------------------------------------------------

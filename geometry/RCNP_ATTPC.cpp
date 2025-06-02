@@ -23,13 +23,13 @@
 #include <iostream>
 
 // Name of geometry version and output file
-const TString geoVersion = "RCNP_ATTPC";
+const TString geoVersion = "RCNP_ATTPC_300torr";
 const TString FileName = geoVersion + ".root";
 const TString FileName1 = geoVersion + "_geomanager.root";
 
 // Names of the different used materials which are used to build the modules
 // The materials are defined in the global media.geo file
-const TString MediumGas = "ATTPCDIsoButane";
+const TString MediumGas = "ATTPCDPropane_300torr";
 const TString CylinderVolumeMedium = "steel";
 const TString MediumVacuum = "vacuum4";
 const TString MediumWindow = "aramid";

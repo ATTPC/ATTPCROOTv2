@@ -1,9 +1,9 @@
 void eventDisplay()
 {
   //-----User Settings:-----------------------------------------------
-  TString  InputDataFile     ="test_rcnp.root";
-  TString  ParFile       ="./data/attpcpar.root";
-  TString  OutputDataFile	 ="rcnptest.root";
+  TString  InputDataFile     ="rcnp_e535_1.root";
+  TString  ParFile       ="./data/attpcpar_e535_1.root";
+  TString  OutputDataFile	 ="rcnpe535_1.root";
 
 
   // -----   Reconstruction run   -------------------------------------------

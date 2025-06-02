@@ -1,13 +1,16 @@
-void RCNP_simtest(Int_t nEvents = 500, TString mcEngine = "TGeant4")
+// 15B (d, 3He) 14Be
+// Beam energy 32.6 MeV/u
+
+void RCNP_e535_2(Int_t nEvents = 500, TString mcEngine = "TGeant4")
 {
 
   TString dir = getenv("VMCWORKDIR");
 
   // Output file name
-  TString outFile ="test_rcnp.root";
+  TString outFile ="rcnp_e535_2.root";
 
   // Parameter file name
-  TString parFile="./data/attpcpar.root";
+  TString parFile="./data/attpcpar_e535_2.root";
 
   // -----   Timer   --------------------------------------------------------
   TStopwatch timer;
@@ -73,15 +76,15 @@ void RCNP_simtest(Int_t nEvents = 500, TString mcEngine = "TGeant4")
 
 
                   // Beam Information
-                Int_t z = 4;  // Atomic number
-	        Int_t a = 12; // Mass number
+                Int_t z = 5;  // Atomic number
+	        Int_t a = 15; // Mass number
 	        Int_t q = 0;   // Charge State
 	        Int_t m = 1;   // Multiplicity  NOTE: Due the limitation of the TGenPhaseSpace accepting only pointers/arrays the maximum multiplicity has been set to 10 particles.
 	        Double_t px = 0.000/a;  // X-Momentum / per nucleon!!!!!!
 	        Double_t py = 0.000/a;  // Y-Momentum / per nucleon!!!!!!
-	        Double_t pz = 2.21/a;  // Z-Momentum / per nucleon!!!!!!
+	        Double_t pz = 3.735/a;  // Z-Momentum / per nucleon!!!!!!
   	        Double_t BExcEner = 0.0;
-                Double_t Bmass = 12.02473; //
+                Double_t Bmass = 15.02835; //
                 Double_t NomEnergy = 110.0; //Used to force the beam to stop within a certain energy range.
 
 
@@ -139,23 +142,23 @@ void RCNP_simtest(Int_t nEvents = 500, TString mcEngine = "TGeant4")
 
                   //--- Scattered -----
                 Zp.push_back(4); //
-                Ap.push_back(13); //
+                Ap.push_back(14); //
                 Qp.push_back(0);
           	Pxp.push_back(0.0);
           	Pyp.push_back(0.0);
           	Pzp.push_back(0.0);
-          	Mass.push_back(13.03394);
-          	ExE.push_back(0.0);
+          	Mass.push_back(14.0407);
+          	ExE.push_back(15.0);
 
 
                  // ---- Recoil -----
-		 Zp.push_back(1); // p
-		 Ap.push_back(1); //
+		 Zp.push_back(2); // p
+		 Ap.push_back(3); //
 		 Qp.push_back(0); //
 		 Pxp.push_back(0.0);
                  Pyp.push_back(0.0);
 		 Pzp.push_back(0.0);
-                 Mass.push_back(1.00783);
+                 Mass.push_back(3.01493);
 		 ExE.push_back(0.0);//In MeV
 
 
@@ -231,7 +234,7 @@ void RCNP_simtest(Int_t nEvents = 500, TString mcEngine = "TGeant4")
   run->Run(nEvents);
 
   //You can export your ROOT geometry ot a separate file
-  run->CreateGeometryFile("./data/RCNP_geo.root");
+  run->CreateGeometryFile("./data/RCNP_geo_e565.root");
   // ------------------------------------------------------------------------
 
   // -----   Finish   -------------------------------------------------------
