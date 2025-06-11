@@ -138,14 +138,14 @@ TGeoVolume *create_detector()
    TGeoRotation *rBottom = new TGeoRotation("rTop", 0, 0, 45);
    rBottom->RegisterYourself();
 
-   TGeoVolume *silicon1 = gGeoManager->MakeBox("silicon1", silicon, Si_width / 2, Si_width / 2, 0.05);
+   TGeoVolume *silicon1 = gGeoManager->MakeBox("silicon1", silicon, Si_width / 2, Si_width / 2, 0.025);
    gGeoMan->GetVolume(geoVersion)
-      ->AddNode(silicon1, 20, new TGeoCombiTrans(0, 0, 120.0 , rBottom));
+      ->AddNode(silicon1, 1, new TGeoCombiTrans(0, 0, 120.0 , rBottom));
    silicon1->SetLineColor(kGray);
 
-   TGeoVolume *silicon2 = gGeoManager->MakeBox("silicon2", silicon, Si_width / 2, Si_width / 2, 0.1);
+   TGeoVolume *silicon2 = gGeoManager->MakeBox("silicon2", silicon, Si_width / 2, Si_width / 2, 0.05);
    gGeoMan->GetVolume(geoVersion)
-      ->AddNode(silicon2, 20, new TGeoCombiTrans(0, 0, 120.5525, rBottom));
+      ->AddNode(silicon2, 2, new TGeoCombiTrans(0, 0, 120.5525, rBottom));
    silicon2->SetLineColor(kGray);
 
 

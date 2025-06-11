@@ -1,16 +1,16 @@
 // 12Be (d,p) 13Be
 // Beam energy 18 MeV/u
 
-void RCNP_e565(Int_t nEvents = 500, TString mcEngine = "TGeant4")
+void RCNP_e565(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
 {
 
   TString dir = getenv("VMCWORKDIR");
 
   // Output file name
-  TString outFile ="rcnp_e565.root";
+  TString outFile ="rcnp_e565_180deg_600torr.root";
 
   // Parameter file name
-  TString parFile="./data/attpcpar_e565.root";
+  TString parFile="./data/attpcpar_e565_180deg_600torr.root";
 
   // -----   Timer   --------------------------------------------------------
   TStopwatch timer;
@@ -40,7 +40,7 @@ void RCNP_e565(Int_t nEvents = 500, TString mcEngine = "TGeant4")
   run->AddModule(cave);
 
   FairDetector* ATTPC = new AtTpc("ATTPC", kTRUE);
-  ATTPC->SetGeometryFileName("RCNP_ATTPC_300torr.root");
+  ATTPC->SetGeometryFileName("RCNP_ATTPC_600torr.root");
   //HELIOS->SetModifyGeometry(kTRUE);
   run->AddModule(ATTPC);
   
@@ -85,7 +85,7 @@ void RCNP_e565(Int_t nEvents = 500, TString mcEngine = "TGeant4")
 	        Double_t pz = 2.21/a;  // Z-Momentum / per nucleon!!!!!!
   	        Double_t BExcEner = 0.0;
                 Double_t Bmass = 12.02473; //
-                Double_t NomEnergy = 110.0; //Used to force the beam to stop within a certain energy range.
+                Double_t NomEnergy = 90.7; //Used to force the beam to stop within a certain energy range.
 
 
 
@@ -162,13 +162,14 @@ void RCNP_e565(Int_t nEvents = 500, TString mcEngine = "TGeant4")
 		 ExE.push_back(0.0);//In MeV
 
 
-                 Double_t ThetaMinCMS = 0.0;
+                 Double_t ThetaMinCMS = 170.0;
                  Double_t ThetaMaxCMS = 180.0;
 
 
         AtTPC2Body* TwoBody = new AtTPC2Body("TwoBody",&Zp,&Ap,&Qp,mult,&Pxp,&Pyp,&Pzp,&Mass,&ExE,ResEner, ThetaMinCMS,ThetaMaxCMS);
         //TwoBody->SetFixedTargetPosition(0.0,0.0,0.0);
         //TwoBody->SetFixedBeamMomentum(0.0,0.0,pz*a);
+        //TwoBody->SetSequentialDecay(kTRUE);
         primGen->AddGenerator(TwoBody);
 
 
@@ -191,8 +192,51 @@ void RCNP_e565(Int_t nEvents = 500, TString mcEngine = "TGeant4")
              // add the gamma generator
              primGen->AddGenerator(gammasGen);*/
 
-             
+// Setting decay
+   // Set the parameters of the decay generator
+/*
+   std::vector<std::vector<Int_t>> zDecay;
+   std::vector<std::vector<Int_t>> aDecay;
+   std::vector<std::vector<Int_t>> qDecay;
+   std::vector<std::vector<Double_t>> massDecay;
 
+   Int_t zB;
+   Int_t aB;
+   Double_t massDecayB;
+   Double_t massTarget;
+   Double_t exEnergy;
+   std::vector<Double_t> SepEne;
+
+   Int_t TotDecayCases = 1; // the number of decay channel (case) to be considered
+
+   zDecay.resize(TotDecayCases);
+   aDecay.resize(TotDecayCases);
+   qDecay.resize(TotDecayCases);
+   massDecay.resize(TotDecayCases);
+
+   zB = 4; // 12Be
+   aB = 13;
+   massDecayB = 13.03394;
+   massTarget = 0.0;
+   exEnergy = 0.0; // NB: Set to zero for sequential decay
+
+      SepEne.push_back(-0.435); // Separation energy for the first decay
+      zDecay.at(0).push_back(0);
+      zDecay.at(0).push_back(4);
+      aDecay.at(0).push_back(1);
+      aDecay.at(0).push_back(12);
+      qDecay.at(0).push_back(0);
+      qDecay.at(0).push_back(0);
+      massDecay.at(0).push_back(1.0087);
+      massDecay.at(0).push_back(12.02473);
+   
+   
+
+   AtTPCIonDecay *decay =
+      new AtTPCIonDecay(&zDecay, &aDecay, &qDecay, &massDecay, zB, aB, massDecayB, massTarget, exEnergy, &SepEne);
+   decay->SetSequentialDecay(kTRUE);
+   //primGen->AddGenerator(decay);
+*/
 	run->SetGenerator(primGen);
 
 // ------------------------------------------------------------------------

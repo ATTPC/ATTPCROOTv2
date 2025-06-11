@@ -1,9 +1,9 @@
 void eventDisplay()
 {
   //-----User Settings:-----------------------------------------------
-  TString  InputDataFile     ="rcnp_e535_1.root";
-  TString  ParFile       ="./data/attpcpar_e535_1.root";
-  TString  OutputDataFile	 ="rcnpe535_1.root";
+  TString  InputDataFile     ="rcnp_e565_300torr.root";
+  TString  ParFile       ="./data/attpcpar_e565_300torr.root";
+  TString  OutputDataFile	 ="rcnpe565_300torr.root";
 
 
   // -----   Reconstruction run   -------------------------------------------
@@ -24,9 +24,12 @@ void eventDisplay()
    //----------------------Traks and points -------------------------------------
    // FairMCTracks *Track = new FairMCTracks("Monte-Carlo Tracks");
    FairMCPointDraw *AtTpcPoints = new FairMCPointDraw("AtTpcPoint", kBlue, kFullSquare);
+     FairMCPointDraw *AtSiArrayPoints = new FairMCPointDraw("AtSiArrayPoint", kBlue, kFullSquare);
+
 
    // fMan->AddTask(Track);
    fMan->AddTask(AtTpcPoints);
+    fMan->AddTask(AtSiArrayPoints);
 
    fMan->Init();
 }
