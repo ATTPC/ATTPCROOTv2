@@ -11,7 +11,7 @@ void Be13_p_sim(Int_t nEvents = 10000, Int_t subnum = 0, Double_t angle_cm = 0)
    // Output file name
    double minangle,maxangle;
 
-   minangle = 18.0000, maxangle = 18.0001;
+   minangle = 0., maxangle = 45.;
 
    TString outFile = TString::Format("./attpcsim_13Be_p_%.1f_%.1f.root",minangle,maxangle);
    //TString outFile = TString::Format("./test_80.0_81.0.root");
@@ -153,8 +153,8 @@ void Be13_p_sim(Int_t nEvents = 10000, Int_t subnum = 0, Double_t angle_cm = 0)
    Mass.push_back(Recoil_mass); // uma
    ExE.push_back(0.0); // In MeV
 		       
-   Double_t ThetaMinCMS = 18.0000;
-   Double_t ThetaMaxCMS = 18.0001;
+   Double_t ThetaMinCMS = minangle;
+   Double_t ThetaMaxCMS = maxangle;
 
    AtTPC2Body *TwoBody = new AtTPC2Body("TwoBody", &Zp, &Ap, &Qp, mult, &Pxp, &Pyp, &Pzp, &Mass, &ExE, ResEner, ThetaMinCMS, ThetaMaxCMS);
    primGen->AddGenerator(TwoBody);
