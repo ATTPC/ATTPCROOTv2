@@ -3,6 +3,8 @@
 
 #include "AtPSAHitPerTBInRegion.h"
 
+#include "AtMap.h"
+
 #include <Math/Point3D.h>
 #include <TH1F.h>
 
@@ -28,6 +30,8 @@ public:
 
    void SetTrack(AtTrack &track);
    void SetTrack(AtTrack &track, AtRawEvent *rawEvent);
+
+   void SetMap(std::shared_ptr<AtMap> map) { fPSA->SetMap(map); }
 
 protected:
    XYZPoint FindVertex(AtTrack &track);

@@ -28,6 +28,14 @@ AtPSAHitPerTBInRegion::HitVector AtPSAHitPerTBInRegion::AnalyzePad(AtPad *pad)
       // return;
    }
 
+   int padSizeID{0};
+   if (fMap != nullptr)
+      padSizeID = fMap->GetPadSize(pad->GetPadNum());
+
+   Double_t divisionFactor{1.};
+   if (padSizeID == 1)
+      divisionFactor = 4.;
+
    HitVector hits;
    auto adc = pad->GetADC();
    for (Int_t iTb = fIniTB; iTb < fEndTB; iTb++) {
@@ -40,7 +48,7 @@ AtPSAHitPerTBInRegion::HitVector AtPSAHitPerTBInRegion::AnalyzePad(AtPad *pad)
          auto hit = std::make_unique<AtHit>(pad->GetPadNum(), XYZPoint(pos.X(), pos.Y(), CalculateZGeo(iTb + TBOffset)),
                                             adc[iTb]);
          hit->SetTimeStamp(iTb + TBOffset);
-         hit->SetTraceIntegral(adc[iTb]);
+         hit->SetTraceIntegral(adc[iTb] / divisionFactor);
          hits.push_back(std::move(hit));
       } // if Threshold
    }

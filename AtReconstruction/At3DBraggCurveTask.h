@@ -35,6 +35,8 @@ private:
    At3DBraggCurveHandler *f3DBraggHandler{nullptr};
    std::unique_ptr<AtFITTER::At3DBraggFitter> f3DBraggFitter{nullptr};
 
+   std::shared_ptr<AtMap> fMap{nullptr};
+
 public:
    At3DBraggCurveTask();
    ~At3DBraggCurveTask();
@@ -47,6 +49,8 @@ public:
    void SetChargeThreshold(Double_t value) { fChargeThres = value; }
 
    void Set3DBraggCurveFitter(std::unique_ptr<AtFITTER::At3DBraggFitter> fitter) { f3DBraggFitter = std::move(fitter); }
+
+   void SetMap(std::shared_ptr<AtMap> map) { fMap = map; }
 
    virtual InitStatus Init() override;
    virtual void Exec(Option_t *opt) override;

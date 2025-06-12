@@ -5,10 +5,11 @@ void digi_Be13_p(int nEvent = 10000, int subnum = 0, int angle_num = 18)
    const char* filename = "13Be_p";
    double minangle, maxangle;
    //minangle = angle_num, maxangle = minangle + 1;
-   minangle = 18, maxangle = 18;
+   minangle = 0., maxangle = 45.;
    TString inOutDir = "./Output/";
    TString outputFile = /*inOutDir +*/ TString::Format("output_digi_rcnp_%s_%.1f_%.1f_hole_pdt3He4He12C_4mm.root",filename,minangle,maxangle);
-   TString scriptfile = "Lookup20150611.xml";
+   //TString scriptfile = "Lookup20150611.xml";
+   TString scriptfile = "e12014_pad_map_size.xml";
 
    TString paramFile = "rcnp_attpc_12Be.par";
 
@@ -107,6 +108,7 @@ void digi_Be13_p(int nEvent = 10000, int subnum = 0, int angle_num = 18)
    fitter->Init();
 
    braggTask->Set3DBraggCurveFitter(std::move(fitter));
+   braggTask->SetMap(mapping);
 
    /*AtFitterTask *fitterTask = new AtFitterTask(std::move(fitter));
    fitterTask->SetPersistence(kFALSE);

@@ -49,6 +49,8 @@ InitStatus At3DBraggCurveTask::Init()
    ioMan->Register(fOutputPatternEventBranchName, "AtTPC", &fOutputPatternEventArray, kIsPersistence);
 
    f3DBraggHandler = new At3DBraggCurveHandler();
+   if (fMap != nullptr)
+      f3DBraggHandler->SetMap(fMap);
 
    return kSUCCESS;
 }
