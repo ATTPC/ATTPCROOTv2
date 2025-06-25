@@ -75,7 +75,7 @@ void AtFRIBLinkedHDFUnpacker::setEventIDAndTimestamps()
          _objID = std::get<0>(group_dims);
          break;
       }
-      
+
       default:
          LOG(warning) << "Could not find object " << obj_name << " in group " << _group;
          fRawEvent->SetNumberOfTimestamps(0);

@@ -42,7 +42,8 @@ void AtHDFUnpacker::Init()
       LOG(fatal) << "Exceded valid range of event numbers. Looking for " << fEventID << " max event number is "
                  << uniqueEvents;
    if (uniqueEvents != numEvents)
-      LOG(error) << "Number of events from metaData (" << uniqueEvents << ") does not match the number of entries in HDF5 file (" << numEvents << ")!";
+      LOG(error) << "Number of events from metaData (" << uniqueEvents
+                 << ") does not match the number of entries in HDF5 file (" << numEvents << ")!";
 
    // Correct event ID for offset in file
    fDataEventID = fFirstEvent + fEventID;
@@ -328,10 +329,9 @@ std::vector<ULong64_t> AtHDFUnpacker::n_entries(std::string dataset_name)
    if (std::get<0>(dataset_dims) == 0)
       return {0};
    _dataset = std::get<0>(dataset_dims);
- 
+
    return std::get<1>(dataset_dims);
 }
-
 
 std::size_t AtHDFUnpacker::n_pads(std::string i_raw_event)
 {

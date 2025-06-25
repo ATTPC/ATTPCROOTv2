@@ -18,7 +18,7 @@ std::size_t AtFRIBSiUnpacker::n_pads(std::string i_raw_event)
 {
    return n_entries(i_raw_event + "/get/pads")[0];
 }
-void AtFRIBSiUnpacker::processSiChannel(std::size_t chIndex) 
+void AtFRIBSiUnpacker::processSiChannel(std::size_t chIndex)
 {
    auto rawadc = pad_raw_data(chIndex);
    AtPadReference PadRef = {rawadc[0], rawadc[1], rawadc[2], rawadc[3]};
@@ -28,7 +28,6 @@ void AtFRIBSiUnpacker::processSiChannel(std::size_t chIndex)
 
    auto pad = fRawEvent->AddAuxPad(pad_name.Data()).first;
    setAdc(pad, rawadc);
-
 };
 
 void AtFRIBSiUnpacker::processData()
@@ -50,7 +49,7 @@ void AtFRIBSiUnpacker::processData()
 
    // Add all the Si channels as aux pads. For now the naming scheme is "CoBo_AsAd_AGet_Ch"
    // Maybe this should change with the mapping?
-   for(auto & siPath : fSiPaths) {
+   for (auto &siPath : fSiPaths) {
       std::string siDataset = "/get/" + siPath;
       auto nSiChannels = n_entries(event_name.Data() + siDataset)[0];
       LOG(info) << "Processing Si channels in dataset " << siPath << " with " << nSiChannels << " channels.";
@@ -58,7 +57,6 @@ void AtFRIBSiUnpacker::processData()
          processSiChannel(chIndex);
       }
    }
-
 
    end_raw_event(); // Close dataset
 };

@@ -59,13 +59,13 @@ protected:
    virtual void processPad(std::size_t padIndex);
    virtual std::size_t n_pads(std::string i_raw_event);
    virtual std::vector<int16_t> pad_raw_data(std::size_t i_pad);
-   
+
    /**
     * @brief Get the number entries in a group.
-    * 
-    * Has the side effect of setting the internal _dataset variable to 
+    *
+    * Has the side effect of setting the internal _dataset variable to
     * the dataset of the group.
-    * 
+    *
     * @param datasetName Name of the dataset to check
     */
    std::vector<ULong64_t> n_entries(std::string datasetName); /// Returns the number of entries in a group

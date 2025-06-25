@@ -14,7 +14,8 @@
 
 class AtFRIBSiUnpacker : public AtFRIBLinkedHDFUnpacker {
 protected:
-std::vector<std::string> fSiPaths = {"si_downstream_back", "si_downstream_front", "si_upstream_back", "si_upstream_front"}; // Paths to the FRIB DAQ channels
+   std::vector<std::string> fSiPaths = {"si_downstream_back", "si_downstream_front", "si_upstream_back",
+                                        "si_upstream_front"}; // Paths to the FRIB DAQ channels
 public:
    AtFRIBSiUnpacker(mapPtr map) : AtFRIBLinkedHDFUnpacker(map)
    {
