@@ -67,9 +67,8 @@ protected:
     * the dataset of the group.
     * 
     * @param datasetName Name of the dataset to check
-    * @param ind Index of the dataset that represents the number of channels (default is 0)
     */
-   std::size_t n_entries(std::string datasetName, int ind = 0); /// Returns the number of entries in a group
+   std::vector<ULong64_t> n_entries(std::string datasetName); /// Returns the number of entries in a group
 
    hid_t open_file(char const *file, IO_MODE mode);
    std::tuple<hid_t, hsize_t> open_group(hid_t fileId, char const *group);

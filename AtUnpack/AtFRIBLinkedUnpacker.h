@@ -13,7 +13,7 @@ class AtFRIBLinkedHDFUnpacker : public AtHDFUnpacker {
 
 protected:
    std::vector<std::string> fFribPaths = {"1903"};
-   //std::string fFribPath = "/frib_physics/1903";
+   std::string fGetPath = "/get_traces"; // Path to the get object containing meta data and traces
 
 public:
    AtFRIBLinkedHDFUnpacker(mapPtr map) : AtHDFUnpacker(map){};

@@ -31,6 +31,7 @@ set(SRCS
   AtHDFUnpacker.cxx
   AtFRIBHDFUnpacker.cxx
   AtFRIBLinkedUnpacker.cxx
+  AtFRIBSiUnpacker.cxx
   AtROOTUnpacker.cxx
   AtGRAWUnpacker.cxx
 
