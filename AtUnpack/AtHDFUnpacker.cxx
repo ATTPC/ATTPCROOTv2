@@ -41,8 +41,8 @@ void AtHDFUnpacker::Init()
    if (fEventID > uniqueEvents)
       LOG(fatal) << "Exceded valid range of event numbers. Looking for " << fEventID << " max event number is "
                  << uniqueEvents;
-   if (uniqueEvents != numEvents / 2)
-      LOG(error) << "Number of events from metaData does not match the number of entries in HDF5 file!";
+   if (uniqueEvents != numEvents)
+      LOG(error) << "Number of events from metaData (" << uniqueEvents << ") does not match the number of entries in HDF5 file (" << numEvents << ")!";
 
    // Correct event ID for offset in file
    fDataEventID = fFirstEvent + fEventID;
