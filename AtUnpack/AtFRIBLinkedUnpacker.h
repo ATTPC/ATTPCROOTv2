@@ -47,7 +47,13 @@ protected:
    */
    std::size_t n_aux(std::string i_raw_event);
 
-   void processAux(std::size_t auxIndex);
+   /** 
+    * @brief Process an auxiliary channel in the frib_physics group.
+    * @param auxIndex Index of the auxiliary channel to process.
+    * @param nTB Number of time bins in the auxiliary channel.
+    */
+   void processAux(std::size_t auxIndex, std::size_t nTB);
+  
    /**
    * @brief Process an SIS digitizer in the frib_physics group.
    * 

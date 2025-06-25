@@ -97,22 +97,22 @@ std::size_t AtFRIBLinkedHDFUnpacker::n_aux(std::string i_raw_event)
    return n_entries(dataset_name, 1); // These are trace x channel so index is 1
 };
 
-void AtFRIBLinkedHDFUnpacker::processAux(std::size_t padIndex)
+void AtFRIBLinkedHDFUnpacker::processAux(std::size_t padIndex, std::size_t nTB)
 {
-   int16_t data[2048];
-   hsize_t counts[2] = {2048, 1};
+   int16_t data[nTB];
+   hsize_t counts[2] = {nTB, 1};
    hsize_t offsets[2] = {0, padIndex};
-   hsize_t dims_out[2] = {2048, 1};
+   hsize_t dims_out[2] = {nTB, 1};
    read_slab<int16_t>(_dataset, counts, offsets, dims_out, data);
-   std::vector<int16_t> rawadc(data, data + 2048);
+   std::vector<int16_t> rawadc(data, data + nTB);
 
    auto trace = fRawEvent->AddGenericTrace(padIndex);
    auto baseline = getBaseline(rawadc);
-   for (Int_t iTb = 0; iTb < 2048; iTb++) {
+   for (Int_t iTb = 0; iTb < nTB; iTb++) {
       trace->SetRawADC(iTb, rawadc.at(iTb));
       trace->SetADC(iTb, rawadc.at(iTb) - baseline);
 
-      if (padIndex == 0 && iTb > 2000)
+      if (padIndex == 0 && iTb > nTB-48)
          LOG(debug) << "Aux trace " << iTb << " " << rawadc.at(iTb);
    }
 };
@@ -125,7 +125,7 @@ void AtFRIBLinkedHDFUnpacker::processSIS(std::string i_raw_event, std::string na
    auto nTB = n_entries(dataset_name, 0);
    LOG(info) << "Processing SIS digitizer " << name << " with " << nChannels << " channels and " << nTB << " time bins.";
 
-   for (auto i = 0; i < nChannels; ++i) processAux(i);
+   for (auto i = 0; i < nChannels; ++i) processAux(i, nTB);
 }
    
 
@@ -145,7 +145,6 @@ void AtFRIBLinkedHDFUnpacker::processData()
    for(auto &sis : fFribPaths) {
       processSIS(event_name.Data(), sis);
    }
-   //processSIS(event_name.Data(), "1903"); // Process the SIS digitizer, hardcoded for now
 
    end_raw_event(); // Close dataset
 };
