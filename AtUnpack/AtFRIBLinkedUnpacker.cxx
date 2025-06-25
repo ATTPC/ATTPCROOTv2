@@ -88,12 +88,6 @@ void AtFRIBLinkedHDFUnpacker::setEventIDAndTimestamps()
 std::size_t AtFRIBLinkedHDFUnpacker::n_pads(std::string i_raw_event)
 {
    return n_entries(i_raw_event + "/get_traces");
-   std::string dataset_name = i_raw_event + "/get_traces";
-   auto dataset_dims = open_dataset(_group, dataset_name.c_str());
-   if (std::get<0>(dataset_dims) == 0)
-      return 0;
-   _dataset = std::get<0>(dataset_dims);
-   return std::get<1>(dataset_dims)[0];
 };
 
 std::size_t AtFRIBLinkedHDFUnpacker::n_aux(std::string i_raw_event)
@@ -101,11 +95,6 @@ std::size_t AtFRIBLinkedHDFUnpacker::n_aux(std::string i_raw_event)
    std::string fFribPath = "/frib_physics/1903";
    std::string dataset_name = i_raw_event + fFribPath;
    return n_entries(dataset_name, 1); // These are trace x channel so index is 1
-   auto dataset_dims = open_dataset(_group, dataset_name.c_str());
-   if (std::get<0>(dataset_dims) == 0)
-      return 0;
-   _dataset = std::get<0>(dataset_dims);
-   return std::get<1>(dataset_dims)[1];
 };
 
 void AtFRIBLinkedHDFUnpacker::processAux(std::size_t padIndex)
@@ -128,6 +117,18 @@ void AtFRIBLinkedHDFUnpacker::processAux(std::size_t padIndex)
    }
 };
 
+void AtFRIBLinkedHDFUnpacker::processSIS(std::string i_raw_event, std::string name)
+{
+   // Open the dataset for the SIS digitizer
+   std::string dataset_name = i_raw_event + "/frib_physics/" + name;
+   auto nChannels = n_entries(dataset_name, 1);
+   auto nTB = n_entries(dataset_name, 0);
+   LOG(info) << "Processing SIS digitizer " << name << " with " << nChannels << " channels and " << nTB << " time bins.";
+
+   for (auto i = 0; i < nChannels; ++i) processAux(i);
+}
+   
+
 void AtFRIBLinkedHDFUnpacker::processData()
 {
    TString event_name = TString::Format("event_%lld", fDataEventID);
@@ -141,10 +142,10 @@ void AtFRIBLinkedHDFUnpacker::processData()
    }
 
    // Loop through and grab all of the generic traces in the event
-   auto nAux = n_aux(event_name.Data());
-   LOG(info) << "Unpacking " << nAux << " generic traces in event " << fDataEventID;
-   for (auto i = 0; i < nAux; ++i)
-      processAux(i);
+   for(auto &sis : fFribPaths) {
+      processSIS(event_name.Data(), sis);
+   }
+   //processSIS(event_name.Data(), "1903"); // Process the SIS digitizer, hardcoded for now
 
    end_raw_event(); // Close dataset
 };
