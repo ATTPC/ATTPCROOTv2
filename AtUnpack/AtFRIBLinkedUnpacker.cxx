@@ -10,6 +10,7 @@
 
 #include <H5Apublic.h>
 #include <H5Gpublic.h>
+#include <H5Opublic.h>
 #include <H5Ppublic.h>
 
 ClassImp(AtFRIBLinkedHDFUnpacker);
@@ -51,23 +52,35 @@ void AtFRIBLinkedHDFUnpacker::setEventIDAndTimestamps()
       std::string obj_name = TString::Format("event_%lld", fDataEventID).Data() + fGetPath;
       LOG(info) << "Looking for dataset or group " << obj_name << " for event " << fDataEventID;
       hid_t _objID = -1;
-      
-      // Try to open as dataset first
-      auto dataset_dims = open_dataset(_group, obj_name.c_str());
-      _objID = std::get<0>(dataset_dims);
-      bool dataset = (_objID >= 0);
-      if (!dataset) {
-         LOG(warning) << "Failed to open as dataset. Trying as group.";
-         // Try to open as group
+
+      H5O_info_t get_info;
+      auto status = H5Oget_info_by_name(_group, obj_name.c_str(), &get_info, H5P_DEFAULT);
+
+      if (status < 0) {
+         LOG(warning) << "Could not find object " << obj_name << " in group " << _group;
+         fRawEvent->SetNumberOfTimestamps(0);
+         return;
+      }
+
+      switch (get_info.type) {
+      case H5O_TYPE_DATASET: {
+         auto dataset_dims = open_dataset(_group, obj_name.c_str());
+         _dataset = std::get<0>(dataset_dims);
+         _objID = _dataset;
+         break;
+      }
+
+      case H5O_TYPE_GROUP: {
          auto group_dims = open_group(_group, obj_name.c_str());
          _objID = std::get<0>(group_dims);
-         if (_objID < 0) {
-            LOG(error) << "Could not open " << obj_name << " as group either.";
-            fRawEvent->SetNumberOfTimestamps(0);
-            return;
-         }
-      } else
-         _dataset = _objID; // Set the dataset to the opened object ID
+         break;
+      }
+      
+      default:
+         LOG(warning) << "Could not find object " << obj_name << " in group " << _group;
+         fRawEvent->SetNumberOfTimestamps(0);
+         return;
+      }
 
       LOG(info) << "Opened object ID " << _objID << " for event " << fDataEventID;
 
@@ -75,8 +88,7 @@ void AtFRIBLinkedHDFUnpacker::setEventIDAndTimestamps()
       if (_attr < 0) {
          LOG(error) << "Could not open timestamp attribute for event " << fDataEventID;
          fRawEvent->SetNumberOfTimestamps(0);
-         if(!dataset) {
-            // If we opened as a group, we can close it
+         if (get_info.type == H5O_TYPE_GROUP) {
             H5Gclose(_objID);
          }
          return;
@@ -92,8 +104,7 @@ void AtFRIBLinkedHDFUnpacker::setEventIDAndTimestamps()
       _attr = H5Aopen(_objID, "timestamp_other", H5P_DEFAULT);
       if (_attr < 0) {
          LOG(error) << "Could not open timestamp_other attribute for event " << fDataEventID;
-         if(!dataset) {
-            // If we opened as a group, we can close it
+         if (get_info.type == H5O_TYPE_GROUP) {
             H5Gclose(_objID);
          }
          return;
@@ -151,13 +162,10 @@ void AtFRIBLinkedHDFUnpacker::processSIS(std::string i_raw_event, std::string na
    auto dims = n_entries(dataset_name);
    std::size_t nTB = 0;
    std::size_t nChannels = 0;
-   if(dims.size() == 1)
-   {
+   if (dims.size() == 1) {
       nTB = 1;
       nChannels = 1;
-   }
-   else
-   {
+   } else {
       nTB = dims.at(0);
       nChannels = dims.at(1);
    }

@@ -76,7 +76,7 @@ void run_unpack_si(int runNumber = 29)
    std::cout << "Unpacking " << numEvents << " events. " << std::endl;
 
    // return;
-   run->Run(0, 4);
+   run->Run(0, 100);
 
    std::cout << std::endl << std::endl;
    std::cout << "Done unpacking events" << std::endl << std::endl;
