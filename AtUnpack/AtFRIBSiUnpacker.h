@@ -13,7 +13,8 @@
  */
 
 class AtFRIBSiUnpacker : public AtFRIBLinkedHDFUnpacker {
-
+protected:
+std::vector<std::string> fSiPaths = {"si_downstream_back", "si_downstream_front", "si_upstream_back", "si_upstream_front"}; // Paths to the FRIB DAQ channels
 public:
    AtFRIBSiUnpacker(mapPtr map) : AtFRIBLinkedHDFUnpacker(map)
    {
@@ -26,11 +27,12 @@ protected:
    // virtual std::size_t open(char const *file) override;
    // virtual void setFirstAndLastEventNum() override;
    // virtual void setEventIDAndTimestamps() override;
-   // virtual void processData() override;
+   virtual void processData() override;
    //  virtual void processPad(std::size_t padIndex) override;
    virtual std::size_t n_pads(std::string i_raw_event) override;
    // std::size_t n_aux(std::string i_raw_event);
    // void processAux(std::size_t auxIndex);
+   void processSiChannel(std::size_t chIndex);
 
    ClassDefOverride(AtFRIBSiUnpacker, 1);
 };
