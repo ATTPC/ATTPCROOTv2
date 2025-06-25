@@ -80,6 +80,7 @@ protected:
    void close_group(hid_t group);
    void close_dataset(hid_t dataset);
    void end_raw_event();
+   Float_t getBaseline(const std::vector<u_int16_t> &data);
    Float_t getBaseline(const std::vector<int16_t> &data);
 
    template <typename T>

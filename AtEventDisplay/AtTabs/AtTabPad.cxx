@@ -3,6 +3,7 @@
 #include "AtAuxPad.h" // for AtAuxPad
 #include "AtDataManip.h"
 #include "AtEvent.h"
+#include "AtGenericTrace.h"
 #include "AtHit.h" // for AtHit
 #include "AtMap.h"
 #include "AtPad.h"
@@ -77,13 +78,30 @@ void AtTabPad::Exec()
    for (auto &[pos, toDraw] : fDrawMap) {
       fCanvas->cd(pos + 1);
       auto hist = toDraw.second;
-      if (toDraw.first == PadDrawType::kAuxPad) {
+      switch (toDraw.first) {
+      case PadDrawType::kAuxPad: {
          hist->Reset();
 
          auto auxPad = fRawEvent->GetAuxPad(fAugNames[pos]);
          if (auxPad != nullptr)
             DrawAdc(hist, *auxPad);
          hist->Draw();
+      }
+      case PadDrawType::kGenTrace: {
+         const auto &trace = fRawEvent->GetGenTraces().at(fGenID[pos]);
+         if (trace != nullptr) {
+            DrawGenTrace(hist, *trace);
+         }
+         break;
+      }
+      case PadDrawType::kRawGenTrace: {
+         const auto &trace = fRawEvent->GetGenTraces().at(fGenID[pos]);
+         if (trace != nullptr) {
+            DrawRawGenTrace(hist, *trace);
+         }
+         break;
+      }
+      default: break;
       }
    }
    UpdateCvsPad();
@@ -108,7 +126,8 @@ void AtTabPad::DrawPad()
    auto fPad = fRawEvent->GetPad(fPadNum->Get());
 
    for (auto &[pos, toDraw] : fDrawMap) {
-      if (toDraw.first == PadDrawType::kAuxPad)
+      if (toDraw.first == PadDrawType::kAuxPad || toDraw.first == PadDrawType::kGenTrace ||
+          toDraw.first == PadDrawType::kRawGenTrace)
          continue;
 
       fCanvas->cd(pos + 1);
@@ -125,11 +144,12 @@ void AtTabPad::DrawPad()
       case PadDrawType::kRawADC: DrawRawAdc(hist, *fPad); break;
       case PadDrawType::kArrAug: DrawArrayAug(hist, *fPad, fAugNames[pos]); break;
       case PadDrawType::kFPN: DrawFPN(hist, *fPad); break;
-      case PadDrawType::kAuxPad:
+      case PadDrawType::kAuxPad: {
          auto auxPad = fRawEvent->GetAuxPad(fAugNames[pos]);
          if (auxPad != nullptr)
             DrawAdc(hist, *auxPad);
          break;
+      }
       }
 
       if (fDrawHits.find(pos) != fDrawHits.end())
@@ -139,6 +159,33 @@ void AtTabPad::DrawPad()
    UpdateCvsPad();
 }
 
+void AtTabPad::DrawGenTrace(TH1D *hist, const AtGenericTrace &trace)
+{
+   if (hist->GetNbinsX() != trace.GetTraceSize()) {
+      auto oldHist = hist;
+      hist = new TH1D(oldHist->GetName(), oldHist->GetTitle(), trace.GetTraceSize(), 0, trace.GetTraceSize());
+      delete oldHist;
+   }
+   for (int i = 0; i < trace.GetTraceSize(); i++) {
+      hist->SetBinContent(i + 1, trace.GetADC()[i]);
+   }
+   hist->Draw();
+}
+
+void AtTabPad::DrawRawGenTrace(TH1D *hist, const AtGenericTrace &trace)
+{
+   LOG(info) << "Drawing raw trace with size " << trace.GetTraceSize() << " for tab " << fTabId;
+   if (hist->GetNbinsX() != trace.GetTraceSize()) {
+      auto oldName = hist->GetName();
+      auto oldTitle = hist->GetTitle();
+      *hist = TH1D(oldName, oldTitle, trace.GetTraceSize(), 0, trace.GetTraceSize());
+      ;
+   }
+   for (int i = 0; i < trace.GetTraceSize(); i++) {
+      hist->SetBinContent(i + 1, trace.GetRawADC()[i]);
+   }
+   hist->Draw();
+}
 void AtTabPad::DrawAdc(TH1D *hist, const AtPad &pad)
 {
    for (int i = 0; i < 512; i++) {
@@ -253,6 +300,18 @@ void AtTabPad::DrawAuxADC(TString auxName, int row, int col)
 {
    fAugNames.emplace(row * fCols + col, auxName);
    SetDraw(row * fCols + col, PadDrawType::kAuxPad);
+}
+
+void AtTabPad::DrawGenTrace(int traceID, int row, int col)
+{
+   fGenID[row * fCols + col] = traceID;
+   SetDraw(row * fCols + col, PadDrawType::kGenTrace);
+}
+void AtTabPad::DrawRawGenTrace(int traceID, int row, int col)
+{
+   fGenID[row * fCols + col] = traceID;
+   SetDraw(row * fCols + col, PadDrawType::kRawGenTrace);
+   LOG(info) << "Drawing raw generic trace " << traceID << " at position (" << row << ", " << col << ")";
 }
 
 void AtTabPad::UpdateCvsPad()

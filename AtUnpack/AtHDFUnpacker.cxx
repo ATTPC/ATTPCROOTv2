@@ -134,6 +134,17 @@ void AtHDFUnpacker::setAdc(AtPad *pad, const std::vector<int16_t> &data)
    pad->SetPedestalSubtracted(fIsBaseLineSubtraction);
 }
 
+Float_t AtHDFUnpacker::getBaseline(const std::vector<u_int16_t> &data)
+{
+   Float_t baseline = 0;
+
+   if (fIsBaseLineSubtraction) {
+      for (Int_t iTb = 5; iTb < 25; iTb++) // First 5 words are electronic id
+         baseline += data[iTb];
+      baseline /= 20.0;
+   }
+   return baseline;
+}
 Float_t AtHDFUnpacker::getBaseline(const std::vector<int16_t> &data)
 {
    Float_t baseline = 0;

@@ -137,18 +137,17 @@ std::size_t AtFRIBLinkedHDFUnpacker::n_aux(std::string i_raw_event)
 
 void AtFRIBLinkedHDFUnpacker::processAux(std::size_t padIndex, std::size_t nTB)
 {
-   int16_t data[nTB];
+   u_int16_t data[nTB];
    hsize_t counts[2] = {nTB, 1};
    hsize_t offsets[2] = {0, padIndex};
    hsize_t dims_out[2] = {nTB, 1};
-   read_slab<int16_t>(_dataset, counts, offsets, dims_out, data);
-   std::vector<int16_t> rawadc(data, data + nTB);
+   read_slab<u_int16_t>(_dataset, counts, offsets, dims_out, data);
+   std::vector<u_int16_t> rawadc(data, data + nTB);
 
-   auto trace = fRawEvent->AddGenericTrace(padIndex);
-   auto baseline = getBaseline(rawadc);
+   auto trace = fRawEvent->AddGenericTrace(padIndex, nTB);
    for (Int_t iTb = 0; iTb < nTB; iTb++) {
       trace->SetRawADC(iTb, rawadc.at(iTb));
-      trace->SetADC(iTb, rawadc.at(iTb) - baseline);
+      trace->SetADC(iTb, rawadc.at(iTb));
 
       if (padIndex == 0 && iTb > nTB - 48)
          LOG(debug) << "Aux trace " << iTb << " " << rawadc.at(iTb);

@@ -21,6 +21,7 @@ class TMemberInspector;
 class TF1;
 class AtPad;
 class TH1D;
+class AtGenericTrace;
 
 namespace DataHandling {
 class AtSubject;
@@ -32,13 +33,14 @@ class AtSubject;
  */
 class AtTabPad : public AtTabCanvas, public DataHandling::AtObserver {
 protected:
-   enum class PadDrawType { kADC, kRawADC, kArrAug, kAuxPad, kFPN };
+   enum class PadDrawType { kADC, kRawADC, kArrAug, kAuxPad, kFPN, kGenTrace, kRawGenTrace };
    using TF1Vec = std::vector<std::unique_ptr<TF1>>;
 
    /// <location, <type, histo>
    /// location is row * nCols + col
    std::unordered_map<Int_t, std::pair<PadDrawType, TH1D *>> fDrawMap; //! Let root handle hist memory
    std::unordered_map<Int_t, std::string> fAugNames;                   //< Augment and Aux pad names
+   std::unordered_map<Int_t, Int_t> fGenID;                            //< Generic trace IDs
    DataHandling::AtPadNum *fPadNum;
 
    std::unordered_map<Int_t, TF1Vec> fDrawHits; //< Draw representation of hits on trace in these TPads
@@ -55,6 +57,8 @@ public:
    void DrawArrayAug(TString augName, int row = 0, int col = 0); //< Draw an array augment current pad
    void DrawAuxADC(TString auxName, int row = 0, int col = 0);   //< Draw an aux pad
    void DrawFPN(int row = 0, int col = 0);                       //< Draw adc in current pad
+   void DrawGenTrace(int traceID, int row = 0, int col = 0);     //< Draw a generic pad
+   void DrawRawGenTrace(int traceID, int row = 0, int col = 0);
 
    /// If called will draw a pictoral representation of the hit on the corresponding pad. Requires a
    /// parameter file "AtDigiPar" be added to the runtime DB.
@@ -73,6 +77,8 @@ private:
    void DrawRawAdc(TH1D *hist, const AtPad &pad);
    void DrawArrayAug(TH1D *hist, const AtPad &pad, TString augName);
    void DrawHit(const AtPad &pad, TF1Vec &funcs);
+   void DrawGenTrace(TH1D *hist, const AtGenericTrace &trace);
+   void DrawRawGenTrace(TH1D *hist, const AtGenericTrace &trace);
    // void DrawHit(TPad *canv, const AtHit &hit);
 
    void UpdateCvsPad();
