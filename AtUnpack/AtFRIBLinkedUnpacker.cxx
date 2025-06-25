@@ -87,6 +87,7 @@ void AtFRIBLinkedHDFUnpacker::setEventIDAndTimestamps()
 
 std::size_t AtFRIBLinkedHDFUnpacker::n_pads(std::string i_raw_event)
 {
+   return n_entries(i_raw_event + "/get_traces");
    std::string dataset_name = i_raw_event + "/get_traces";
    auto dataset_dims = open_dataset(_group, dataset_name.c_str());
    if (std::get<0>(dataset_dims) == 0)
@@ -97,7 +98,9 @@ std::size_t AtFRIBLinkedHDFUnpacker::n_pads(std::string i_raw_event)
 
 std::size_t AtFRIBLinkedHDFUnpacker::n_aux(std::string i_raw_event)
 {
+   std::string fFribPath = "/frib_physics/1903";
    std::string dataset_name = i_raw_event + fFribPath;
+   return n_entries(dataset_name, 1); // These are trace x channel so index is 1
    auto dataset_dims = open_dataset(_group, dataset_name.c_str());
    if (std::get<0>(dataset_dims) == 0)
       return 0;

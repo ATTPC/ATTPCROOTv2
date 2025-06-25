@@ -322,14 +322,20 @@ std::vector<uint64_t> AtHDFUnpacker::get_header(std::string headerName)
    return retVec;
 }
 
-std::size_t AtHDFUnpacker::n_pads(std::string i_raw_event)
+std::size_t AtHDFUnpacker::n_entries(std::string dataset_name, int ind)
 {
-   std::string dataset_name = i_raw_event;
    auto dataset_dims = open_dataset(_group, dataset_name.c_str());
    if (std::get<0>(dataset_dims) == 0)
       return 0;
    _dataset = std::get<0>(dataset_dims);
-   return std::get<1>(dataset_dims)[0];
+   return std::get<1>(dataset_dims)[ind];
+}
+
+
+std::size_t AtHDFUnpacker::n_pads(std::string i_raw_event)
+{
+   std::string dataset_name = i_raw_event;
+   return n_entries(i_raw_event);
 }
 
 std::vector<int16_t> AtHDFUnpacker::pad_raw_data(std::size_t i_pad)

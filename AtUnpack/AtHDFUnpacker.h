@@ -59,6 +59,18 @@ protected:
    virtual void processPad(std::size_t padIndex);
    virtual std::size_t n_pads(std::string i_raw_event);
    virtual std::vector<int16_t> pad_raw_data(std::size_t i_pad);
+   
+   /**
+    * @brief Get the number entries in a group.
+    * 
+    * Has the side effect of setting the internal _dataset variable to 
+    * the dataset of the group.
+    * 
+    * @param datasetName Name of the dataset to check
+    * @param ind Index of the dataset that represents the number of channels (default is 0)
+    */
+   std::size_t n_entries(std::string datasetName, int ind = 0); /// Returns the number of entries in a group
+
    hid_t open_file(char const *file, IO_MODE mode);
    std::tuple<hid_t, hsize_t> open_group(hid_t fileId, char const *group);
    std::tuple<hid_t, std::vector<hsize_t>>
