@@ -121,6 +121,7 @@ endif()
 find_package2(PUBLIC CUDA)
 find_package2(PUBLIC HiRAEVT CONFIG)
 find_package2(PUBLIC GENFIT2)
+find_package2(PUBLIC CATIMA)
 
 find_package2(PUBLIC Eigen3 3.3 NO_MODULE)
 
@@ -223,6 +224,7 @@ install(FILES
   cmake/modules/FindPythia6.cmake
   cmake/modules/FindPythia8.cmake
   cmake/modules/FindROOT.cmake
+  cmake/modules/FindCATIMA.cmake
   DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}/modules)
 
 # Install our utility scripts for others if they want

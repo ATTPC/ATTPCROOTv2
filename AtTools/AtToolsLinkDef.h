@@ -19,6 +19,7 @@
 #pragma link C++ class AtTools::AtTrackTransformer - !;
 #pragma link C++ class AtTools::AtELossModel - !;
 #pragma link C++ class AtTools::AtELossTable - !;
+#pragma link C++ class AtTools::AtELossCATIMA - !;
 
 #pragma link C++ class AtSpaceChargeModel - !;
 #pragma link C++ class AtLineChargeModel - !;

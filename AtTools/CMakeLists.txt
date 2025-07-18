@@ -59,6 +59,15 @@ if(HiRAEVT_FOUND)
     )
 endif()
 
+if(CATIMA_FOUND)
+  set(SRCS ${SRCS}
+    AtELossCATIMA.cxx
+    )
+  set(DEPENDENCIES ${DEPENDENCIES}
+    CATIMA::catima
+    )
+endif()
+
 Set(INCLUDE_DIR
   ${CMAKE_SOURCE_DIR}/AtTools/AtHitSampling
   ${CMAKE_SOURCE_DIR}/AtTools/ElectronicResponse
@@ -68,6 +77,11 @@ Set(INCLUDE_DIR
 set(TEST_SRCS
   DataCleaning/AtkNNTest.cxx
 )
+if(CATIMA_FOUND)
+  set(TEST_SRCS ${TEST_SRCS}
+    AtELossCATIMATest.cxx
+    )
+endif()
 
 attpcroot_generate_tests(${LIBRARY_NAME}Tests
   SRCS ${TEST_SRCS}
