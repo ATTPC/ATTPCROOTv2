@@ -1,6 +1,9 @@
 #ifndef ATELOSSMODEL_H
 #define ATELOSSMODEL_H
 
+#include <utility>
+#include <vector>
+
 namespace AtTools {
 
 /**
@@ -53,6 +56,14 @@ public:
     * reach energyIni after distance.
     */
    virtual double GetEnergy(double energyIni, double distance) const = 0;
+
+   /**
+    * Get the Bragg curve for a given energy as a vector of (dE/dx, distance) pairs.
+    * @param[in] energy The kinetic energy of the particle for which the curve is being computed for.
+    * @param[in] rangeStepSize The step size for the distances the Bragg curve will be computed for in mm. Default value
+    * is 0.1mm.
+    */
+   virtual std::vector<std::pair<double, double>> GetBraggCurve(double energy, double rangeStepSize = 0.1) const;
 
 protected:
    void SetIniDensity(double density)

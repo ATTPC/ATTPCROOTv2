@@ -5,6 +5,7 @@
 #include "AtELossModel.h"
 
 #include <catima/catima.h>
+#include <memory>
 #include <tuple>
 #include <vector>
 
@@ -12,8 +13,8 @@ namespace AtTools {
 
 class AtELossCATIMA : public AtELossModel {
 protected:
-   catima::Material *fMaterial{nullptr};
-   catima::Projectile *fProjectile{nullptr};
+   std::unique_ptr<catima::Material> fMaterial{nullptr};
+   std::unique_ptr<catima::Projectile> fProjectile{nullptr};
 
    double fProjectileMassUma{-1};
 
@@ -44,7 +45,7 @@ public:
     */
    void SetProjectile(double A, double Z, double massUma)
    {
-      fProjectile = new catima::Projectile(A, Z);
+      fProjectile = std::make_unique<catima::Projectile>(A, Z);
       fProjectileMassUma = massUma;
    }
    /**

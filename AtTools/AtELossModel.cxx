@@ -16,4 +16,20 @@ void AtELossModel::SetDensity(double density)
    fdEdxScale = fDensity / fDensityIni;
 }
 
+std::vector<std::pair<double, double>> AtELossModel::GetBraggCurve(double energy, double rangeStepSize) const
+{
+   std::vector<std::pair<double, double>> braggCurve;
+
+   double remainingEnergy{energy};
+   double range{};
+   while (remainingEnergy > 0) {
+      remainingEnergy = GetEnergy(remainingEnergy, range);
+      double dEdx = GetdEdx(remainingEnergy);
+      braggCurve.push_back(std::make_pair(dEdx, range));
+      range += rangeStepSize;
+   }
+
+   return braggCurve;
+}
+
 } // namespace AtTools

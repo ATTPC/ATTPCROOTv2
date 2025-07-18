@@ -5,7 +5,7 @@
 AtTools::AtELossCATIMA::AtELossCATIMA(double density, std::vector<std::tuple<int, int, int>> materialComponents)
    : AtELossModel(density)
 {
-   fMaterial = new catima::Material();
+   fMaterial = std::make_unique<catima::Material>();
 
    for (auto materialComponent : materialComponents)
       fMaterial->add_element(std::get<0>(materialComponent), std::get<1>(materialComponent),

@@ -10,7 +10,7 @@ TEST(AtELossCATIMATest, LISE_Match)
 {
    // Create the vector with the gas components for H2.
    std::vector<std::tuple<int, int, int>> components;
-   components.push_back({1, 1, 1}); // (A, Z, stoichiometry)
+   components.push_back({1, 1, 2}); // (A, Z, stoichiometry)
 
    // Calculate the gas density for 600Torr H2 from LISE.
    double density = 6.5643e-5; // g/cm3
@@ -82,4 +82,11 @@ TEST(AtELossCATIMATest, LISE_Match)
       double ELoss = catimaModel.GetEnergyLoss(10, distance);
       EXPECT_TRUE(std::abs(ELoss - ELossLISE) / ELossLISE < 0.05);
    }
+
+   // Finally, for 4He, we test if GetRange works when setting a non-zero final energy.
+   double energyIni{10};
+   double energyFin{4.227};
+   double rangeLISE{500};
+   double range = catimaModel.GetRange(energyIni, energyFin);
+   EXPECT_TRUE(std::abs(range - rangeLISE) / rangeLISE < 0.05);
 }
