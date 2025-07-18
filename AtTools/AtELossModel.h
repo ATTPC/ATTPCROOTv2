@@ -63,7 +63,8 @@ public:
     * @param[in] rangeStepSize The step size for the distances the Bragg curve will be computed for in mm. Default value
     * is 0.1mm.
     */
-   virtual std::vector<std::pair<double, double>> GetBraggCurve(double energy, double rangeStepSize = 0.1) const;
+   virtual std::vector<std::pair<double, double>>
+   GetBraggCurve(double energy, double rangeStepSize = 0.1, double totalFractionELoss = 0.001) const;
 
 protected:
    void SetIniDensity(double density)

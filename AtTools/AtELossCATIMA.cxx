@@ -86,3 +86,30 @@ double AtTools::AtELossCATIMA::GetEnergy(double energyIni, double distance) cons
 
    return remainingEnergy;
 }
+
+std::vector<std::pair<double, double>>
+AtTools::AtELossCATIMA::GetBraggCurve(double energy, double rangeStepSize, double totalFractionELoss) const
+{
+   if (rangeStepSize == 0)
+      return GetBraggCurve(energy, fRangeStepSize, totalFractionELoss);
+
+   std::vector<std::pair<double, double>> braggCurve;
+
+   double remainingEnergy{energy};
+   double range{};
+   while (remainingEnergy / energy > totalFractionELoss) {
+
+      catima::Result result = catima::calculate(*fProjectile, *fMaterial, remainingEnergy / fProjectileMassUma);
+      double dEdx = result.dEdxi * fDensity;
+      braggCurve.push_back(std::make_pair(dEdx, range));
+
+      double DE = dEdx * rangeStepSize / 10.;
+      if (DE > remainingEnergy)
+         break;
+
+      remainingEnergy -= DE;
+      range += rangeStepSize;
+   }
+
+   return braggCurve;
+}

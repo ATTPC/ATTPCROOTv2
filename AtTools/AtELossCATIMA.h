@@ -37,6 +37,9 @@ public:
    }
    virtual double GetEnergy(double energyIni, double distance) const override;
 
+   virtual std::vector<std::pair<double, double>>
+   GetBraggCurve(double energy, double rangeStepSize = 0, double totalFractionELoss = 0.001) const override;
+
    /**
     * Setter of the catima projectile used for calculations.
     * @param[in] A Mass number of the projectile.
