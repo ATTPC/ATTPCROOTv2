@@ -5,8 +5,8 @@
  *								     *
  *********************************************************************/
 
-#ifndef ATFITTERTASK
-#define ATFITTERTASK
+#ifndef ATFITTERTASKOLD
+#define ATFITTERTASKOLD
 
 #include "AtFormat.h"
 #include "AtKinematics.h"
@@ -15,8 +15,9 @@
 #include <FairTask.h>
 
 #include <Rtypes.h>
-#include <TClonesArray.h>
 
+#include "EventDisplay.h"
+#include "Exception.h"
 #include "FairLogger.h"
 #include "FairRootManager.h"
 #include "FairRun.h"
@@ -38,23 +39,22 @@ namespace AtTools {
 class AtTrackTransformer;
 } // namespace AtTools
 namespace AtFITTER {
-class AtFitter;
+class AtFitterOld;
 } // namespace AtFITTER
+namespace genfit {
+class Track;
+} // namespace genfit
 
-class AtFitterTask : public FairTask {
+class [[deprecated]] AtFitterTaskOld : public FairTask {
 
 public:
-   AtFitterTask(std::unique_ptr<AtFITTER::AtFitter> fitter);
-   ~AtFitterTask() = default;
+   // AtFitterTask();
+   ~AtFitterTaskOld() = default;
+   AtFitterTaskOld(std::unique_ptr<AtFITTER::AtFitterOld> fitter);
 
    void SetInputBranch(TString branchName);
    void SetOutputBranch(TString branchName);
    void SetPersistence(Bool_t value = kTRUE);
-
-   void SetRawEventBranch(TString branchName);
-   void SetEventBranch(TString branchName);
-
-   void SetFitResultBranch(TString branchName);
 
    virtual InitStatus Init();
    virtual void SetParContainers();
@@ -66,25 +66,14 @@ private:
 
    Bool_t fIsPersistence; //!< Persistence check variable
 
-   std::unique_ptr<AtFITTER::AtFitter> fFitter;
+   std::unique_ptr<AtFITTER::AtFitterOld> fFitter;
    AtDigiPar *fPar{nullptr};
    TClonesArray *fPatternEventArray;
    TClonesArray fTrackingEventArray;
 
    std::size_t fEventCnt{0};
 
-   // Include the option to input AtRawEvent and AtEvent in case some specific AtFitter needs it.
-   TString fRawEventBranchName;
-   TString fEventBranchName;
-   TClonesArray *fRawEventArray;
-   TClonesArray *fEventArray;
-
-   // Include the option to store all the fit metadata in a AtFitResult branch.
-   TString fFitResultBranchName;
-   TClonesArray fFitResultArray;
-   bool fSaveFitResult{false};
-
-   ClassDef(AtFitterTask, 2);
+   ClassDef(AtFitterTaskOld, 1);
 };
 
 #endif

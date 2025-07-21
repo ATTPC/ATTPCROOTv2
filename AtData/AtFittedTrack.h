@@ -1,6 +1,8 @@
 #ifndef ATFITTEDTRACK_H
 #define ATFITTEDTRACK_H
 
+#include "AtFitTrackResult.h"
+
 #include <Math/Point3D.h>
 #include <Math/Point3Dfwd.h>
 #include <Math/Vector3D.h>
@@ -8,6 +10,7 @@
 #include <Rtypes.h>
 #include <TMath.h>
 #include <TObject.h>
+#include <TString.h>
 
 #include <algorithm>
 #include <iostream>
@@ -20,125 +23,129 @@ class TClass;
 class TMemberInspector;
 
 class AtFittedTrack : public TObject {
-
+public:
    using XYZVector = ROOT::Math::XYZVector;
+   using TrackResultPtr = std::unique_ptr<AtFitTrackResult>;
+
+   struct Kinematics {
+      Double_t kineticEnergy{-1};    // Kinetic energy
+      Double_t theta{-1};            // Theta scattering angle
+      Double_t phi{-1};              // Phi scattering angle
+      Double_t kineticEnergyXtr{-1}; // Extrapolated kinetic energy
+      Double_t thetaXtr{-1};         // Extrapolated theta scattering angle
+      Double_t phiXtr{-1};           // Extrapolated phi scattering angle
+   };
+
+   struct Statistics {
+      Double_t pValue{-1};    // Probability for rejecting the fit hypothesis
+      Double_t chi2{-1};      // Chi2 of the fit
+      Int_t NDF{-1};          // Number of degrees of freedom for the fit
+      Double_t redChi2{-1};   // Reduced chi2
+      Bool_t fitConverged{0}; // Whether or not the fit managed to converge
+   };
+
+   struct ParticleInfo {
+      TString idPDG{""}; // PDG code of the particle
+      Int_t charge{0};   // Charge of the particle
+      Double_t mass{-1}; // Mass of the particle
+   };
+
+   struct TrackProperties {
+      XYZVector initialPosition;         // Position of the first hit
+      XYZVector initialPositionXtr;      // Position of the point closest to (0,0)
+      Double_t extrapolatedDistance{-1}; // Distance initialPosition->initialPositionXtr along the pattern
+      Double_t distancePOCA{-1};         // Distance initialPositionXtr->(0,0)
+      Double_t trackLength{-1};          // Distance initialPosition->End of charge
+      Double_t trackLengthXtr{-1};       // Distance initialPositionXtr->End of charge
+      Double_t estimateTotalCharge{-1};  // Sum of the charge of all hits
+      Double_t estimateDeDx{-1};         // Sum of the charge of all hits divided by range
+      Int_t trackPoints{-1};             // Number of hits in the track
+   };
 
 private:
    Int_t fTrackID{-1}; //< Track ID from pattern recognition
 
-   Float_t fEnergy{0};
-   Float_t fTheta{0};
-   Float_t fPhi{0};
-   Float_t fEnergyPRA{0};
-   Float_t fThetaPRA{0};
-   Float_t fPhiPRA{0};
+   // Kinematic variables obtained by the fit.
+   std::vector<Kinematics> fKinematics;
 
-   Float_t fExcitationEnergy{0};
+   // Particle information.
+   std::vector<ParticleInfo> fParticleInfo;
 
-   XYZVector fInitialPos;    // xiniFitVec,yiniFitVec,ziniFitVec;
-   XYZVector fInitialPosPRA; // xiniPRAVec,yiniPRAVec,ziniPRAVec;
-   XYZVector fInitialPosXtr;
+   // Vertex where the particle has originated from.
+   std::vector<XYZVector> fVertex;
 
-   Float_t fIonChamberEnergy{0};
-   Int_t fIonChamberTime{0};
+   // Track properties.
+   TrackProperties fTrackProperties;
 
-   Float_t fEnergyXtr{0};
-   Float_t fExcitationEnergyXtr{0};
+   // Parameters regarding the statistics of the fit.
+   Statistics fStats;
 
-   Float_t fDistanceXtr{0};
-   Float_t fTrackLength{0};
-   Float_t fPOCAXtr{0};
-
-   Float_t fPValue{0};
-   Float_t fChi2{0};
-   Float_t fBChi2{0};
-   Float_t fNdf{0};
-   Float_t fBNdf{0};
-   Bool_t fFitConverged{0};
-
-   Int_t fCharge{0};
-   Float_t fBrho{0};
-   Float_t fELossADC{0};
-   Float_t fDEdxADC{0};
-   std::string fPDG{0};
-   Int_t fTrackPoints{0};
+   // Copy of the AtFitTrackResult object corresponding to the fit used for this track.
+   TrackResultPtr fTrackResult{nullptr};
 
 public:
    AtFittedTrack() = default;
    ~AtFittedTrack() = default;
 
-   inline void SetTrackID(Int_t trackid) { fTrackID = trackid; }
+   void SetTrackID(Int_t trackid) { fTrackID = trackid; }
 
-   inline void SetEnergyAngles(Float_t energy, Float_t energyxtr, Float_t theta, Float_t phi, Float_t energypra,
-                               Float_t thetapra, Float_t phipra)
+   void SetKinematics(int particleIdx, Double_t energy, Double_t theta, Double_t phi, Double_t energyxtr,
+                      Double_t thetaxtr, Double_t phixtr);
+   void SetParticleInfo(int particleIdx, std::string pdg, Int_t charge, Double_t mass);
+   void SetVertex(int particleIdx, XYZVector point);
+
+   void
+   SetKinematics(Double_t energy, Double_t theta, Double_t phi, Double_t energyxtr, Double_t thetaxtr, Double_t phixtr)
    {
-      fEnergy = energy;
-      fEnergyXtr = energyxtr;
-      fTheta = theta;
-      fPhi = phi;
-      fEnergyPRA = energypra;
-      fThetaPRA = thetapra;
-      fPhiPRA = phi;
+      SetKinematics(0, energy, theta, phi, energyxtr, thetaxtr, phixtr);
    }
 
-   inline void SetVertexPosition(XYZVector inipos, XYZVector iniposPRA, XYZVector iniposxtr)
+   void SetParticleInfo(std::string pdg, Int_t charge, Double_t mass) { SetParticleInfo(0, pdg, charge, mass); }
+
+   void SetVertex(XYZVector point) { SetVertex(0, point); }
+
+   void SetTrackProperties(XYZVector initialPosition, XYZVector initialPositionXtr, Double_t extrapolatedDistance,
+                           Double_t distancePOCA, Double_t trackLength, Double_t trackLengthXtr,
+                           Double_t estimateTotalCharge, Int_t trackPoints)
    {
-      fInitialPos = inipos;
-      fInitialPosPRA = iniposPRA;
-      fInitialPosXtr = iniposxtr;
+      fTrackProperties.initialPosition = initialPosition;
+      fTrackProperties.initialPositionXtr = initialPositionXtr;
+      fTrackProperties.extrapolatedDistance = extrapolatedDistance;
+      fTrackProperties.distancePOCA = distancePOCA;
+      fTrackProperties.trackLength = trackLength;
+      fTrackProperties.trackLengthXtr = trackLengthXtr;
+      fTrackProperties.estimateTotalCharge = estimateTotalCharge;
+      fTrackProperties.estimateDeDx = estimateTotalCharge / trackLengthXtr;
+      fTrackProperties.trackPoints = trackPoints;
    }
 
-   inline void SetStats(Float_t pvalue, Float_t chi2, Float_t bchi2, Float_t ndf, Float_t bndf, Bool_t conv)
+   void SetStats(Double_t pvalue, Double_t chi2, Int_t ndf, Bool_t conv)
    {
-      fPValue = pvalue;
-      fChi2 = chi2;
-      fBChi2 = bchi2;
-      fNdf = ndf;
-      fBNdf = bndf;
-      fFitConverged = conv;
+      fStats.pValue = pvalue;
+      fStats.chi2 = chi2;
+      fStats.NDF = ndf;
+      fStats.redChi2 = chi2 / ndf;
+      fStats.fitConverged = conv;
    }
 
-   inline void
-   SetTrackProperties(Int_t charge, Float_t brho, Float_t eloss, Float_t dedx, std::string pdg, Int_t points)
-   {
-      fCharge = charge;
-      fBrho = brho;
-      fELossADC = eloss;
-      fDEdxADC = dedx;
-      fPDG = pdg;
-      fTrackPoints = points;
-   }
-
-   inline void SetIonChamber(Float_t icenergy, Int_t ictime)
-   {
-      fIonChamberEnergy = icenergy;
-      fIonChamberTime = ictime;
-   }
-
-   inline void SetExcitationEnergy(Float_t exenergy, Float_t exenergyxtr)
-   {
-      fExcitationEnergy = exenergy;
-      fExcitationEnergyXtr = exenergyxtr;
-   }
-
-   inline void SetDistances(Float_t distancextr, Float_t length, Float_t poca)
-   {
-      fDistanceXtr = distancextr;
-      fTrackLength = length;
-      fPOCAXtr = poca;
-   }
+   void SetTrackResult(TrackResultPtr trackResult) { fTrackResult = std::move(trackResult); }
 
    const Int_t GetTrackID() { return fTrackID; }
 
-   const std::tuple<Float_t, Float_t, Float_t, Float_t, Float_t, Float_t, Float_t> GetEnergyAngles();
-   const std::tuple<XYZVector, XYZVector, XYZVector> GetVertices();
-   const std::tuple<Float_t, Float_t, Float_t, Float_t, Float_t, Bool_t> GetStats();
-   const std::tuple<Int_t, Float_t, Float_t, Float_t, std::string, Int_t> GetTrackProperties();
-   const std::tuple<Float_t, Float_t> GetIonChamber();
-   const std::tuple<Float_t, Float_t> GetExcitationEnergy();
-   const std::tuple<Float_t, Float_t, Float_t> GetDistances();
+   const Kinematics GetKinematics(int particleIdx) { return fKinematics[particleIdx]; }
+   const ParticleInfo GetParticleInfo(int particleIdx) { return fParticleInfo[particleIdx]; }
+   const XYZVector GetVertex(int particleIdx) { return fVertex[particleIdx]; }
 
-   ClassDef(AtFittedTrack, 1);
+   const Kinematics GetKinematics() { return fKinematics[0]; }
+   const ParticleInfo GetParticleInfo() { return fParticleInfo[0]; }
+   const XYZVector GetVertex() { return fVertex[0]; }
+
+   const TrackProperties GetTrackProperties() { return fTrackProperties; }
+   const Statistics GetStats() { return fStats; }
+
+   TrackResultPtr &GetTrackResult() { return fTrackResult; }
+
+   ClassDef(AtFittedTrack, 2);
 };
 
 #endif

@@ -41,7 +41,6 @@ set(SRCS
   AtProtoQuadrant.cxx
   AtTrack.cxx
   AtContainerManip.cxx
-  AtMCResult.cxx
   AtFissionEvent.cxx
   
 
@@ -55,7 +54,16 @@ set(SRCS
   AtPattern/AtPadPlaneElement.cxx
 
   AtFittedTrack.cxx
-  
+  AtFitResult.cxx
+  AtFitTrackResult.cxx
+  AtMCResult.cxx
+
+
+  # Deprecated things to be removed eventually.
+  AtTrackingEventOld.cxx
+  AtFittedTrackOld.cxx
+  AtMCResultOld.cxx
+
   )
 
 set(TEST_SRCS
