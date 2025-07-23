@@ -125,6 +125,44 @@ find_package2(PUBLIC CATIMA)
 
 find_package2(PUBLIC Eigen3 3.3 NO_MODULE)
 
+# If catima was not found, then download and build it locally
+if(NOT CATIMA_FOUND)
+  message(STATUS "CATIMA not found, downloading and building locally")
+  FetchContent_Declare(catima
+    GIT_REPOSITORY https://github.com/hrosiak/catima.git
+    GIT_TAG master)
+  
+  # Set CATIMA build options before making it available
+  set(TESTS OFF CACHE BOOL "Disable CATIMA tests" FORCE)
+  set(EXAMPLES OFF CACHE BOOL "Disable CATIMA examples" FORCE)
+  set(APPS OFF CACHE BOOL "Disable CATIMA applications" FORCE)
+  set(GENERATE_DATA OFF CACHE BOOL "Disable CATIMA data generator" FORCE)
+  
+  FetchContent_MakeAvailable(catima)
+
+  # Suppress shadow warnings for CATIMA target
+  if(TARGET catima)
+    get_target_property(catima_compile_options catima COMPILE_OPTIONS)
+    if(catima_compile_options)
+      list(REMOVE_ITEM catima_compile_options "-Wshadow")
+    endif()
+    target_compile_options(catima PRIVATE 
+      $<$<OR:$<CXX_COMPILER_ID:GNU>,$<CXX_COMPILER_ID:Clang>>:-Wno-shadow>
+    )
+  endif()
+  
+  # Create an alias to match the expected target name
+  if(TARGET catima AND NOT TARGET CATIMA::catima)
+    add_library(CATIMA::catima ALIAS catima)
+  endif()
+  
+  # Set CATIMA_FOUND to true so other parts of the project know it's available
+  set(CATIMA_FOUND TRUE)
+  
+  message(STATUS "CATIMA built locally and available as catima::catima target")
+endif()
+
+
 if(TARGET Eigen3::Eigen)
   message("Found Eigen, grabbing OpenKF")
 
