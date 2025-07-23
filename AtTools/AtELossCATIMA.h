@@ -27,6 +27,7 @@ public:
     * @param[in] materialComponents Components of the material. They are passed as a vector of tuples (A, Z,
     * stoichiometry).
     */
+   AtELossCATIMA(double density) : AtELossModel(density) {}
    AtELossCATIMA(double density, std::vector<std::tuple<int, int, int>> materialComponents);
    AtELossCATIMA(double density, const catima::Material &material)
       : AtELossModel(density), fMaterial(std::make_unique<catima::Material>(material))
@@ -40,6 +41,10 @@ public:
       return energyIni - GetEnergy(energyIni, distance);
    }
    virtual double GetEnergy(double energyIni, double distance) const override;
+
+   virtual double GetRangeVariance(double energy) const override;
+   virtual double GetElossVariance(double energyIni, double energyFin) const override;
+   virtual double GetdEdxVariance(double energyIni, double energyFin) const override;
 
    virtual std::vector<std::pair<double, double>>
    GetBraggCurve(double energy, double rangeStepSize = 0, double totalFractionELoss = 0.001) const override;

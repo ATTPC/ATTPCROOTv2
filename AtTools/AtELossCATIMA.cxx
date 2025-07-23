@@ -83,6 +83,30 @@ double AtELossCATIMA::GetEnergy(double energyIni, double distance) const
 
    return remainingEnergy;
 }
+double AtELossCATIMA::GetRangeVariance(double energy) const
+{
+   if (fProjectile == nullptr || fMaterial == nullptr) {
+      LOG(error) << "Projectile or material not set. Range variance is 0.";
+      return 0;
+   }
+   auto range_var =
+      catima::range_variance(*fProjectile, energy / fProjectileMassAmu, *fMaterial); // range var in (g/cm^2)^2
+   LOG(debug) << "Range variance in (g/cm^2)^2: " << range_var << " for energy: " << energy / fProjectileMassAmu
+              << " MeV/u";
+   range_var /= fDensity * fDensity; // convert to (cm)^2
+   LOG(debug) << "Range variance in (cm)^2: " << range_var << " for energy: " << energy / fProjectileMassAmu
+              << " MeV/u";
+   return range_var * 100; // convert to mm^2
+}
+
+double AtELossCATIMA::GetElossVariance(double energyIni, double energyFin) const
+{
+   return 0;
+}
+double AtELossCATIMA::GetdEdxVariance(double energyIni, double energyFin) const
+{
+   return 0;
+}
 
 std::vector<std::pair<double, double>>
 AtELossCATIMA::GetBraggCurve(double energy, double rangeStepSize, double totalFractionELoss) const

@@ -1,10 +1,49 @@
 #include "AtELossCATIMA.h"
 
+#include <catima/structures.h>
 #include <cmath>
 #include <gtest/gtest.h>
 #include <tuple>
 #include <utility>
 #include <vector>
+
+/**
+ * Test fixture for the AtELossCATIMA class that initializes a H2 gas w/ proton model.
+ */
+class AtELossCATIMATestFixture : public ::testing::Test {
+protected:
+   AtTools::AtELossCATIMA catimaModel;
+
+   AtELossCATIMATestFixture() : catimaModel(6.5643e-5)
+   {
+      // Initialize the CATIMA model with H2 gas density and components and set projectile to proton.
+      catimaModel.SetMaterial(catima::Material(1, 1)); // Set material to H2
+      catimaModel.SetProjectile(1, 1, 1.007825031898); // Set projectile to proton
+   }
+};
+
+TEST_F(AtELossCATIMATestFixture, ConstructCATIMAModel)
+{
+   // Basic check: ensure model is constructed and can compute range
+   double range = catimaModel.GetRange(1.0); // 1 MeV
+   EXPECT_GT(range, 0.0);
+}
+
+TEST_F(AtELossCATIMATestFixture, TestRangeStraggling)
+{
+   // Check dEdx for a known energy
+   double range_var = catimaModel.GetRangeVariance(1.0); // 1 MeV
+   double expected = 1.99;                               // Expected value from LISE for H2 at 1 MeV
+   ASSERT_NEAR(range_var, expected * expected, 0.2 * expected * expected);
+
+   double range_straggling = catimaModel.GetRangeStraggling(1.0); // 1 MeV
+   ASSERT_NEAR(range_straggling, expected, 0.1 * expected);
+
+   // Check straggling at 10 MeV
+   range_straggling = catimaModel.GetRangeStraggling(10.0); // 10 MeV
+   expected = 95.933;                                       // mm
+   ASSERT_NEAR(range_straggling, expected, 0.1 * expected);
+}
 
 TEST(AtELossCATIMATest, LISE_Match)
 {

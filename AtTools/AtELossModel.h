@@ -78,9 +78,27 @@ public:
     * @param energyIni The initial kinetic energy of the particle in MeV.
     * @param energyFin The final kinetic energy of the particle in MeV.
     *
-    * @return The energy loss straggling in MeV.
+    * @return The energy loss straggling variance in Me^2.
     */
-   virtual double GetEnergyLossStraggling(double energyIni, double energyFin) const { return 0; };
+   virtual double GetElossVariance(double energyIni, double energyFin) const = 0;
+   virtual double GetElossStraggling(double energyIni, double energyFin) const
+   {
+      return std::sqrt(GetElossVariance(energyIni, energyFin));
+   }
+
+   /**
+    * @brief Get the straggling in dE/dx for a particle between two energies.
+    * @param energyIni The initial kinetic energy of the particle in MeV.
+    * @param energyFin The final kinetic energy of the particle in MeV.
+    *
+    * Assumes the the dE/dx is constant over the range from energyIni to energyFin.
+    * @return The straggling in dE/dx (variance) in (MeV/mm)^2.
+    */
+   virtual double GetdEdxVariance(double energyIni, double energyFin) const = 0;
+   virtual double GetdEdxStraggling(double energyIni, double energyFin) const
+   {
+      return std::sqrt(GetdEdxVariance(energyIni, energyFin));
+   }
 
    /**
     * Get the Bragg curve for a given energy as a vector of (dE/dx, distance) pairs.

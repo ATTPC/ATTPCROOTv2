@@ -76,6 +76,23 @@ double AtELossTable::GetEnergy(double energyIni, double distance) const
    return -1;
 }
 
+double AtELossTable::GetRangeVariance(double energy) const
+{
+   LOG(error) << "GetRangeVariance not implemented for AtELossTable";
+   return 0;
+}
+
+double AtELossTable::GetElossVariance(double energyIni, double energyFin) const
+{
+   LOG(error) << "GetElossVariance not implemented for AtELossTable";
+   return 0;
+}
+double AtELossTable::GetdEdxVariance(double energyIni, double energyFin) const
+{
+   LOG(error) << "GetdEdxVariance not implemented for AtELossTable";
+   return 0;
+}
+
 double AtELossTable::GetEnergyOld(double energyIni, double distance) const
 {
    if (distance == 0)
