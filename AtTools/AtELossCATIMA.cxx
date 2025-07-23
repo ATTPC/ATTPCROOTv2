@@ -1,18 +1,15 @@
 #include "AtELossCATIMA.h"
 
 #include <FairLogger.h>
+namespace AtTools {
 
-AtTools::AtELossCATIMA::AtELossCATIMA(double density, std::vector<std::tuple<int, int, int>> materialComponents)
+AtELossCATIMA::AtELossCATIMA(double density, std::vector<std::tuple<int, int, int>> materialComponents)
    : AtELossModel(density)
 {
-   fMaterial = std::make_unique<catima::Material>();
-
-   for (auto materialComponent : materialComponents)
-      fMaterial->add_element(std::get<0>(materialComponent), std::get<1>(materialComponent),
-                             std::get<2>(materialComponent));
+   SetMaterial(materialComponents);
 }
 
-double AtTools::AtELossCATIMA::GetdEdx(double energy) const
+double AtELossCATIMA::GetdEdx(double energy) const
 {
    if (fProjectile == nullptr) {
       LOG(warning)
@@ -20,18 +17,18 @@ double AtTools::AtELossCATIMA::GetdEdx(double energy) const
       return 0;
    }
 
-   if (fProjectileMassUma <= 0) {
+   if (fProjectileMassAmu <= 0) {
       LOG(error) << " Error in AtTools::AtELossCATIMA::GetdEdx : The projectile's mass in umas can not be <= 0! "
                     "GetdEdx will return 0!";
       return 0;
    }
 
-   catima::Result result = catima::calculate(*fProjectile, *fMaterial, energy / fProjectileMassUma);
+   catima::Result result = catima::calculate(*fProjectile, *fMaterial, energy / fProjectileMassAmu);
    double dEdx = result.dEdxi * fDensity;
    return dEdx;
 }
 
-double AtTools::AtELossCATIMA::GetRange(double energyIni, double energyFin) const
+double AtELossCATIMA::GetRange(double energyIni, double energyFin) const
 {
    if (energyFin < 0) {
       LOG(warning) << " Warning in AtTools::AtELossCATIMA::GetRange : The final energy was set to a negative value! "
@@ -40,14 +37,14 @@ double AtTools::AtELossCATIMA::GetRange(double energyIni, double energyFin) cons
    }
 
    if (energyFin == 0) {
-      fProjectile->T = energyIni / fProjectileMassUma;
+      fProjectile->T = energyIni / fProjectileMassAmu;
       return catima::range(*fProjectile, *fMaterial) / fDensity * 10.;
    }
 
    double remainingEnergy{energyIni};
    double range{0};
    while (remainingEnergy > energyFin) {
-      catima::Result result = catima::calculate(*fProjectile, *fMaterial, remainingEnergy / fProjectileMassUma);
+      catima::Result result = catima::calculate(*fProjectile, *fMaterial, remainingEnergy / fProjectileMassAmu);
       double dEdx = result.dEdxi * fDensity;
       double DE = dEdx * fRangeStepSize / 10.;
 
@@ -63,12 +60,12 @@ double AtTools::AtELossCATIMA::GetRange(double energyIni, double energyFin) cons
    return range;
 }
 
-double AtTools::AtELossCATIMA::GetEnergy(double energyIni, double distance) const
+double AtELossCATIMA::GetEnergy(double energyIni, double distance) const
 {
    double remainingEnergy{energyIni};
    double range{0};
    while (range < distance) {
-      catima::Result result = catima::calculate(*fProjectile, *fMaterial, remainingEnergy / fProjectileMassUma);
+      catima::Result result = catima::calculate(*fProjectile, *fMaterial, remainingEnergy / fProjectileMassAmu);
       double dEdx = result.dEdxi * fDensity;
       double DE{};
 
@@ -88,7 +85,7 @@ double AtTools::AtELossCATIMA::GetEnergy(double energyIni, double distance) cons
 }
 
 std::vector<std::pair<double, double>>
-AtTools::AtELossCATIMA::GetBraggCurve(double energy, double rangeStepSize, double totalFractionELoss) const
+AtELossCATIMA::GetBraggCurve(double energy, double rangeStepSize, double totalFractionELoss) const
 {
    if (rangeStepSize == 0)
       return GetBraggCurve(energy, fRangeStepSize, totalFractionELoss);
@@ -99,7 +96,7 @@ AtTools::AtELossCATIMA::GetBraggCurve(double energy, double rangeStepSize, doubl
    double range{};
    while (remainingEnergy / energy > totalFractionELoss) {
 
-      catima::Result result = catima::calculate(*fProjectile, *fMaterial, remainingEnergy / fProjectileMassUma);
+      catima::Result result = catima::calculate(*fProjectile, *fMaterial, remainingEnergy / fProjectileMassAmu);
       double dEdx = result.dEdxi * fDensity;
       braggCurve.push_back(std::make_pair(dEdx, range));
 
@@ -113,3 +110,14 @@ AtTools::AtELossCATIMA::GetBraggCurve(double energy, double rangeStepSize, doubl
 
    return braggCurve;
 }
+
+void AtELossCATIMA::SetMaterial(std::vector<std::tuple<int, int, int>> materialComponents)
+{
+   fMaterial = std::make_unique<catima::Material>();
+   for (const auto &materialComponent : materialComponents) {
+      fMaterial->add_element(std::get<0>(materialComponent), std::get<1>(materialComponent),
+                             std::get<2>(materialComponent));
+   }
+}
+
+} // namespace AtTools

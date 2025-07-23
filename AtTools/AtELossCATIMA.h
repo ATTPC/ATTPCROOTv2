@@ -16,18 +16,22 @@ protected:
    std::unique_ptr<catima::Material> fMaterial{nullptr};
    std::unique_ptr<catima::Projectile> fProjectile{nullptr};
 
-   double fProjectileMassUma{-1};
+   double fProjectileMassAmu{-1}; /// Mass of the projectile in amu (atomic mass units).
 
    double fRangeStepSize{0.1}; // mm
 
 public:
    /**
     * Initializer of the CATIMA AtELossModel wrapper.
-    * @param[in] density Density of the material.
+    * @param[in] density Density of the material (g/cm^2).
     * @param[in] materialComponents Components of the material. They are passed as a vector of tuples (A, Z,
     * stoichiometry).
     */
    AtELossCATIMA(double density, std::vector<std::tuple<int, int, int>> materialComponents);
+   AtELossCATIMA(double density, const catima::Material &material)
+      : AtELossModel(density), fMaterial(std::make_unique<catima::Material>(material))
+   {
+   }
 
    virtual double GetdEdx(double energy) const override;
    virtual double GetRange(double energyIni, double energyFin = 0) const override;
@@ -44,13 +48,16 @@ public:
     * Setter of the catima projectile used for calculations.
     * @param[in] A Mass number of the projectile.
     * @param[in] Z Charge number of the projectile.
-    * @param[in] massUma Mass of the projectile in umas.
+    * @param[in] massAmu Mass of the projectile in amu.
     */
-   void SetProjectile(double A, double Z, double massUma)
+   void SetProjectile(double A, double Z, double massAmu)
    {
       fProjectile = std::make_unique<catima::Projectile>(A, Z);
-      fProjectileMassUma = massUma;
+      fProjectileMassAmu = massAmu;
    }
+   void SetMaterial(const catima::Material &material) { fMaterial = std::make_unique<catima::Material>(material); }
+   void SetMaterial(std::vector<std::tuple<int, int, int>> materialComponents);
+
    /**
     * Setter of the range step size used for calculations. By default it is set to 0.1mm.
     * @param[in] stepSize The step size used for ranges. It must be input in mm.
