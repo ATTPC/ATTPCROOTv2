@@ -74,17 +74,25 @@ public:
    virtual double GetRangeVariance(double energy) const { return 0; };
 
    /**
+    * @brief Get the energy loss straggling for a particle over some distance.
+    * @param energyIni The initial kinetic energy of the particle in MeV.
+    * @param distance The distance traveled by the particle in mm.
+    * @return The energy loss  variance in MeV^2.
+    */
+   virtual double GetElossStragglingDistance(double energyIni, double distance) const
+   {
+      double energyFin = GetEnergy(energyIni, distance);
+      return GetElossStraggling(energyIni, energyFin);
+   }
+
+   /**
     * @brief Get the energy loss straggling for a particle between two energies.
     * @param energyIni The initial kinetic energy of the particle in MeV.
     * @param energyFin The final kinetic energy of the particle in MeV.
     *
-    * @return The energy loss straggling variance in Me^2.
+    * @return The energy loss straggling in MeV.
     */
-   virtual double GetElossVariance(double energyIni, double energyFin) const = 0;
-   virtual double GetElossStraggling(double energyIni, double energyFin) const
-   {
-      return std::sqrt(GetElossVariance(energyIni, energyFin));
-   }
+   virtual double GetElossStraggling(double energyIni, double energyFin) const = 0;
 
    /**
     * @brief Get the straggling in dE/dx for a particle between two energies.
@@ -92,14 +100,9 @@ public:
     * @param energyFin The final kinetic energy of the particle in MeV.
     *
     * Assumes the the dE/dx is constant over the range from energyIni to energyFin.
-    * @return The straggling in dE/dx (variance) in (MeV/mm)^2.
+    * @return The straggling in dE/dx in MeV/mm.
     */
-   virtual double GetdEdxVariance(double energyIni, double energyFin) const = 0;
-   virtual double GetdEdxStraggling(double energyIni, double energyFin) const
-   {
-      return std::sqrt(GetdEdxVariance(energyIni, energyFin));
-   }
-
+   virtual double GetdEdxStraggling(double energyIni, double energyFin) const = 0;
    /**
     * Get the Bragg curve for a given energy as a vector of (dE/dx, distance) pairs.
     * @param[in] energy The kinetic energy of the particle for which the curve is being computed for.

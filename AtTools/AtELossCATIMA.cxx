@@ -24,8 +24,8 @@ double AtELossCATIMA::GetdEdx(double energy) const
    }
 
    catima::Result result = catima::calculate(*fProjectile, *fMaterial, energy / fProjectileMassAmu);
-   double dEdx = result.dEdxi * fDensity;
-   return dEdx;
+   double dEdx = result.dEdxi * fDensity; // MeV/cm
+   return dEdx / 10.0;                    // convert to MeV/mm
 }
 
 double AtELossCATIMA::GetRange(double energyIni, double energyFin) const
@@ -99,13 +99,35 @@ double AtELossCATIMA::GetRangeVariance(double energy) const
    return range_var * 100; // convert to mm^2
 }
 
-double AtELossCATIMA::GetElossVariance(double energyIni, double energyFin) const
+double AtELossCATIMA::GetElossStraggling(double energyIni, double energyFin) const
 {
-   return 0;
+   if (fProjectile == nullptr || fMaterial == nullptr) {
+      LOG(error) << "Projectile or material not set.";
+      return 0;
+   }
+   if (energyFin > energyIni) {
+      LOG(error) << "Final energy must be less than initial energy!";
+      return 0;
+   }
+   auto energy_strag = catima::energy_straggling_from_E(*fProjectile, energyIni / fProjectileMassAmu,
+                                                        energyFin / fProjectileMassAmu, *fMaterial);
+   return energy_strag;
 }
-double AtELossCATIMA::GetdEdxVariance(double energyIni, double energyFin) const
+double AtELossCATIMA::GetdEdxStraggling(double energyIni, double energyFin) const
 {
-   return 0;
+   if (fProjectile == nullptr || fMaterial == nullptr) {
+      LOG(error) << "Projectile or material not set. dEdx straggling is 0.";
+      return 0;
+   }
+   auto dedx_min = GetdEdx(energyIni);
+   auto dedx_max = GetdEdx(energyFin);
+   if (std::abs(dedx_min - dedx_max) / dedx_min > 0.01) {
+      LOG(warning) << "From " << energyIni << " to " << energyFin
+                   << " MeV the dEdx is not constant. dEdx straggling calculation is unreliable.";
+   }
+   auto dE_st = GetElossStraggling(energyIni, energyFin);
+   auto factor = dE_st / (energyIni - energyFin);
+   return factor * dedx_min;
 }
 
 std::vector<std::pair<double, double>>

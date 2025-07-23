@@ -82,14 +82,14 @@ double AtELossTable::GetRangeVariance(double energy) const
    return 0;
 }
 
-double AtELossTable::GetElossVariance(double energyIni, double energyFin) const
+double AtELossTable::GetElossStraggling(double energyIni, double energyFin) const
 {
-   LOG(error) << "GetElossVariance not implemented for AtELossTable";
+   LOG(error) << "GetElossStraggling not implemented for AtELossTable";
    return 0;
 }
-double AtELossTable::GetdEdxVariance(double energyIni, double energyFin) const
+double AtELossTable::GetdEdxStraggling(double energyIni, double energyFin) const
 {
-   LOG(error) << "GetdEdxVariance not implemented for AtELossTable";
+   LOG(error) << "GetdEdxStraggling not implemented for AtELossTable";
    return 0;
 }
 
