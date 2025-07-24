@@ -47,6 +47,11 @@ TEST_F(AtELossCATIMATestFixture, TestRangeStraggling)
    range_straggling = model.GetRangeStraggling(10.0); // 10 MeV
    expected = 95.933;                                 // mm
    ASSERT_NEAR(range_straggling, expected, 0.1 * expected);
+
+   model.SetDensity(4e-5);
+   range_straggling = model.GetRangeStraggling(1.0); // 1 MeV
+   expected = 3.27;                                  // mm
+   ASSERT_NEAR(range_straggling, expected, 0.1 * expected);
 }
 
 TEST_F(AtELossCATIMATestFixture, TestEnergyLossStraggling)
