@@ -8,6 +8,7 @@ on: [push, pull_request]
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: RELWITHDEBINFO
+  
 
 jobs:
   build:
@@ -16,7 +17,6 @@ jobs:
     # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
     runs-on: ubuntu-latest
     container: anthoak13/attpcroot-deps
-
     steps:
     - uses: actions/checkout@v4
 
@@ -33,5 +33,6 @@ jobs:
       # working-directory: ${{github.workspace}}/build
       # Execute tests defined by the CMake configuration.
       # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
-      run: cd ${{github.workspace}}/build && ctest
+      run: cd ${{github.workspace}}/build && source config.sh && ctest
+      shell: bash
 
