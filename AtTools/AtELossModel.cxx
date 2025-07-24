@@ -9,9 +9,6 @@ namespace AtTools {
  */
 void AtELossModel::SetDensity(double density)
 {
-   if (fDensityIni == 0)
-      throw std::invalid_argument("Cannot set the density if the density of in model is not known");
-
    fDensity = density;
 }
 

@@ -51,6 +51,8 @@ TEST_F(AtELossTableTestFixture, TestRange)
 TEST_F(AtELossTableTestFixture, TestRangeStraggling)
 {
    // Check range straggling for known energies
+   // tableModel.SetDensity(4.1906E-05);
+
    double range_var = tableModel.GetRangeVariance(1.0); // 1 MeV
    double expected = 5.58;                              // Expected value from SRIM table (LISE is different)
    ASSERT_NEAR(range_var, expected * expected, 0.2 * expected * expected);

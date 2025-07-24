@@ -19,18 +19,13 @@ namespace AtTools {
 class AtELossModel {
 protected:
    /**
-    *  Density of the target in mg/cm^3 if known (used to scale E-loss over different ranges).
-    *  This is the density used in the internal model (set on construction).
-    */
-   double fDensityIni;
-   /**
-    *  Density of the target in mg/cm^3 we are calcualting energy losses for. Energy loss is scaled
+    *  Density of the target in g/cm^3 we are calcualting energy losses for. Energy loss is scaled
     *  using this value and fDensityIni.
     */
    double fDensity;
 
 public:
-   AtELossModel(double density) : fDensityIni(density), fDensity(fDensityIni){};
+   AtELossModel(double density) : fDensity(density){};
    virtual ~AtELossModel() = default;
 
    virtual void SetDensity(double density);
@@ -111,13 +106,6 @@ public:
     */
    virtual std::vector<std::pair<double, double>>
    GetBraggCurve(double energy, double rangeStepSize = 0.1, double totalFractionELoss = 0.001) const;
-
-protected:
-   void SetIniDensity(double density)
-   {
-      fDensityIni = density;
-      fDensity = density;
-   }
 };
 } // namespace AtTools
 

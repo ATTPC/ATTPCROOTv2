@@ -12,16 +12,21 @@ namespace AtTools {
 
 void AtELossTable::SetDensity(double density)
 {
+   if (fDensity == 0)
+      throw std::invalid_argument("Cannot set the density of a E loss table if the current density is not known");
+
+   auto fDensityIni = fDensity; // store initial density
    AtELossModel::SetDensity(density);
-   LOG(info) << "Scaling energy loss table to " << density << " g/cm^3";
+   LOG(info) << "Scaling energy loss table to " << density << " g/cm^3 from " << fDensity << " g/cm^3";
    auto x = fdXdE.get_x();
    auto y = fdXdE.get_y();
    auto r_var = fRangeVariance.get_y();
-   auto fScaling = density / fDensity;
+   auto fScaling = density / fDensityIni;
    for (auto &elem : y) {
       elem = fScaling / elem; // scale dx/de by the density
    }
    for (auto &elem : r_var) {
+      LOG(info) << "Scaling range variance by " << fScaling * fScaling;
       elem = elem / (fScaling * fScaling); // scale range variance by the density
    }
    LoadTable(x, y);
@@ -181,7 +186,7 @@ void AtELossTable::LoadSrimTable(std::string fileName)
       // If this is the densityt line, grab it and continue
       if (tokens[0] == "Target" && tokens[1] == "Density") {
          LOG(info) << "Setting target density to: " << tokens[3] << " g/cm^3";
-         SetIniDensity(std::stod(tokens[3]));
+         fDensity = std::stod(tokens[3]);
          continue;
       }
 
@@ -231,7 +236,7 @@ void AtELossTable::LoadLiseTable(std::string fileName, double mass, double densi
 
    std::vector<double> energy;
    std::vector<double> dEdX;
-   SetIniDensity(fabs(density));
+   fDensity = (fabs(density));
 
    while (!file.eof()) {
       // Get the current line
