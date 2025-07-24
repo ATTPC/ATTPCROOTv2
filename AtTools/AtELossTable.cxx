@@ -10,6 +10,24 @@
 
 namespace AtTools {
 
+void AtELossTable::SetDensity(double density)
+{
+   AtELossModel::SetDensity(density);
+   LOG(info) << "Scaling energy loss table to " << density << " g/cm^3";
+   auto x = fdXdE.get_x();
+   auto y = fdXdE.get_y();
+   auto r_var = fRangeVariance.get_y();
+   auto fScaling = density / fDensity;
+   for (auto &elem : y) {
+      elem = fScaling / elem; // scale dx/de by the density
+   }
+   for (auto &elem : r_var) {
+      elem = elem / (fScaling * fScaling); // scale range variance by the density
+   }
+   LoadTable(x, y);
+   LoadRangeVariance(x, r_var);
+}
+
 void AtELossTable::LoadTable(const std::vector<double> &energy, const std::vector<double> &dEdX)
 {
 
@@ -33,7 +51,7 @@ AtELossTable::AtELossTable(const std::vector<double> &energy, const std::vector<
 double AtELossTable::GetdEdx(double energy) const
 {
    double dedx = 1 / fdXdE(energy);
-   return dedx * fdEdxScale;
+   return dedx;
 }
 
 double AtELossTable::GetRange(double energyIni, double energyFin) const
@@ -62,13 +80,17 @@ double AtELossTable::GetEnergy(double energyIni, double distance) const
 
       double range = GetRange(energyIni, guessEnergy);
       if (fabs(range - distance) < fDistErr) {
-         LOG(debug) << "Energy converged in " << i + 1 << " iterations.";
+         LOG(info) << "Energy converged in " << i + 1 << " iterations.";
          return guessEnergy;
       }
       LOG(debug) << "guessE: " << guessEnergy << " d: " << distance << " R: " << range
                  << " dEdX: " << GetdEdx(guessEnergy) << " dEnergy: " << GetdEdx(guessEnergy) * (distance - range);
       // Update guess energy using what is essentially Newton's method
       guessEnergy += GetdEdx(guessEnergy) * (range - distance);
+      if (guessEnergy < fdXdE.get_x_min() * 1.01) {
+         guessEnergy = fdXdE.get_x_min();
+         return guessEnergy;
+      }
    }
 
    LOG(error) << "Energy calculation (" << energyIni << " MeV through " << distance << " mm) failed to converge in "
@@ -78,19 +100,24 @@ double AtELossTable::GetEnergy(double energyIni, double distance) const
 
 double AtELossTable::GetRangeVariance(double energy) const
 {
-   LOG(error) << "GetRangeVariance not implemented for AtELossTable";
-   return 0;
+   if (fRangeVariance.get_size() == 0 || fRangeVariance.get_x_min() > energy || fRangeVariance.get_x_max() < energy) {
+      LOG(error) << "Energy " << energy << " MeV is out of range for range variance table!";
+      return 0;
+   }
+   // doubling density halves straggling.
+   auto variance = fRangeVariance(energy); // with ini density
+   return variance;
 }
 
 double AtELossTable::GetElossStraggling(double energyIni, double energyFin) const
 {
-   LOG(error) << "GetElossStraggling not implemented for AtELossTable";
-   return 0;
+   return GetdEdx(energyIni) * std::sqrt(GetRangeVariance(energyIni) - GetRangeVariance(energyFin));
 }
 double AtELossTable::GetdEdxStraggling(double energyIni, double energyFin) const
 {
-   LOG(error) << "GetdEdxStraggling not implemented for AtELossTable";
-   return 0;
+   double factor =
+      std::sqrt(GetRangeVariance(energyIni) - GetRangeVariance(energyFin)) / GetRange(energyIni, energyFin);
+   return GetdEdx(energyIni) * factor;
 }
 
 double AtELossTable::GetEnergyOld(double energyIni, double distance) const
@@ -142,6 +169,7 @@ void AtELossTable::LoadSrimTable(std::string fileName)
    double conversion = 0;
    std::vector<double> energy;
    std::vector<double> dEdX;
+   std::vector<double> rangeVar;
 
    while (!file.eof()) {
       // Get the current line
@@ -172,10 +200,15 @@ void AtELossTable::LoadSrimTable(std::string fileName)
          //  If this is part of the table, grab it and continue
          double en = std::stod(tokens.at(0)) * GetUnitConversion(tokens.at(1));
          double dedx = std::stod(tokens.at(2)) + std::stod(tokens.at(3));
+         double range = std::stod(tokens.at(4)) * GetUnitConversion(tokens.at(5));
+         double range_st = std::stod(tokens.at(6)) * GetUnitConversion(tokens.at(7));
+
+         LOG(info) << "En: " << en << " dEdX " << dedx << " Range: " << range << " Range st: " << range_st;
 
          // If we made it this far then we have a valid table entry
          energy.push_back(en);
          dEdX.push_back(dedx);
+         rangeVar.push_back(range_st * range_st);
 
          LOG(debug) << en << " " << dedx;
 
@@ -187,13 +220,14 @@ void AtELossTable::LoadSrimTable(std::string fileName)
       dedx *= conversion;
 
    LoadTable(energy, dEdX);
+   LoadRangeVariance(energy, rangeVar);
 }
 
 void AtELossTable::LoadLiseTable(std::string fileName, double mass, double density, int column)
 {
    std::ifstream file(fileName);
    if (!file.is_open())
-      LOG(fatal) << "Failed to open SRIM file " << fileName;
+      LOG(fatal) << "Failed to open LISE file " << fileName;
 
    std::vector<double> energy;
    std::vector<double> dEdX;
@@ -236,6 +270,14 @@ double AtELossTable::GetUnitConversion(const std::string &unit)
    if (unit == "MeV")
       return 1e-0;
    if (unit == "GeV")
+      return 1e3;
+   if (unit == "um")
+      return 1e-3;
+   if (unit == "mm")
+      return 1e0;
+   if (unit == "cm")
+      return 1e1;
+   if (unit == "m")
       return 1e3;
    return 0;
 }

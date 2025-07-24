@@ -13,6 +13,7 @@ namespace AtTools {
 class AtELossTable : public AtELossModel {
 protected:
    tk::spline fdXdE;
+   tk::spline fRangeVariance; /// Range variance (mm) as a function of energy.
 
    double fDistErr{1e-4};
 
@@ -20,10 +21,13 @@ public:
    AtELossTable(double density = 0) : AtELossModel(density) {}
    AtELossTable(const std::vector<double> &energy, const std::vector<double> &dEdX, double density = 0);
 
+   virtual void SetDensity(double density) override;
+
    /// Set error in particle range when calculating energy losses.
    void SetDistanceError(double val) { fDistErr = val; }
    void LoadSrimTable(std::string fileName);
    /**
+    *
     * Load energy loss table from LISE++ (export of stopping power graph to file).
     * @param[in] fileName Name of text file.
     * @param[in] mass Mass of the fragment in units of u.
@@ -49,6 +53,10 @@ public:
 
 private:
    void LoadTable(const std::vector<double> &energy, const std::vector<double> &dEdX);
+   void LoadRangeVariance(const std::vector<double> &energy, const std::vector<double> &rangeVariance)
+   {
+      fRangeVariance = tk::spline(energy, rangeVariance);
+   }
    double GetUnitConversion(const std::string &unit);
 };
 

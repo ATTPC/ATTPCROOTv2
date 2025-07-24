@@ -29,13 +29,11 @@ protected:
     */
    double fDensity;
 
-   double fdEdxScale{1};
-
 public:
    AtELossModel(double density) : fDensityIni(density), fDensity(fDensityIni){};
    virtual ~AtELossModel() = default;
 
-   void SetDensity(double density);
+   virtual void SetDensity(double density);
    /**
     * Get the stopping power in MeV/mm
     */

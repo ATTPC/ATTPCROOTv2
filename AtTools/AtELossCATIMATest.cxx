@@ -15,73 +15,73 @@
  */
 class AtELossCATIMATestFixture : public ::testing::Test {
 protected:
-   AtTools::AtELossCATIMA catimaModel;
+   AtTools::AtELossCATIMA model;
    double mass{1.007825031898}; // Mass of proton in amu
 
-   AtELossCATIMATestFixture() : catimaModel(6.5643e-5)
+   AtELossCATIMATestFixture() : model(6.5643e-5)
    {
       // Initialize the CATIMA model with H2 gas density and components and set projectile to proton.
-      catimaModel.SetMaterial(catima::Material(1, 1)); // Set material to H2
-      catimaModel.SetProjectile(1, 1, mass);           // Set projectile to proton
+      model.SetMaterial(catima::Material(1, 1)); // Set material to H2
+      model.SetProjectile(1, 1, mass);           // Set projectile to proton
    }
 };
 
 TEST_F(AtELossCATIMATestFixture, ConstructCATIMAModel)
 {
    // Basic check: ensure model is constructed and can compute range
-   double range = catimaModel.GetRange(1.0); // 1 MeV
+   double range = model.GetRange(1.0); // 1 MeV
    EXPECT_GT(range, 0.0);
 }
 
 TEST_F(AtELossCATIMATestFixture, TestRangeStraggling)
 {
    // Check dEdx for a known energy
-   double range_var = catimaModel.GetRangeVariance(1.0); // 1 MeV
-   double expected = 1.99;                               // Expected value from LISE for H2 at 1 MeV
+   double range_var = model.GetRangeVariance(1.0); // 1 MeV
+   double expected = 1.99;                         // Expected value from LISE for H2 at 1 MeV
    ASSERT_NEAR(range_var, expected * expected, 0.2 * expected * expected);
 
-   double range_straggling = catimaModel.GetRangeStraggling(1.0); // 1 MeV
+   double range_straggling = model.GetRangeStraggling(1.0); // 1 MeV
    ASSERT_NEAR(range_straggling, expected, 0.1 * expected);
 
    // Check straggling at 10 MeV
-   range_straggling = catimaModel.GetRangeStraggling(10.0); // 10 MeV
-   expected = 95.933;                                       // mm
+   range_straggling = model.GetRangeStraggling(10.0); // 10 MeV
+   expected = 95.933;                                 // mm
    ASSERT_NEAR(range_straggling, expected, 0.1 * expected);
 }
 
 TEST_F(AtELossCATIMATestFixture, TestEnergyLossStraggling)
 {
 
-   double expectedSigma = 0.0084 * mass;                                       // Expected sigma from LISE
-   double eloss_straggling = catimaModel.GetElossStraggling(1.0, 0.75 * mass); // 1 MeV to 10 MeV
+   double expectedSigma = 0.0084 * mass;                                 // Expected sigma from LISE
+   double eloss_straggling = model.GetElossStraggling(1.0, 0.75 * mass); // 1 MeV to 10 MeV
    ASSERT_NEAR(eloss_straggling, expectedSigma, 0.1 * expectedSigma);
 
    expectedSigma = 0.0376 * mass;
-   eloss_straggling = catimaModel.GetElossStraggling(5.0, 3.58164 * mass);
+   eloss_straggling = model.GetElossStraggling(5.0, 3.58164 * mass);
    ASSERT_NEAR(eloss_straggling, expectedSigma, 0.1 * expectedSigma);
 }
 
 TEST_F(AtELossCATIMATestFixture, TestEnergyLossStragglingDistance)
 {
-   double expectedSigma = 0.0084 * mass;                                        // Expected sigma from LISE
-   double eloss_straggling = catimaModel.GetElossStragglingDistance(1.0, 50.0); // 1 MeV over 10 mm
+   double expectedSigma = 0.0084 * mass;                                  // Expected sigma from LISE
+   double eloss_straggling = model.GetElossStragglingDistance(1.0, 50.0); // 1 MeV over 10 mm
    ASSERT_NEAR(eloss_straggling, expectedSigma, 0.1 * expectedSigma);
 
    expectedSigma = 0.0376 * mass;
-   eloss_straggling = catimaModel.GetElossStragglingDistance(5.0, 1000.0); // 5 MeV over 100 mm
+   eloss_straggling = model.GetElossStragglingDistance(5.0, 1000.0); // 5 MeV over 100 mm
    ASSERT_NEAR(eloss_straggling, expectedSigma, 0.1 * expectedSigma);
 }
 
 TEST_F(AtELossCATIMATestFixture, TestdEdxStraggling)
 {
-   double dedx = catimaModel.GetdEdx(5.0);
+   double dedx = model.GetdEdx(5.0);
    double dE = dedx * 50;
-   double expected_dE = catimaModel.GetEnergyLoss(5.0, 50.0);
+   double expected_dE = model.GetEnergyLoss(5.0, 50.0);
 
    ASSERT_NEAR(dE, expected_dE, 0.01 * expected_dE); // Verify linear assumption is true
 
-   double E_st = catimaModel.GetElossStragglingDistance(5.0, 50.0);
-   double dedx_straggling = catimaModel.GetdEdxStraggling(5.0, catimaModel.GetEnergy(5.0, 50.0));
+   double E_st = model.GetElossStragglingDistance(5.0, 50.0);
+   double dedx_straggling = model.GetdEdxStraggling(5.0, model.GetEnergy(5.0, 50.0));
    ASSERT_NEAR(dedx_straggling * 50, E_st, 0.01 * E_st); // Check dEdx straggling
 
    double e_min = expected_dE - E_st;

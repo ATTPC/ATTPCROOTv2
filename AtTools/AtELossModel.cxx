@@ -13,7 +13,6 @@ void AtELossModel::SetDensity(double density)
       throw std::invalid_argument("Cannot set the density if the density of in model is not known");
 
    fDensity = density;
-   fdEdxScale = fDensity / fDensityIni;
 }
 
 std::vector<std::pair<double, double>>

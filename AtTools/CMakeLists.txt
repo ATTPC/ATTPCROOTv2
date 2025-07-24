@@ -76,6 +76,7 @@ Set(INCLUDE_DIR
 
 set(TEST_SRCS
   DataCleaning/AtkNNTest.cxx
+  AtELossTableTest.cxx
 )
 if(CATIMA_FOUND)
   set(TEST_SRCS ${TEST_SRCS}
