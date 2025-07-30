@@ -150,6 +150,20 @@ public:
    void SetPatternPar(std::vector<double> par) { fPatternPar = std::move(par); }
    void SetChi2(double chi2) { fChi2 = chi2; }
 
+   /**
+    * Calculate the distance in mm along the line from point at parameter t1 to point at parameter t2.
+    * By default returns -99999, which should not be possible in any case.
+    * This function needs to be overriden for any specific AtPattern subclass in order to be useful.
+    */
+   virtual Double_t DistanceAlongPattern(double t1, double t2) const { return -99999; }
+
+   /**
+    * Parameter value at the point passed as input.
+    * By default returns -99999, which should not be possible in any case.
+    * This function needs to be overriden for any specific AtPattern subclass in order to be useful.
+    */
+   virtual double parameterAtPoint(const XYZPoint &point) const { return -99999; }
+
 protected:
    /**
     * Called by other versions of FitPattern. If pointCharge is not empty does charge weighted fit.

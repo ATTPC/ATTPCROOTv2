@@ -210,3 +210,12 @@ std::vector<Double_t> AtPatternLine::lineIntersecR(Double_t rMax, Double_t tMin,
    }
    return result;
 }
+
+Double_t AtPatternLine::DistanceAlongPattern(double t1, double t2) const
+{
+   XYZPoint point1 = GetPointAt(t1);
+   XYZPoint point2 = GetPointAt(t2);
+   Double_t distanceSquared = std::pow(point1.X() - point2.X(), 2) + std::pow(point1.Y() - point2.Y(), 2) +
+                              std::pow(point1.Z() - point2.Z(), 2);
+   return TMath::Sqrt(distanceSquared);
+}

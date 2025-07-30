@@ -28,7 +28,7 @@ AtTrack &AtTrack::operator=(AtTrack obj)
 AtTrack::AtTrack(const AtTrack &o)
    : fTrackID(o.fTrackID), fIsMerged(o.fIsMerged), fVertexToZDist(o.fVertexToZDist), fGeoThetaAngle(o.fGeoThetaAngle),
      fGeoPhiAngle(o.fGeoPhiAngle), fGeoRadius(o.fGeoRadius), fGeoCenter(o.fGeoCenter),
-     fHitClusterArray(o.fHitClusterArray)
+     fHitClusterArray(o.fHitClusterArray), fBraggCurveValues(o.fBraggCurveValues), fBraggCurve(o.fBraggCurve)
 {
    fPattern = (o.fPattern != nullptr) ? o.fPattern->Clone() : nullptr;
    for (auto &hit : o.fHitArray)

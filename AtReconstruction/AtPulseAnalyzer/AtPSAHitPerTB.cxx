@@ -24,7 +24,7 @@ AtPSAHitPerTB::HitVector AtPSAHitPerTB::AnalyzePad(AtPad *pad)
 {
    auto pos = pad->GetPadCoord();
    if ((pos.X() < -9000 || pos.Y() < -9000) && pad->GetPadNum() != -1)
-      LOG(error) << " AtPSAHitPErTB::Analysis Warning! Wrong Coordinates for Pad : " << pad->GetPadNum() << std::endl;
+      LOG(error) << " AtPSAHitPerTB::Analysis Warning! Wrong Coordinates for Pad : " << pad->GetPadNum() << std::endl;
 
    if (!(pad->IsPedestalSubtracted())) {
       LOG(error) << "Pedestal should be subtracted to use this class!";
@@ -33,25 +33,28 @@ AtPSAHitPerTB::HitVector AtPSAHitPerTB::AnalyzePad(AtPad *pad)
 
    HitVector hits;
    auto adc = pad->GetADC();
-   double traceIntegral = 0;
-   for (Int_t iTb = 0; iTb < fNumTbs; iTb++) {
+   double traceIntegral{0};
+   for (Int_t iTb = fIniTB; iTb < fEndTB; iTb++) {
 
       // We are above threshold, so create a hit
       if (adc[iTb] > getThreshold(pad->GetSizeID())) {
 
          // This allows to constrain the calculation of the charge avoiding noisy timebuckets
-         if (iTb > fIniTB && iTb < fEndTB)
-            traceIntegral += adc[iTb];
+         // if (iTb > fIniTB && iTb < fEndTB) //< Trivially true if we change limits of for loop.
+         traceIntegral += adc[iTb];
 
          auto hit = std::make_unique<AtHit>(pad->GetPadNum(), XYZPoint(pos.X(), pos.Y(), CalculateZGeo(iTb)), adc[iTb]);
          hit->SetTimeStamp(iTb);
+         hit->SetTraceIntegral(adc[iTb]);
          hits.push_back(std::move(hit));
       } // if Threshold
    }
 
-   // Loop through all hits and add traceIntegral
-   for (auto &hit : hits)
-      hit->SetTraceIntegral(traceIntegral);
+   // Loop through all hits and substitute traceIntegral if desired.
+   if (fReplaceTraceIntegral) {
+      for (auto &hit : hits)
+         hit->SetTraceIntegral(traceIntegral);
+   }
 
    return hits;
 }
@@ -59,14 +62,19 @@ AtPSAHitPerTB::HitVector AtPSAHitPerTB::AnalyzePad(AtPad *pad)
 void AtPSAHitPerTB::SetTBLimits(std::pair<Int_t, Int_t> limits)
 {
    if (limits.first >= limits.second) {
-      std::cout << " Warning AtPSA::SetTBLimits -  Wrong Time Bucket limits. Setting default limits (0,512) ... "
-                << "\n";
+      LOG(warning) << " Warning in AtPSAHitPerTB::SetTBLimits() :  Wrong Time Bucket limits. Setting default limits (0,"
+                   << fNumTbs << ") ... ";
       fIniTB = 0;
-      fEndTB = 512;
+      fEndTB = fNumTbs;
 
    } else {
       fIniTB = limits.first;
+      if (limits.first < 0)
+         fIniTB = 0;
+
       fEndTB = limits.second;
+      if (limits.second > fNumTbs)
+         fEndTB = fNumTbs;
    }
 }
 

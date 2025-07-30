@@ -95,7 +95,7 @@ protected:
    void SetPointsFromHits(TEvePointSet &hitSet, const std::vector<AtHit *> &hits);
    void SetPointsFromTrack(TEvePointSet &hitSet, const AtTrack &track);
 
-private:
+protected:
    // Functions to draw the initial canvases
    void DrawPadPlane();
    void DrawPadWave();
@@ -105,7 +105,7 @@ private:
    // Update hit sets
    void UpdatePadPlane();
    void UpdateEventElements();
-   void UpdatePatternEventElements();
+   virtual void UpdatePatternEventElements();
 
    void ExpandNumPatterns(int num);
 

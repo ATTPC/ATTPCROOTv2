@@ -24,6 +24,16 @@ class TMemberInspector;
 
 class AtTrack : public TObject {
 
+public:
+   struct BraggCurve {
+      std::vector<Double_t> IntegratedELossValues;
+      std::vector<Double_t> RangeValues;
+      std::vector<Double_t> ELossErrors;
+      Int_t nBins{0};
+      Double_t binSize{0};
+      Int_t smoothingSteps{0};
+   };
+
 protected:
    using XYZPoint = ROOT::Math::XYZPoint;
    using HitPtr = std::unique_ptr<AtHit>;
@@ -43,6 +53,12 @@ protected:
    Double_t fGeoRadius{};                    //< Initial radius of curvature
    std::pair<Double_t, Double_t> fGeoCenter; //< Center of the spiral track
    std::vector<AtHitCluster> fHitClusterArray; //< Clusterized hits container. Can also be stored in fHitArray
+
+   // Obtained in AtPatternModification
+   // Vector of pair of values for the Bragg curve of the track (archLength[mm], eLoss[a.u.]).
+   std::vector<std::pair<Double_t, Double_t>> fBraggCurveValues;
+   // Container for the Bragg curve integrated over the binning.
+   BraggCurve fBraggCurve;
 
 public:
    AtTrack() = default;
@@ -72,6 +88,9 @@ public:
       swap(a.fGeoPhiAngle, b.fGeoPhiAngle);
       swap(a.fGeoRadius, b.fGeoRadius);
       swap(a.fGeoCenter, b.fGeoCenter);
+
+      swap(a.fBraggCurveValues, b.fBraggCurveValues);
+      swap(a.fBraggCurve, b.fBraggCurve);
    };
 
    // Getters
@@ -89,6 +108,9 @@ public:
    std::pair<Double_t, Double_t> GetGeoCenter() const { return fGeoCenter; }
    std::vector<AtHitCluster> *GetHitClusterArray() { return &fHitClusterArray; }
 
+   std::vector<std::pair<Double_t, Double_t>> GetBraggCurveValues() { return fBraggCurveValues; }
+   const BraggCurve GetBraggCurve() { return fBraggCurve; }
+
    Bool_t GetIsMerged() const { return fIsMerged; }
    Double_t GetVertexToZDist() const { return fVertexToZDist; }
 
@@ -103,6 +125,9 @@ public:
    void SetGeoRadius(Double_t radius) { fGeoRadius = radius; }
    void SetGeoCenter(std::pair<Double_t, Double_t> center) { fGeoCenter = center; }
    void AddClusterHit(std::shared_ptr<AtHitCluster> hitCluster);
+
+   void AddBraggCurvePair(Double_t range, Double_t eLoss) { fBraggCurveValues.push_back(std::make_pair(range, eLoss)); }
+   void SetBraggCurve(BraggCurve braggCurve) { fBraggCurve = braggCurve; }
 
    void SetIsMerged(bool val) { fIsMerged = val; }
    void SetVertexToZDist(Double_t val) { fVertexToZDist = val; }
@@ -139,7 +164,7 @@ protected:
       return o;
    }
 
-   ClassDef(AtTrack, 3);
+   ClassDef(AtTrack, 4);
 };
 
 #endif
