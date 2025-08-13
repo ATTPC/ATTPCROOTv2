@@ -71,3 +71,18 @@ TEveLine *AtPattern::GetEveLine(double tMin, double tMax, int n) const
    }
    return retLine;
 }
+
+Double_t AtPattern::DistanceAlongPattern(XYZPoint point1, XYZPoint point2) const
+{
+   LOG(warning) << "Using default definition of DistanceAlongPattern in AtPattern! This may not be correct for patterns different to AtPatternLine!";
+
+   return DefaultDistanceAlongPattern(point1, point2);
+}
+
+Double_t AtPattern::DefaultDistanceAlongPattern(XYZPoint point1, XYZPoint point2) const
+{
+   XYZPoint closestPoint1 = ClosestPointOnPattern(point1);
+   XYZPoint closestPoint2 = ClosestPointOnPattern(point2);
+
+   return (closestPoint1 - closestPoint2).R();
+}

@@ -5,8 +5,6 @@
 
 #include <TH1F.h>
 
-using XYZPoint = ROOT::Math::XYZPoint;
-
 ClassImp(AtBraggCurveFinder);
 
 void AtBraggCurveFinder::InitializePSA()
@@ -56,22 +54,21 @@ void AtBraggCurveFinder::ProcessTrack(AtTrack &track)
       return;
    }
    XYZPoint vertex = (XYZPoint)tv.at(0).vertex;
-   double tVertex = pattern->parameterAtPoint(vertex);
 
    // Extract the AtHits.
    std::vector<AtHit> hitArray = track.GetHitArrayObject();
    for (auto hit : hitArray) {
-      ProcessHit(tVertex, hit, track, fRawEvent);
+      ProcessHit(vertex, hit, track, fRawEvent);
    }
 
    // Make the Bragg curve histogram.
    GenerateBraggCurveHistogram(track);
 }
 
-void AtBraggCurveFinder::ProcessHit(double tVertex, AtHit hit, AtTrack &track, AtRawEvent *rawEvent)
+void AtBraggCurveFinder::ProcessHit(XYZPoint vertex, AtHit hit, AtTrack &track, AtRawEvent *rawEvent)
 {
    if (rawEvent == nullptr) {
-      ProcessHit(tVertex, hit, track);
+      ProcessHit(vertex, hit, track);
       return;
    }
 
@@ -96,17 +93,15 @@ void AtBraggCurveFinder::ProcessHit(double tVertex, AtHit hit, AtTrack &track, A
 
    auto subHitVector = fPSA->AnalyzePad(pad);
    for (auto &&subHit : subHitVector)
-      ProcessHit(tVertex, *subHit, track);
+      ProcessHit(vertex, *subHit, track);
 }
 
-void AtBraggCurveFinder::ProcessHit(double tVertex, AtHit hit, AtTrack &track)
+void AtBraggCurveFinder::ProcessHit(XYZPoint vertex, AtHit hit, AtTrack &track)
 {
    // Extract yet again the AtPattern.
    auto *pattern = track.GetPattern();
 
-   double tPoint = pattern->parameterAtPoint(hit.GetPosition());
-
-   Double_t range = pattern->DistanceAlongPattern(tVertex, tPoint);
+   Double_t range = pattern->DistanceAlongPattern(vertex, hit.GetPosition());
    Double_t eLoss = hit.GetTraceIntegral();
 
    // TO-DO: Correct eLoss of big pads due to the difference in capacitance.

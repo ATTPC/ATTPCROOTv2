@@ -7,11 +7,16 @@
 #include "AtTrack.h"
 
 #include <TMath.h>
+#include <Math/Point3D.h>
+#include <Math/Point3Dfwd.h> // for XYZPoint
 
 #include <cmath>
 #include <random>
 
 class AtBraggCurveFinder : public AtPatternModification {
+public:
+   using XYZPoint = ROOT::Math::XYZPoint;
+
 protected:
    // Line distance threshold to be used by the AtFindVertex.
    Double_t fLineDistThreshold{30};
@@ -49,8 +54,8 @@ public:
 
 private:
    void ProcessTrack(AtTrack &track);
-   void ProcessHit(double tVertex, AtHit hit, AtTrack &track, AtRawEvent *rawEvent);
-   void ProcessHit(double tVertex, AtHit hit, AtTrack &track);
+   void ProcessHit(XYZPoint vertex, AtHit hit, AtTrack &track, AtRawEvent *rawEvent);
+   void ProcessHit(XYZPoint vertex, AtHit hit, AtTrack &track);
 
    void GenerateBraggCurveHistogram(AtTrack &track);
 

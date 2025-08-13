@@ -151,18 +151,11 @@ public:
    void SetChi2(double chi2) { fChi2 = chi2; }
 
    /**
-    * Calculate the distance in mm along the line from point at parameter t1 to point at parameter t2.
-    * By default returns -99999, which should not be possible in any case.
-    * This function needs to be overriden for any specific AtPattern subclass in order to be useful.
+    * Calculate the distance in mm along the line from the closest point on pattern from point1 to
+    * the closest point on pattern from point2. This definition may not be correct for all AtPatterns!
+    * This function may need to be overriden for any specific AtPattern subclass in order to be useful.
     */
-   virtual Double_t DistanceAlongPattern(double t1, double t2) const { return -99999; }
-
-   /**
-    * Parameter value at the point passed as input.
-    * By default returns -99999, which should not be possible in any case.
-    * This function needs to be overriden for any specific AtPattern subclass in order to be useful.
-    */
-   virtual double parameterAtPoint(const XYZPoint &point) const { return -99999; }
+   virtual Double_t DistanceAlongPattern(XYZPoint point1, XYZPoint point2) const;
 
 protected:
    /**
@@ -170,6 +163,12 @@ protected:
     * Sets fPatternPar, fChi2, and fNFree
     */
    virtual void FitPattern(const std::vector<XYZPoint> &pointsToFit, const std::vector<double> &pointCharge) = 0;
+
+   /**
+    * Default function that computes the distance along the pattern assuming that the pattern is
+    * straight.
+    */
+   Double_t DefaultDistanceAlongPattern(XYZPoint point1, XYZPoint point2) const;
 
    ClassDef(AtPattern, 1)
 };
