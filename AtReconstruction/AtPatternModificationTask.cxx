@@ -8,14 +8,20 @@
 
 ClassImp(AtPatternModificationTask);
 
-AtPatternModificationTask::AtPatternModificationTask()
-   : fPatternEventBranchName("AtPatternEvent"), fRawEventBranchName("AtRawEvent"), fEventBranchName("AtEvent")
+AtPatternModificationTask::AtPatternModificationTask(std::vector<std::unique_ptr<AtPatternModification>> patternModifications)
+   : fInputBranchName("AtPatternEvent"), fOutputBranchName("AtPatternEventModified"), fRawEventBranchName("AtRawEvent"), fEventBranchName("AtEvent"), fPatternEventModifiedArray(TClonesArray("AtPatternEvent", 1))
 {
+   fPatternModifications = std::move(patternModifications);
 }
 
-void AtPatternModificationTask::SetPatternEventBranch(TString branchName)
+void AtPatternModificationTask::SetInputBranch(TString branchName)
 {
-   fPatternEventBranchName = branchName;
+   fInputBranchName = branchName;
+}
+
+void AtPatternModificationTask::SetOutputBranch(TString branchName)
+{
+   fOutputBranchName = branchName;
 }
 
 void AtPatternModificationTask::SetRawEventBranch(TString branchName)
@@ -28,6 +34,11 @@ void AtPatternModificationTask::SetEventBranch(TString branchName)
    fEventBranchName = branchName;
 }
 
+void AtPatternModificationTask::SetPersistence(Bool_t value)
+{
+   kIsPersistence = value;
+}
+
 InitStatus AtPatternModificationTask::Init()
 {
    FairRootManager *ioMan = FairRootManager::Instance();
@@ -36,7 +47,7 @@ InitStatus AtPatternModificationTask::Init()
       return kERROR;
    }
 
-   fPatternEventArray = dynamic_cast<TClonesArray *>(ioMan->GetObject(fPatternEventBranchName));
+   fPatternEventArray = dynamic_cast<TClonesArray *>(ioMan->GetObject(fInputBranchName));
    if (fPatternEventArray == nullptr) {
       LOG(error) << "Cannot find AtPatternEvent array!";
       return kERROR;
@@ -52,6 +63,8 @@ InitStatus AtPatternModificationTask::Init()
       LOG(info) << "AtEvent branch name was not set. No AtEvent will be passed to the AtPatternModifications.";
    }
 
+   ioMan->Register(fOutputBranchName, "AtTPC", &fPatternEventModifiedArray, kIsPersistence);
+
    return kSUCCESS;
 }
 
@@ -60,9 +73,12 @@ void AtPatternModificationTask::Exec(Option_t *option)
    if (fPatternEventArray->GetEntriesFast() == 0)
       return;
 
-   LOG(info) << " AtPatternModificationTask::Exec() : Applying pattern modifications to pattern event " << fEventCnt;
+   LOG(info) << "Applying pattern modifications to pattern event " << fEventCnt;
 
    AtPatternEvent *patternEvent = dynamic_cast<AtPatternEvent *>(fPatternEventArray->At(0));
+   AtPatternEvent *patternEventModified = dynamic_cast<AtPatternEvent *>(fPatternEventModifiedArray.ConstructedAt(0));
+
+   *patternEventModified = *patternEvent;
 
    AtRawEvent *rawEvent{nullptr};
    if (fRawEventArray != nullptr)
@@ -73,7 +89,7 @@ void AtPatternModificationTask::Exec(Option_t *option)
       event = dynamic_cast<AtEvent *>(fEventArray->At(0));
 
    for (int i = 0; i < fPatternModifications.size(); i++)
-      fPatternModifications[i]->ModifyPatternEvent(patternEvent, rawEvent, event);
+      fPatternModifications[i]->ModifyPatternEvent(patternEventModified, rawEvent, event);
 
    ++fEventCnt;
 }

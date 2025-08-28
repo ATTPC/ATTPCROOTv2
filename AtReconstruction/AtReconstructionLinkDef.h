@@ -37,8 +37,8 @@
 #pragma link C++ class SampleConsensus::AtEstimator - !;
 #pragma link C++ enum SampleConsensus::Estimators;
 
-#pragma link C++ class AtPatternModification + ;
-#pragma link C++ class AtBraggCurveFinder + ;
+#pragma link C++ class AtPatternModification - !;
+#pragma link C++ class AtBraggCurveFinder - !;
 #pragma link C++ class AtPatternModificationTask + ;
 
 #pragma link C++ class AtMacroTask + ;

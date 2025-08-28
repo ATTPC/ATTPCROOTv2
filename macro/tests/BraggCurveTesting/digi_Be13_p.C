@@ -67,11 +67,16 @@ void digi_Be13_p(int nEvent = 10000, int subnum = 0, int angle_cm = 15)
    ransacTask->SetNumItera(500);
 
    // Create the AtPatternModification task.
-   AtPatternModificationTask *patternModTask = new AtPatternModificationTask();
+   std::vector<std::unique_ptr<AtPatternModification>> patternModifications;
+
    auto braggCurveFinder = std::make_unique<AtBraggCurveFinder>();
    braggCurveFinder->SetBinSize(3.);
    braggCurveFinder->SetNumSmoothingSteps(200);
-   patternModTask->AddPatternModification(std::move(braggCurveFinder));
+   patternModifications.push_back(std::move(braggCurveFinder));
+
+   AtPatternModificationTask *patternModTask = new AtPatternModificationTask(std::move(patternModifications));
+   //patternModTask->SetOutputBranch("AtPatternEvent");
+   patternModTask->SetPersistence(kTRUE);
 
    fRun->AddTask(clusterizer);
    fRun->AddTask(pulse);

@@ -15,7 +15,8 @@
 
 class AtPatternModificationTask : public FairTask {
 private:
-   TString fPatternEventBranchName;
+   TString fInputBranchName;
+   TString fOutputBranchName;
    TString fRawEventBranchName;
    TString fEventBranchName;
 
@@ -23,21 +24,21 @@ private:
    TClonesArray *fPatternEventArray;
    TClonesArray *fRawEventArray;
    TClonesArray *fEventArray;
+   TClonesArray fPatternEventModifiedArray;
+
+   Bool_t kIsPersistence{kFALSE};
 
    ULong_t fEventCnt{0};
 
 public:
-   AtPatternModificationTask();
+   AtPatternModificationTask(std::vector<std::unique_ptr<AtPatternModification>> patternModifications);
    ~AtPatternModificationTask() = default;
 
-   void SetPatternEventBranch(TString branchName);
+   void SetInputBranch(TString branchName);
+   void SetOutputBranch(TString branchName);
    void SetRawEventBranch(TString branchName);
    void SetEventBranch(TString branchName);
-
-   void AddPatternModification(std::unique_ptr<AtPatternModification> patternModification)
-   {
-      fPatternModifications.push_back(std::move(patternModification));
-   }
+   void SetPersistence(Bool_t value = kTRUE);
 
    virtual InitStatus Init() override;
    virtual void Exec(Option_t *opt) override;
