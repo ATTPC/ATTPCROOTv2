@@ -74,7 +74,8 @@ TEveLine *AtPattern::GetEveLine(double tMin, double tMax, int n) const
 
 Double_t AtPattern::DistanceAlongPattern(XYZPoint point1, XYZPoint point2) const
 {
-   LOG(warning) << "Using default definition of DistanceAlongPattern in AtPattern! This may not be correct for patterns different to AtPatternLine!";
+   LOG(warning) << "Using default definition of DistanceAlongPattern in AtPattern! This may not be correct for "
+                   "patterns different to AtPatternLine!";
 
    return DefaultDistanceAlongPattern(point1, point2);
 }
