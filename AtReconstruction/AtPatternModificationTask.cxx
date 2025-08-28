@@ -72,13 +72,8 @@ void AtPatternModificationTask::Exec(Option_t *option)
    if (fEventArray != nullptr)
       event = dynamic_cast<AtEvent *>(fEventArray->At(0));
 
-   for (int i = 0; i < fPatternModifications.size(); i++) {
-      fPatternModifications[i]->Reset();
-      fPatternModifications[i]->SetPatternEvent(patternEvent);
-      fPatternModifications[i]->SetRawEvent(rawEvent);
-      fPatternModifications[i]->SetEvent(event);
-      fPatternModifications[i]->ModifyPatternEvent();
-   }
+   for (int i = 0; i < fPatternModifications.size(); i++)
+      fPatternModifications[i]->ModifyPatternEvent(patternEvent, rawEvent, event);
 
    ++fEventCnt;
 }

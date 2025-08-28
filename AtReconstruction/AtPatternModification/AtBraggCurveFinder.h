@@ -40,8 +40,9 @@ public:
    AtBraggCurveFinder() = default;
    ~AtBraggCurveFinder() = default;
 
-   virtual void ModifyPatternEvent() override;
    virtual void Init() override;
+
+   virtual void ModifyPatternEvent(AtPatternEvent *patternEvent, AtRawEvent *rawEvent = nullptr, AtEvent *event = nullptr) override;
 
    void SetLineDistThreshold(Double_t lineDistThreshold) { fLineDistThreshold = lineDistThreshold; }
    void SetTSSemiWidth(int value) { fTSSemiWidth = value; }
@@ -52,16 +53,15 @@ public:
    void SetELossRelativeError(double value) { fELossRelativeError = value; }
    void SetNumSmoothingSteps(int value) { fNumSmoothingSteps = value; }
 
-private:
-   void ProcessTrack(AtTrack &track);
-   void ProcessHit(XYZPoint vertex, AtHit hit, AtTrack &track, AtRawEvent *rawEvent);
-   void ProcessHit(XYZPoint vertex, AtHit hit, AtTrack &track);
+protected:
+   virtual AtTrack GetModifiedTrack(AtTrack *track, AtRawEvent *rawEvent = nullptr, AtEvent *event = nullptr) override;
+   void ProcessHit(XYZPoint vertex, AtHit hit, AtTrack &modifiedTrack, AtRawEvent *rawEvent);
+   void ProcessHit(XYZPoint vertex, AtHit hit, AtTrack &modifiedTrack);
 
-   void GenerateBraggCurveHistogram(AtTrack &track);
+   void GenerateBraggCurveHistogram(AtTrack &modifiedTrack);
 
    void InitializePSA();
 
-   ClassDefOverride(AtBraggCurveFinder, 1);
 };
 
 #endif

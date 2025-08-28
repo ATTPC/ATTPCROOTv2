@@ -5,8 +5,6 @@
 
 #include <TH1F.h>
 
-ClassImp(AtBraggCurveFinder);
-
 void AtBraggCurveFinder::InitializePSA()
 {
    fPSA = std::make_unique<AtPSAHitPerTB>();
@@ -24,51 +22,53 @@ void AtBraggCurveFinder::Init()
    fRNG.seed(ss);
 }
 
-void AtBraggCurveFinder::ModifyPatternEvent()
+void AtBraggCurveFinder::ModifyPatternEvent(AtPatternEvent *patternEvent, AtRawEvent *rawEvent, AtEvent *event)
 {
-   std::vector<AtTrack> &tracks = fPatternEvent->GetTrackCand();
-   LOG(info) << "Applying AtBraggCurveFinder modification to " << tracks.size() << " tracks.";
-
-   if (fRawEvent == nullptr)
+   if (rawEvent == nullptr)
       LOG(warning) << "No AtRawEvent was passed to the At3DBraggFinder, so it will not be used. The resulting bragg "
                       "curve may have more fluctuations in the ELoss per bin than expected!";
 
-   for (auto &track : tracks)
-      ProcessTrack(track);
+   AtPatternModification::ModifyPatternEvent(patternEvent, rawEvent, event);
 }
 
-void AtBraggCurveFinder::ProcessTrack(AtTrack &track)
+AtTrack AtBraggCurveFinder::GetModifiedTrack(AtTrack *track, AtRawEvent *rawEvent, AtEvent *event)
 {
+   // Create a copy of the AtTrack as an AtTrackBragg.
+   AtTrack modifiedTrack(*track);
+
    // Extract the AtPattern.
-   auto *pattern = track.GetPattern();
+   auto *pattern = modifiedTrack.GetPattern();
 
    // Find the vertex of this track.
    std::vector<AtTrack> trackToFindVtx;
-   trackToFindVtx.push_back(track);
+   trackToFindVtx.push_back(modifiedTrack);
    AtFindVertex findVtx(fLineDistThreshold);
    findVtx.FindVertex(trackToFindVtx, 1);
    std::vector<tracksFromVertex> tv = findVtx.GetTracksVertex();
    if (tv.size() != 1) {
       LOG(warning) << "Found " << tv.size()
                    << " vertex. We need to have 1 and only 1 to find the Bragg curve! Skipping this track!";
-      return;
+      return modifiedTrack;
    }
    XYZPoint vertex = (XYZPoint)tv.at(0).vertex;
 
    // Extract the AtHits.
-   std::vector<AtHit> hitArray = track.GetHitArrayObject();
+   std::vector<AtHit> hitArray = modifiedTrack.GetHitArrayObject();
    for (auto hit : hitArray) {
-      ProcessHit(vertex, hit, track, fRawEvent);
+      ProcessHit(vertex, hit, modifiedTrack, rawEvent);
    }
 
    // Make the Bragg curve histogram.
-   GenerateBraggCurveHistogram(track);
+   GenerateBraggCurveHistogram(modifiedTrack);
+
+   // Return the modified track.
+   return modifiedTrack;
 }
 
-void AtBraggCurveFinder::ProcessHit(XYZPoint vertex, AtHit hit, AtTrack &track, AtRawEvent *rawEvent)
+void AtBraggCurveFinder::ProcessHit(XYZPoint vertex, AtHit hit, AtTrack &modifiedTrack, AtRawEvent *rawEvent)
 {
    if (rawEvent == nullptr) {
-      ProcessHit(vertex, hit, track);
+      ProcessHit(vertex, hit, modifiedTrack);
       return;
    }
 
@@ -93,23 +93,23 @@ void AtBraggCurveFinder::ProcessHit(XYZPoint vertex, AtHit hit, AtTrack &track, 
 
    auto subHitVector = fPSA->AnalyzePad(pad);
    for (auto &&subHit : subHitVector)
-      ProcessHit(vertex, *subHit, track);
+      ProcessHit(vertex, *subHit, modifiedTrack);
 }
 
-void AtBraggCurveFinder::ProcessHit(XYZPoint vertex, AtHit hit, AtTrack &track)
+void AtBraggCurveFinder::ProcessHit(XYZPoint vertex, AtHit hit, AtTrack &modifiedTrack)
 {
    // Extract yet again the AtPattern.
-   auto *pattern = track.GetPattern();
+   auto *pattern = modifiedTrack.GetPattern();
 
    Double_t range = pattern->DistanceAlongPattern(vertex, hit.GetPosition());
    Double_t eLoss = hit.GetTraceIntegral();
 
    // TO-DO: Correct eLoss of big pads due to the difference in capacitance.
 
-   track.AddBraggCurvePair(range, eLoss);
+   modifiedTrack.AddBraggCurvePair(range, eLoss);
 }
 
-void AtBraggCurveFinder::GenerateBraggCurveHistogram(AtTrack &track)
+void AtBraggCurveFinder::GenerateBraggCurveHistogram(AtTrack &modifiedTrack)
 {
 
    // Define the histogram where to integrate the charge over bins.
@@ -122,7 +122,7 @@ void AtBraggCurveFinder::GenerateBraggCurveHistogram(AtTrack &track)
    for (int i = 0; i < fNumSmoothingSteps; i++) {
 
       // Fill in the histogram.
-      auto braggCurveValues = track.GetBraggCurveValues();
+      auto braggCurveValues = modifiedTrack.GetBraggCurveValues();
       for (auto pairBragg : braggCurveValues) {
          double rangeRandomOffset = fUniform(fRNG) * fBinSize;
          histBraggCurve->Fill(pairBragg.first + rangeRandomOffset, pairBragg.second);
@@ -144,6 +144,9 @@ void AtBraggCurveFinder::GenerateBraggCurveHistogram(AtTrack &track)
       ELossErrors.push_back(IntegratedELossValues[i] * fELossRelativeError);
    }
 
+   // Delete the TH1F to prevent memory leaks.
+   delete histBraggCurve;
+
    // Create an AtTrack::BraggCurve struct where to save the Bragg curve information.
    AtTrack::BraggCurve braggCurve;
    braggCurve.IntegratedELossValues = IntegratedELossValues;
@@ -153,5 +156,5 @@ void AtBraggCurveFinder::GenerateBraggCurveHistogram(AtTrack &track)
    braggCurve.binSize = fBinSize;
    braggCurve.smoothingSteps = fNumSmoothingSteps;
 
-   track.SetBraggCurve(braggCurve);
+   modifiedTrack.SetBraggCurve(braggCurve);
 }

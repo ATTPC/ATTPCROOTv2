@@ -5,34 +5,24 @@
 #include "AtPatternEvent.h"
 #include "AtRawEvent.h"
 
-class AtPatternModification : public TObject {
-protected:
-   // Pointer to the AtPatternEvent to be modified.
-   AtPatternEvent *fPatternEvent{nullptr};
-
-   // Pointers to AtRawEvent and AtEvent that may be used or not in the modification.
-   AtRawEvent *fRawEvent{nullptr};
-   AtEvent *fEvent{nullptr};
-
+class AtPatternModification {
 public:
    AtPatternModification() = default;
-   ~AtPatternModification() = default;
+   virtual ~AtPatternModification() = default;
 
-   virtual void ModifyPatternEvent() = 0;
    virtual void Init() = 0;
 
-   // Mandatory to set.
-   void SetPatternEvent(AtPatternEvent *patternEvent) { fPatternEvent = patternEvent; }
+   /**
+    * Function that unpacks the AtPatternEvent and iterates over the track candidates in order to apply the GetModifiedTrack to each one.
+    */
+   virtual void ModifyPatternEvent(AtPatternEvent *patternEvent, AtRawEvent *rawEvent = nullptr, AtEvent *event = nullptr);
 
-   // Optional to set.
-   void SetRawEvent(AtRawEvent *rawEvent) { fRawEvent = rawEvent; }
-   void SetEvent(AtEvent *event) { fEvent = event; }
+protected:
+   /**
+    * Actually implements ths track modification.
+    */
+   virtual AtTrack GetModifiedTrack(AtTrack *track, AtRawEvent *rawEvent = nullptr, AtEvent *event = nullptr) = 0;
 
-   // Reset pointers.
-   void Reset();
-
-private:
-   ClassDef(AtPatternModification, 1);
 };
 
 #endif
