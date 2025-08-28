@@ -34,11 +34,8 @@ AtTabBraggCurve::AtTabBraggCurve() : AtTabMain() {}
 
 AtTabBraggCurve::~AtTabBraggCurve()
 {
-   fPadNum->Detach(this);
-   fEventBranch->Detach(this);
-   fRawEventBranch->Detach(this);
-   fPatternEventBranch->Detach(this);
-   fEntry->Detach(this);
+   delete fHistELossVRange;
+   delete fCvsELossVRange;
 }
 
 void AtTabBraggCurve::Update(DataHandling::AtSubject *sub)

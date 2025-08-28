@@ -108,8 +108,8 @@ public:
    std::pair<Double_t, Double_t> GetGeoCenter() const { return fGeoCenter; }
    std::vector<AtHitCluster> *GetHitClusterArray() { return &fHitClusterArray; }
 
-   std::vector<std::pair<Double_t, Double_t>> GetBraggCurveValues() { return fBraggCurveValues; }
-   const BraggCurve GetBraggCurve() { return fBraggCurve; }
+   std::vector<std::pair<Double_t, Double_t>> GetBraggCurveValues() const { return fBraggCurveValues; }
+   BraggCurve GetBraggCurve() const { return fBraggCurve; }
 
    Bool_t GetIsMerged() const { return fIsMerged; }
    Double_t GetVertexToZDist() const { return fVertexToZDist; }

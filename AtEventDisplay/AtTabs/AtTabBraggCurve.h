@@ -31,7 +31,7 @@ protected:
 
 public:
    AtTabBraggCurve();
-   ~AtTabBraggCurve();
+   virtual ~AtTabBraggCurve();
 
    virtual void Update(DataHandling::AtSubject *sub) override;
 
@@ -41,9 +41,9 @@ protected:
    void DrawHistELossVRange();
    void DrawHistELossVRange(AtTrack::BraggCurve braggCurve);
 
-private:
    virtual void UpdatePatternEventElements() override;
 
+private:
    ClassDefOverride(AtTabBraggCurve, 1);
 };
 #endif
