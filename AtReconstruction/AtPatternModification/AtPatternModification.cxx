@@ -9,7 +9,7 @@ void AtPatternModification::ModifyPatternEvent(AtPatternEvent *patternEvent, AtR
    std::vector<AtTrack> modifiedTracks;
 
    // Iterate over the original tracks and store the modified ones.
-   for (auto track: tracks)
+   for (auto track : tracks)
       modifiedTracks.push_back(GetModifiedTrack(&track, rawEvent, event));
 
    // Replace the vector of track candidates with the new modified one.

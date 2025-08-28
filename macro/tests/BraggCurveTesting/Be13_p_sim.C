@@ -1,13 +1,13 @@
 void Be13_p_sim(Int_t nEvents = 10000, Int_t subnum = 0, Double_t angle_cm = 15)
 {
-   //Int_t subnum = 0,
+   // Int_t subnum = 0,
    srand((unsigned)time(NULL));
    gRandom->SetSeed(subnum);
 
    TString dir = getenv("VMCWORKDIR");
 
    // Output file name
-   double minangle,maxangle;
+   double minangle, maxangle;
    minangle = angle_cm, maxangle = angle_cm;
    TString outFile = TString::Format("./attpcsim_13Be_p_%.1f_%.1f_550Torr.root", minangle, maxangle);
 
@@ -49,21 +49,21 @@ void Be13_p_sim(Int_t nEvents = 10000, Int_t subnum = 0, Double_t angle_cm = 15)
    Int_t q = 4;  // Charge State
    Int_t m = 1;  // Multiplicity  NOTE: Due the limitation of the TGenPhaseSpace accepting only pointers/arrays the
                  // maximum multiplicity has been set to 10 particles.
-   Double_t kBeam = 18;		//Beam energy per nucleon(MeV/u)
-   Double_t BExcEner = 0.0;	//Excitation energy of beam
-   Double_t Beam_mass = 12.026922;	//Target mass in MeV
-   Double_t Target_mass = 2.014101;	//Beam mass in MeV
-   Double_t Recoil_mass = 1.007825; 	//Recoil mass in MeV
-   Double_t Residual_mass = 13.036134;	//Residual mass in MeV
-   Double_t px = 0.000 / a;    // X-Momentum GeV/ per nucleon!!!!!!
-   Double_t py = 0.000 / a;    // Y-Momentum GeV/ per nucleon!!!!!!
-   Double_t pz = 2.21261 / a; // Z-Momentum GeV/ per nucleon!!!!!!
+   Double_t kBeam = 18;                // Beam energy per nucleon(MeV/u)
+   Double_t BExcEner = 0.0;            // Excitation energy of beam
+   Double_t Beam_mass = 12.026922;     // Target mass in MeV
+   Double_t Target_mass = 2.014101;    // Beam mass in MeV
+   Double_t Recoil_mass = 1.007825;    // Recoil mass in MeV
+   Double_t Residual_mass = 13.036134; // Residual mass in MeV
+   Double_t px = 0.000 / a;            // X-Momentum GeV/ per nucleon!!!!!!
+   Double_t py = 0.000 / a;            // Y-Momentum GeV/ per nucleon!!!!!!
+   Double_t pz = 2.21261 / a;          // Z-Momentum GeV/ per nucleon!!!!!!
    Double_t NomEnergy = 71.9428;
 
    AtTPCIonGenerator *ionGen = new AtTPCIonGenerator("Ion", z, a, q, m, px, py, pz, BExcEner, Beam_mass, NomEnergy);
    ionGen->SetSpotRadius(0, -100, 0);
 
-   primGen->AddGenerator(ionGen);	//add the ion generator
+   primGen->AddGenerator(ionGen); // add the ion generator
 
    // primGen->SetBeam(1,1,0,0); //These parameters change the position of the vertex of every track added to the
    // Primary Generator
@@ -85,7 +85,7 @@ void Be13_p_sim(Int_t nEvents = 10000, Int_t subnum = 0, Double_t angle_cm = 15)
 
    mult = 4; // Number of Nuclei involved in the reaction (Should be always 4) THIS DEFINITION IS MANDATORY (and the
              // number of particles must be the same)
-   //ResEner = 0.06; // MeV
+   // ResEner = 0.06; // MeV
 
    // ---- Beam ----
    Zp.push_back(z); // 12Be TRACKID=0
@@ -98,40 +98,41 @@ void Be13_p_sim(Int_t nEvents = 10000, Int_t subnum = 0, Double_t angle_cm = 15)
    ExE.push_back(BExcEner);
 
    // ---- Target ----
-   Zp.push_back(1);  // 2H
+   Zp.push_back(1); // 2H
    Ap.push_back(2); //
-   Qp.push_back(0);  //
+   Qp.push_back(0); //
    Pxp.push_back(0.0);
    Pyp.push_back(0.0);
    Pzp.push_back(0.0);
    Mass.push_back(Target_mass); // uma
-   ExE.push_back(0.0); // In MeV
-		       //
+   ExE.push_back(0.0);          // In MeV
+                                //
 
    //--- Scattered -----
-   Zp.push_back(4); // 13Be  TRACKID=2
+   Zp.push_back(4);  // 13Be  TRACKID=2
    Ap.push_back(13); //
    Qp.push_back(0);
    Pxp.push_back(0.0);
    Pyp.push_back(0.0);
    Pzp.push_back(0.0);
    Mass.push_back(Residual_mass); // uma
-   ExE.push_back(0.0);    //
+   ExE.push_back(0.0);            //
 
    // ---- Recoil ------
    Zp.push_back(1);
    Ap.push_back(1); //
-   Qp.push_back(0);  //
+   Qp.push_back(0); //
    Pxp.push_back(0.0);
    Pyp.push_back(0.0);
    Pzp.push_back(0.0);
    Mass.push_back(Recoil_mass); // uma
-   ExE.push_back(0.0); // In MeV
+   ExE.push_back(0.0);          // In MeV
 
    Double_t ThetaMinCMS = minangle;
    Double_t ThetaMaxCMS = maxangle;
 
-   AtTPC2Body *TwoBody = new AtTPC2Body("TwoBody", &Zp, &Ap, &Qp, mult, &Pxp, &Pyp, &Pzp, &Mass, &ExE, ResEner, ThetaMinCMS, ThetaMaxCMS);
+   AtTPC2Body *TwoBody =
+      new AtTPC2Body("TwoBody", &Zp, &Ap, &Qp, mult, &Pxp, &Pyp, &Pzp, &Mass, &ExE, ResEner, ThetaMinCMS, ThetaMaxCMS);
    primGen->AddGenerator(TwoBody);
 
    run->SetGenerator(primGen);

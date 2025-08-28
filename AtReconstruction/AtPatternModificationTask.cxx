@@ -8,8 +8,10 @@
 
 ClassImp(AtPatternModificationTask);
 
-AtPatternModificationTask::AtPatternModificationTask(std::vector<std::unique_ptr<AtPatternModification>> patternModifications)
-   : fInputBranchName("AtPatternEvent"), fOutputBranchName("AtPatternEventModified"), fRawEventBranchName("AtRawEvent"), fEventBranchName("AtEvent"), fPatternEventModifiedArray(TClonesArray("AtPatternEvent", 1))
+AtPatternModificationTask::AtPatternModificationTask(
+   std::vector<std::unique_ptr<AtPatternModification>> patternModifications)
+   : fInputBranchName("AtPatternEvent"), fOutputBranchName("AtPatternEventModified"), fRawEventBranchName("AtRawEvent"),
+     fEventBranchName("AtEvent"), fPatternEventModifiedArray(TClonesArray("AtPatternEvent", 1))
 {
    fPatternModifications = std::move(patternModifications);
 }

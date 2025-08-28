@@ -6,9 +6,9 @@
 #include "AtPatternModification.h"
 #include "AtTrack.h"
 
-#include <TMath.h>
 #include <Math/Point3D.h>
 #include <Math/Point3Dfwd.h> // for XYZPoint
+#include <TMath.h>
 
 #include <cmath>
 #include <random>
@@ -42,7 +42,8 @@ public:
 
    virtual void Init() override;
 
-   virtual void ModifyPatternEvent(AtPatternEvent *patternEvent, AtRawEvent *rawEvent = nullptr, AtEvent *event = nullptr) override;
+   virtual void
+   ModifyPatternEvent(AtPatternEvent *patternEvent, AtRawEvent *rawEvent = nullptr, AtEvent *event = nullptr) override;
 
    void SetLineDistThreshold(Double_t lineDistThreshold) { fLineDistThreshold = lineDistThreshold; }
    void SetTSSemiWidth(int value) { fTSSemiWidth = value; }
@@ -61,7 +62,6 @@ protected:
    void GenerateBraggCurveHistogram(AtTrack &modifiedTrack);
 
    void InitializePSA();
-
 };
 
 #endif

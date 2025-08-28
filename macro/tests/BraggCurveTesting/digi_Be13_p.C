@@ -2,10 +2,11 @@ bool reduceFunc(AtRawEvent *evt);
 
 void digi_Be13_p(int nEvent = 10000, int subnum = 0, int angle_cm = 15)
 {
-   const char* filename = "13Be_p";
+   const char *filename = "13Be_p";
    double minangle, maxangle;
    minangle = angle_cm, maxangle = angle_cm;
-   TString outputFile = TString::Format("output_digi_rcnp_%s_%.1f_%.1f_hole_550Torr.root", filename, minangle, maxangle);
+   TString outputFile =
+      TString::Format("output_digi_rcnp_%s_%.1f_%.1f_hole_550Torr.root", filename, minangle, maxangle);
    TString scriptfile = "e12014_pad_map_size.xml";
 
    TString paramFile = "BraggCurveTesting.par";
@@ -38,22 +39,22 @@ void digi_Be13_p(int nEvent = 10000, int subnum = 0, int angle_cm = 15)
    auto mapping = std::make_shared<AtTpcMap>();
    mapping->ParseXMLMap(mapParFile.Data());
    mapping->GeneratePadPlane();
-   mapping->ParseInhibitMap( dir + "/resources/coordmap_inhi.txt", AtMap::InhibitType::kTotal);
+   mapping->ParseInhibitMap(dir + "/resources/coordmap_inhi.txt", AtMap::InhibitType::kTotal);
 
    AtClusterizeTask *clusterizer = new AtClusterizeTask(std::make_shared<AtClusterizeLine>());
    clusterizer->SetPersistence(kTRUE);
-   //clusterizer->SetATTPCInverted(true);
+   // clusterizer->SetATTPCInverted(true);
 
    AtPulseTask *pulse = new AtPulseTask(std::make_shared<AtPulseLine>(mapping));
    pulse->SetPersistence(kTRUE);
 
    auto psa = std::make_unique<AtPSAMax>();
-   //psa->SetThreshold(5);
+   // psa->SetThreshold(5);
 
    // Create PSA task
    AtPSAtask *psaTask = new AtPSAtask(std::move(psa));
    psaTask->SetPersistence(kTRUE);
-   //psaTask->SetATTPCInverted(true);
+   // psaTask->SetATTPCInverted(true);
 
    AtRansacTask *ransacTask = new AtRansacTask();
    ransacTask->SetPersistence(kTRUE);
@@ -61,8 +62,9 @@ void digi_Be13_p(int nEvent = 10000, int subnum = 0, int angle_cm = 15)
    ransacTask->SetDistanceThreshold(15.0); // 12
    ransacTask->SetMinHitsLine(10);         // 10
    // in AtRansacTask parttern type set to line : auto patternType = AtPatterns::PatternType::kLine;
-   ransacTask->SetAlgorithm(1); // 1=Homemade Ransac (default); 2=Homemade Mlesac; 3=Homemade Lmeds;//4
-   ransacTask->SetRanSamMode(5); // SampleMethod { kUniform = 0, kChargeWeighted = 1, kGaussian = 2, kWeightedGaussian = 3, kWeightedY = 4 };//2
+   ransacTask->SetAlgorithm(1);  // 1=Homemade Ransac (default); 2=Homemade Mlesac; 3=Homemade Lmeds;//4
+   ransacTask->SetRanSamMode(5); // SampleMethod { kUniform = 0, kChargeWeighted = 1, kGaussian = 2, kWeightedGaussian =
+                                 // 3, kWeightedY = 4 };//2
    ransacTask->SetChargeThreshold(0); // 150
    ransacTask->SetNumItera(500);
 
@@ -75,7 +77,7 @@ void digi_Be13_p(int nEvent = 10000, int subnum = 0, int angle_cm = 15)
    patternModifications.push_back(std::move(braggCurveFinder));
 
    AtPatternModificationTask *patternModTask = new AtPatternModificationTask(std::move(patternModifications));
-   //patternModTask->SetOutputBranch("AtPatternEvent");
+   // patternModTask->SetOutputBranch("AtPatternEvent");
    patternModTask->SetPersistence(kTRUE);
 
    fRun->AddTask(clusterizer);
@@ -88,7 +90,7 @@ void digi_Be13_p(int nEvent = 10000, int subnum = 0, int angle_cm = 15)
    fRun->Init();
 
    timer.Start();
-   //fRun->Run(0, 30000);
+   // fRun->Run(0, 30000);
    fRun->Run(0, nEvent);
    timer.Stop();
 
