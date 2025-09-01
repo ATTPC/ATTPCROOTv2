@@ -1,12 +1,12 @@
-#include "AtFitTrackResult.h"
+#include "AtFitTrackMetadata.h"
 
 #include <iostream>
-ClassImp(AtFitTrackResult);
+ClassImp(AtFitTrackMetadata);
 
-void AtFitTrackResult::Print() const
+void AtFitTrackMetadata::Print() const
 
 {
-   std::cout << " Fit result for track with ID " << fTrackID << ":" << std::endl;
+   std::cout << " Fit metadata for track with ID " << fTrackID << ":" << std::endl;
 
    std::cout << " Statistics: " << std::endl;
    std::cout << "   PValue    = " << fPValue << std::endl;

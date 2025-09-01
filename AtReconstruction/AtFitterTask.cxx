@@ -2,6 +2,7 @@
 
 #include "AtDigiPar.h"
 #include "AtEvent.h"
+#include "AtFitMetadata.h"
 #include "AtFitter.h"
 #include "AtParsers.h"
 #include "AtPatternEvent.h"
@@ -28,7 +29,7 @@ ClassImp(AtFitterTask);
 AtFitterTask::AtFitterTask(std::unique_ptr<AtFITTER::AtFitter> fitter)
    : fInputBranchName("AtPatternEvent"), fOutputBranchName("AtTrackingEvent"), fIsPersistence(kFALSE),
      fTrackingEventArray(TClonesArray("AtTrackingEvent", 1)), fFitter(std::move(fitter)), fRawEventBranchName(""),
-     fEventBranchName(""), fFitResultBranchName("")
+     fEventBranchName(""), fFitMetadataBranchName("")
 {
 }
 
@@ -57,10 +58,10 @@ void AtFitterTask::SetEventBranch(TString branchName)
    fEventBranchName = branchName;
 }
 
-void AtFitterTask::SetFitResultBranch(TString branchName)
+void AtFitterTask::SetFitMetadataBranch(TString branchName)
 {
-   fFitResultBranchName = branchName;
-   fSaveFitResult = true;
+   fFitMetadataBranchName = branchName;
+   fSaveFitMetadata = true;
 }
 
 InitStatus AtFitterTask::Init()
@@ -78,7 +79,7 @@ InitStatus AtFitterTask::Init()
    }
 
    ioMan->Register(fOutputBranchName, "AtTPC", &fTrackingEventArray, fIsPersistence);
-   ioMan->Register(fFitResultBranchName, "AtTPC", &fFitResultArray, fIsPersistence && fSaveFitResult);
+   ioMan->Register(fFitMetadataBranchName, "AtTPC", &fFitMetadataArray, fIsPersistence && fSaveFitMetadata);
 
    fRawEventArray = dynamic_cast<TClonesArray *>(ioMan->GetObject(fRawEventBranchName));
    if (fRawEventArray == nullptr) {
@@ -132,7 +133,7 @@ void AtFitterTask::Exec(Option_t *option)
    fTrackingEventArray.Delete();
 
    auto trackingEvent = dynamic_cast<AtTrackingEvent *>(fTrackingEventArray.ConstructedAt(0));
-   auto fitResult = dynamic_cast<AtFitResult *>(fFitResultArray.ConstructedAt(0));
+   auto fitMetadata = dynamic_cast<AtFitMetadata *>(fFitMetadataArray.ConstructedAt(0));
 
    LOG(info) << " AtFitterTask::Exec() : Fitting event " << fEventCnt;
 
@@ -141,7 +142,7 @@ void AtFitterTask::Exec(Option_t *option)
    LOG(info) << " AtFitterTask::Exec() : Number of candidate tracks : " << tracks.size();
 
    fFitter->SetPatternEvent(patternEvent);
-   fFitter->SetFitResult(fitResult);
+   fFitter->SetFitMetadata(fitMetadata);
    auto fittedTracks = fFitter->ProcessEvent();
 
    LOG(info) << " AtFitterTask::Exec() : Number of fitted tracks : " << fittedTracks.size();

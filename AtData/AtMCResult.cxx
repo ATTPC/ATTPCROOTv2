@@ -7,7 +7,7 @@ namespace MCFitter {
 void AtMCResult::Print() const
 
 {
-   AtFitTrackResult::Print();
+   AtFitTrackMetadata::Print();
    std::cout << " MC fit specifics: " << std::endl;
 
    std::cout << "   Iteration = " << fIterNum << std::endl;

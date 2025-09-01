@@ -54,7 +54,7 @@ public:
    void SetRawEventBranch(TString branchName);
    void SetEventBranch(TString branchName);
 
-   void SetFitResultBranch(TString branchName);
+   void SetFitMetadataBranch(TString branchName);
 
    virtual InitStatus Init();
    virtual void SetParContainers();
@@ -80,9 +80,9 @@ private:
    TClonesArray *fEventArray;
 
    // Include the option to store all the fit metadata in a AtFitResult branch.
-   TString fFitResultBranchName;
-   TClonesArray fFitResultArray;
-   bool fSaveFitResult{false};
+   TString fFitMetadataBranchName;
+   TClonesArray fFitMetadataArray;
+   bool fSaveFitMetadata{false};
 
    ClassDef(AtFitterTask, 2);
 };

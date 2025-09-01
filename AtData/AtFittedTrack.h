@@ -1,7 +1,7 @@
 #ifndef ATFITTEDTRACK_H
 #define ATFITTEDTRACK_H
 
-#include "AtFitTrackResult.h"
+#include "AtFitTrackMetadata.h"
 
 #include <Math/Point3D.h>
 #include <Math/Point3Dfwd.h>
@@ -25,7 +25,7 @@ class TMemberInspector;
 class AtFittedTrack : public TObject {
 public:
    using XYZVector = ROOT::Math::XYZVector;
-   using TrackResultPtr = std::unique_ptr<AtFitTrackResult>;
+   using TrackMetadataPtr = std::unique_ptr<AtFitTrackMetadata>;
 
    struct Kinematics {
       Double_t kineticEnergy{-1};    // Kinetic energy
@@ -81,7 +81,7 @@ private:
    Statistics fStats;
 
    // Copy of the AtFitTrackResult object corresponding to the fit used for this track.
-   TrackResultPtr fTrackResult{nullptr};
+   TrackMetadataPtr fTrackMetadata{nullptr};
 
 public:
    AtFittedTrack() = default;
@@ -128,7 +128,7 @@ public:
       fStats.fitConverged = conv;
    }
 
-   void SetTrackResult(TrackResultPtr trackResult) { fTrackResult = std::move(trackResult); }
+   void SetTrackMetadata(TrackMetadataPtr trackMetadata) { fTrackMetadata = std::move(trackMetadata); }
 
    const Int_t GetTrackID() { return fTrackID; }
 
@@ -143,7 +143,7 @@ public:
    const TrackProperties GetTrackProperties() { return fTrackProperties; }
    const Statistics GetStats() { return fStats; }
 
-   TrackResultPtr &GetTrackResult() { return fTrackResult; }
+   TrackMetadataPtr &GetTrackMetadata() { return fTrackMetadata; }
 
    ClassDef(AtFittedTrack, 2);
 };

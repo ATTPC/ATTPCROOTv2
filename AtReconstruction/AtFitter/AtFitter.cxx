@@ -5,7 +5,7 @@ ClassImp(AtFITTER::AtFitter);
 void AtFITTER::AtFitter::Reset()
 {
    fPatternEvent = nullptr;
-   fFitResult = nullptr;
+   fFitMetadata = nullptr;
    fRawEvent = nullptr;
    fEvent = nullptr;
 }

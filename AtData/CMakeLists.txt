@@ -54,8 +54,8 @@ set(SRCS
   AtPattern/AtPadPlaneElement.cxx
 
   AtFittedTrack.cxx
-  AtFitResult.cxx
-  AtFitTrackResult.cxx
+  AtFitMetadata.cxx
+  AtFitTrackMetadata.cxx
   AtMCResult.cxx
 
 

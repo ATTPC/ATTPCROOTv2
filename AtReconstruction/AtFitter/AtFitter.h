@@ -1,7 +1,7 @@
 #ifndef AtFITTER_H
 #define AtFITTER_H
 
-#include "AtFitResult.h"
+#include "AtFitMetadata.h"
 
 #include <Rtypes.h>
 #include <TObject.h>
@@ -26,17 +26,17 @@ namespace AtFITTER {
 
 class AtFitter : public TObject {
 public:
-   using TrackResultPtr = std::unique_ptr<AtFitTrackResult>;
-   using TrackResultsVector = std::vector<TrackResultPtr>;
-   using TrackResultsSet =
-      std::set<TrackResultPtr, std::function<bool(const TrackResultPtr &, const TrackResultPtr &)>>;
+   using TrackMetadataPtr = std::unique_ptr<AtFitTrackMetadata>;
+   using TrackMetadatasVector = std::vector<TrackMetadataPtr>;
+   using TrackMetadatasSet =
+      std::set<TrackMetadataPtr, std::function<bool(const TrackMetadataPtr &, const TrackMetadataPtr &)>>;
 
 protected:
    // Pointer to the AtPatternEvent to be fitted.
    AtPatternEvent *fPatternEvent{nullptr};
 
    // Pointer to the AtFitResult object in which store the fit metadata.
-   AtFitResult *fFitResult{nullptr};
+   AtFitMetadata *fFitMetadata{nullptr};
 
    // Pointers to AtRawEvent and AtEvent. In case some specific fitter needs to access information
    // in any of those branches.
@@ -44,7 +44,7 @@ protected:
    AtEvent *fEvent{nullptr};
 
    // Compare function that will be used to sort the fit results for a given track.
-   virtual bool CompareTrackFitsFunction(const TrackResultPtr &trackResultA, const TrackResultPtr &trackResultB) = 0;
+   virtual bool CompareTrackFitsFunction(const TrackMetadataPtr &trackMetadataA, const TrackMetadataPtr &trackMetadataB) = 0;
 
 public:
    AtFitter() = default;
@@ -55,7 +55,7 @@ public:
 
    // Mandatory to set.
    void SetPatternEvent(AtPatternEvent *patternEvent) { fPatternEvent = patternEvent; }
-   void SetFitResult(AtFitResult *fitResult) { fFitResult = fitResult; }
+   void SetFitMetadata(AtFitMetadata *fitMetadata) { fFitMetadata = fitMetadata; }
 
    // Optional to set.
    void SetRawEvent(AtRawEvent *rawEvent) { fRawEvent = rawEvent; }

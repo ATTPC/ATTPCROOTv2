@@ -1,5 +1,5 @@
-#ifndef ATFITTRACKRESULT_H
-#define ATFITTRACKRESULT_H
+#ifndef ATFITTRACKMETADATA_H
+#define ATFITTRACKMETADATA_H
 
 #include <Rtypes.h> // for Double_t, THashConsistencyHolder, ClassDefOverride
 #include <TObject.h>
@@ -11,9 +11,9 @@ class TMemberInspector;
 /**
  * Class for storing the result of the fit of an AtTrack from an AtFitter class.
  */
-class AtFitTrackResult : public TObject {
+class AtFitTrackMetadata : public TObject {
 protected:
-   // Copy of the statistics parameters which are also saved in AtFittedTrack.
+   // Statistics parameters of the fit.
    Double_t fPValue{0};
    Double_t fChi2{0};
    Int_t fNdf{0};
@@ -23,8 +23,8 @@ protected:
    Int_t fTrackID{-1};
 
 public:
-   AtFitTrackResult() = default;
-   ~AtFitTrackResult() = default;
+   AtFitTrackMetadata() = default;
+   ~AtFitTrackMetadata() = default;
 
    void SetPValue(Double_t value) { fPValue = value; }
    void SetChi2(Double_t value) { fChi2 = value; }
@@ -40,7 +40,7 @@ public:
 
    virtual void Print() const;
 
-   ClassDefOverride(AtFitTrackResult, 1);
+   ClassDefOverride(AtFitTrackMetadata, 1);
 };
 
 #endif

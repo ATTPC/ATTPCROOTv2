@@ -1,7 +1,7 @@
 #ifndef ATMCRESULT_H
 #define ATMCRESULT_H
 
-#include "AtFitTrackResult.h"
+#include "AtFitTrackMetadata.h"
 
 #include <Rtypes.h> // for Double_t, THashConsistencyHolder, ClassDefOverride
 #include <TObject.h>
@@ -17,7 +17,7 @@ namespace MCFitter {
 /**
  * Class for storing the result of an iteration in the AtMCFitter method.
  */
-class AtMCResult : public AtFitTrackResult {
+class AtMCResult : public AtFitTrackMetadata {
 public:
    using ParamMap = std::map<std::string, Double_t>;
 
