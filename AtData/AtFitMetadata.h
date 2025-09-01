@@ -27,7 +27,13 @@ public:
    using MetadatasMap = std::map<Int_t, TrackMetadatasVector>;
 
 protected:
-   // Vector to store the results for all different fits done to all tracks in the event.
+   /**
+    * Map to store the metadatas for all different fits done to all tracks in the event.
+    * The Int_t corresponds to the trackID for which the metadatas correspond to.
+    * The vector of AtFitTrackMetadata contains the different metadatas for all fits
+    * that have been done for the track (for example, different assumptions for the
+    * particles of the track, different initial conditions, etc...).
+    */
    MetadatasMap fMetadatas;
 
    // Event ID for which this fit was done.
@@ -37,7 +43,10 @@ public:
    AtFitMetadata() = default;
    ~AtFitMetadata() = default;
 
-   void SetTrackMetadatasVector(Int_t trackID, TrackMetadatasVector metadatas) { fMetadatas[trackID] = std::move(metadatas); }
+   void SetTrackMetadatasVector(Int_t trackID, TrackMetadatasVector metadatas)
+   {
+      fMetadatas[trackID] = std::move(metadatas);
+   }
 
    void SetEventID(ULong_t id) { fEventID = id; }
 

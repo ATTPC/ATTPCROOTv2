@@ -36,18 +36,10 @@ public:
       Double_t phiXtr{-1};           // Extrapolated phi scattering angle
    };
 
-   struct Statistics {
-      Double_t pValue{-1};    // Probability for rejecting the fit hypothesis
-      Double_t chi2{-1};      // Chi2 of the fit
-      Int_t NDF{-1};          // Number of degrees of freedom for the fit
-      Double_t redChi2{-1};   // Reduced chi2
-      Bool_t fitConverged{0}; // Whether or not the fit managed to converge
-   };
-
    struct ParticleInfo {
       TString idPDG{""}; // PDG code of the particle
-      Int_t charge{0};   // Charge of the particle
-      Double_t mass{-1}; // Mass of the particle
+      Int_t charge{0};   // Charge number of the particle
+      Double_t mass{-1}; // Mass of the particle in amu
    };
 
    struct TrackProperties {
@@ -76,9 +68,6 @@ private:
 
    // Track properties.
    TrackProperties fTrackProperties;
-
-   // Parameters regarding the statistics of the fit.
-   Statistics fStats;
 
    // Copy of the AtFitTrackResult object corresponding to the fit used for this track.
    TrackMetadataPtr fTrackMetadata{nullptr};
@@ -119,15 +108,6 @@ public:
       fTrackProperties.trackPoints = trackPoints;
    }
 
-   void SetStats(Double_t pvalue, Double_t chi2, Int_t ndf, Bool_t conv)
-   {
-      fStats.pValue = pvalue;
-      fStats.chi2 = chi2;
-      fStats.NDF = ndf;
-      fStats.redChi2 = chi2 / ndf;
-      fStats.fitConverged = conv;
-   }
-
    void SetTrackMetadata(TrackMetadataPtr trackMetadata) { fTrackMetadata = std::move(trackMetadata); }
 
    const Int_t GetTrackID() { return fTrackID; }
@@ -141,7 +121,6 @@ public:
    const XYZVector GetVertex() { return fVertex[0]; }
 
    const TrackProperties GetTrackProperties() { return fTrackProperties; }
-   const Statistics GetStats() { return fStats; }
 
    TrackMetadataPtr &GetTrackMetadata() { return fTrackMetadata; }
 

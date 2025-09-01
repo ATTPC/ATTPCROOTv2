@@ -44,7 +44,8 @@ protected:
    AtEvent *fEvent{nullptr};
 
    // Compare function that will be used to sort the fit results for a given track.
-   virtual bool CompareTrackFitsFunction(const TrackMetadataPtr &trackMetadataA, const TrackMetadataPtr &trackMetadataB) = 0;
+   virtual bool
+   CompareTrackFitsFunction(const TrackMetadataPtr &trackMetadataA, const TrackMetadataPtr &trackMetadataB) = 0;
 
 public:
    AtFitter() = default;
