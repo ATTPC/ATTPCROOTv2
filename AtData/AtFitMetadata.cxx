@@ -1,3 +1,3 @@
-#include "AtFitResult.h"
+#include "AtFitMetadata.h"
 
-ClassImp(AtFitResult);
+ClassImp(AtFitMetadata);
