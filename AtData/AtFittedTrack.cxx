@@ -2,8 +2,7 @@
 
 ClassImp(AtFittedTrack);
 
-void AtFittedTrack::SetKinematics(int particleIdx, Double_t energy, Double_t theta, Double_t phi, Double_t energyxtr,
-                                  Double_t thetaxtr, Double_t phixtr)
+void AtFittedTrack::SetKinematics(int particleIdx, Double_t energy, Double_t theta, Double_t phi)
 {
    while (particleIdx >= fKinematics.size()) {
       Kinematics newKinematics;
@@ -13,9 +12,18 @@ void AtFittedTrack::SetKinematics(int particleIdx, Double_t energy, Double_t the
    fKinematics[particleIdx].kineticEnergy = energy;
    fKinematics[particleIdx].theta = theta;
    fKinematics[particleIdx].phi = phi;
-   fKinematics[particleIdx].kineticEnergyXtr = energyxtr;
-   fKinematics[particleIdx].thetaXtr = thetaxtr;
-   fKinematics[particleIdx].phiXtr = phixtr;
+}
+
+void AtFittedTrack::SetKinematicsXtr(int particleIdx, Double_t energyxtr, Double_t thetaxtr, Double_t phixtr)
+{
+   while (particleIdx >= fKinematicsXtr.size()) {
+      Kinematics newKinematics;
+      fKinematicsXtr.push_back(newKinematics);
+   }
+
+   fKinematicsXtr[particleIdx].kineticEnergy = energyxtr;
+   fKinematicsXtr[particleIdx].theta = thetaxtr;
+   fKinematicsXtr[particleIdx].phi = phixtr;
 }
 
 void AtFittedTrack::SetParticleInfo(int particleIdx, std::string pdg, Int_t charge, Double_t mass)
