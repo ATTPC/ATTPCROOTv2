@@ -41,8 +41,13 @@ namespace EventFit {
 class AtFitter;
 } // namespace EventFit
 
+/**
+ * Task that takes a certain AtFitter and uses to fit an AtPatternEvent. The AtFitter may need access to the AtRawEvent
+ * or AtEvent as well, so pointers to them are also read and passed to the AtFitter. An AtFitMetadata object may also be
+ * written, which would contain the fit metadata information for all fits done to all AtTracks.
+ * Specific logic of the fitting is contained in AtFitter and derived classes.
+ */
 class AtFitterTask : public FairTask {
-
 public:
    AtFitterTask(std::unique_ptr<EventFit::AtFitter> fitter);
    ~AtFitterTask() = default;
@@ -53,7 +58,6 @@ public:
 
    void SetRawEventBranch(TString branchName);
    void SetEventBranch(TString branchName);
-
    void SetFitMetadataBranch(TString branchName);
 
    virtual InitStatus Init();
