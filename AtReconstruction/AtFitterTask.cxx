@@ -26,7 +26,7 @@ class AtFittedTrack;
 
 ClassImp(AtFitterTask);
 
-AtFitterTask::AtFitterTask(std::unique_ptr<AtFITTER::AtFitter> fitter)
+AtFitterTask::AtFitterTask(std::unique_ptr<EventFit::AtFitter> fitter)
    : fInputBranchName("AtPatternEvent"), fOutputBranchName("AtTrackingEvent"), fIsPersistence(kFALSE),
      fTrackingEventArray(TClonesArray("AtTrackingEvent", 1)), fFitter(std::move(fitter)), fRawEventBranchName(""),
      fEventBranchName(""), fFitMetadataBranchName("")
@@ -113,42 +113,35 @@ void AtFitterTask::SetParContainers()
 
 void AtFitterTask::Exec(Option_t *option)
 {
-   fFitter->Reset();
-
    if (fPatternEventArray->GetEntriesFast() == 0)
       return;
 
-   // If there is AtRawEvent available, pass it to the fitter.
-   if (fRawEventArray) {
-      AtRawEvent *rawEvent = dynamic_cast<AtRawEvent *>(fRawEventArray->At(0));
-      fFitter->SetRawEvent(rawEvent);
-   }
+   // If there is AtRawEvent available, get it so it can be passed to the fitter.
+   AtRawEvent *rawEvent = nullptr;
+   if (fRawEventArray)
+      rawEvent = dynamic_cast<AtRawEvent *>(fRawEventArray->At(0));
 
-   // If there is AtEvent available, pass it to the fitter.
-   if (fEventArray) {
-      AtEvent *event = dynamic_cast<AtEvent *>(fEventArray->At(0));
-      fFitter->SetEvent(event);
-   }
+   // If there is AtEvent available, get it so it can be passed to the fitter.
+   AtEvent *event = nullptr;
+   if (fEventArray)
+      event = dynamic_cast<AtEvent *>(fEventArray->At(0));
 
    fTrackingEventArray.Delete();
 
    auto trackingEvent = dynamic_cast<AtTrackingEvent *>(fTrackingEventArray.ConstructedAt(0));
    auto fitMetadata = dynamic_cast<AtFitMetadata *>(fFitMetadataArray.ConstructedAt(0));
 
-   LOG(info) << " AtFitterTask::Exec() : Fitting event " << fEventCnt;
+   LOG(info) << " Fitting event " << fEventCnt;
 
    AtPatternEvent *patternEvent = dynamic_cast<AtPatternEvent *>(fPatternEventArray->At(0));
    std::vector<AtTrack> &tracks = patternEvent->GetTrackCand();
-   LOG(info) << " AtFitterTask::Exec() : Number of candidate tracks : " << tracks.size();
+   LOG(info) << " Number of candidate tracks : " << tracks.size();
 
-   fFitter->SetPatternEvent(patternEvent);
-   fFitter->SetFitMetadata(fitMetadata);
-   auto fittedTracks = fFitter->ProcessEvent();
+   fFitter->FitEvent(trackingEvent, patternEvent, fitMetadata, rawEvent, event);
 
-   LOG(info) << " AtFitterTask::Exec() : Number of fitted tracks : " << fittedTracks.size();
+   auto &fittedTracks = trackingEvent->GetFittedTracks();
 
-   for (auto &fittedTrack : fittedTracks)
-      trackingEvent->AddFittedTrack(std::move(fittedTrack));
+   LOG(info) << " Number of fitted tracks : " << fittedTracks.size();
 
    ++fEventCnt;
 }

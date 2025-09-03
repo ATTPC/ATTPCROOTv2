@@ -1,11 +1,22 @@
 #include "AtFitter.h"
 
-ClassImp(AtFITTER::AtFitter);
+#include "AtPatternEvent.h"
+#include "AtTrackingEvent.h"
 
-void AtFITTER::AtFitter::Reset()
+ClassImp(EventFit::AtFitter);
+
+void EventFit::AtFitter::FitEvent(AtTrackingEvent *trackingEvent, AtPatternEvent *patternEvent,
+                                  AtFitMetadata *fitMetadata, AtRawEvent *rawEvent, AtEvent *event)
 {
-   fPatternEvent = nullptr;
-   fFitMetadata = nullptr;
-   fRawEvent = nullptr;
-   fEvent = nullptr;
+   // Extract the candidate AtTracks.
+   std::vector<AtTrack> tracks = patternEvent->GetTrackCand();
+
+   // Save the original AtTracks to the AtTrackingEvent.
+   trackingEvent->SetTrackArray(&tracks);
+
+   // Iterate over the AtTracks and store the AtFittedTracks in the AtTrackingEvent.
+   for (auto track : tracks) {
+      std::unique_ptr<AtFittedTrack> fittedTrack(GetFittedTrack(&track, fitMetadata, rawEvent, event));
+      trackingEvent->AddFittedTrack(std::move(fittedTrack));
+   }
 }

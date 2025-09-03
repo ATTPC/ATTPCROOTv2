@@ -37,14 +37,14 @@ class AtTrack;
 namespace AtTools {
 class AtTrackTransformer;
 } // namespace AtTools
-namespace AtFITTER {
+namespace EventFit {
 class AtFitter;
-} // namespace AtFITTER
+} // namespace EventFit
 
 class AtFitterTask : public FairTask {
 
 public:
-   AtFitterTask(std::unique_ptr<AtFITTER::AtFitter> fitter);
+   AtFitterTask(std::unique_ptr<EventFit::AtFitter> fitter);
    ~AtFitterTask() = default;
 
    void SetInputBranch(TString branchName);
@@ -66,7 +66,7 @@ private:
 
    Bool_t fIsPersistence; //!< Persistence check variable
 
-   std::unique_ptr<AtFITTER::AtFitter> fFitter;
+   std::unique_ptr<EventFit::AtFitter> fFitter;
    AtDigiPar *fPar{nullptr};
    TClonesArray *fPatternEventArray;
    TClonesArray fTrackingEventArray;

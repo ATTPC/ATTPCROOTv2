@@ -46,14 +46,15 @@
 #pragma link C++ namespace kf;
 #pragma link C++ namespace kf::util;
 
-#pragma link C++ namespace AtFITTER;
+#pragma link C++ namespace EventFit;
 #pragma link C++ class AtFitterTask + ;
-#pragma link C++ class AtFITTER::AtFitter - ;
+#pragma link C++ class EventFit::AtFitter - ;
 
 /* Classes that depend on Genfit2 */
+#pragma link C++ namespace AtFITTER;
 #pragma link C++ class genfit::AtSpacepointMeasurement + ;
 #pragma link C++ class AtFITTER::AtFitterOld + ;
-#pragma link C++ class AtFITTER::AtFitterTaskOld + ;
+#pragma link C++ class AtFitterTaskOld + ;
 #pragma link C++ class AtFITTER::AtGenfit + ;
 
 #pragma link C++ namespace MCFitter;

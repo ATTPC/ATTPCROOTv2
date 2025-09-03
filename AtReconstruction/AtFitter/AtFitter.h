@@ -20,9 +20,12 @@ class TClass;
 class TMemberInspector;
 class AtRawEvent;
 class AtEvent;
+class AtFitMetadata;
 class AtPatternEvent;
+class AtRawEvent;
+class AtTrackingEvent;
 
-namespace AtFITTER {
+namespace EventFit {
 
 class AtFitter : public TObject {
 public:
@@ -31,44 +34,26 @@ public:
    using TrackMetadatasSet =
       std::set<TrackMetadataPtr, std::function<bool(const TrackMetadataPtr &, const TrackMetadataPtr &)>>;
 
+public:
+   AtFitter() = default;
+   ~AtFitter() = default;
+
+   virtual void FitEvent(AtTrackingEvent *trackingEvent, AtPatternEvent *patternEvent,
+                         AtFitMetadata *fitMetadata = nullptr, AtRawEvent *rawEvent = nullptr,
+                         AtEvent *event = nullptr);
+   virtual void Init() = 0;
+
 protected:
-   // Pointer to the AtPatternEvent to be fitted.
-   AtPatternEvent *fPatternEvent{nullptr};
-
-   // Pointer to the AtFitResult object in which store the fit metadata.
-   AtFitMetadata *fFitMetadata{nullptr};
-
-   // Pointers to AtRawEvent and AtEvent. In case some specific fitter needs to access information
-   // in any of those branches.
-   AtRawEvent *fRawEvent{nullptr};
-   AtEvent *fEvent{nullptr};
+   virtual AtFittedTrack *GetFittedTrack(AtTrack *track, AtFitMetadata *fitMetadata = nullptr,
+                                         AtRawEvent *rawEvent = nullptr, AtEvent *event = nullptr) = 0;
 
    // Compare function that will be used to sort the fit results for a given track.
    virtual bool
    CompareTrackFitsFunction(const TrackMetadataPtr &trackMetadataA, const TrackMetadataPtr &trackMetadataB) = 0;
 
-public:
-   AtFitter() = default;
-   ~AtFitter() = default;
-
-   virtual std::vector<std::unique_ptr<AtFittedTrack>> ProcessEvent() = 0;
-   virtual void Init() = 0;
-
-   // Mandatory to set.
-   void SetPatternEvent(AtPatternEvent *patternEvent) { fPatternEvent = patternEvent; }
-   void SetFitMetadata(AtFitMetadata *fitMetadata) { fFitMetadata = fitMetadata; }
-
-   // Optional to set.
-   void SetRawEvent(AtRawEvent *rawEvent) { fRawEvent = rawEvent; }
-   void SetEvent(AtEvent *event) { fEvent = event; }
-
-   // Reset pointers to AtPatternEvent, AtRawEvent and AtEvent.
-   void Reset();
-
-protected:
    ClassDef(AtFitter, 2);
 };
 
-} // namespace AtFITTER
+} // namespace EventFit
 
 #endif
