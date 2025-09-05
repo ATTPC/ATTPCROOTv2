@@ -8,6 +8,18 @@ ClassImp(EventFit::AtFitter);
 void EventFit::AtFitter::FitEvent(AtTrackingEvent *trackingEvent, AtPatternEvent *patternEvent,
                                   AtFitMetadata *fitMetadata, AtRawEvent *rawEvent, AtEvent *event)
 {
+   // Check for nullptr.
+   if (trackingEvent == nullptr) {
+      LOG(error) << " Tracking event is nullptr! The fitter can not fit this event. Maybe the tracking event is not "
+                    "being constructed properly in the fitter task.";
+      return;
+   }
+
+   if (patternEvent == nullptr) {
+      LOG(error) << " Pattern event is nullptr! The fitter can not fit this event.";
+      return;
+   }
+
    // Extract the candidate AtTracks.
    std::vector<AtTrack> tracks = patternEvent->GetTrackCand();
 
