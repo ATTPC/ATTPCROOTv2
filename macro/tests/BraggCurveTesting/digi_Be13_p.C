@@ -1,10 +1,10 @@
 bool reduceFunc(AtRawEvent *evt);
 
-void digi_Be13_p(int nEvent = 10000, int subnum = 0, int angle_cm = 15)
+void digi_Be13_p(int nEvent = 10000, int subnum = 0, int angle_cm = 180)
 {
    const char *filename = "13Be_p";
    double minangle, maxangle;
-   minangle = angle_cm, maxangle = angle_cm;
+   minangle = 0, maxangle = angle_cm;
    TString outputFile =
       TString::Format("output_digi_rcnp_%s_%.1f_%.1f_hole_550Torr.root", filename, minangle, maxangle);
    TString scriptfile = "e12014_pad_map_size.xml";
@@ -72,7 +72,7 @@ void digi_Be13_p(int nEvent = 10000, int subnum = 0, int angle_cm = 15)
    std::vector<std::unique_ptr<AtPatternModification>> patternModifications;
 
    auto braggCurveFinder = std::make_unique<AtBraggCurveFinder>();
-   braggCurveFinder->SetBinSize(3.);
+   braggCurveFinder->SetBinSize(6.);
    braggCurveFinder->SetNumSmoothingSteps(200);
    patternModifications.push_back(std::move(braggCurveFinder));
 

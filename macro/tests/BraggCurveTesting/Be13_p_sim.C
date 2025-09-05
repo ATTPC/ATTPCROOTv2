@@ -1,4 +1,4 @@
-void Be13_p_sim(Int_t nEvents = 10000, Int_t subnum = 0, Double_t angle_cm = 15)
+void Be13_p_sim(Int_t nEvents = 10000, Int_t subnum = 0, Double_t angle_cm = 180)
 {
    // Int_t subnum = 0,
    srand((unsigned)time(NULL));
@@ -8,7 +8,7 @@ void Be13_p_sim(Int_t nEvents = 10000, Int_t subnum = 0, Double_t angle_cm = 15)
 
    // Output file name
    double minangle, maxangle;
-   minangle = angle_cm, maxangle = angle_cm;
+   minangle = 0, maxangle = angle_cm;
    TString outFile = TString::Format("./attpcsim_13Be_p_%.1f_%.1f_550Torr.root", minangle, maxangle);
 
    // Parameter file name

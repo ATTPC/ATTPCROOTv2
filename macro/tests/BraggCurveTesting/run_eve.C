@@ -1,7 +1,7 @@
 
 void run_eve()
 {
-   TString InputDataPath = "./output_digi_rcnp_13Be_p_15.0_15.0_hole_550Torr.root";
+   TString InputDataPath = "./output_digi_rcnp_13Be_p_0.0_180.0_hole_550Torr.root";
    TString OutputDataPath = "./output.reco_display.root";
    std::cout << "Opening: " << InputDataPath << std::endl;
 
