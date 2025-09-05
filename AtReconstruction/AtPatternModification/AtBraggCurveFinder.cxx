@@ -31,10 +31,10 @@ void AtBraggCurveFinder::ModifyPatternEvent(AtPatternEvent *patternEvent, AtRawE
    AtPatternModification::ModifyPatternEvent(patternEvent, rawEvent, event);
 }
 
-AtTrack AtBraggCurveFinder::GetModifiedTrack(AtTrack *track, AtRawEvent *rawEvent, AtEvent *event)
+AtTrack AtBraggCurveFinder::GetModifiedTrack(const AtTrack &track, AtRawEvent *rawEvent, AtEvent *event)
 {
-   // Create a copy of the AtTrack as an AtTrackBragg.
-   AtTrack modifiedTrack(*track);
+   // Create a copy of the AtTrack as an AtTrackBragg (not yet, still AtTrack for now).
+   AtTrack modifiedTrack(track);
 
    // Extract the AtPattern.
    auto *pattern = modifiedTrack.GetPattern();

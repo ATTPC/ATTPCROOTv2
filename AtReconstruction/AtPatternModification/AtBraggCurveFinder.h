@@ -55,7 +55,8 @@ public:
    void SetNumSmoothingSteps(int value) { fNumSmoothingSteps = value; }
 
 protected:
-   virtual AtTrack GetModifiedTrack(AtTrack *track, AtRawEvent *rawEvent = nullptr, AtEvent *event = nullptr) override;
+   virtual AtTrack
+   GetModifiedTrack(const AtTrack &track, AtRawEvent *rawEvent = nullptr, AtEvent *event = nullptr) override;
    void ProcessHit(XYZPoint vertex, AtHit hit, AtTrack &modifiedTrack, AtRawEvent *rawEvent);
    void ProcessHit(XYZPoint vertex, AtHit hit, AtTrack &modifiedTrack);
 

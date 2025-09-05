@@ -13,12 +13,18 @@
 #include <utility>
 #include <vector>
 
+/**
+ * This task takes the AtPatternEvent coming from the pattern recognition task and makes a copy of it. Then, it takes
+ * this new AtPatternEvent and it applies a list of AtPatternModifications to it. The resulting final modified
+ * AtPatternEvent is stored in a new TBranch. It can also be saved in the original AtPatternEvent TBranch if you set the
+ * output name to it and you set kIsPersistence to false in the pattern recognition task.
+ */
 class AtPatternModificationTask : public FairTask {
 private:
-   TString fInputBranchName;
-   TString fOutputBranchName;
-   TString fRawEventBranchName;
-   TString fEventBranchName;
+   TString fInputBranchName{"AtPatternEvent"};
+   TString fOutputBranchName{"AtPatternEventModified"};
+   TString fRawEventBranchName{"AtRawEvent"};
+   TString fEventBranchName{"AtEvent"};
 
    std::vector<std::unique_ptr<AtPatternModification>> fPatternModifications;
    TClonesArray *fPatternEventArray;
