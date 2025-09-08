@@ -54,6 +54,10 @@ Bool_t AtDigiPar::getParams(FairParamList *paramList) // TODO Change all these p
          LOG(fatal) << "Cannot find ZPadPlane parameter!";
          return kFALSE;
       }
+      if (!(paramList->fill("IsTPCInverted", &fIsTPCInverted))) {
+         LOG(warning) << "Cannot find IsTPCInverted parameter! Setting it to 0 (false) by default.";
+         fIsTPCInverted = 0;
+      }
 
       if (!(paramList->fill("EIonize", &fEIonize))) {
          LOG(fatal) << "Cannot find EIonize parameter!";
@@ -117,6 +121,7 @@ void AtDigiPar::putParams(FairParamList *paramList)
 
    paramList->add("TBEntrance", fTBEntrance);
    paramList->add("ZPadPlane", fZPadPlane);
+   paramList->add("IsTPCInverted", fIsTPCInverted);
 
    paramList->add("EIonize", fEIonize);
    paramList->add("Fano", fFano);
