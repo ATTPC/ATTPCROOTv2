@@ -112,6 +112,7 @@ set(SRCS
   AtFitter/ParameterDistributions/AtStudentDistribution.cxx
 
   AtFitter/AtFitter.cxx
+  AtFitter/AtBraggCurveFitter.cxx
   AtFitter/AtMCFitter.cxx
   AtFitter/AtMCFitterTask.cxx
   AtFitter/AtMCFission.cxx
