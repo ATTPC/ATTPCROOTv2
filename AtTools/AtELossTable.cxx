@@ -166,6 +166,8 @@ double AtELossTable::GetEnergyOld(double energyIni, double distance) const
 
 void AtELossTable::LoadSrimTable(std::string fileName)
 {
+   fELossModelName = "SRIM";
+
    std::ifstream file(fileName);
    if (!file.is_open())
       LOG(fatal) << "Failed to open SRIM file " << fileName;
@@ -230,6 +232,8 @@ void AtELossTable::LoadSrimTable(std::string fileName)
 
 void AtELossTable::LoadLiseTable(std::string fileName, double mass, double density, int column)
 {
+   fELossModelName = "LISE";
+
    std::ifstream file(fileName);
    if (!file.is_open())
       LOG(fatal) << "Failed to open LISE file " << fileName;

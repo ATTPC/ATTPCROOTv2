@@ -2,6 +2,7 @@
 #define ATELOSSMODEL_H
 
 #include <cmath>
+#include <string>
 #include <utility>
 #include <vector>
 
@@ -24,11 +25,22 @@ protected:
     */
    double fDensity;
 
+   /**
+    *  String containing the name of the specific ELossModel. Could be useful to keep track of which ELossModel was used
+    * in each case.
+    */
+   std::string fELossModelName;
+
 public:
-   AtELossModel(double density) : fDensity(density){};
+   AtELossModel(double density, std::string name = "noName") : fDensity(density), fELossModelName(name){};
    virtual ~AtELossModel() = default;
 
    virtual void SetDensity(double density);
+   virtual void SetELossModelName(std::string name);
+
+   virtual double GetDensity();
+   virtual std::string GetELossModelName();
+
    /**
     * Get the stopping power in MeV/mm
     */

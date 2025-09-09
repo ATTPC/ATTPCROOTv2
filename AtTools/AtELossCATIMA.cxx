@@ -3,8 +3,9 @@
 #include <FairLogger.h>
 namespace AtTools {
 
-AtELossCATIMA::AtELossCATIMA(double density, std::vector<std::tuple<int, int, int>> materialComponents)
-   : AtELossModel(density)
+AtELossCATIMA::AtELossCATIMA(double density, std::vector<std::tuple<int, int, int>> materialComponents,
+                             std::string name)
+   : AtELossModel(density, name)
 {
    SetMaterial(materialComponents);
 }
@@ -12,14 +13,12 @@ AtELossCATIMA::AtELossCATIMA(double density, std::vector<std::tuple<int, int, in
 double AtELossCATIMA::GetdEdx(double energy) const
 {
    if (fProjectile == nullptr) {
-      LOG(warning)
-         << " Warning in AtTools::AtELossCATIMA::GetdEdx : The projectile was not set! GetdEdx will return 0!";
+      LOG(warning) << " The projectile was not set! GetdEdx will return 0!";
       return 0;
    }
 
    if (fProjectileMassAmu <= 0) {
-      LOG(error) << " Error in AtTools::AtELossCATIMA::GetdEdx : The projectile's mass in umas can not be <= 0! "
-                    "GetdEdx will return 0!";
+      LOG(error) << " The projectile's mass in umas can not be <= 0! GetdEdx will return 0!";
       return 0;
    }
 
@@ -31,8 +30,7 @@ double AtELossCATIMA::GetdEdx(double energy) const
 double AtELossCATIMA::GetRange(double energyIni, double energyFin) const
 {
    if (energyFin < 0) {
-      LOG(warning) << " Warning in AtTools::AtELossCATIMA::GetRange : The final energy was set to a negative value! "
-                      "Setting energyFin to 0!";
+      LOG(warning) << " The final energy was set to a negative value! Setting energyFin to 0!";
       energyFin = 0;
    }
 

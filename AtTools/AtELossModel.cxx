@@ -12,6 +12,21 @@ void AtELossModel::SetDensity(double density)
    fDensity = density;
 }
 
+void AtELossModel::SetELossModelName(std::string name)
+{
+   fELossModelName = name;
+}
+
+double AtELossModel::GetDensity()
+{
+   return fDensity;
+}
+
+std::string AtELossModel::GetELossModelName()
+{
+   return fELossModelName;
+}
+
 std::vector<std::pair<double, double>>
 AtELossModel::GetBraggCurve(double energy, double rangeStepSize, double totalFractionELoss) const
 {

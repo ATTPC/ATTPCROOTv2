@@ -27,10 +27,11 @@ public:
     * @param[in] materialComponents Components of the material. They are passed as a vector of tuples (A, Z,
     * stoichiometry).
     */
-   AtELossCATIMA(double density) : AtELossModel(density) {}
-   AtELossCATIMA(double density, std::vector<std::tuple<int, int, int>> materialComponents);
-   AtELossCATIMA(double density, const catima::Material &material)
-      : AtELossModel(density), fMaterial(std::make_unique<catima::Material>(material))
+   AtELossCATIMA(double density, std::string name = "CATima") : AtELossModel(density, name) {}
+   AtELossCATIMA(double density, std::vector<std::tuple<int, int, int>> materialComponents,
+                 std::string name = "CATima");
+   AtELossCATIMA(double density, const catima::Material &material, std::string name = "CATima")
+      : AtELossModel(density, name), fMaterial(std::make_unique<catima::Material>(material))
    {
    }
 
