@@ -57,6 +57,7 @@ set(SRCS
   AtFitMetadata.cxx
   AtFitTrackMetadata.cxx
   AtMCResult.cxx
+  AtBraggFitMetadata.cxx
 
 
   # Deprecated things to be removed eventually.

@@ -46,6 +46,7 @@
 #pragma link C++ class AtFitMetadata + ;
 #pragma link C++ class AtFitTrackMetadata + ;
 #pragma link C++ class MCFitter::AtMCResult + ;
+#pragma link C++ class AtBraggFitMetadata + ;
 
 #pragma link C++ class AtTrackingEventOld + ;
 #pragma link C++ class AtFittedTrackOld + ;
