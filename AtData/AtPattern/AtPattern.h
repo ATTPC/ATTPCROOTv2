@@ -157,6 +157,16 @@ public:
     */
    virtual Double_t DistanceAlongPattern(XYZPoint point1, XYZPoint point2) const;
 
+   /**
+    * Calculate the geometric theta angle based on the fitted pattern parameters. By default, it is set to 0. In order for this to be useful, it must be overriden in each specific pattern type.
+    */
+   virtual Double_t CalculateTheta() const;
+
+   /**
+    * Calculate the geometric phi angle based on the fitted pattern parameters. By default, it is set to 0. In order for this to be useful, it must be overriden in each specific pattern type.
+    */
+   virtual Double_t CalculatePhi() const;
+
 protected:
    /**
     * Called by other versions of FitPattern. If pointCharge is not empty does charge weighted fit.

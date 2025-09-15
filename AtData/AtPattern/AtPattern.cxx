@@ -87,3 +87,17 @@ Double_t AtPattern::DefaultDistanceAlongPattern(XYZPoint point1, XYZPoint point2
 
    return (closestPoint1 - closestPoint2).R();
 }
+
+Double_t AtPattern::CalculateTheta() const
+{
+   LOG(warning) << " Using default CalculateTheta() method! Setting theta to 0 by default!";
+
+   return 0;
+}
+
+Double_t AtPattern::CalculatePhi() const
+{
+   LOG(warning) << " Using default CalculatePhi() method! Setting phi to 0 by default!";
+
+   return 0;
+}
