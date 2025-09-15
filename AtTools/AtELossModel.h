@@ -27,19 +27,48 @@ protected:
 
    /**
     *  String containing the name of the specific ELossModel. Could be useful to keep track of which ELossModel was used
-    * in each case.
+    *  in each case.
     */
    std::string fELossModelName;
 
+   /**
+    *  Particle PDG code for which this ELoss model works.
+    */
+   std::string fPDGCode{"none"};
+
+   /**
+    *  Charge in units of elemental charge that the particle has.
+    */
+   int fZ{0};
+
+   /**
+    *  Atomic mass number that the particle has.
+    */
+   int fA{0};
+
+   /**
+    *  Mass in amus that the particle has.
+    */
+   double fMassAmu{0};
+
 public:
-   AtELossModel(double density, std::string name = "noName") : fDensity(density), fELossModelName(name){};
+   AtELossModel(double density, std::string name = "noName") : fDensity(density), fELossModelName(name) {};
    virtual ~AtELossModel() = default;
 
    virtual void SetDensity(double density);
    virtual void SetELossModelName(std::string name);
+   virtual void SetPDGCode(std::string pdg);
+   virtual void SetChargeNumber(int z);
+   virtual void SetAtomicMassNumber(int a);
+   virtual void SetMassAmu(double mass);
+
 
    virtual double GetDensity();
    virtual std::string GetELossModelName();
+   virtual std::string GetPDGCode();
+   virtual int GetChargeNumber();
+   virtual int GetAtomicMassNumber();
+   virtual double GetMassAmu();
 
    /**
     * Get the stopping power in MeV/mm

@@ -17,6 +17,26 @@ void AtELossModel::SetELossModelName(std::string name)
    fELossModelName = name;
 }
 
+void AtELossModel::SetPDGCode(std::string pdg)
+{
+   fPDGCode = pdg;
+}
+
+void AtELossModel::SetChargeNumber(int z)
+{
+   fZ = z;
+}
+
+void AtELossModel::SetAtomicMassNumber(int a)
+{
+   fA = a;
+}
+
+void AtELossModel::SetMassAmu(double mass)
+{
+   fMassAmu = mass;
+}
+
 double AtELossModel::GetDensity()
 {
    return fDensity;
@@ -25,6 +45,26 @@ double AtELossModel::GetDensity()
 std::string AtELossModel::GetELossModelName()
 {
    return fELossModelName;
+}
+
+std::string AtELossModel::GetPDGCode()
+{
+   return fPDGCode;
+}
+
+int AtELossModel::GetChargeNumber()
+{
+   return fZ;
+}
+
+int AtELossModel::GetAtomicMassNumber()
+{
+   return fA;
+}
+
+double AtELossModel::GetMassAmu()
+{
+   return fMassAmu;
 }
 
 std::vector<std::pair<double, double>>

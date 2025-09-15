@@ -16,8 +16,6 @@ protected:
    std::unique_ptr<catima::Material> fMaterial{nullptr};
    std::unique_ptr<catima::Projectile> fProjectile{nullptr};
 
-   double fProjectileMassAmu{-1}; /// Mass of the projectile in amu (atomic mass units).
-
    double fRangeStepSize{0.1}; // mm
 
 public:
@@ -34,6 +32,10 @@ public:
       : AtELossModel(density, name), fMaterial(std::make_unique<catima::Material>(material))
    {
    }
+
+   virtual void SetChargeNumber(int z) override;
+   virtual void SetAtomicMassNumber(int a) override;
+   virtual void SetMassAmu(double mass) override;
 
    virtual double GetdEdx(double energy) const override;
    virtual double GetRange(double energyIni, double energyFin = 0) const override;
@@ -59,7 +61,9 @@ public:
    void SetProjectile(double A, double Z, double massAmu)
    {
       fProjectile = std::make_unique<catima::Projectile>(A, Z);
-      fProjectileMassAmu = massAmu;
+      fA = A;
+      fZ = Z;
+      fMassAmu = massAmu;
    }
    void SetMaterial(const catima::Material &material) { fMaterial = std::make_unique<catima::Material>(material); }
    void SetMaterial(std::vector<std::tuple<int, int, int>> materialComponents);
