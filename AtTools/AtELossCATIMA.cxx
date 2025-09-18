@@ -147,10 +147,10 @@ double AtELossCATIMA::GetdEdxStraggling(double energyIni, double energyFin) cons
 }
 
 std::vector<std::pair<double, double>>
-AtELossCATIMA::GetBraggCurve(double energy, double rangeStepSize, double totalFractionELoss) const
+AtELossCATIMA::GetBraggCurve(double energy, double rangeStepSize, double totalFractionELoss, double minRange) const
 {
    if (rangeStepSize == 0)
-      return GetBraggCurve(energy, fRangeStepSize, totalFractionELoss);
+      return GetBraggCurve(energy, fRangeStepSize, totalFractionELoss, minRange);
 
    std::vector<std::pair<double, double>> braggCurve;
 
@@ -167,6 +167,14 @@ AtELossCATIMA::GetBraggCurve(double energy, double rangeStepSize, double totalFr
          break;
 
       remainingEnergy -= DE;
+      range += rangeStepSize;
+   }
+
+   if (!minRange)
+      return braggCurve;
+
+   while (range < minRange - rangeStepSize) {
+      braggCurve.push_back(std::make_pair(0, range));
       range += rangeStepSize;
    }
 

@@ -50,7 +50,7 @@ public:
    virtual double GetdEdxStraggling(double energyIni, double energyFin) const override;
 
    virtual std::vector<std::pair<double, double>>
-   GetBraggCurve(double energy, double rangeStepSize = 0, double totalFractionELoss = 0.001) const override;
+   GetBraggCurve(double energy, double rangeStepSize = 0, double totalFractionELoss = 0.001, double minRange = 0) const override;
 
    /**
     * Setter of the catima projectile used for calculations.

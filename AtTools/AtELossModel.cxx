@@ -68,7 +68,7 @@ double AtELossModel::GetMassAmu()
 }
 
 std::vector<std::pair<double, double>>
-AtELossModel::GetBraggCurve(double energy, double rangeStepSize, double totalFractionELoss) const
+AtELossModel::GetBraggCurve(double energy, double rangeStepSize, double totalFractionELoss, double minRange) const
 {
    std::vector<std::pair<double, double>> braggCurve;
 
@@ -78,6 +78,14 @@ AtELossModel::GetBraggCurve(double energy, double rangeStepSize, double totalFra
       remainingEnergy = GetEnergy(energy, range);
       double dEdx = GetdEdx(remainingEnergy);
       braggCurve.push_back(std::make_pair(dEdx, range));
+      range += rangeStepSize;
+   }
+
+   if (!minRange)
+      return braggCurve;
+
+   while (range < minRange - rangeStepSize) {
+      braggCurve.push_back(std::make_pair(0, range));
       range += rangeStepSize;
    }
 

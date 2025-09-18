@@ -143,10 +143,13 @@ public:
     * @param[in] rangeStepSize The step size for the distances the Bragg curve will be computed for in mm. Default value
     * is 0.1mm.
     * @param[in] totalFractionELoss Consider particle stopped when energy drops below energy*totalFractionELoss.
+    * @param[in] minRange If minRange is 0, the Bragg curve is computed only until the particle has stopped. If it's
+    * different than 0, then it will add dE/dx=0 until x=minRange after the actual Bragg curve in case it has not reached
+    * that value yet. Default value is 0.
     * @return A vector of pairs (dE/dx, distance) representing the Bragg curve (MeV/mm, mm).
     */
    virtual std::vector<std::pair<double, double>>
-   GetBraggCurve(double energy, double rangeStepSize = 0.1, double totalFractionELoss = 0.001) const;
+   GetBraggCurve(double energy, double rangeStepSize = 0.1, double totalFractionELoss = 0.001, double minRange = 0) const;
 };
 } // namespace AtTools
 
