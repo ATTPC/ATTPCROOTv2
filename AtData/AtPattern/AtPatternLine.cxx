@@ -218,7 +218,7 @@ Double_t AtPatternLine::DistanceAlongPattern(XYZPoint point1, XYZPoint point2) c
 
 Double_t AtPatternLine::CalculateTheta() const
 {
-   return TMath::Pi() - GetDirection().Eta();
+   return TMath::Pi() - GetDirection().Theta();
 }
 
 Double_t AtPatternLine::CalculatePhi() const
