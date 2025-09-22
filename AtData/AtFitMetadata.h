@@ -6,7 +6,6 @@
 #include <FairLogger.h>
 
 #include <Rtypes.h> // for Double_t, THashConsistencyHolder, ClassDefOverride
-#include <TMap.h>
 #include <TObject.h>
 
 #include <functional>
