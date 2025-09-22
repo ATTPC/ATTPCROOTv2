@@ -191,7 +191,8 @@ void AtSidebarEventControl::FillFrame()
 }
 
 AtSidebarBranchControl::AtSidebarBranchControl(DataHandling::AtBranch &rawEvent, DataHandling::AtBranch &event,
-                                               DataHandling::AtBranch &patternEvent, const TGWindow *p, UInt_t w,
+                                               DataHandling::AtBranch &patternEvent, DataHandling::AtBranch &trackingEvent,
+                                               DataHandling::AtBranch &fitMetadata, const TGWindow *p, UInt_t w,
                                                UInt_t h, UInt_t options, Pixel_t back)
    : AtVerticalSidebarFrame(p, w, h, options, back)
 {
@@ -199,6 +200,8 @@ AtSidebarBranchControl::AtSidebarBranchControl(DataHandling::AtBranch &rawEvent,
    fBranches.insert({"AtRawEvent", rawEvent});
    fBranches.insert({"AtEvent", event});
    fBranches.insert({"AtPatternEvent", patternEvent});
+   fBranches.insert({"AtTrackingEvent", trackingEvent});
+   fBranches.insert({"AtFitMetadata", fitMetadata});
 
    for (auto &[className, branch] : fBranches)
       branch.Attach(this);
@@ -215,6 +218,8 @@ void AtSidebarBranchControl::FillFrame()
    FillBranchFrame("Raw Event: ", "AtRawEvent");
    FillBranchFrame("Event: ", "AtEvent");
    FillBranchFrame("Pattern Event: ", "AtPatternEvent");
+   FillBranchFrame("Tracking Event: ", "AtTrackingEvent");
+   FillBranchFrame("Fit Metadata: ", "AtFitMetadata");
 
    // Resize boxes
    for (auto &[name, box] : fBranchBoxes)
@@ -288,6 +293,16 @@ void AtSidebarBranchControl::SelectedAtEvent(Int_t ind)
 void AtSidebarBranchControl::SelectedAtPatternEvent(Int_t ind)
 {
    SelectEvent(ind, "AtPatternEvent");
+}
+
+void AtSidebarBranchControl::SelectedAtTrackingEvent(Int_t ind)
+{
+   SelectEvent(ind, "AtTrackingEvent");
+}
+
+void AtSidebarBranchControl::SelectedAtFitMetadata(Int_t ind)
+{
+   SelectEvent(ind, "AtFitMetadata");
 }
 
 void AtSidebarBranchControl::Update(DataHandling::AtSubject *changedSubject)

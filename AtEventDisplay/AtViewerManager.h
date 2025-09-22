@@ -39,6 +39,8 @@ private:
    DataHandling::AtBranch fRawEventBranch{};     //< Not observing
    DataHandling::AtBranch fEventBranch{};        //< Not observing
    DataHandling::AtBranch fPatternEventBranch{}; //< Not observing
+   DataHandling::AtBranch fTrackingEventBranch{};//< Not observing
+   DataHandling::AtBranch fFitMetadataBranch{};  //< Not observing
    DataHandling::AtPadNum fPadNum{-1};           //< Not Observing
 
    AtEventSidebar *fSidebar;
@@ -71,6 +73,8 @@ public:
    DataHandling::AtBranch &GetRawEventBranch() { return fRawEventBranch; }
    DataHandling::AtBranch &GetEventBranch() { return fEventBranch; }
    DataHandling::AtBranch &GetPatternEventBranch() { return fPatternEventBranch; }
+   DataHandling::AtBranch &GetTrackingEventBranch() { return fTrackingEventBranch; }
+   DataHandling::AtBranch &GetFitMetadataBranch() { return fFitMetadataBranch; }
    DataHandling::AtTreeEntry &GetCurrentEntry() { return fEntry; }
    DataHandling::AtPadNum &GetPadNum() { return fPadNum; }
 
