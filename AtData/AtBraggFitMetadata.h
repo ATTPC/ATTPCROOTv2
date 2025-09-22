@@ -17,7 +17,7 @@ class TMemberInspector;
 class AtBraggFitMetadata : public AtFitTrackMetadata {
 protected:
    // Parameters of the fit and name of the ELoss model used.
-   TString fELossModelName{"None"};
+   TString fELossModelName{"none"};
    Double_t fKineticEnergy{-1}; // MeV
    Double_t fKineticEnergyUncertainty{-1}; // MeV
    Double_t fAmplitudeFactor{-1}; // ADC/MeV
@@ -31,8 +31,6 @@ protected:
 
 public:
    AtBraggFitMetadata() = default;
-   AtBraggFitMetadata(const AtBraggFitMetadata &) = default;
-   AtBraggFitMetadata(AtBraggFitMetadata &&) = default;
    ~AtBraggFitMetadata() = default;
 
    void SetELossModelName(std::string name) { fELossModelName = TString(name); }

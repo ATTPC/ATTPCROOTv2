@@ -68,7 +68,7 @@ private:
    TrackProperties fTrackProperties;
 
    // Copy of the AtFitTrackResult object corresponding to the fit used for this track.
-   TrackMetadataPtr fTrackMetadata{nullptr};
+   //TrackMetadataPtr fTrackMetadata{nullptr};
 
    // Deprecated members needed to keep support of deprecated methods.
    [[deprecated("No PRA information is supposed to be kept in AtFittedTrack.")]] Double_t fEnergyPRA{0};
@@ -121,7 +121,7 @@ public:
       fTrackProperties.trackPoints = trackPoints;
    }
 
-   void SetTrackMetadata(TrackMetadataPtr trackMetadata) { fTrackMetadata = std::move(trackMetadata); }
+   //void SetTrackMetadata(TrackMetadataPtr trackMetadata) { fTrackMetadata = std::move(trackMetadata); }
 
    const Int_t GetTrackID() { return fTrackID; }
 
@@ -132,7 +132,7 @@ public:
 
    const TrackProperties GetTrackPropertiesStruct() { return fTrackProperties; }
 
-   TrackMetadataPtr &GetTrackMetadata() { return fTrackMetadata; }
+   //TrackMetadataPtr &GetTrackMetadata() { return fTrackMetadata; }
 
    // Old deprecated methods.
    [[deprecated("Replaced by SetKinematics() and SetKinematicsXtr().")]] void
@@ -157,13 +157,13 @@ public:
    [[deprecated("Statistics now live inside the AtFitTrackMetadata. Check SetTrackMetadata().")]] void
    SetStats(Float_t pvalue, Float_t chi2, Float_t bchi2, Float_t ndf, Float_t bndf, Bool_t conv)
    {
-      if (fTrackMetadata == nullptr)
+      /*if (fTrackMetadata == nullptr)
          fTrackMetadata = std::make_unique<AtFitTrackMetadata>();
       fTrackMetadata->SetPValue(pvalue);
       fTrackMetadata->SetChi2(chi2);
       fTrackMetadata->SetNdf(ndf);
       fTrackMetadata->SetFitConverged(conv);
-      fTrackMetadata->SetTrackID(fTrackID);
+      fTrackMetadata->SetTrackID(fTrackID);*/
 
       fBChi2 = bchi2;
       fBNdf = bndf;
@@ -215,10 +215,10 @@ public:
       Float_t, Float_t, Float_t, Float_t, Float_t, Bool_t>
    GetStats()
    {
-      if (fTrackMetadata == nullptr)
+      //if (fTrackMetadata == nullptr)
          return std::forward_as_tuple(0, 0, 0, 0, 0, 0);
-      return std::forward_as_tuple(fTrackMetadata->GetPValue(), fTrackMetadata->GetChi2(), fBChi2,
-                                   fTrackMetadata->GetNdf(), fBNdf, fTrackMetadata->GetFitConverged());
+      //return std::forward_as_tuple(fTrackMetadata->GetPValue(), fTrackMetadata->GetChi2(), fBChi2,
+      //                             fTrackMetadata->GetNdf(), fBNdf, fTrackMetadata->GetFitConverged());
    }
    [[deprecated("The TrackProperties have changed. Please check the new GetTrackProperties() method.")]] const std::
       tuple<Int_t, Float_t, Float_t, Float_t, std::string, Int_t>
