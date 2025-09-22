@@ -3,8 +3,6 @@
 #include "AtPatternEvent.h"
 #include "AtTrackingEvent.h"
 
-ClassImp(EventFit::AtFitter);
-
 void EventFit::AtFitter::FitEvent(AtTrackingEvent *trackingEvent, AtPatternEvent *patternEvent,
                                   AtFitMetadata *fitMetadata, AtRawEvent *rawEvent, AtEvent *event)
 {
@@ -20,8 +18,10 @@ void EventFit::AtFitter::FitEvent(AtTrackingEvent *trackingEvent, AtPatternEvent
       return;
    }
 
-   // Extract the candidate AtTracks.
+   // Extract the candidate AtTracks. If there are not any tracks, return earlier.
    std::vector<AtTrack> tracks = patternEvent->GetTrackCand();
+   if (!tracks.size())
+      return;
 
    // Save the original AtTracks to the AtTrackingEvent.
    trackingEvent->SetTrackArray(&tracks);

@@ -87,8 +87,6 @@ private:
    TString fFitMetadataBranchName;
    TClonesArray fFitMetadataArray;
    bool fSaveFitMetadata{false};
-
-   ClassDef(AtFitterTask, 2);
 };
 
 #endif

@@ -29,12 +29,6 @@ namespace EventFit {
 
 class AtFitter : public TObject {
 public:
-   using TrackMetadataPtr = std::unique_ptr<AtFitTrackMetadata>;
-   using TrackMetadatasVector = std::vector<TrackMetadataPtr>;
-   using TrackMetadatasSet =
-      std::set<TrackMetadataPtr, std::function<bool(const TrackMetadataPtr &, const TrackMetadataPtr &)>>;
-
-public:
    AtFitter() = default;
    ~AtFitter() = default;
 
@@ -46,12 +40,6 @@ public:
 protected:
    virtual AtFittedTrack *GetFittedTrack(AtTrack *track, AtFitMetadata *fitMetadata = nullptr,
                                          AtRawEvent *rawEvent = nullptr, AtEvent *event = nullptr) = 0;
-
-   // Compare function that will be used to sort the fit results for a given track.
-   virtual bool
-   CompareTrackFitsFunction(const TrackMetadataPtr &trackMetadataA, const TrackMetadataPtr &trackMetadataB) = 0;
-
-   ClassDef(AtFitter, 2);
 };
 
 } // namespace EventFit

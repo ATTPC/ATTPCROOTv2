@@ -45,7 +45,7 @@ public:
 
    void SetTrackMetadatasVector(Int_t trackID, TrackMetadatasVector metadatas)
    {
-      fMetadatas[trackID] = std::move(metadatas);
+      fMetadatas.insert({trackID, std::move(metadatas)});
    }
 
    void SetEventID(ULong_t id) { fEventID = id; }

@@ -24,12 +24,10 @@
 class AtTrack;
 class AtFittedTrack;
 
-ClassImp(AtFitterTask);
-
 AtFitterTask::AtFitterTask(std::unique_ptr<EventFit::AtFitter> fitter)
    : fInputBranchName("AtPatternEvent"), fOutputBranchName("AtTrackingEvent"), fIsPersistence(kFALSE),
      fTrackingEventArray(TClonesArray("AtTrackingEvent", 1)), fFitter(std::move(fitter)), fRawEventBranchName(""),
-     fEventBranchName(""), fFitMetadataBranchName("")
+     fEventBranchName(""), fFitMetadataBranchName(""), fFitMetadataArray(TClonesArray("AtFitMetadata", 1))
 {
 }
 
@@ -127,6 +125,7 @@ void AtFitterTask::Exec(Option_t *option)
       event = dynamic_cast<AtEvent *>(fEventArray->At(0));
 
    fTrackingEventArray.Delete();
+   fFitMetadataArray.Delete();
 
    auto trackingEvent = dynamic_cast<AtTrackingEvent *>(fTrackingEventArray.ConstructedAt(0));
    auto fitMetadata = dynamic_cast<AtFitMetadata *>(fFitMetadataArray.ConstructedAt(0));
