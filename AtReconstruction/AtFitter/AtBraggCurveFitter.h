@@ -51,8 +51,6 @@ protected:
    double fStartingEstimatedKinE{0.1}; // MeV
    double fEstimatedKinEStep{0.01}; // MeV
    double fKinEPrecision{0.25}; // MeV
-   double fMinKinE{0.25}; // MeV
-   double fMaxKinE{20}; // MeV
 
 public:
    AtBraggCurveFitter(ELossModelsVector eLossModels);
@@ -71,8 +69,6 @@ public:
    void SetStartingEstimatedKinE(double value) { fStartingEstimatedKinE = value; }
    void SetEstimatedKinEStep(double value) { fEstimatedKinEStep = value; }
    void SetKinEPrecision(double value) { fKinEPrecision = value; }
-   void SetMinKinE(double value) { fMinKinE = value; }
-   void SetMaxKinE(double value) { fMaxKinE = value; }
 
 protected:
    virtual AtFittedTrack *GetFittedTrack(AtTrack *track, AtFitMetadata *fitMetadata = nullptr,

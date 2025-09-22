@@ -24,6 +24,8 @@ protected:
 
 public:
    AtFitTrackMetadata() = default;
+   AtFitTrackMetadata(const AtFitTrackMetadata &) = default;
+   AtFitTrackMetadata(AtFitTrackMetadata &&) = default;
    ~AtFitTrackMetadata() = default;
 
    void SetPValue(Double_t value) { fPValue = value; }

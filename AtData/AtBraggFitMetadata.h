@@ -31,6 +31,8 @@ protected:
 
 public:
    AtBraggFitMetadata() = default;
+   AtBraggFitMetadata(const AtBraggFitMetadata &) = default;
+   AtBraggFitMetadata(AtBraggFitMetadata &&) = default;
    ~AtBraggFitMetadata() = default;
 
    void SetELossModelName(std::string name) { fELossModelName = TString(name); }

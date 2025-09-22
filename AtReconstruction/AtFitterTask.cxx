@@ -77,7 +77,7 @@ InitStatus AtFitterTask::Init()
    }
 
    ioMan->Register(fOutputBranchName, "AtTPC", &fTrackingEventArray, fIsPersistence);
-   //ioMan->Register(fFitMetadataBranchName, "AtTPC", &fFitMetadataArray, fIsPersistence && fSaveFitMetadata);
+   ioMan->Register(fFitMetadataBranchName, "AtTPC", &fFitMetadataArray, fIsPersistence && fSaveFitMetadata);
 
    fRawEventArray = dynamic_cast<TClonesArray *>(ioMan->GetObject(fRawEventBranchName));
    if (fRawEventArray == nullptr) {
@@ -127,9 +127,8 @@ void AtFitterTask::Exec(Option_t *option)
    fTrackingEventArray.Delete();
    fFitMetadataArray.Delete();
 
-   auto trackingEvent = dynamic_cast<AtTrackingEvent *>(fTrackingEventArray.ConstructedAt(0, "C"));
-   //auto fitMetadata = dynamic_cast<AtFitMetadata *>(fFitMetadataArray.ConstructedAt(0));
-   AtFitMetadata *fitMetadata = nullptr;
+   auto trackingEvent = dynamic_cast<AtTrackingEvent *>(fTrackingEventArray.ConstructedAt(0));
+   auto fitMetadata = dynamic_cast<AtFitMetadata *>(fFitMetadataArray.ConstructedAt(0));
 
    LOG(info) << " Fitting event " << fEventCnt;
 

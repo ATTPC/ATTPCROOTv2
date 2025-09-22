@@ -65,7 +65,6 @@ AtFittedTrack *EventFit::AtBraggCurveFitter::GetFittedTrack(AtTrack *track, AtFi
    fBinSize = braggCurve.binSize;
 
    // The minimum range where we should be able to get ELoss values for.
-   // TO-DO: This depends on angle of the track. We should consider updating track by track.
    fMinimumRange = fHoleRadius / TMath::Sin(track->GetGeoTheta());
 
    // Get the index with maximum ELoss, and get the associated range.
@@ -79,7 +78,6 @@ AtFittedTrack *EventFit::AtBraggCurveFitter::GetFittedTrack(AtTrack *track, AtFi
 
    // Now, we iterate over all possible particles that this AtTrack may be.
    fProjectileIdx = 0;
-   std::cout << "fELossModels.size() = " << fELossModels.size() << std::endl;
    while (fProjectileIdx < fELossModels.size()) {
       // We obtain the estimation of the kinetic energy from the estimated range, for this candidate particle.
       double estimatedKinE{fStartingEstimatedKinE};
@@ -145,8 +143,8 @@ AtFittedTrack *EventFit::AtBraggCurveFitter::GetFittedTrack(AtTrack *track, AtFi
    fittedTrack->SetParticleInfo(bestFitTrackMetadata->GetPDGCode().Data(), bestFitTrackMetadata->GetChargeNumber(), bestFitTrackMetadata->GetMassAmu());
    //fittedTrack->SetVertex(???); //TO-DO
    //fittedTrack->SetTrackPropertiesStruct(???); //TO-DO
-   //std::unique_ptr<AtBraggFitMetadata> uniqueBestFitMetadata(bestFitTrackMetadata);
-   //fittedTrack->SetTrackMetadata(std::move(uniqueBestFitMetadata));
+   std::unique_ptr<AtBraggFitMetadata> uniqueBestFitMetadata = std::make_unique<AtBraggFitMetadata>(*bestFitTrackMetadata);
+   fittedTrack->SetTrackMetadata(std::move(uniqueBestFitMetadata));
 
    // Add the corresponding vector of fit metadatas for this track to the AtFitMetadata of this event.
    if (fitMetadata)
