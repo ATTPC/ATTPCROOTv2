@@ -137,6 +137,7 @@ public:
     * @return The straggling in dE/dx in MeV/mm.
     */
    virtual double GetdEdxStraggling(double energyIni, double energyFin) const = 0;
+
    /**
     * Get the Bragg curve for a given energy as a vector of (dE/dx, distance) pairs.
     * @param[in] energy The kinetic energy of the particle for which the curve is being computed for.
@@ -150,6 +151,19 @@ public:
     */
    virtual std::vector<std::pair<double, double>>
    GetBraggCurve(double energy, double rangeStepSize = 0.1, double totalFractionELoss = 0.001, double minRange = 0) const;
+
+   /**
+    * Get the Bragg curve for a given energy and integrate the dE/dx over bins of given width.
+    * @param[in] energy The kinetic energy of the particle for which the ELoss is being computed for.
+    * @param[in] binSize The width of the bins on which the dE/dx is going to be integrated on.
+    * @param[in] valuesPerBin How many values the of dE/dx will be calculated for each bin. Default is 200.
+    * @param[in] totalFractionELoss Consider particle stopped when energy drops below energy*totalFractionELoss.
+    * @param[in] minRange If minRange is 0, the Bragg curve is computed only until the particle has stopped. If it's
+    * different than 0, then it will add dE/dx=0 until x=minRange after the actual Bragg curve in case it has not reached
+    * that value yet. Default value is 0.
+    * @return A vector of pairs (ELoss, distance) representing the integrated Bragg curve (MeV, mm).
+    */
+   virtual std::vector<std::pair<double, double>> GetIntegratedELoss(double energy, double binSize, int valuesPerBin = 200, double totalFractionELoss = 0.001, double minRange = 0) const;
 };
 } // namespace AtTools
 

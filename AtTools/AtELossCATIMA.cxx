@@ -161,13 +161,13 @@ AtELossCATIMA::GetBraggCurve(double energy, double rangeStepSize, double totalFr
       catima::Result result = catima::calculate(*fProjectile, *fMaterial, remainingEnergy / fMassAmu);
       double dEdx = result.dEdxi * fDensity;
       braggCurve.push_back(std::make_pair(dEdx, range));
+      range += rangeStepSize;
 
       double DE = dEdx * rangeStepSize / 10.;
-      if (DE > remainingEnergy)
+      if (DE > remainingEnergy || DE == 0)
          break;
 
       remainingEnergy -= DE;
-      range += rangeStepSize;
    }
 
    if (!minRange)

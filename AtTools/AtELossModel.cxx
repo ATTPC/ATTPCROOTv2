@@ -92,4 +92,30 @@ AtELossModel::GetBraggCurve(double energy, double rangeStepSize, double totalFra
    return braggCurve;
 }
 
+std::vector<std::pair<double, double>> AtELossModel::GetIntegratedELoss(double energy, double binSize, int valuesPerBin, double totalFractionELoss, double minRange) const
+{
+   auto braggCurve = GetBraggCurve(energy, binSize / valuesPerBin, totalFractionELoss, minRange);
+
+   std::vector<std::pair<double, double>> integratedELoss;
+   double currentELoss{};
+
+   for (int i = 0; i < braggCurve.size(); i++) {
+      auto currentPair = braggCurve[i];
+      if ((i + 1) % valuesPerBin == 0) {
+         int currentBinNum = integratedELoss.size();
+         integratedELoss.push_back(std::make_pair(currentELoss, binSize * (1 / 2. + currentBinNum)));
+         currentELoss = 0;
+      }
+      currentELoss += currentPair.first * binSize / valuesPerBin;
+   }
+
+   // If size of dE/dx is not multiple of the number of values per bin, the last ELoss was not saved. In that case we store it before returning the vector.
+   if (braggCurve.size() % valuesPerBin != 0) {
+      int currentBinNum = integratedELoss.size();
+      integratedELoss.push_back(std::make_pair(currentELoss, binSize * (1 / 2. + currentBinNum)));
+   }
+
+   return integratedELoss;
+}
+
 } // namespace AtTools
