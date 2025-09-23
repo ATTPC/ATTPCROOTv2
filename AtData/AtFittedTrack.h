@@ -87,6 +87,7 @@ private:
 
 public:
    AtFittedTrack() = default;
+   AtFittedTrack(const AtFittedTrack &copy);
    ~AtFittedTrack() = default;
 
    void SetTrackID(Int_t trackid) { fTrackID = trackid; }

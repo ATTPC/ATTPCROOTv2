@@ -4,6 +4,7 @@
 #include <Rtypes.h> // for Double_t, THashConsistencyHolder, ClassDefOverride
 #include <TObject.h>
 
+#include <memory>
 class TBuffer;
 class TClass;
 class TMemberInspector;
@@ -27,6 +28,10 @@ public:
    AtFitTrackMetadata(const AtFitTrackMetadata &) = default;
    AtFitTrackMetadata(AtFitTrackMetadata &&) = default;
    ~AtFitTrackMetadata() = default;
+   AtFitTrackMetadata &operator=(const AtFitTrackMetadata &) = default;
+   AtFitTrackMetadata &operator=(AtFitTrackMetadata &&) = default;
+
+   virtual std::unique_ptr<AtFitTrackMetadata> Clone();
 
    void SetPValue(Double_t value) { fPValue = value; }
    void SetChi2(Double_t value) { fChi2 = value; }

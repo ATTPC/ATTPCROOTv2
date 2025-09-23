@@ -41,6 +41,7 @@ protected:
 
 public:
    AtFitMetadata() = default;
+   AtFitMetadata(const AtFitMetadata &copy);
    ~AtFitMetadata() = default;
 
    void SetTrackMetadatasVector(Int_t trackID, TrackMetadatasVector metadatas)

@@ -35,6 +35,8 @@ public:
    AtBraggFitMetadata(AtBraggFitMetadata &&) = default;
    ~AtBraggFitMetadata() = default;
 
+   virtual std::unique_ptr<AtFitTrackMetadata> Clone() override;
+
    void SetELossModelName(std::string name) { fELossModelName = TString(name); }
    void SetKineticEnergy(Double_t value) { fKineticEnergy = value; }
    void SetKineticEnergyUncertainty(Double_t value) { fKineticEnergyUncertainty = value; }

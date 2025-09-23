@@ -3,6 +3,11 @@
 #include <iostream>
 ClassImp(AtBraggFitMetadata);
 
+std::unique_ptr<AtFitTrackMetadata> AtBraggFitMetadata::Clone()
+{
+   return std::make_unique<AtBraggFitMetadata>(*this);
+}
+
 void AtBraggFitMetadata::Print() const
 {
    AtFitTrackMetadata::Print();
