@@ -139,7 +139,7 @@ AtFittedTrack *EventFit::AtBraggCurveFitter::GetFittedTrack(AtTrack *track, AtFi
    // Construct the AtFittedTrack based on the best fit, i.e. the first element in the set.
    AtFittedTrack *fittedTrack = new AtFittedTrack();
    fittedTrack->SetTrackID(track->GetTrackID());
-   fittedTrack->SetKinematics(bestFitTrackMetadata->GetKineticEnergy(), track->GetPattern()->CalculateTheta(), track->GetPattern()->CalculatePhi());
+   fittedTrack->SetKinematics(bestFitTrackMetadata->GetKineticEnergy(), track->GetGeoTheta(), track->GetGeoPhi());
    fittedTrack->SetParticleInfo(bestFitTrackMetadata->GetPDGCode().Data(), bestFitTrackMetadata->GetChargeNumber(), bestFitTrackMetadata->GetMassAmu());
    //fittedTrack->SetVertex(???); //TO-DO
    //fittedTrack->SetTrackPropertiesStruct(???); //TO-DO
