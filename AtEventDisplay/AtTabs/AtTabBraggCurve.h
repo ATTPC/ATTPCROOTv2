@@ -10,6 +10,7 @@
 #include <TEveEventManager.h> // for TEveEventManager
 #include <TEvePointSet.h>     // for TEvePointSet
 #include <TH1F.h>
+#include <TGraph.h>
 
 #include <array>        // for array
 #include <memory>       // for make_unique
@@ -27,6 +28,7 @@ class AtTabBraggCurve : public AtTabMain {
 protected:
    TCanvas *fCvsELossVRange{nullptr};
    TH1F *fHistELossVRange{nullptr};
+   TGraph *fFittedELossGraph{nullptr};
 
    int fTrackIdx{-1};
    DataHandling::AtBranch *fTrackingEventBranch;

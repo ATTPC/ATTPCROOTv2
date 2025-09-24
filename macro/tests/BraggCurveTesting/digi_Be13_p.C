@@ -94,7 +94,7 @@ void digi_Be13_p(int nEvent = 10000, int subnum = 0, int angle_cm = 30)
    eLossModelC3D8_550Torr_p->SetProjectile(1, 1, 1.007825031898);
    eLossModels.push_back(std::move(eLossModelC3D8_550Torr_p));
 
-   std::unique_ptr<AtTools::AtELossCATIMA> eLossModelC3D8_550Torr_d = std::make_unique<AtTools::AtELossCATIMA>(density, "CATima_C3D8_550Torr_d");
+   /*std::unique_ptr<AtTools::AtELossCATIMA> eLossModelC3D8_550Torr_d = std::make_unique<AtTools::AtELossCATIMA>(density, "CATima_C3D8_550Torr_d");
    eLossModelC3D8_550Torr_d->SetMaterial(materialComponents);
    eLossModelC3D8_550Torr_d->SetProjectile(2, 1, 2.014101777844);
    eLossModels.push_back(std::move(eLossModelC3D8_550Torr_d));
@@ -107,9 +107,11 @@ void digi_Be13_p(int nEvent = 10000, int subnum = 0, int angle_cm = 30)
    std::unique_ptr<AtTools::AtELossCATIMA> eLossModelC3D8_550Torr_4He = std::make_unique<AtTools::AtELossCATIMA>(density, "CATima_C3D8_550Torr_4He");
    eLossModelC3D8_550Torr_4He->SetMaterial(materialComponents);
    eLossModelC3D8_550Torr_4He->SetProjectile(4, 2, 4.00260325413);
-   eLossModels.push_back(std::move(eLossModelC3D8_550Torr_4He));
+   eLossModels.push_back(std::move(eLossModelC3D8_550Torr_4He));*/
 
    std::unique_ptr<EventFit::AtBraggCurveFitter> braggCurveFitter = std::make_unique<EventFit::AtBraggCurveFitter>(std::move(eLossModels));
+   braggCurveFitter->SetEstimatedAmplitudeFactor(500);
+   braggCurveFitter->SetEstimatedAmplitudeFactorPrecision(400);
    braggCurveFitter->Init();
 
    AtFitterTask *fitterTask = new AtFitterTask(std::move(braggCurveFitter));

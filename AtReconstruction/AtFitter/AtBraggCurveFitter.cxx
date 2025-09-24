@@ -119,6 +119,10 @@ AtFittedTrack *EventFit::AtBraggCurveFitter::GetFittedTrack(AtTrack *track, AtFi
       braggFitMetadata->SetChargeNumber(fELossModels[fProjectileIdx]->GetChargeNumber());
       braggFitMetadata->SetMassAmu(fELossModels[fProjectileIdx]->GetMassAmu());
 
+      // Compute the ELoss profile that best fits the experimental values and store them in the metadata.
+      auto integratedELossValues = fELossModels[fProjectileIdx]->GetIntegratedELoss(fitPar[0], fBinSize, fValuesPerBin, 0.001, fNBins * fBinSize);
+      braggFitMetadata->SetELossFitValues(integratedELossValues);
+
       // Add metadata to set.
       trackMetadatasSet.insert(braggFitMetadata);
 

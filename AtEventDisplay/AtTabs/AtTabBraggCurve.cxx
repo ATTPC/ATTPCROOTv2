@@ -2,6 +2,8 @@
 
 #include "AtViewerManager.h"
 #include "AtEvent.h"
+#include "AtBraggFitMetadata.h"
+#include "AtFitTrackMetadata.h"
 #include "AtFitMetadata.h"
 #include "AtPattern.h" // for AtPattern
 #include "AtPatternEvent.h"
@@ -209,6 +211,10 @@ void AtTabBraggCurve::UpdatePatternEventElements()
 
 void AtTabBraggCurve::UpdateTrackingEventElements()
 {
+   // Reset the graphs to begin with.
+   if (fFittedELossGraph != nullptr)
+      fCvsELossVRange->GetListOfPrimitives()->Remove(fFittedELossGraph);
+
    auto trackingEvent = GetFairRootInfo<AtTrackingEvent>();
    if (trackingEvent == nullptr) {
       LOG(debug) << "Cannot update AtTrackingEvent elements: no event available.";
@@ -220,7 +226,6 @@ void AtTabBraggCurve::UpdateTrackingEventElements()
       return;
    PrintFittedTrackInfo(*fittedTracks.at(fTrackIdx));
    DrawBestFittingELoss(*fittedTracks.at(fTrackIdx));
-
 }
 
 void AtTabBraggCurve::UpdateFitMetadata()
@@ -262,5 +267,21 @@ void AtTabBraggCurve::PrintFittedTrackInfo(AtFittedTrack fittedTrack)
 
 void AtTabBraggCurve::DrawBestFittingELoss(AtFittedTrack fittedTrack)
 {
+   std::unique_ptr<AtFitTrackMetadata> &fitTrackMetadata = fittedTrack.GetTrackMetadata();
+   auto braggFitMetadata = dynamic_cast<AtBraggFitMetadata*>(fitTrackMetadata.get());
+   if (braggFitMetadata == nullptr) {
+      LOG(error) << "The fit metadata is not of type AtBraggFitMetadata. The fit ELoss profile will not be plotted!";
+      return;
+   }
 
+   auto fitELossValues = braggFitMetadata->GetELossFitValues();
+   double amplitudeFactor = braggFitMetadata->GetAmplitudeFactor();
+
+   fFittedELossGraph = new TGraph();
+   for (auto pair: fitELossValues)
+      fFittedELossGraph->AddPoint(pair.second, amplitudeFactor * pair.first);
+   fCvsELossVRange->cd();
+   fFittedELossGraph->Draw("same");
+   fCvsELossVRange->Modified();
+   fCvsELossVRange->Update();
 }

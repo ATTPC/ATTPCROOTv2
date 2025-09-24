@@ -29,6 +29,9 @@ protected:
    Int_t fZ{0};
    Double_t fMassAmu{0};
 
+   // The ELoss profile that best fits the experimental Bragg curve. Stored here for quick access on the Bragg curve tab of the viewer for example.
+   std::vector<std::pair<Double_t, Double_t>> fELossFitValues;
+
 public:
    AtBraggFitMetadata() = default;
    AtBraggFitMetadata(const AtBraggFitMetadata &) = default;
@@ -46,6 +49,7 @@ public:
    void SetAtomicMassNumber(Int_t value) { fA = value; }
    void SetChargeNumber(Int_t value) { fZ = value; }
    void SetMassAmu(Double_t value) { fMassAmu = value; }
+   void SetELossFitValues(std::vector<std::pair<Double_t, Double_t>> values) { fELossFitValues = values; }
 
    TString GetELossModelName() { return fELossModelName; }
    Double_t GetKineticEnergy() { return fKineticEnergy; }
@@ -56,6 +60,7 @@ public:
    Int_t GetAtomicMassNumber() { return fA; }
    Int_t GetChargeNumber() { return fZ; }
    Double_t GetMassAmu() { return fMassAmu; }
+   std::vector<std::pair<Double_t, Double_t>> GetELossFitValues() { return fELossFitValues; }
 
    virtual void Print() const override;
 
