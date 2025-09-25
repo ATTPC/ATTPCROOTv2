@@ -4,7 +4,6 @@
 #include "AtEvent.h"
 #include "AtBraggFitMetadata.h"
 #include "AtFitTrackMetadata.h"
-#include "AtFitMetadata.h"
 #include "AtPattern.h" // for AtPattern
 #include "AtPatternEvent.h"
 #include "AtTabInfo.h" // for AtTabInfoFairRoot, AtTabInfo
@@ -78,24 +77,19 @@ void AtTabBraggCurve::InitTab()
 void AtTabBraggCurve::Update(DataHandling::AtSubject *sub)
 {
    // If we should update the stuff that depends on the AtEvent
-   if (sub == fEventBranch || sub == fEntry) {
+   if (sub == fEventBranch || sub == fEntry)
       UpdateEventElements();
-   }
-   if (sub == fPatternEventBranch || sub == fEntry) {
+   if (sub == fPatternEventBranch || sub == fEntry)
       UpdatePatternEventElements();
-   }
-   if (sub == fTrackingEventBranch || sub == fEntry) {
-      UpdateTrackingEventElements();
-   }
-   if (sub == fFitMetadataBranch || sub == fEntry) {
+   if (sub == fFitMetadataBranch || sub == fEntry)
       UpdateFitMetadata();
-   }
+   if (sub == fTrackingEventBranch || sub == fEntry)
+      UpdateTrackingEventElements();
 
 
    // If we should update the 3D display
-   if (sub == fEventBranch || sub == fPatternEventBranch || sub == fEntry) {
+   if (sub == fEventBranch || sub == fPatternEventBranch || sub == fEntry)
       gEve->Redraw3D(false); // false -> don't reset camera
-   }
 }
 
 void AtTabBraggCurve::MakeTab(TEveWindowSlot *slot)
@@ -222,7 +216,7 @@ void AtTabBraggCurve::UpdateTrackingEventElements()
    }
 
    auto &fittedTracks = trackingEvent->GetFittedTracks();
-   if (fTrackIdx >= fittedTracks.size())
+   if (fTrackIdx >= fittedTracks.size() || fTrackIdx == -1)
       return;
    PrintFittedTrackInfo(*fittedTracks.at(fTrackIdx));
    DrawBestFittingELoss(*fittedTracks.at(fTrackIdx));
@@ -236,7 +230,9 @@ void AtTabBraggCurve::UpdateFitMetadata()
       return;
    }
 
-   std::cout << "I'm still to be implemented :)" << std::endl;
+   if (fTrackIdx >= fitMetadata->GetNumEntries() || fTrackIdx == -1)
+      return;
+   PrintFittedTrackMetadata(fitMetadata);
 
 }
 
@@ -247,14 +243,14 @@ void AtTabBraggCurve::PrintFittedTrackInfo(AtFittedTrack fittedTrack)
 
    // Particle info.
    AtFittedTrack::ParticleInfo particleInfo = fittedTrack.GetParticleInfo();
-   std::cout << "Particle information:" << std::endl;
+   std::cout << " Particle information:" << std::endl;
    std::cout << "   - PDG code: " << particleInfo.idPDG.Data() << std::endl;
    std::cout << "   - Z = " << particleInfo.charge << std::endl;
    std::cout << "   - m = " << particleInfo.mass << " amu" << std::endl;
 
    // Kinematics.
    AtFittedTrack::Kinematics kinematics = fittedTrack.GetKinematics();
-   std::cout << "Kinematics:" << std::endl;
+   std::cout << " Kinematics:" << std::endl;
    std::cout << "   - kineticEnergy = " << kinematics.kineticEnergy << " MeV" << std::endl;
    std::cout << "   - theta = " << kinematics.theta * 180 / TMath::Pi() << " deg" << std::endl;
    std::cout << "   - phi = " << kinematics.phi * 180 / TMath::Pi() << " deg" << std::endl;
@@ -263,6 +259,7 @@ void AtTabBraggCurve::PrintFittedTrackInfo(AtFittedTrack fittedTrack)
    //XYZVector vertex = fittedTrack.GetVertex();
    //std::cout << "Vertex = (" << vertex.X() << ", " << vertex.Y() << ", " << vertex.Z() << ") [mm]" << std::endl;
 
+   std::cout << std::endl;
 }
 
 void AtTabBraggCurve::DrawBestFittingELoss(AtFittedTrack fittedTrack)
@@ -284,4 +281,23 @@ void AtTabBraggCurve::DrawBestFittingELoss(AtFittedTrack fittedTrack)
    fFittedELossGraph->Draw("same");
    fCvsELossVRange->Modified();
    fCvsELossVRange->Update();
+}
+
+void AtTabBraggCurve::PrintFittedTrackMetadata(AtFitMetadata *fitMetadata)
+{
+   std::cout << " === Metadata of all fits for track with ID " << fTrackIdx << " in event " << fitMetadata->GetEventID() << " === " << std::endl;
+
+   auto &fitTrackMetadatas = fitMetadata->GetTrackMetadatasVector(fTrackIdx);
+
+   for (auto &fitTrackMetadata: fitTrackMetadatas) {
+      auto braggFitMetadata = dynamic_cast<AtBraggFitMetadata*>(fitTrackMetadata.get());
+      if (braggFitMetadata == nullptr) {
+         LOG(error) << "The fit metadata is not of type AtBraggFitMetadata. The fit metadata will not be printed!";
+         return;
+      }
+
+      braggFitMetadata->Print();
+
+      std::cout << std::endl;
+   }
 }

@@ -2,6 +2,7 @@
 #define ATTABBRAGGCURVE_H
 
 #include "AtFittedTrack.h"
+#include "AtFitMetadata.h"
 #include "AtTabMain.h" // for AtTabMain::TEvePointSetPtr, AtTa...
 #include "AtTrack.h"
 #include "AtViewerManagerSubject.h" // for AtBranch
@@ -53,6 +54,7 @@ protected:
 
    void PrintFittedTrackInfo(AtFittedTrack fittedTrack);
    void DrawBestFittingELoss(AtFittedTrack fittedTrack);
+   void PrintFittedTrackMetadata(AtFitMetadata *fitMetadata);
 
 private:
    ClassDefOverride(AtTabBraggCurve, 1);

@@ -11,7 +11,7 @@ std::unique_ptr<AtFitTrackMetadata> AtFitTrackMetadata::Clone()
 void AtFitTrackMetadata::Print() const
 
 {
-   std::cout << " Fit metadata for track with ID " << fTrackID << ":" << std::endl;
+   std::cout << " Fit metadata " << fFitID << " for track with ID " << fTrackID << ":" << std::endl;
 
    std::cout << " Statistics: " << std::endl;
    std::cout << "   PValue    = " << fPValue << std::endl;

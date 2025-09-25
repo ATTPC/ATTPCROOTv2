@@ -52,6 +52,8 @@ public:
    void SetEventID(ULong_t id) { fEventID = id; }
 
    TrackMetadatasVector &GetTrackMetadatasVector(Int_t trackID) { return fMetadatas.at(trackID); }
+   ULong_t GetEventID() { return fEventID; }
+   Int_t GetNumEntries() { return fMetadatas.size(); }
 
    ClassDefOverride(AtFitMetadata, 1);
 };

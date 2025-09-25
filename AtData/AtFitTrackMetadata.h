@@ -23,6 +23,9 @@ protected:
    // The track ID for which this fit was done for.
    Int_t fTrackID{-1};
 
+   // More than 1 fit may be done for each track. Adding a fit ID.
+   Int_t fFitID{-1};
+
 public:
    AtFitTrackMetadata() = default;
    AtFitTrackMetadata(const AtFitTrackMetadata &) = default;
@@ -38,12 +41,14 @@ public:
    void SetNdf(Int_t value) { fNdf = value; }
    void SetFitConverged(Bool_t value) { fFitConverged = value; }
    void SetTrackID(Int_t value) { fTrackID = value; }
+   void SetFitID(Int_t value) { fFitID = value; }
 
    Double_t GetPValue() const { return fPValue; }
    Double_t GetChi2() const { return fChi2; }
    Int_t GetNdf() const { return fNdf; }
    Bool_t GetFitConverged() const { return fFitConverged; }
    Int_t GetTrackID() const { return fTrackID; }
+   Int_t GetFitID() const { return fFitID; }
 
    virtual void Print() const;
 

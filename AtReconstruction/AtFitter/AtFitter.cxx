@@ -18,6 +18,11 @@ void EventFit::AtFitter::FitEvent(AtTrackingEvent *trackingEvent, AtPatternEvent
       return;
    }
 
+   // Set event ID.
+   trackingEvent->SetEventID(patternEvent->GetEventID());
+   if (fitMetadata)
+      fitMetadata->SetEventID(patternEvent->GetEventID());
+
    // Extract the candidate AtTracks. If there are not any tracks, return earlier.
    std::vector<AtTrack> tracks = patternEvent->GetTrackCand();
    if (!tracks.size())

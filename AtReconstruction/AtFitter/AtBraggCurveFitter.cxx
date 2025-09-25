@@ -104,6 +104,7 @@ AtFittedTrack *EventFit::AtBraggCurveFitter::GetFittedTrack(AtTrack *track, AtFi
       AtBraggFitMetadata *braggFitMetadata = new AtBraggFitMetadata();
       braggFitMetadata->SetChi2(chi2);
       braggFitMetadata->SetTrackID(track->GetTrackID());
+      braggFitMetadata->SetFitID(fProjectileIdx);
       braggFitMetadata->SetFitConverged(kTRUE); // I'm setting to true by default because I don't know how to check with minuit :C
 
       //braggFitMetadata->SetPValue(pvalue???); // will be calculated in the future.
