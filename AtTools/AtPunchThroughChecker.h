@@ -2,6 +2,9 @@
 #define ATPUNCHTHROUGHCHECKER_H
 
 #include "AtTrack.h"
+#include "AtHit.h"
+
+#include <tuple>
 
 namespace AtTools {
 
@@ -14,9 +17,11 @@ namespace AtTools {
 
 class AtPunchThroughChecker {
 protected:
+   // Geometry of the TPC.
    double fTPCLength{1000}; // mm
    double fTPCRadius{250};  // mm
 
+   // If the last hit of the AtTrack is closer than this distance to the border of the TPC, it is considered that is has punched through.
    double fDistanceThreshold{20}; // mm
 
 public:
@@ -24,6 +29,13 @@ public:
    ~AtPunchThroughChecker() = default;
 
    bool IsPunchThrough(AtTrack *track);
+
+   void SetTPCLength(double value) { fTPCLength = value; }
+   void SetTPCRadius(double value) { fTPCRadius = value; }
+   void SetDistanceThreshold(double value) { fDistanceThreshold = value; }
+
+private:
+   std::tuple<double, double> GetLastHitZPosAndRadius(AtTrack *track, bool &movingForward);
 
 };
 } // namespace AtTools

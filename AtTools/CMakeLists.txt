@@ -10,6 +10,7 @@ set(SRCS
   AtELossModel.cxx
   AtELossTable.cxx
   AtFindVertex.cxx
+  AtPunchThroughChecker.cxx
   
   AtCSVReader.cxx
   AtEulerTransformation.cxx
