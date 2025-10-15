@@ -5,6 +5,7 @@
 #include "AtELossModel.h"
 #include "AtFittedTrack.h"
 #include "AtFitter.h"
+#include "AtPunchThroughChecker.h"
 
 #include <TMinuit.h>
 
@@ -35,6 +36,9 @@ protected:
    static double fBinSize;
    static double fMinimumRange;
    double fHoleRadius{30}; // mm
+
+   // The AtPunchThroughChecker that will check if a track is punching through or not.
+   AtTools::AtPunchThroughChecker *fPunchThroughChecker;
 
    // The TMinuit which will perform the minimization.
    TMinuit *fMinuit{nullptr};
@@ -69,6 +73,7 @@ public:
    void SetStartingEstimatedKinE(double value) { fStartingEstimatedKinE = value; }
    void SetEstimatedKinEStep(double value) { fEstimatedKinEStep = value; }
    void SetKinEPrecision(double value) { fKinEPrecision = value; }
+   void SetDistanceThreshold(double value) { fPunchThroughChecker->SetDistanceThreshold(value); }
 
 protected:
    virtual AtFittedTrack *GetFittedTrack(AtTrack *track, AtFitMetadata *fitMetadata = nullptr,

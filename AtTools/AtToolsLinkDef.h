@@ -29,7 +29,7 @@
 #pragma link C++ class AtTools::AtKinematics + ;
 #pragma link C++ class AtTools::AtVirtualTerminal + ;
 
-#pragma link C++ class AtTools::AtPunchThroughChecker + ;
+#pragma link C++ class AtTools::AtPunchThroughChecker - !;
 
 #pragma link C++ class RandomSample::AtSample - !;
 #pragma link C++ class RandomSample::AtIndependentSample - !;

@@ -112,6 +112,7 @@ void digi_Be13_p(int nEvent = 10000, int subnum = 0, int angle_cm = 30)
    std::unique_ptr<EventFit::AtBraggCurveFitter> braggCurveFitter = std::make_unique<EventFit::AtBraggCurveFitter>(std::move(eLossModels));
    braggCurveFitter->SetEstimatedAmplitudeFactor(360);
    braggCurveFitter->SetEstimatedAmplitudeFactorPrecision(30);
+   braggCurveFitter->SetDistanceThreshold(10);
    braggCurveFitter->Init();
 
    AtFitterTask *fitterTask = new AtFitterTask(std::move(braggCurveFitter));

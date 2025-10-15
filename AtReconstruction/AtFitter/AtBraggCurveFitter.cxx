@@ -1,6 +1,8 @@
 #include "AtBraggCurveFitter.h"
 
 #include "AtTrack.h"
+#include "AtTrackingEvent.h"
+#include "AtPatternEvent.h"
 
 #include <TMinuit.h>
 #include <TSystem.h>
@@ -22,11 +24,13 @@ double EventFit::AtBraggCurveFitter::fEstimatedAmplitudeFactorPrecision{3e2}; //
 
 EventFit::AtBraggCurveFitter::AtBraggCurveFitter(ELossModelsVector eLossModels)
 {
+   fPunchThroughChecker = new AtTools::AtPunchThroughChecker();
    fELossModels = std::move(eLossModels);
 }
 
 EventFit::AtBraggCurveFitter::~AtBraggCurveFitter()
 {
+   delete fPunchThroughChecker;
    delete fMinuit;
 }
 
@@ -38,7 +42,47 @@ void EventFit::AtBraggCurveFitter::FitEvent(AtTrackingEvent *trackingEvent, AtPa
       Init();
    }
 
-   EventFit::AtFitter::FitEvent(trackingEvent, patternEvent, fitMetadata, rawEvent, event);
+
+   // Check for nullptr.
+   if (trackingEvent == nullptr) {
+      LOG(error) << " Tracking event is nullptr! The fitter can not fit this event. Maybe the tracking event is not "
+                    "being constructed properly in the fitter task.";
+      return;
+   }
+
+
+   if (patternEvent == nullptr) {
+      LOG(error) << " Pattern event is nullptr! The fitter can not fit this event.";
+      return;
+   }
+
+   // Set event ID.
+   trackingEvent->SetEventID(patternEvent->GetEventID());
+   if (fitMetadata)
+      fitMetadata->SetEventID(patternEvent->GetEventID());
+
+
+   // Extract the candidate AtTracks. If there are not any tracks, return earlier.
+   std::vector<AtTrack> tracks = patternEvent->GetTrackCand();
+   if (!tracks.size())
+      return;
+
+
+   // Save the original AtTracks to the AtTrackingEvent.
+   trackingEvent->SetTrackArray(&tracks);
+
+
+   // Iterate over the AtTracks and store the AtFittedTracks in the AtTrackingEvent.
+   for (auto track : tracks) {
+      // Check for punch-through.
+      if (fPunchThroughChecker->IsPunchThrough(&track)) {
+         LOG(info) << "Track with ID " << track.GetTrackID() << " has punched through. Skipping!";
+         continue;
+      }
+
+      std::unique_ptr<AtFittedTrack> fittedTrack(GetFittedTrack(&track, fitMetadata, rawEvent, event));
+      trackingEvent->AddFittedTrack(std::move(fittedTrack));
+   }
 }
 
 void EventFit::AtBraggCurveFitter::Init()
