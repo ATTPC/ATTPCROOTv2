@@ -135,8 +135,8 @@ void unpack_rcnp(int run_num = 52){
    eLossModels.push_back(std::move(eLossModelC4H10_57_7Torr_12C));
 
    std::unique_ptr<EventFit::AtBraggCurveFitter> braggCurveFitter = std::make_unique<EventFit::AtBraggCurveFitter>(std::move(eLossModels));
-   braggCurveFitter->SetEstimatedAmplitudeFactor(360);
-   braggCurveFitter->SetEstimatedAmplitudeFactorPrecision(30);
+   braggCurveFitter->SetEstimatedAmplitudeFactor(6000);
+   braggCurveFitter->SetEstimatedAmplitudeFactorPrecision(1000);
    braggCurveFitter->SetDistanceThreshold(10);
    braggCurveFitter->Init();
 
