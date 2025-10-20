@@ -32,6 +32,9 @@ protected:
    // The ELoss profile that best fits the experimental Bragg curve. Stored here for quick access on the Bragg curve tab of the viewer for example.
    std::vector<std::pair<Double_t, Double_t>> fELossFitValues;
 
+   // Parameter to store whether or not the track punched through. Most likely, yes.
+   Bool_t fIsPunchThrough{kTRUE};
+
 public:
    AtBraggFitMetadata() = default;
    AtBraggFitMetadata(const AtBraggFitMetadata &) = default;
@@ -50,6 +53,7 @@ public:
    void SetChargeNumber(Int_t value) { fZ = value; }
    void SetMassAmu(Double_t value) { fMassAmu = value; }
    void SetELossFitValues(std::vector<std::pair<Double_t, Double_t>> values) { fELossFitValues = values; }
+   void SetIsPunchThrough(Bool_t value) { fIsPunchThrough = value; }
 
    TString GetELossModelName() { return fELossModelName; }
    Double_t GetKineticEnergy() { return fKineticEnergy; }
@@ -61,6 +65,7 @@ public:
    Int_t GetChargeNumber() { return fZ; }
    Double_t GetMassAmu() { return fMassAmu; }
    std::vector<std::pair<Double_t, Double_t>> GetELossFitValues() { return fELossFitValues; }
+   Bool_t GetIsPunchThrough() { return fIsPunchThrough; }
 
    virtual void Print() const override;
 

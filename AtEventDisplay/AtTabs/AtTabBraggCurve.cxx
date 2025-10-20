@@ -241,6 +241,15 @@ void AtTabBraggCurve::PrintFittedTrackInfo(AtFittedTrack fittedTrack)
 {
    std::cout << " Fitted track with ID " << fittedTrack.GetTrackID() << " information:" << std::endl;
 
+   // If track punched through, there is nothing to print other than a warning.
+   std::unique_ptr<AtFitTrackMetadata> &fitTrackMetadata = fittedTrack.GetTrackMetadata();
+   auto braggFitMetadata = dynamic_cast<AtBraggFitMetadata*>(fitTrackMetadata.get());
+   Bool_t isPunchThrough = braggFitMetadata->GetIsPunchThrough();
+   if (isPunchThrough) {
+      std::cout << " Punch through? " << isPunchThrough << std::endl;
+      return;
+   }
+
    // Particle info.
    AtFittedTrack::ParticleInfo particleInfo = fittedTrack.GetParticleInfo();
    std::cout << " Particle information:" << std::endl;
@@ -270,6 +279,11 @@ void AtTabBraggCurve::DrawBestFittingELoss(AtFittedTrack fittedTrack)
       LOG(error) << "The fit metadata is not of type AtBraggFitMetadata. The fit ELoss profile will not be plotted!";
       return;
    }
+
+   // Again, if punch through, there is no best fit to draw.
+   Bool_t isPunchThrough = braggFitMetadata->GetIsPunchThrough();
+   if (isPunchThrough)
+      return;
 
    auto fitELossValues = braggFitMetadata->GetELossFitValues();
    double amplitudeFactor = braggFitMetadata->GetAmplitudeFactor();

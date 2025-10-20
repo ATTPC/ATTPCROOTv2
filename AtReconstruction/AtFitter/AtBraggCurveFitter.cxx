@@ -42,47 +42,7 @@ void EventFit::AtBraggCurveFitter::FitEvent(AtTrackingEvent *trackingEvent, AtPa
       Init();
    }
 
-
-   // Check for nullptr.
-   if (trackingEvent == nullptr) {
-      LOG(error) << " Tracking event is nullptr! The fitter can not fit this event. Maybe the tracking event is not "
-                    "being constructed properly in the fitter task.";
-      return;
-   }
-
-
-   if (patternEvent == nullptr) {
-      LOG(error) << " Pattern event is nullptr! The fitter can not fit this event.";
-      return;
-   }
-
-   // Set event ID.
-   trackingEvent->SetEventID(patternEvent->GetEventID());
-   if (fitMetadata)
-      fitMetadata->SetEventID(patternEvent->GetEventID());
-
-
-   // Extract the candidate AtTracks. If there are not any tracks, return earlier.
-   std::vector<AtTrack> tracks = patternEvent->GetTrackCand();
-   if (!tracks.size())
-      return;
-
-
-   // Save the original AtTracks to the AtTrackingEvent.
-   trackingEvent->SetTrackArray(&tracks);
-
-
-   // Iterate over the AtTracks and store the AtFittedTracks in the AtTrackingEvent.
-   for (auto track : tracks) {
-      // Check for punch-through.
-      if (fPunchThroughChecker->IsPunchThrough(&track)) {
-         LOG(info) << "Track with ID " << track.GetTrackID() << " has punched through. Skipping!";
-         continue;
-      }
-
-      std::unique_ptr<AtFittedTrack> fittedTrack(GetFittedTrack(&track, fitMetadata, rawEvent, event));
-      trackingEvent->AddFittedTrack(std::move(fittedTrack));
-   }
+   EventFit::AtFitter::FitEvent(trackingEvent, patternEvent, fitMetadata, rawEvent, event);
 }
 
 void EventFit::AtBraggCurveFitter::Init()
@@ -120,6 +80,41 @@ AtFittedTrack *EventFit::AtBraggCurveFitter::GetFittedTrack(AtTrack *track, AtFi
    // Clear the set in case it's filled from previous track.
    BraggFitMetadatasSet trackMetadatasSet = std::set<AtBraggFitMetadata *, std::function<bool(AtBraggFitMetadata *, AtBraggFitMetadata *)>>(CompareTrackFitsFunction);
 
+   // In case the AtTrack has punched through, we simply set it in the metadata and we skip the fitting.
+   Bool_t isPunchThrough = fPunchThroughChecker->IsPunchThrough(track);
+   if (isPunchThrough) {
+      LOG(info) << "Track with ID " << track->GetTrackID() << " has punched through. Skipping the fitting and adding empty fit metadatas!";
+
+      // We add an empty entry to the AtFitMetadata for each ELoss model anyways.
+      if (fitMetadata) {
+         TrackMetadatasVector trackMetadatasVector;
+         fProjectileIdx = 0;
+         while (fProjectileIdx < fELossModels.size()) {
+            std::unique_ptr<AtBraggFitMetadata> uniqueBraggFitMetadata = std::make_unique<AtBraggFitMetadata>();
+            uniqueBraggFitMetadata->SetIsPunchThrough(isPunchThrough);
+            uniqueBraggFitMetadata->SetFitConverged(kFALSE);
+            uniqueBraggFitMetadata->SetTrackID(track->GetTrackID());
+            uniqueBraggFitMetadata->SetFitID(fProjectileIdx);
+
+            trackMetadatasVector.push_back(std::move(uniqueBraggFitMetadata));
+
+            fProjectileIdx++;
+         }
+         fitMetadata->SetTrackMetadatasVector(track->GetTrackID(), std::move(trackMetadatasVector));
+      }
+
+      // Also, empty AtBraggFitMetadata for the AtFittedTrack that is required.
+      std::unique_ptr<AtBraggFitMetadata> uniqueBestFitMetadata = std::make_unique<AtBraggFitMetadata>();
+      uniqueBestFitMetadata->SetIsPunchThrough(isPunchThrough);
+      uniqueBestFitMetadata->SetFitConverged(kFALSE);
+      uniqueBestFitMetadata->SetTrackID(track->GetTrackID());
+
+      AtFittedTrack *notFittedTrack = new AtFittedTrack();
+      notFittedTrack->SetTrackID(track->GetTrackID());
+      notFittedTrack->SetTrackMetadata(std::move(uniqueBestFitMetadata));
+      return notFittedTrack;
+   }
+
    // Now, we iterate over all possible particles that this AtTrack may be.
    fProjectileIdx = 0;
    while (fProjectileIdx < fELossModels.size()) {
@@ -150,6 +145,7 @@ AtFittedTrack *EventFit::AtBraggCurveFitter::GetFittedTrack(AtTrack *track, AtFi
       braggFitMetadata->SetTrackID(track->GetTrackID());
       braggFitMetadata->SetFitID(fProjectileIdx);
       braggFitMetadata->SetFitConverged(kTRUE); // I'm setting to true by default because I don't know how to check with minuit :C
+      braggFitMetadata->SetIsPunchThrough(isPunchThrough);
 
       //braggFitMetadata->SetPValue(pvalue???); // will be calculated in the future.
       //braggFitMetadata->SetNdf(ndf???); // ""
