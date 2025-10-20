@@ -7,7 +7,7 @@ bool reduceFunc(AtRawEvent *evt){
   return (evt->GetNumPads() > 0) && evt->IsGood();
 }
 
-void unpack_rcnp(int run_num = 115){
+void unpack_rcnp(int run_num = 52){
   // Load the library for unpacking and reconstruction
   gSystem->Load("libAtRecoMediumnstruction.so");
 

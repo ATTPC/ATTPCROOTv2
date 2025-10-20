@@ -12,7 +12,7 @@ void run_eve(int runNum = 52, TString OutputDataFile = "./run_0052_display.root"
 //void run_eve(int runNum = 42)  
 {
   //  TString OutputDataFile = "./run_0038_display.root";
-  TString InputDataFile = TString::Format("./run_%04d.root", runNum);
+  TString InputDataFile = TString::Format("./decode_data/run_%04d.root", runNum);
   std::cout << "Opening: " << InputDataFile << std::endl;
 
    TString dir = getenv("VMCWORKDIR");

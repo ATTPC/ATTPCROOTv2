@@ -125,7 +125,7 @@ void AtFRIBLinkedHDFUnpacker::setEventIDAndTimestamps()
 
 std::size_t AtFRIBLinkedHDFUnpacker::n_pads(std::string i_raw_event)
 {
-   return n_entries(i_raw_event + "/get_traces")[0];
+   return n_entries(i_raw_event + "/get/pads")[0];
 };
 
 std::size_t AtFRIBLinkedHDFUnpacker::n_aux(std::string i_raw_event)
