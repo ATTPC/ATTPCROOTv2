@@ -35,6 +35,9 @@ protected:
    // Parameter to store whether or not the track punched through. Most likely, yes.
    Bool_t fIsPunchThrough{kTRUE};
 
+   // Sometimes, the experimental Bragg curve values could not be reconstructed (vertex not found for example).
+   Bool_t fIsReconstructedELoss{kFALSE};
+
 public:
    AtBraggFitMetadata() = default;
    AtBraggFitMetadata(const AtBraggFitMetadata &) = default;
@@ -54,6 +57,7 @@ public:
    void SetMassAmu(Double_t value) { fMassAmu = value; }
    void SetELossFitValues(std::vector<std::pair<Double_t, Double_t>> values) { fELossFitValues = values; }
    void SetIsPunchThrough(Bool_t value) { fIsPunchThrough = value; }
+   void SetIsReconstructedELoss(Bool_t value) { fIsReconstructedELoss = value; }
 
    TString GetELossModelName() { return fELossModelName; }
    Double_t GetKineticEnergy() { return fKineticEnergy; }
@@ -66,6 +70,7 @@ public:
    Double_t GetMassAmu() { return fMassAmu; }
    std::vector<std::pair<Double_t, Double_t>> GetELossFitValues() { return fELossFitValues; }
    Bool_t GetIsPunchThrough() { return fIsPunchThrough; }
+   Bool_t GetIsReconstructedELoss() { return fIsReconstructedELoss; }
 
    virtual void Print() const override;
 

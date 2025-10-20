@@ -14,6 +14,7 @@ void AtBraggFitMetadata::Print() const
 
    std::cout << " Bragg fitting specifics: " << std::endl;
    std::cout << "   Punched through? " << fIsPunchThrough << std::endl;
+   std::cout << "   Reconstructed ELoss profile? " << fIsReconstructedELoss << std::endl;
    std::cout << "   ELoss model name: " << fELossModelName.Data() << std::endl;
    std::cout << "   Particle: (A, Z) = (" << fA << ", " << fZ << "), mass = " << fMassAmu << " umas" << std::endl;
    std::cout << "   KineticEnergy = (" << fKineticEnergy << " +- " << fKineticEnergyUncertainty << ") MeV" << std::endl;

@@ -241,12 +241,14 @@ void AtTabBraggCurve::PrintFittedTrackInfo(AtFittedTrack fittedTrack)
 {
    std::cout << " Fitted track with ID " << fittedTrack.GetTrackID() << " information:" << std::endl;
 
-   // If track punched through, there is nothing to print other than a warning.
+   // If track punched through or no ELoss profile, there is nothing to print other than a warning.
    std::unique_ptr<AtFitTrackMetadata> &fitTrackMetadata = fittedTrack.GetTrackMetadata();
    auto braggFitMetadata = dynamic_cast<AtBraggFitMetadata*>(fitTrackMetadata.get());
    Bool_t isPunchThrough = braggFitMetadata->GetIsPunchThrough();
-   if (isPunchThrough) {
+   Bool_t isReconstructedELoss = braggFitMetadata->GetIsReconstructedELoss();
+   if (isPunchThrough || !isReconstructedELoss) {
       std::cout << " Punch through? " << isPunchThrough << std::endl;
+      std::cout << " Reconstructed ELoss profile? " << isPunchThrough << std::endl;
       return;
    }
 
@@ -280,9 +282,10 @@ void AtTabBraggCurve::DrawBestFittingELoss(AtFittedTrack fittedTrack)
       return;
    }
 
-   // Again, if punch through, there is no best fit to draw.
+   // Again, if punch through or no ELoss profile, there is no best fit to draw.
    Bool_t isPunchThrough = braggFitMetadata->GetIsPunchThrough();
-   if (isPunchThrough)
+   Bool_t isReconstructedELoss = braggFitMetadata->GetIsReconstructedELoss();
+   if (isPunchThrough || !isReconstructedELoss)
       return;
 
    auto fitELossValues = braggFitMetadata->GetELossFitValues();
