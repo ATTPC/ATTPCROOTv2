@@ -10,7 +10,7 @@ EField:Double_t              70000   # V/m
 BField:Double_t                0.0   # Tesla
 TBEntrance:Int_t               200   # Beam position at detector entrance in TB
 ZPadPlane:Double_t             0.0   # Position of the micromegas pad plane 
-IsTPCInverted:Int_t              1   # Is the drift direction inverted? [0=false;1=true]
+IsTPCInverted:Int_t              0   # Is the drift direction inverted? [0=false;1=true]
 EIonize:Double_t             42.70   # Ionization energy of gas in eV
 Fano:Double_t                 0.24   # Fano factor of the gas
 CoefL:Double_t              0.0055   # Longitudal coefficient of diffusion [cm^2/us]

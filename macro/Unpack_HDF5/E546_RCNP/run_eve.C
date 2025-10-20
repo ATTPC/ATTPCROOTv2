@@ -9,7 +9,6 @@
 
 //void run_eve(int runNum = 174, TString OutputDataFile = "./data/output.reco_display.root")
 void run_eve(int runNum = 52, TString OutputDataFile = "./run_0052_display.root")  
-//void run_eve(int runNum = 42)  
 {
   //  TString OutputDataFile = "./run_0038_display.root";
   TString InputDataFile = TString::Format("./decode_data/run_%04d.root", runNum);
@@ -43,7 +42,12 @@ void run_eve(int runNum = 52, TString OutputDataFile = "./run_0052_display.root"
 
    auto tabMain = std::make_unique<AtTabMain>();
    tabMain->SetMultiHit(100); // Set the maximum number of multihits in the visualization
+
+   auto tabBraggCurve = std::make_unique<AtTabBraggCurve>();
+   tabBraggCurve->SetMultiHit(100);
+
    eveMan->AddTab(std::move(tabMain));
+   eveMan->AddTab(std::move(tabBraggCurve));
 
    eveMan->Init();
 

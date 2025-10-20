@@ -116,12 +116,42 @@ void unpack_rcnp(int run_num = 52){
   //  patternModTask->SetOutputBranch("AtPatternEvent");
   patternModTask->SetPersistence(kTRUE);
 
+   // Create the AtFitterTask task.
+   std::vector<std::unique_ptr<AtTools::AtELossModel>> eLossModels;
+
+   double density = 1.835e-4;
+   std::vector<std::tuple<int, int, int>> materialComponents;
+   materialComponents.push_back(std::make_tuple(12, 6, 4));
+   materialComponents.push_back(std::make_tuple(1, 1, 10));
+
+   std::unique_ptr<AtTools::AtELossCATIMA> eLossModelC4H10_57_7Torr_alpha = std::make_unique<AtTools::AtELossCATIMA>(density, "CATima_C4H10_57_7Torr_alpha");
+   eLossModelC4H10_57_7Torr_alpha->SetMaterial(materialComponents);
+   eLossModelC4H10_57_7Torr_alpha->SetProjectile(4, 2, 4.00260325413);
+   eLossModels.push_back(std::move(eLossModelC4H10_57_7Torr_alpha));
+
+   std::unique_ptr<AtTools::AtELossCATIMA> eLossModelC4H10_57_7Torr_12C = std::make_unique<AtTools::AtELossCATIMA>(density, "CATima_C4H10_57_7Torr_12C");
+   eLossModelC4H10_57_7Torr_12C->SetMaterial(materialComponents);
+   eLossModelC4H10_57_7Torr_12C->SetProjectile(12, 6, 12);
+   eLossModels.push_back(std::move(eLossModelC4H10_57_7Torr_12C));
+
+   std::unique_ptr<EventFit::AtBraggCurveFitter> braggCurveFitter = std::make_unique<EventFit::AtBraggCurveFitter>(std::move(eLossModels));
+   braggCurveFitter->SetEstimatedAmplitudeFactor(360);
+   braggCurveFitter->SetEstimatedAmplitudeFactorPrecision(30);
+   braggCurveFitter->SetDistanceThreshold(10);
+   braggCurveFitter->Init();
+
+   AtFitterTask *fitterTask = new AtFitterTask(std::move(braggCurveFitter));
+   fitterTask->SetPersistence(kTRUE);
+   fitterTask->SetInputBranch("AtPatternEventModified");
+   fitterTask->SetFitMetadataBranch("AtFitMetadata");
+
   run->AddTask(unpackTask);
   // run->AddTask(filterTask);
   run->AddTask(psaTask);
   run->AddTask(SCTask);
   run->AddTask(ransacTask);
   run->AddTask(patternModTask);
+  run->AddTask(fitterTask);
 
   std::cout << "***** Starting Init ******" << std::endl;
   run->Init();
