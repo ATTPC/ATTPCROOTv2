@@ -94,19 +94,19 @@ void digi_Be13_p(int nEvent = 10000)
    eLossModelC3D8_d->SetMaterial(materialComponents);
    eLossModelC3D8_d->SetProjectile(2, 1, 2.014101777844);
    eLossModelC3D8_d->SetPDGCode("1000010020");
-   eLossModels.push_back(std::move(eLossModelC3D8_d));
+   //eLossModels.push_back(std::move(eLossModelC3D8_d));
 
    std::unique_ptr<AtTools::AtELossCATIMA> eLossModelC3D8_t = std::make_unique<AtTools::AtELossCATIMA>(density, "CATima_C3D8_600Torr_t");
    eLossModelC3D8_t->SetMaterial(materialComponents);
    eLossModelC3D8_t->SetProjectile(3, 1, 3.01604928132);
    eLossModelC3D8_t->SetPDGCode("1000010030");
-   eLossModels.push_back(std::move(eLossModelC3D8_t));
+   //eLossModels.push_back(std::move(eLossModelC3D8_t));
 
    std::unique_ptr<AtTools::AtELossCATIMA> eLossModelC3D8_4He = std::make_unique<AtTools::AtELossCATIMA>(density, "CATima_C3D8_600Torr_4He");
    eLossModelC3D8_4He->SetMaterial(materialComponents);
    eLossModelC3D8_4He->SetProjectile(4, 2, 4.00260325413);
    eLossModelC3D8_4He->SetPDGCode("1000020040");
-   eLossModels.push_back(std::move(eLossModelC3D8_4He));
+   //eLossModels.push_back(std::move(eLossModelC3D8_4He));
 
    std::unique_ptr<AtTools::AtELossCATIMA> eLossModelC3D8_12Be = std::make_unique<AtTools::AtELossCATIMA>(density, "CATima_C3D8_600Torr_12Be");
    eLossModelC3D8_12Be->SetMaterial(materialComponents);
