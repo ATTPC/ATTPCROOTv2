@@ -32,6 +32,9 @@ public:
       Int_t nBins{0};
       Double_t binSize{0};
       Int_t smoothingSteps{0};
+      Double_t vertexX{0};
+      Double_t vertexY{0};
+      Double_t vertexZ{-999};
    };
 
 protected:
