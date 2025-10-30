@@ -1,14 +1,14 @@
 #include "AtTabBraggCurve.h"
 
-#include "AtViewerManager.h"
-#include "AtEvent.h"
 #include "AtBraggFitMetadata.h"
+#include "AtEvent.h"
 #include "AtFitTrackMetadata.h"
 #include "AtPattern.h" // for AtPattern
 #include "AtPatternEvent.h"
 #include "AtTabInfo.h" // for AtTabInfoFairRoot, AtTabInfo
 #include "AtTrack.h"   // for AtTrack
 #include "AtTrackingEvent.h"
+#include "AtViewerManager.h"
 
 #include <FairLogger.h> // for LOG
 
@@ -23,10 +23,10 @@
 #include <TEveViewer.h>
 #include <TEveWindow.h>
 #include <TGLViewer.h>
-#include <TStyle.h>
 #include <TGTab.h>
 #include <TGeoManager.h>
 #include <TRootEmbeddedCanvas.h>
+#include <TStyle.h>
 
 #include <array>   // for array
 #include <utility> // for move
@@ -85,7 +85,6 @@ void AtTabBraggCurve::Update(DataHandling::AtSubject *sub)
       UpdateFitMetadata();
    if (sub == fTrackingEventBranch || sub == fEntry)
       UpdateTrackingEventElements();
-
 
    // If we should update the 3D display
    if (sub == fEventBranch || sub == fPatternEventBranch || sub == fEntry)
@@ -233,9 +232,7 @@ void AtTabBraggCurve::UpdateFitMetadata()
    if (fTrackIdx >= fitMetadata->GetNumEntries() || fTrackIdx == -1)
       return;
    PrintFittedTrackMetadata(fitMetadata);
-
 }
-
 
 void AtTabBraggCurve::PrintFittedTrackInfo(AtFittedTrack fittedTrack)
 {
@@ -243,7 +240,7 @@ void AtTabBraggCurve::PrintFittedTrackInfo(AtFittedTrack fittedTrack)
 
    // If track punched through or no ELoss profile, there is nothing to print other than a warning.
    std::unique_ptr<AtFitTrackMetadata> &fitTrackMetadata = fittedTrack.GetTrackMetadata();
-   auto braggFitMetadata = dynamic_cast<AtBraggFitMetadata*>(fitTrackMetadata.get());
+   auto braggFitMetadata = dynamic_cast<AtBraggFitMetadata *>(fitTrackMetadata.get());
    Bool_t isPunchThrough = braggFitMetadata->GetIsPunchThrough();
    Bool_t isReconstructedELoss = braggFitMetadata->GetIsReconstructedELoss();
    if (isPunchThrough || !isReconstructedELoss) {
@@ -276,7 +273,7 @@ void AtTabBraggCurve::PrintFittedTrackInfo(AtFittedTrack fittedTrack)
 void AtTabBraggCurve::DrawBestFittingELoss(AtFittedTrack fittedTrack)
 {
    std::unique_ptr<AtFitTrackMetadata> &fitTrackMetadata = fittedTrack.GetTrackMetadata();
-   auto braggFitMetadata = dynamic_cast<AtBraggFitMetadata*>(fitTrackMetadata.get());
+   auto braggFitMetadata = dynamic_cast<AtBraggFitMetadata *>(fitTrackMetadata.get());
    if (braggFitMetadata == nullptr) {
       LOG(error) << "The fit metadata is not of type AtBraggFitMetadata. The fit ELoss profile will not be plotted!";
       return;
@@ -292,7 +289,7 @@ void AtTabBraggCurve::DrawBestFittingELoss(AtFittedTrack fittedTrack)
    double amplitudeFactor = braggFitMetadata->GetAmplitudeFactor();
 
    fFittedELossGraph = new TGraph();
-   for (auto pair: fitELossValues)
+   for (auto pair : fitELossValues)
       fFittedELossGraph->AddPoint(pair.second, amplitudeFactor * pair.first);
    fCvsELossVRange->cd();
    fFittedELossGraph->Draw("same");
@@ -302,12 +299,13 @@ void AtTabBraggCurve::DrawBestFittingELoss(AtFittedTrack fittedTrack)
 
 void AtTabBraggCurve::PrintFittedTrackMetadata(AtFitMetadata *fitMetadata)
 {
-   std::cout << " === Metadata of all fits for track with ID " << fTrackIdx << " in event " << fitMetadata->GetEventID() << " === " << std::endl;
+   std::cout << " === Metadata of all fits for track with ID " << fTrackIdx << " in event " << fitMetadata->GetEventID()
+             << " === " << std::endl;
 
    auto &fitTrackMetadatas = fitMetadata->GetTrackMetadatasVector(fTrackIdx);
 
-   for (auto &fitTrackMetadata: fitTrackMetadatas) {
-      auto braggFitMetadata = dynamic_cast<AtBraggFitMetadata*>(fitTrackMetadata.get());
+   for (auto &fitTrackMetadata : fitTrackMetadatas) {
+      auto braggFitMetadata = dynamic_cast<AtBraggFitMetadata *>(fitTrackMetadata.get());
       if (braggFitMetadata == nullptr) {
          LOG(error) << "The fit metadata is not of type AtBraggFitMetadata. The fit metadata will not be printed!";
          return;

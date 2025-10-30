@@ -1,8 +1,8 @@
 #include "AtBraggCurveFitter.h"
 
+#include "AtPatternEvent.h"
 #include "AtTrack.h"
 #include "AtTrackingEvent.h"
-#include "AtPatternEvent.h"
 
 #include <TMinuit.h>
 #include <TSystem.h>
@@ -21,7 +21,7 @@ std::vector<double> EventFit::AtBraggCurveFitter::fExperimentalIntegratedELossEr
 int EventFit::AtBraggCurveFitter::fNBins{0};
 double EventFit::AtBraggCurveFitter::fBinSize{0};
 double EventFit::AtBraggCurveFitter::fMinimumRange{30};
-double EventFit::AtBraggCurveFitter::fEstimatedAmplitudeFactor{3.5e3}; // ADC/MeV
+double EventFit::AtBraggCurveFitter::fEstimatedAmplitudeFactor{3.5e3};        // ADC/MeV
 double EventFit::AtBraggCurveFitter::fEstimatedAmplitudeFactorPrecision{3e2}; // ADC/MeV
 
 EventFit::AtBraggCurveFitter::AtBraggCurveFitter(ELossModelsVector eLossModels)
@@ -36,11 +36,13 @@ EventFit::AtBraggCurveFitter::~AtBraggCurveFitter()
    delete fMinuit;
 }
 
-void EventFit::AtBraggCurveFitter::FitEvent(AtTrackingEvent *trackingEvent, AtPatternEvent *patternEvent, AtFitMetadata *fitMetadata, AtRawEvent *rawEvent, AtEvent *event)
+void EventFit::AtBraggCurveFitter::FitEvent(AtTrackingEvent *trackingEvent, AtPatternEvent *patternEvent,
+                                            AtFitMetadata *fitMetadata, AtRawEvent *rawEvent, AtEvent *event)
 {
    // Check if fMinuit was initialised.
    if (fMinuit == nullptr) {
-      LOG(warning) << " Minuit was not initialised! Please, check if you ran the Init() function of the fitter before passing it to the fitter task! Initialising now!";
+      LOG(warning) << " Minuit was not initialised! Please, check if you ran the Init() function of the fitter before "
+                      "passing it to the fitter task! Initialising now!";
       Init();
    }
 
@@ -73,12 +75,16 @@ AtFittedTrack *EventFit::AtBraggCurveFitter::GetFittedTrack(AtTrack *track, AtFi
    // Check for punsh through.
    Bool_t isPunchThrough = fPunchThroughChecker->IsPunchThrough(track);
 
-   // In case the AtTrack has punched through or the ELoss profile has not been reconstructed for any reason, we do not fit and return "empty" metadatas and fitted track.
+   // In case the AtTrack has punched through or the ELoss profile has not been reconstructed for any reason, we do not
+   // fit and return "empty" metadatas and fitted track.
    if (isPunchThrough || !fBinSize) {
       if (isPunchThrough)
-         LOG(info) << "Track with ID " << track->GetTrackID() << " has punched through. Skipping the fitting and adding empty fit metadatas!";
+         LOG(info) << "Track with ID " << track->GetTrackID()
+                   << " has punched through. Skipping the fitting and adding empty fit metadatas!";
       else
-         LOG(info) << "Track with ID " << track->GetTrackID() << " has does not have a reconstructed ELoss profile. Skipping the fitting and adding empty fit metadatas!";
+         LOG(info)
+            << "Track with ID " << track->GetTrackID()
+            << " has does not have a reconstructed ELoss profile. Skipping the fitting and adding empty fit metadatas!";
 
       // We add an empty entry to the AtFitMetadata for each ELoss model anyways.
       if (fitMetadata) {
@@ -112,8 +118,6 @@ AtFittedTrack *EventFit::AtBraggCurveFitter::GetFittedTrack(AtTrack *track, AtFi
       return notFittedTrack;
    }
 
-
-
    // The minimum range where we should be able to get ELoss values for.
    fMinimumRange = fHoleRadius / TMath::Sin(track->GetGeoTheta());
 
@@ -124,7 +128,9 @@ AtFittedTrack *EventFit::AtBraggCurveFitter::GetFittedTrack(AtTrack *track, AtFi
    double estimatedRange = fExperimentalRangeValues[maxELossIndex];
 
    // Clear the set in case it's filled from previous track.
-   BraggFitMetadatasSet trackMetadatasSet = std::set<AtBraggFitMetadata *, std::function<bool(AtBraggFitMetadata *, AtBraggFitMetadata *)>>(CompareTrackFitsFunction);
+   BraggFitMetadatasSet trackMetadatasSet =
+      std::set<AtBraggFitMetadata *, std::function<bool(AtBraggFitMetadata *, AtBraggFitMetadata *)>>(
+         CompareTrackFitsFunction);
 
    // Now, we iterate over all possible particles that this AtTrack may be.
    fProjectileIdx = 0;
@@ -134,7 +140,8 @@ AtFittedTrack *EventFit::AtBraggCurveFitter::GetFittedTrack(AtTrack *track, AtFi
       while (fELossModels[fProjectileIdx]->GetRange(estimatedKinE) < estimatedRange)
          estimatedKinE += fEstimatedKinEStep;
 
-      fMinuit->DefineParameter(0, "kinE", estimatedKinE, fKinEPrecision, estimatedKinE - 2 * fKinEPrecision, estimatedKinE + 2 * fKinEPrecision);
+      fMinuit->DefineParameter(0, "kinE", estimatedKinE, fKinEPrecision, estimatedKinE - 2 * fKinEPrecision,
+                               estimatedKinE + 2 * fKinEPrecision);
       fMinuit->DefineParameter(1, "amplFactor", fEstimatedAmplitudeFactor, fEstimatedAmplitudeFactorPrecision,
                                fEstimatedAmplitudeFactor - fEstimatedAmplitudeFactorPrecision,
                                fEstimatedAmplitudeFactor + fEstimatedAmplitudeFactorPrecision); // ADC/MeV
@@ -155,10 +162,11 @@ AtFittedTrack *EventFit::AtBraggCurveFitter::GetFittedTrack(AtTrack *track, AtFi
       braggFitMetadata->SetChi2(chi2);
       braggFitMetadata->SetTrackID(track->GetTrackID());
       braggFitMetadata->SetFitID(fProjectileIdx);
-      braggFitMetadata->SetFitConverged(kTRUE); // I'm setting to true by default because I don't know how to check with minuit :C
+      braggFitMetadata->SetFitConverged(
+         kTRUE); // I'm setting to true by default because I don't know how to check with minuit :C
 
-      //braggFitMetadata->SetPValue(pvalue???); // will be calculated in the future.
-      //braggFitMetadata->SetNdf(ndf???); // ""
+      // braggFitMetadata->SetPValue(pvalue???); // will be calculated in the future.
+      // braggFitMetadata->SetNdf(ndf???); // ""
 
       braggFitMetadata->SetELossModelName(fELossModels[fProjectileIdx]->GetELossModelName());
       braggFitMetadata->SetKineticEnergy(fitPar[0]);
@@ -173,7 +181,8 @@ AtFittedTrack *EventFit::AtBraggCurveFitter::GetFittedTrack(AtTrack *track, AtFi
       braggFitMetadata->SetIsReconstructedELoss(fBinSize);
 
       // Compute the ELoss profile that best fits the experimental values and store them in the metadata.
-      auto integratedELossValues = fELossModels[fProjectileIdx]->GetIntegratedELoss(fitPar[0], fBinSize, fValuesPerBin, 0.001, fNBins * fBinSize);
+      auto integratedELossValues =
+         fELossModels[fProjectileIdx]->GetIntegratedELoss(fitPar[0], fBinSize, fValuesPerBin, 0.001, fNBins * fBinSize);
       braggFitMetadata->SetELossFitValues(integratedELossValues);
 
       // Add metadata to set.
@@ -197,10 +206,12 @@ AtFittedTrack *EventFit::AtBraggCurveFitter::GetFittedTrack(AtTrack *track, AtFi
    AtFittedTrack *fittedTrack = new AtFittedTrack();
    fittedTrack->SetTrackID(track->GetTrackID());
    fittedTrack->SetKinematics(bestFitTrackMetadata->GetKineticEnergy(), track->GetGeoTheta(), track->GetGeoPhi());
-   fittedTrack->SetParticleInfo(bestFitTrackMetadata->GetPDGCode().Data(), bestFitTrackMetadata->GetChargeNumber(), bestFitTrackMetadata->GetMassAmu());
+   fittedTrack->SetParticleInfo(bestFitTrackMetadata->GetPDGCode().Data(), bestFitTrackMetadata->GetChargeNumber(),
+                                bestFitTrackMetadata->GetMassAmu());
    fittedTrack->SetVertex(XYZVector(braggCurve.vertexX, braggCurve.vertexY, braggCurve.vertexZ));
-   //fittedTrack->SetTrackPropertiesStruct(???); //TO-DO
-   std::unique_ptr<AtBraggFitMetadata> uniqueBestFitMetadata = std::make_unique<AtBraggFitMetadata>(*bestFitTrackMetadata);
+   // fittedTrack->SetTrackPropertiesStruct(???); //TO-DO
+   std::unique_ptr<AtBraggFitMetadata> uniqueBestFitMetadata =
+      std::make_unique<AtBraggFitMetadata>(*bestFitTrackMetadata);
    fittedTrack->SetTrackMetadata(std::move(uniqueBestFitMetadata));
 
    // Add the corresponding vector of fit metadatas for this track to the AtFitMetadata of this event.
@@ -245,7 +256,8 @@ void EventFit::AtBraggCurveFitter::BraggFCN(int &npar, double *gin, double &fval
    double amplitudeFactor = par[1];
 
    // Get the integrated dE/dx bin by bin.
-   auto integratedELossValues = fELossModels[fProjectileIdx]->GetIntegratedELoss(kineticEnergy, fBinSize, fValuesPerBin, 0.001, fNBins * fBinSize);
+   auto integratedELossValues = fELossModels[fProjectileIdx]->GetIntegratedELoss(kineticEnergy, fBinSize, fValuesPerBin,
+                                                                                 0.001, fNBins * fBinSize);
 
    // Commpute the chi2 value.
    fval = 0;

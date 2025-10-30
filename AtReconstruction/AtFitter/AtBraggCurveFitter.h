@@ -18,12 +18,14 @@ class AtBraggCurveFitter : public AtFitter {
 public:
    using TrackMetadataPtr = std::unique_ptr<AtFitTrackMetadata>;
    using TrackMetadatasVector = std::vector<TrackMetadataPtr>;
-   using BraggFitMetadatasSet = std::set<AtBraggFitMetadata *, std::function<bool(AtBraggFitMetadata *, AtBraggFitMetadata *)>>;
+   using BraggFitMetadatasSet =
+      std::set<AtBraggFitMetadata *, std::function<bool(AtBraggFitMetadata *, AtBraggFitMetadata *)>>;
    using ELossModelPtr = std::unique_ptr<AtTools::AtELossModel>;
    using ELossModelsVector = std::vector<ELossModelPtr>;
 
 protected:
-   // The ELossModels to be used to obtain the theoretical ELoss values. Each ELoss model correspond to a different candidate particle.
+   // The ELossModels to be used to obtain the theoretical ELoss values. Each ELoss model correspond to a different
+   // candidate particle.
    static ELossModelsVector fELossModels;
    static int fProjectileIdx;
    static int fValuesPerBin;
@@ -48,13 +50,13 @@ protected:
    int fIerflg{0};
 
    // What the amplitude factor should approximate to, and with which precision.
-   static double fEstimatedAmplitudeFactor; // ADC/MeV
+   static double fEstimatedAmplitudeFactor;          // ADC/MeV
    static double fEstimatedAmplitudeFactorPrecision; // ADC/MeV
 
    // Parameters related to the estimation of the initial kinetic energy guess. Fitting precision too.
    double fStartingEstimatedKinE{0.1}; // MeV
-   double fEstimatedKinEStep{0.01}; // MeV
-   double fKinEPrecision{0.25}; // MeV
+   double fEstimatedKinEStep{0.01};    // MeV
+   double fKinEPrecision{0.25};        // MeV
 
 public:
    AtBraggCurveFitter(ELossModelsVector eLossModels);
@@ -80,8 +82,7 @@ protected:
                                          AtRawEvent *rawEvent = nullptr, AtEvent *event = nullptr) override;
 
    // Compare function that will be used to sort the fit results for a given track.
-   static bool
-   CompareTrackFitsFunction(AtBraggFitMetadata *braggMetadataA, AtBraggFitMetadata *braggMetadataB);
+   static bool CompareTrackFitsFunction(AtBraggFitMetadata *braggMetadataA, AtBraggFitMetadata *braggMetadataB);
 
    // FCN function that will be minimized by TMinuit.
    static void BraggFCN(int &npar, double *gin, double &fval, double *par, int iflag);

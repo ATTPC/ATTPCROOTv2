@@ -18,9 +18,9 @@ class AtBraggFitMetadata : public AtFitTrackMetadata {
 protected:
    // Parameters of the fit and name of the ELoss model used.
    TString fELossModelName{"none"};
-   Double_t fKineticEnergy{-1}; // MeV
-   Double_t fKineticEnergyUncertainty{-1}; // MeV
-   Double_t fAmplitudeFactor{-1}; // ADC/MeV
+   Double_t fKineticEnergy{-1};              // MeV
+   Double_t fKineticEnergyUncertainty{-1};   // MeV
+   Double_t fAmplitudeFactor{-1};            // ADC/MeV
    Double_t fAmplitudeFactorUncertainty{-1}; // ADC/MeV
 
    // Particle information.
@@ -29,7 +29,8 @@ protected:
    Int_t fZ{0};
    Double_t fMassAmu{0};
 
-   // The ELoss profile that best fits the experimental Bragg curve. Stored here for quick access on the Bragg curve tab of the viewer for example.
+   // The ELoss profile that best fits the experimental Bragg curve. Stored here for quick access on the Bragg curve tab
+   // of the viewer for example.
    std::vector<std::pair<Double_t, Double_t>> fELossFitValues;
 
    // Parameter to store whether or not the track punched through. Most likely, yes.

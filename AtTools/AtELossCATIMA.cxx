@@ -105,13 +105,10 @@ double AtELossCATIMA::GetRangeVariance(double energy) const
       LOG(error) << "Projectile or material not set. Range variance is 0.";
       return 0;
    }
-   auto range_var =
-      catima::range_variance(*fProjectile, energy / fMassAmu, *fMaterial); // range var in (g/cm^2)^2
-   LOG(debug) << "Range variance in (g/cm^2)^2: " << range_var << " for energy: " << energy / fMassAmu
-              << " MeV/u";
+   auto range_var = catima::range_variance(*fProjectile, energy / fMassAmu, *fMaterial); // range var in (g/cm^2)^2
+   LOG(debug) << "Range variance in (g/cm^2)^2: " << range_var << " for energy: " << energy / fMassAmu << " MeV/u";
    range_var /= fDensity * fDensity; // convert to (cm)^2
-   LOG(debug) << "Range variance in (cm)^2: " << range_var << " for energy: " << energy / fMassAmu
-              << " MeV/u";
+   LOG(debug) << "Range variance in (cm)^2: " << range_var << " for energy: " << energy / fMassAmu << " MeV/u";
    return range_var * 100; // convert to mm^2
 }
 
@@ -125,8 +122,8 @@ double AtELossCATIMA::GetElossStraggling(double energyIni, double energyFin) con
       LOG(error) << "Final energy must be less than initial energy!";
       return 0;
    }
-   auto energy_strag = catima::energy_straggling_from_E(*fProjectile, energyIni / fMassAmu,
-                                                        energyFin / fMassAmu, *fMaterial);
+   auto energy_strag =
+      catima::energy_straggling_from_E(*fProjectile, energyIni / fMassAmu, energyFin / fMassAmu, *fMaterial);
    return energy_strag;
 }
 double AtELossCATIMA::GetdEdxStraggling(double energyIni, double energyFin) const

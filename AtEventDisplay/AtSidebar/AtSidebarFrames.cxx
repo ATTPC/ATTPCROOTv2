@@ -191,7 +191,8 @@ void AtSidebarEventControl::FillFrame()
 }
 
 AtSidebarBranchControl::AtSidebarBranchControl(DataHandling::AtBranch &rawEvent, DataHandling::AtBranch &event,
-                                               DataHandling::AtBranch &patternEvent, DataHandling::AtBranch &trackingEvent,
+                                               DataHandling::AtBranch &patternEvent,
+                                               DataHandling::AtBranch &trackingEvent,
                                                DataHandling::AtBranch &fitMetadata, const TGWindow *p, UInt_t w,
                                                UInt_t h, UInt_t options, Pixel_t back)
    : AtVerticalSidebarFrame(p, w, h, options, back)

@@ -18,5 +18,6 @@ void AtBraggFitMetadata::Print() const
    std::cout << "   ELoss model name: " << fELossModelName.Data() << std::endl;
    std::cout << "   Particle: (A, Z) = (" << fA << ", " << fZ << "), mass = " << fMassAmu << " umas" << std::endl;
    std::cout << "   KineticEnergy = (" << fKineticEnergy << " +- " << fKineticEnergyUncertainty << ") MeV" << std::endl;
-   std::cout << "   AmplitudeFactor = (" << fAmplitudeFactor << " +- " << fAmplitudeFactorUncertainty << ") ADC/MeV" <<std::endl;
+   std::cout << "   AmplitudeFactor = (" << fAmplitudeFactor << " +- " << fAmplitudeFactorUncertainty << ") ADC/MeV"
+             << std::endl;
 }

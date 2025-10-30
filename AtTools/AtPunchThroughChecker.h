@@ -1,8 +1,8 @@
 #ifndef ATPUNCHTHROUGHCHECKER_H
 #define ATPUNCHTHROUGHCHECKER_H
 
-#include "AtTrack.h"
 #include "AtHit.h"
+#include "AtTrack.h"
 
 #include <tuple>
 
@@ -21,7 +21,8 @@ protected:
    double fTPCLength{1000}; // mm
    double fTPCRadius{250};  // mm
 
-   // If the last hit of the AtTrack is closer than this distance to the border of the TPC, it is considered that is has punched through.
+   // If the last hit of the AtTrack is closer than this distance to the border of the TPC, it is considered that is has
+   // punched through.
    double fDistanceThreshold{20}; // mm
 
 public:
@@ -36,7 +37,6 @@ public:
 
 private:
    std::tuple<double, double> GetLastHitZPosAndRadius(AtTrack *track, bool &movingForward);
-
 };
 } // namespace AtTools
 

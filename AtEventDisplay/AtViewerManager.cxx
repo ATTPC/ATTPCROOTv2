@@ -71,7 +71,8 @@ AtViewerManager::AtViewerManager(std::shared_ptr<AtMap> map) : fMap(std::move(ma
 
    fBasebar = new AtEventSidebar(kHorizontalFrame);
    fBasebar->AddSidebarFrame(new AtSidebarEventControl(fEntry, fBasebar));
-   fBasebar->AddSidebarFrame(new AtSidebarBranchControl(fRawEventBranch, fEventBranch, fPatternEventBranch, fTrackingEventBranch, fFitMetadataBranch, fBasebar));
+   fBasebar->AddSidebarFrame(new AtSidebarBranchControl(fRawEventBranch, fEventBranch, fPatternEventBranch,
+                                                        fTrackingEventBranch, fFitMetadataBranch, fBasebar));
 
    browser->StopEmbedding();
    browser->SetTabTitle("Control", TRootBrowser::kBottom);
