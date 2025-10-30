@@ -57,16 +57,14 @@ void getSetupAcceptance()
          if (!isReconstructedELoss)
             nNotReconstructedELoss++;
 
-         if (isPunchThrough || !isReconstructedELoss)
-            continue;
+         if (isPunchThrough || !isReconstructedELoss) continue;
 
          // We are interested in protons, so we check the events that were succesfully identified as protons.
          AtFittedTrack::ParticleInfo particleInfo = fittedTrack->GetParticleInfo();
          TString pdgCode = particleInfo.idPDG;
          int charge = particleInfo.charge;
          double mass = particleInfo.mass;
-         if (pdgCode != "1000010010")
-            continue;
+         if (pdgCode != "1000010010") continue;
 
          // If all checks passed, we can get event information and fill histograms.
          AtFittedTrack::Kinematics kinematics = fittedTrack->GetKinematics();
@@ -80,10 +78,13 @@ void getSetupAcceptance()
 
          histChi2->Fill(chi2);
 
-         //if(chi2 > 80)
-         //if(chi2 < 90 || chi2 > 170)
-         //if(chi2 < 190 || chi2 > 220)
-            //continue;
+         // Any other gates.
+         //if(chi2 > 80) continue;
+         //if(chi2 < 90 || chi2 > 170) continue;
+         //if(chi2 < 190 || chi2 > 220) continue;
+
+         int nZSection = 0;
+         //if(100 * nZSection > vertex.Z() || vertex.Z() > 100 * (nZSection + 1)) continue;
 
          histVertexZvTrackThetaLAB->Fill(vertex.Z(), trackThetaLAB);
          histTrackKinematics->Fill(trackThetaLAB, trackKineticEnergy);
@@ -100,11 +101,13 @@ void getSetupAcceptance()
    histVertexZvTrackThetaLAB->GetXaxis()->SetTitle("Z_{vertex} [mm]");
    histVertexZvTrackThetaLAB->GetYaxis()->SetTitle("#theta_{LAB} [deg]");
 
-   TGraph *kineGS = ReadKinematics("./12Be_dp_gs_21MeVu.txt");
+   TGraph *kineGSStart = ReadKinematics("./12Be_dp_gs_21MeVu_start.txt");
+   TGraph *kineGSEnd = ReadKinematics("./12Be_dp_gs_21MeVu_end.txt");
 
    TCanvas *c2 = new TCanvas();
    histTrackKinematics->Draw("zcol");
-   kineGS->Draw("same");
+   kineGSStart->Draw("same");
+   kineGSEnd->Draw("same");
    histTrackKinematics->GetXaxis()->SetTitle("#theta_{LAB} [deg]");
    histTrackKinematics->GetYaxis()->SetTitle("K_{LAB} [MeV]");
 
