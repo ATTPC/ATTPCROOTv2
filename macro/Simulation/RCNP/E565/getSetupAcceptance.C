@@ -9,9 +9,13 @@ void getSetupAcceptance()
    TH2F *histVertexZvTrackThetaLAB = new TH2F("histVertexZvTrackThetaLAB", "histVertexZvTrackThetaLAB", 100, 0, 1000, 180, 0, 180);
    TH2F *histTrackKinematics = new TH2F("histTrackKinematics", "histTrackKinematics", 180, 0, 180, 80, 0, 20);
 
-
-
    TH1F *histChi2 = new TH1F("histChi2", "histChi2", 100, 0, 1000);
+
+   // Open the TCutFiles that may be needed.
+   TFile *fileKinematicCuts = new TFile("./TCutFiles/kinematicsTCuts.root", "READ");
+   TCutG *cutArtifactKinematics = (TCutG *)fileKinematicCuts->Get("cutArtifactKinematics");
+   TCutG *cutKinematics = (TCutG *)fileKinematicCuts->Get("cutKinematics");
+   fileKinematicCuts->Close();
 
    // Min and Max angles of the simulation.
    Double_t ThetaMinCMS = 0.0;
@@ -28,6 +32,15 @@ void getSetupAcceptance()
    TTreeReader reader("cbmsim", file);
    TTreeReaderValue<TClonesArray> trackingArray(reader, "AtTrackingEvent");
 
+   // Text files where to save certain event numbers based on cuts.
+   std::ofstream eventsArtifactKinematicsFile;
+   eventsArtifactKinematicsFile.open("./filteredEventNumbers/eventsArtifactKinematics.txt");
+   std::cout << eventsArtifactKinematicsFile.is_open() << std::endl;
+
+   std::ofstream eventsKinematicsFile;
+   eventsKinematicsFile.open("./filteredEventNumbers/eventsKinematics.txt");
+   std::cout << eventsKinematicsFile.is_open() << std::endl;
+
    // Number of fails.
    int nPunchThrough{};
    int nNotReconstructedELoss{};
@@ -42,7 +55,9 @@ void getSetupAcceptance()
 
       auto &fittedTracks = trackingEvent->GetFittedTracks();
 
+      int trackNum{};
       for (auto &fittedTrack: fittedTracks) {
+         trackNum++;
 
          // Extract the metadata for this fit.
          auto &fitTrackMetadata = fittedTrack->GetTrackMetadata();
@@ -64,12 +79,13 @@ void getSetupAcceptance()
          TString pdgCode = particleInfo.idPDG;
          int charge = particleInfo.charge;
          double mass = particleInfo.mass;
-         if (pdgCode != "1000010010") continue;
+         //if (pdgCode != "1000010010") continue;
+         if (charge != 1) continue;
 
          // If all checks passed, we can get event information and fill histograms.
          AtFittedTrack::Kinematics kinematics = fittedTrack->GetKinematics();
          double trackKineticEnergy = kinematics.kineticEnergy;
-         double trackThetaLAB = 180 - kinematics.theta * 180 / TMath::Pi();
+         double trackThetaLAB = kinematics.theta * 180 / TMath::Pi();
          double trackPhi = kinematics.phi * 180 / TMath::Pi();
 
          auto vertex = fittedTrack->GetVertex();
@@ -77,6 +93,15 @@ void getSetupAcceptance()
          double chi2 = braggFitMetadata->GetChi2();
 
          histChi2->Fill(chi2);
+
+         // Store event IDs depending on different cuts.
+         if (cutArtifactKinematics)
+            if (cutArtifactKinematics->IsInside(trackThetaLAB, trackKineticEnergy))
+               eventsArtifactKinematicsFile << "Event " << i << " | Track " << (trackNum - 1) << "\n";
+
+         if (cutKinematics)
+            if (cutKinematics->IsInside(trackThetaLAB, trackKineticEnergy))
+               eventsKinematicsFile << "Event " << i << " | Track " << (trackNum - 1) << "\n";
 
          // Any other gates.
          //if(chi2 > 80) continue;
@@ -92,8 +117,10 @@ void getSetupAcceptance()
 
    }
 
-   // Close file.
+   // Close files.
    file->Close();
+   eventsArtifactKinematicsFile.close();
+   eventsKinematicsFile.close();
 
    // Draw histograms in TCanvas.
    TCanvas *c = new TCanvas();
@@ -101,13 +128,15 @@ void getSetupAcceptance()
    histVertexZvTrackThetaLAB->GetXaxis()->SetTitle("Z_{vertex} [mm]");
    histVertexZvTrackThetaLAB->GetYaxis()->SetTitle("#theta_{LAB} [deg]");
 
-   TGraph *kineGSStart = ReadKinematics("./12Be_dp_gs_21MeVu_start.txt");
-   TGraph *kineGSEnd = ReadKinematics("./12Be_dp_gs_21MeVu_end.txt");
+   TGraph *kineGSStart = ReadKinematics("./kineFiles/12Be_dp_gs_21MeVu_start.txt");
+   TGraph *kineGSEnd = ReadKinematics("./kineFiles/12Be_dp_gs_21MeVu_end.txt");
 
    TCanvas *c2 = new TCanvas();
    histTrackKinematics->Draw("zcol");
    kineGSStart->Draw("same");
    kineGSEnd->Draw("same");
+   if (cutArtifactKinematics) cutArtifactKinematics->Draw("same");
+   if (cutKinematics) cutKinematics->Draw("same");
    histTrackKinematics->GetXaxis()->SetTitle("#theta_{LAB} [deg]");
    histTrackKinematics->GetYaxis()->SetTitle("K_{LAB} [MeV]");
 
