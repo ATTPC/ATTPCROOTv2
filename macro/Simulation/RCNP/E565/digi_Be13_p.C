@@ -5,8 +5,8 @@ void digi_Be13_p(int nEvent = 10000)
    Double_t ThetaMinCMS = 0.0;
    Double_t ThetaMaxCMS = 50.0;
 
-   TString mcFile = TString::Format("./attpcsim_13Be_p_%.1f_%.1f_600Torr.root", ThetaMinCMS, ThetaMaxCMS);
-   TString outputFile = TString::Format("./output_digi_rcnp_13Be_p_%.1f_%.1f_600Torr_9mmBinning.root", ThetaMinCMS, ThetaMaxCMS);
+   TString mcFile = TString::Format("./simData/attpcsim_13Be_p_%.1f_%.1f_600Torr.root", ThetaMinCMS, ThetaMaxCMS);
+   TString outputFile = TString::Format("./digiFiles/output_digi_rcnp_13Be_p_%.1f_%.1f_600Torr_9mmBinning.root", ThetaMinCMS, ThetaMaxCMS);
 
    TString scriptfile = "RCNP2025.xml";
    TString paramFile = "ATTPC.E656_RCNP.SIM.par";

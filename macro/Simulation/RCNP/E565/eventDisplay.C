@@ -1,8 +1,8 @@
 void eventDisplay()
 {
    //-----User Settings:-----------------------------------------------
-   TString  InputDataFile     ="attpcsim_13Be_p_0.0_50.0_600Torr.root";
-   TString  ParFile       ="./data/attpcpar_13Be_p_0.0_50.0_600Torr.root";
+   TString  InputDataFile     ="./simData/attpcsim_13Be_p_0.0_50.0_600Torr.root";
+   TString  ParFile       ="./simData/attpcpar_13Be_p_0.0_50.0_600Torr.root";
    TString  OutputDataFile	 ="rcnpe565_600torr.root";
 
    // -----   Reconstruction run   -------------------------------------------

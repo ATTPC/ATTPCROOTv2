@@ -22,7 +22,7 @@ void getSetupAcceptance()
    Double_t ThetaMaxCMS = 50.0;
 
    // Open the digitalization file and get the TTree.
-   TString digiFileName = TString::Format("./output_digi_rcnp_13Be_p_%.1f_%.1f_600Torr_9mmBinning.root", ThetaMinCMS, ThetaMaxCMS);
+   TString digiFileName = TString::Format("./digiFiles/output_digi_rcnp_13Be_p_%.1f_%.1f_600Torr_9mmBinning.root", ThetaMinCMS, ThetaMaxCMS);
    TFile *file = new TFile(digiFileName, "READ");
    TTree *tree = (TTree *)file->Get("cbmsim");
    Int_t nEvents = tree->GetEntries();
@@ -35,11 +35,18 @@ void getSetupAcceptance()
    // Text files where to save certain event numbers based on cuts.
    std::ofstream eventsArtifactKinematicsFile;
    eventsArtifactKinematicsFile.open("./filteredEventNumbers/eventsArtifactKinematics.txt");
-   std::cout << eventsArtifactKinematicsFile.is_open() << std::endl;
 
    std::ofstream eventsKinematicsFile;
    eventsKinematicsFile.open("./filteredEventNumbers/eventsKinematics.txt");
-   std::cout << eventsKinematicsFile.is_open() << std::endl;
+
+   std::ofstream eventsChi2_1File;
+   eventsChi2_1File.open("./filteredEventNumbers/eventsChi2_1.txt");
+
+   std::ofstream eventsChi2_2File;
+   eventsChi2_2File.open("./filteredEventNumbers/eventsChi2_2.txt");
+
+   std::ofstream eventsChi2_3File;
+   eventsChi2_3File.open("./filteredEventNumbers/eventsChi2_3.txt");
 
    // Number of fails.
    int nPunchThrough{};
@@ -103,7 +110,15 @@ void getSetupAcceptance()
             if (cutKinematics->IsInside(trackThetaLAB, trackKineticEnergy))
                eventsKinematicsFile << "Event " << i << " | Track " << (trackNum - 1) << "\n";
 
-         // Any other gates.
+
+         if(chi2 < 80)
+            eventsChi2_1File << "Event " << i << " | Track " << (trackNum - 1) << "\n";
+         if(chi2 > 90 && chi2 < 170)
+            eventsChi2_2File << "Event " << i << " | Track " << (trackNum - 1) << "\n";
+         if(chi2 > 190 && chi2 < 220)
+            eventsChi2_3File << "Event " << i << " | Track " << (trackNum - 1) << "\n";
+
+         // Any other gates for the histograms.
          //if(chi2 > 80) continue;
          //if(chi2 < 90 || chi2 > 170) continue;
          //if(chi2 < 190 || chi2 > 220) continue;
@@ -121,6 +136,9 @@ void getSetupAcceptance()
    file->Close();
    eventsArtifactKinematicsFile.close();
    eventsKinematicsFile.close();
+   eventsChi2_1File.close();
+   eventsChi2_2File.close();
+   eventsChi2_3File.close();
 
    // Draw histograms in TCanvas.
    TCanvas *c = new TCanvas();

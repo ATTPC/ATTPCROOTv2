@@ -1,7 +1,7 @@
 // 12Be (d,p) 13Be
 // Beam energy 21 MeV/u
 
-void RCNP_e565(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
+void Be12_dp_sim(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
 {
    Double_t ThetaMinCMS = 0.0;
    Double_t ThetaMaxCMS = 50.0;
@@ -9,10 +9,10 @@ void RCNP_e565(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
    TString dir = getenv("VMCWORKDIR");
 
    // Output file name
-   TString outFile = TString::Format("./attpcsim_13Be_p_%.1f_%.1f_600Torr.root", ThetaMinCMS, ThetaMaxCMS);
+   TString outFile = TString::Format("./simData/attpcsim_13Be_p_%.1f_%.1f_600Torr.root", ThetaMinCMS, ThetaMaxCMS);
 
    // Parameter file name
-   TString parFile = TString::Format("./data/attpcpar_13Be_p_%.1f_%.1f_600Torr.root", ThetaMinCMS, ThetaMaxCMS);
+   TString parFile = TString::Format("./simData/attpcpar_13Be_p_%.1f_%.1f_600Torr.root", ThetaMinCMS, ThetaMaxCMS);
 
    // -----   Timer   --------------------------------------------------------
    TStopwatch timer;
@@ -244,7 +244,7 @@ void RCNP_e565(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
   run->Run(nEvents);
 
   //You can export your ROOT geometry ot a separate file
-  run->CreateGeometryFile("./data/RCNP_geo_e565.root");
+  run->CreateGeometryFile("./simData/RCNP_geo_e565.root");
   // ------------------------------------------------------------------------
 
   // -----   Finish   -------------------------------------------------------
