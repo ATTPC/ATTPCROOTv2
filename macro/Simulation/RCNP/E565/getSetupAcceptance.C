@@ -27,17 +27,17 @@ void getSetupAcceptance()
 
    // Min and Max angles of the simulation.
    Double_t ThetaMinCMS = 0.0;
-   Double_t ThetaMaxCMS = 50.0;
+   Double_t ThetaMaxCMS = 40.0;
 
    // Open the digitalization file and get the TTree.
-   TString digiFileName = TString::Format("./digiFiles/output_digi_rcnp_13Be_p_%.1f_%.1f_600Torr_9mmBinning.root", ThetaMinCMS, ThetaMaxCMS);
+   TString digiFileName = TString::Format("/data/ATTPCROOTv2_results/E565/Simulation/digiFiles/output_digi_rcnp_13Be_p_%.1f_%.1f_600Torr_9mmBinning.root", ThetaMinCMS, ThetaMaxCMS);
    TFile *digiFile = new TFile(digiFileName, "READ");
    TTree *digiTree = (TTree *)digiFile->Get("cbmsim");
    int nDigiEvents = digiTree->GetEntries();
    std::cout << " Number of reconstructed events : " << double(nDigiEvents) / 2 << std::endl;
 
    // Open the MC file and get the TTree.
-   TString mcFileName = TString::Format("./simData/attpcsim_13Be_p_%.1f_%.1f_600Torr.root", ThetaMinCMS, ThetaMaxCMS);
+   TString mcFileName = TString::Format("/data/ATTPCROOTv2_results/E565/Simulation/simFiles/attpcsim_13Be_p_%.1f_%.1f_600Torr.root", ThetaMinCMS, ThetaMaxCMS);
    TFile *mcFile = new TFile(mcFileName, "READ");
    TTree *mcTree = (TTree *)mcFile->Get("cbmsim");
    int nMcEvents = mcTree->GetEntries();
