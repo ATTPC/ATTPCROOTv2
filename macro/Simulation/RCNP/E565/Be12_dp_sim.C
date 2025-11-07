@@ -12,7 +12,7 @@ void Be12_dp_sim(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
    TString outFile = TString::Format("/data/ATTPCROOTv2_results/E565/Simulation/simFiles/attpcsim_13Be_p_%.1f_%.1f_600Torr.root", ThetaMinCMS, ThetaMaxCMS);
 
    // Parameter file name
-   TString parFile = TString::Format("/data/ATTPCROOTv2_results/E565/Simulation/simFiles/simData/attpcpar_13Be_p_%.1f_%.1f_600Torr.root", ThetaMinCMS, ThetaMaxCMS);
+   TString parFile = TString::Format("/data/ATTPCROOTv2_results/E565/Simulation/simFiles/attpcpar_13Be_p_%.1f_%.1f_600Torr.root", ThetaMinCMS, ThetaMaxCMS);
 
    // -----   Timer   --------------------------------------------------------
    TStopwatch timer;
