@@ -58,9 +58,9 @@ void RCNP_ATTPC()
    // Load the necessary FairRoot libraries
    // gROOT->LoadMacro("$VMCWORKDIR/gconfig/basiclibs.C");
    // basiclibs();
-   // gSystem->Load("libGeoBase");
-   // gSystem->Load("libParBase");
-   // gSystem->Load("libBase");
+   gSystem->Load("libGeoBase");
+   gSystem->Load("libParBase");
+   gSystem->Load("libBase");
 
    // Load needed material definition from media.geo file
    create_materials_from_media_file();
@@ -122,12 +122,14 @@ void create_materials_from_media_file()
    FairGeoMedium *disobutane = geoMedia->getMedium("ATTPCDPropane_600torr");
    FairGeoMedium *steel = geoMedia->getMedium("steel");
    FairGeoMedium *vacuum4 = geoMedia->getMedium("vacuum4");
+   FairGeoMedium *aramid = geoMedia->getMedium("aramid");
 
    // include check if all media are found
 
    geoBuild->createMedium(disobutane);
    geoBuild->createMedium(steel);
    geoBuild->createMedium(vacuum4);
+   geoBuild->createMedium(aramid);
 }
 
 TGeoVolume *create_detector()
@@ -155,6 +157,14 @@ TGeoVolume *create_detector()
       ->AddNode(tpc_window2, 1, new TGeoCombiTrans(0.0, 0.0, 100.0, new TGeoRotation("tpc_window2", 0, tpc_rot, 0)));
    tpc_window2->SetTransparency(50);
 
+   // ATTPC Vessel
+   TGeoVolume *vessel_volume = gGeoManager->MakeTube("vessel_volume", OuterCylinder, tpc_diameter / 2.,
+                                                     (tpc_diameter + 2.0) / 2., drift_length / 2.);
+
+   gGeoMan->GetVolume(geoVersion)
+      ->AddNode(vessel_volume, 1,
+                new TGeoCombiTrans(0.0, 0.0, drift_length / 2.0, new TGeoRotation("vessel_volume", 0, tpc_rot, 0)));
+   vessel_volume->SetTransparency(90);
 
 
    // Single detector_layer
