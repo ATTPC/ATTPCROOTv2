@@ -244,7 +244,7 @@ void Be12_dp_sim(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
   run->Run(nEvents);
 
   //You can export your ROOT geometry ot a separate file
-  run->CreateGeometryFile("./simData/RCNP_geo_e565.root");
+  run->CreateGeometryFile("/data/ATTPCROOTv2_results/E565/Simulation/simFiles/RCNP_geo_e565.root");
   // ------------------------------------------------------------------------
 
   // -----   Finish   -------------------------------------------------------
