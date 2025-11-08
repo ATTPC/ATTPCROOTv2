@@ -6,14 +6,17 @@ void getSetupAcceptance()
    FairRunAna *run = new FairRunAna(); // Forcing a dummy run
 
    // Histogram definitions.
+   TH2F *histVertexZvTrackThetaLABTotalSimulation = new TH2F("histVertexZvTrackThetaLABTotalSimulation", "histVertexZvTrackThetaLABTotalSimulation", 100, 0, 1000, 180, 0, 180);
+   TH2F *histTrackKinematicsTotalSimulation = new TH2F("histTrackKinematicsTotalSimulation", "histTrackKinematicsTotalSimulation", 180, 0, 180, 80, 0, 20);
+
    TH2F *histVertexZvTrackThetaLABSiArray = new TH2F("histVertexZvTrackThetaLABSiArray", "histVertexZvTrackThetaLABSiArray", 100, 0, 1000, 180, 0, 180);
    TH2F *histTrackKinematicsSiArray = new TH2F("histTrackKinematicsSiArray", "histTrackKinematicsSiArray", 180, 0, 180, 80, 0, 20);
 
    TH2F *histVertexZvTrackThetaLABATTPC = new TH2F("histVertexZvTrackThetaLABATTPC", "histVertexZvTrackThetaLABATTPC", 100, 0, 1000, 180, 0, 180);
    TH2F *histTrackKinematicsATTPC = new TH2F("histTrackKinematicsATTPC", "histTrackKinematicsATTPC", 180, 0, 180, 80, 0, 20);
 
-   TH2F *histVertexZvTrackThetaLABTotal = new TH2F("histVertexZvTrackThetaLABTotal", "histVertexZvTrackThetaLABTotal", 100, 0, 1000, 180, 0, 180);
-   TH2F *histTrackKinematicsTotal = new TH2F("histTrackKinematicsTotal", "histTrackKinematicsTotal", 180, 0, 180, 80, 0, 20);
+   TH2F *histVertexZvTrackThetaLABTotalAcceptance = new TH2F("histVertexZvTrackThetaLABTotalAcceptance", "histVertexZvTrackThetaLABTotalAcceptance", 100, 0, 1000, 180, 0, 180);
+   TH2F *histTrackKinematicsTotalAcceptance = new TH2F("histTrackKinematicsTotalAcceptance", "histTrackKinematicsTotalAcceptance", 180, 0, 180, 80, 0, 20);
 
    TH1F *histChi2 = new TH1F("histChi2", "histChi2", 100, 0, 1000);
 
@@ -88,15 +91,15 @@ void getSetupAcceptance()
          continue;
       }
 
-      // If no track in the drift region, skip entry.
-      if (!mcTrackArray->GetEntries())
+      // If there are not exactly 3 tracks in the drift region, skip entry. (We want proton, 12Be and neutron)
+      if (mcTrackArray->GetEntries() != 3)
          continue;
 
       // Checking the total ELoss of the heavy residue in the drift region.
       double heavyTotalELoss{};
       for (int j = 0; j < mcPointArray->GetEntries(); j++) {
          AtMCPoint *mcPoint = (AtMCPoint *)mcPointArray->At(j);
-         if (mcPoint->GetTrackID() == 0)
+         if (mcPoint->GetTrackID() == 2)
             heavyTotalELoss += mcPoint->GetEnergyLoss();
       }
 
@@ -112,24 +115,24 @@ void getSetupAcceptance()
          AtMCPoint *mcPointSi = (AtMCPoint *) mcSiPointArray->At(idxSi);
          TString volName = mcPointSi->GetVolName();
          int trackID = mcPointSi->GetTrackID();
-         if (trackID == 0 && volName.Contains("silicon1")) {
+         if (trackID == 2 && volName.Contains("silicon1")) {
             ELossSi1 += mcPointSi->GetEnergyLoss();
             nSi1++;
             continue;
          }
 
-         if (trackID == 0 && volName.Contains("silicon2")) {
+         if (trackID == 2 && volName.Contains("silicon2")) {
             ELossSi2 += mcPointSi->GetEnergyLoss();
             nSi2++;
          }
       }
 
       // If we had a good Si array detector measurement, fill the Si acceptance histograms. Also keep track of this condition for later coincidence acceptance.
-      AtMCTrack *mcTrackBeamlike = (AtMCTrack *)mcTrackArray->At(0);
+      AtMCTrack *mcTrackBeamlike = (AtMCTrack *)mcTrackArray->At(1);
       double kineticEnergyBeamlike = (mcTrackBeamlike->GetEnergy() - 13.03394 * 0.93149401) * 1000;
       double thetaBeamlike = 180 - TMath::ASin(mcTrackBeamlike->GetPt() / mcTrackBeamlike->GetP()) * TMath::RadToDeg();
 
-      AtMCTrack *mcTrackScattered = (AtMCTrack *)mcTrackArray->At(1);
+      AtMCTrack *mcTrackScattered = (AtMCTrack *)mcTrackArray->At(0);
       double kineticEnergyScattered = (mcTrackScattered->GetEnergy() - mcTrackScattered->GetMass()) * 1000;
       double thetaScattered = 180 - TMath::ASin(mcTrackScattered->GetPt() / mcTrackScattered->GetP()) * TMath::RadToDeg();
 
@@ -140,6 +143,10 @@ void getSetupAcceptance()
          histVertexZvTrackThetaLABSiArray->Fill(mcVertexZ, thetaScattered);
          histTrackKinematicsSiArray->Fill(thetaScattered, kineticEnergyScattered);
       }
+
+      // In any case, fill the total simulation histograms.
+      histVertexZvTrackThetaLABTotalSimulation->Fill(mcVertexZ, thetaScattered);
+      histTrackKinematicsTotalSimulation->Fill(thetaScattered, kineticEnergyScattered);
 
       // Now we take a look into the reconstructed AtTrackingEvent.
       AtTrackingEvent *trackingEvent = (AtTrackingEvent *)trackingArray->At(0);
@@ -209,16 +216,16 @@ void getSetupAcceptance()
          //if(chi2 < 90 || chi2 > 170) continue;
          //if(chi2 < 190 || chi2 > 220) continue;
 
-         int nZSection = 0;
-         //if(100 * nZSection > vertex.Z() || vertex.Z() > 100 * (nZSection + 1)) continue;
+         int nZSection = 5;
+         if(100 * nZSection > vertex.Z() || vertex.Z() > 100 * (nZSection + 1)) continue;
 
          histVertexZvTrackThetaLABATTPC->Fill(vertex.Z(), trackThetaLAB);
          histTrackKinematicsATTPC->Fill(trackThetaLAB, trackKineticEnergy);
 
          // Finally, if there is good Si array measurement, fill the coincidence histograms.
          if (goodSiMeasurement) {
-            histVertexZvTrackThetaLABTotal->Fill(vertex.Z(), trackThetaLAB);
-            histTrackKinematicsTotal->Fill(trackThetaLAB, trackKineticEnergy);
+            histVertexZvTrackThetaLABTotalAcceptance->Fill(vertex.Z(), trackThetaLAB);
+            histTrackKinematicsTotalAcceptance->Fill(trackThetaLAB, trackKineticEnergy);
          }
       }
 
@@ -269,20 +276,34 @@ void getSetupAcceptance()
    histTrackKinematicsSiArray->GetYaxis()->SetTitle("K_{LAB} [MeV]");
 
    TCanvas *c6 = new TCanvas();
-   histVertexZvTrackThetaLABTotal->Draw("zcol");
-   histVertexZvTrackThetaLABTotal->GetXaxis()->SetTitle("Z_{vertex} [mm]");
-   histVertexZvTrackThetaLABTotal->GetYaxis()->SetTitle("#theta_{LAB} [deg]");
+   histVertexZvTrackThetaLABTotalAcceptance->Draw("zcol");
+   histVertexZvTrackThetaLABTotalAcceptance->GetXaxis()->SetTitle("Z_{vertex} [mm]");
+   histVertexZvTrackThetaLABTotalAcceptance->GetYaxis()->SetTitle("#theta_{LAB} [deg]");
 
    TCanvas *c7 = new TCanvas();
-   histTrackKinematicsTotal->Draw("zcol");
+   histTrackKinematicsTotalAcceptance->Draw("zcol");
    kineGSStart->Draw("same");
    kineGSEnd->Draw("same");
    if (cutArtifactKinematics) cutArtifactKinematics->DrawClone("same");
    if (cutKinematics) cutKinematics->DrawClone("same");
-   histTrackKinematicsTotal->GetXaxis()->SetTitle("#theta_{LAB} [deg]");
-   histTrackKinematicsTotal->GetYaxis()->SetTitle("K_{LAB} [MeV]");
+   histTrackKinematicsTotalAcceptance->GetXaxis()->SetTitle("#theta_{LAB} [deg]");
+   histTrackKinematicsTotalAcceptance->GetYaxis()->SetTitle("K_{LAB} [MeV]");
 
    TCanvas *c8 = new TCanvas();
+   histVertexZvTrackThetaLABTotalSimulation->Draw("zcol");
+   histVertexZvTrackThetaLABTotalSimulation->GetXaxis()->SetTitle("Z_{vertex} [mm]");
+   histVertexZvTrackThetaLABTotalSimulation->GetYaxis()->SetTitle("#theta_{LAB} [deg]");
+
+   TCanvas *c9 = new TCanvas();
+   histTrackKinematicsTotalSimulation->Draw("zcol");
+   kineGSStart->Draw("same");
+   kineGSEnd->Draw("same");
+   if (cutArtifactKinematics) cutArtifactKinematics->DrawClone("same");
+   if (cutKinematics) cutKinematics->DrawClone("same");
+   histTrackKinematicsTotalSimulation->GetXaxis()->SetTitle("#theta_{LAB} [deg]");
+   histTrackKinematicsTotalSimulation->GetYaxis()->SetTitle("K_{LAB} [MeV]");
+
+   TCanvas *c10 = new TCanvas();
    histHeavyELoss->Draw();
    histHeavyELoss->GetXaxis()->SetTitle("ELoss_{heavy} [idk]");
 
