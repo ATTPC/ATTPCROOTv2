@@ -9,9 +9,11 @@ void Be12_dp_sim(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
    TString dir = getenv("VMCWORKDIR");
 
    // Output file name
+   //TString outFile = TString::Format("./simData/attpcsim_13Be_p_%.1f_%.1f_600Torr.root", ThetaMinCMS, ThetaMaxCMS);
    TString outFile = TString::Format("/data/ATTPCROOTv2_results/E565/Simulation/simFiles/attpcsim_13Be_p_%.1f_%.1f_600Torr.root", ThetaMinCMS, ThetaMaxCMS);
 
    // Parameter file name
+   //TString parFile = TString::Format("./simData/attpcpar_13Be_p_%.1f_%.1f_600Torr.root", ThetaMinCMS, ThetaMaxCMS);
    TString parFile = TString::Format("/data/ATTPCROOTv2_results/E565/Simulation/simFiles/attpcpar_13Be_p_%.1f_%.1f_600Torr.root", ThetaMinCMS, ThetaMaxCMS);
 
    // -----   Timer   --------------------------------------------------------
@@ -135,7 +137,7 @@ void Be12_dp_sim(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
    AtTPC2Body* TwoBody = new AtTPC2Body("TwoBody",&Zp,&Ap,&Qp,mult,&Pxp,&Pyp,&Pzp,&Mass,&ExE,ResEner, ThetaMinCMS,ThetaMaxCMS);
    //TwoBody->SetFixedTargetPosition(0.0,0.0,0.0);
    //TwoBody->SetFixedBeamMomentum(0.0,0.0,pz*a);
-   //TwoBody->SetSequentialDecay(kTRUE);
+   TwoBody->SetSequentialDecay(kTRUE);
    primGen->AddGenerator(TwoBody);
 
 
@@ -158,9 +160,9 @@ void Be12_dp_sim(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
              // add the gamma generator
              primGen->AddGenerator(gammasGen);*/
 
-// Setting decay
+   // Setting decay
    // Set the parameters of the decay generator
-/*
+
    std::vector<std::vector<Int_t>> zDecay;
    std::vector<std::vector<Int_t>> aDecay;
    std::vector<std::vector<Int_t>> qDecay;
@@ -180,29 +182,26 @@ void Be12_dp_sim(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
    qDecay.resize(TotDecayCases);
    massDecay.resize(TotDecayCases);
 
-   zB = 4; // 12Be
+   zB = 4; // 13Be
    aB = 13;
    massDecayB = 13.03394;
    massTarget = 0.0;
    exEnergy = 0.0; // NB: Set to zero for sequential decay
 
-      SepEne.push_back(-0.435); // Separation energy for the first decay
-      zDecay.at(0).push_back(0);
-      zDecay.at(0).push_back(4);
-      aDecay.at(0).push_back(1);
-      aDecay.at(0).push_back(12);
-      qDecay.at(0).push_back(0);
-      qDecay.at(0).push_back(0);
-      massDecay.at(0).push_back(1.0087);
-      massDecay.at(0).push_back(12.02473);
-   
-   
+   SepEne.push_back(-0.50774236); // Separation energy for the first decay
+   zDecay.at(0).push_back(4);
+   zDecay.at(0).push_back(0);
+   aDecay.at(0).push_back(12);
+   aDecay.at(0).push_back(1);
+   qDecay.at(0).push_back(0);
+   qDecay.at(0).push_back(0);
+   massDecay.at(0).push_back(Bmass);
+   massDecay.at(0).push_back(1.0087);
 
    AtTPCIonDecay *decay =
       new AtTPCIonDecay(&zDecay, &aDecay, &qDecay, &massDecay, zB, aB, massDecayB, massTarget, exEnergy, &SepEne);
-   decay->SetSequentialDecay(kTRUE);
-   //primGen->AddGenerator(decay);
-*/
+   primGen->AddGenerator(decay);
+
 	run->SetGenerator(primGen);
 
 // ------------------------------------------------------------------------
@@ -244,6 +243,7 @@ void Be12_dp_sim(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
   run->Run(nEvents);
 
   //You can export your ROOT geometry ot a separate file
+  //run->CreateGeometryFile("./simData/RCNP_geo_e565.root");
   run->CreateGeometryFile("/data/ATTPCROOTv2_results/E565/Simulation/simFiles/RCNP_geo_e565.root");
   // ------------------------------------------------------------------------
 

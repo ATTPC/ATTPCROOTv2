@@ -200,7 +200,7 @@ Bool_t AtTPCIonDecay::GenerateReaction(FairPrimaryGenerator *primGen)
 
       fIsDecay = kFALSE;
 
-      if (!kIsFinalGen) // NB: Decay modelled as two-step (coming from reaction generator)
+      if (kIsFinalGen) // NB: Decay modelled as two-step (coming from reaction generator)
       {
          fBeamEnergy = AtVertexPropagator::Instance()->GetTrackEnergy(0) / 1000.0;
          TVector3 ScatP = AtVertexPropagator::Instance()->GetScatterP();
@@ -216,13 +216,13 @@ Bool_t AtTPCIonDecay::GenerateReaction(FairPrimaryGenerator *primGen)
          excitationEnergy = fExEnergy; // From compound nucleus
       }
 
-      TParticlePDG *thisPart0 = nullptr;
+      /*TParticlePDG *thisPart0 = nullptr;
       thisPart0 = TDatabasePDG::Instance()->GetParticle(
          fIon.at(Case).at(0)->GetName()); // NB: The first particle of the list must be the decaying ion
       int pdgType0 = thisPart0->PdgCode();
 
       LOG(info) << cBLUE << " Ejectile info : " << pdgType0 << " " << fBeamMass << " " << fPxBeam << " " << fPyBeam
-                << " " << fPzBeam << " " << fBeamEnergy << " " << excitationEnergy << cNORMAL << "\n";
+                << " " << fPzBeam << " " << fBeamEnergy << " " << excitationEnergy << cNORMAL << "\n";*/
 
       // === Phase Space Calculation
 
