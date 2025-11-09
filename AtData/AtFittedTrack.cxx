@@ -2,7 +2,9 @@
 
 ClassImp(AtFittedTrack);
 
-AtFittedTrack::AtFittedTrack(const AtFittedTrack &copy) : fTrackID(copy.fTrackID), fKinematics(copy.fKinematics), fKinematicsXtr(copy.fKinematicsXtr), fParticleInfo(copy.fParticleInfo), fVertex(copy.fVertex), fTrackProperties(copy.fTrackProperties)
+AtFittedTrack::AtFittedTrack(const AtFittedTrack &copy)
+   : fTrackID(copy.fTrackID), fKinematics(copy.fKinematics), fKinematicsXtr(copy.fKinematicsXtr),
+     fParticleInfo(copy.fParticleInfo), fVertex(copy.fVertex), fTrackProperties(copy.fTrackProperties)
 {
    fTrackMetadata = copy.fTrackMetadata->Clone();
 }

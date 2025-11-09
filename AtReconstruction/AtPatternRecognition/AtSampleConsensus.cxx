@@ -110,7 +110,6 @@ AtPatternEvent AtSampleConsensus::Solve(const std::vector<const AtHit *> &hitArr
       if (inlierHits.size() > fMinPatternPoints) {
          auto track = CreateTrack(pattern.get(), inlierHits);
          track.SetTrackID(retEvent.GetTrackCand().size());
-
          retEvent.AddTrack(track);
       }
    }
@@ -136,8 +135,12 @@ AtTrack AtSampleConsensus::CreateTrack(AtPattern *pattern, std::vector<const AtH
    track.SetPattern(pattern->Clone());
 
    // Determine the geometric angles and store them in the track.
-   track.SetGeoTheta(pattern->CalculateTheta());
-   track.SetGeoPhi(pattern->CalculatePhi());
+   auto firstHitPosition = pattern->ClosestPointOnPattern(track.GetFirstPoint());
+   auto lastHitPosition = pattern->ClosestPointOnPattern(track.GetLastPoint());
+   auto direction = lastHitPosition - firstHitPosition;
+
+   track.SetGeoTheta(TMath::Pi() - direction.Theta());
+   track.SetGeoPhi(direction.Phi());
 
    return track;
 }

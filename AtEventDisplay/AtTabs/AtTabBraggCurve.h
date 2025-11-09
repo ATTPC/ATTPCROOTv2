@@ -1,8 +1,8 @@
 #ifndef ATTABBRAGGCURVE_H
 #define ATTABBRAGGCURVE_H
 
-#include "AtFittedTrack.h"
 #include "AtFitMetadata.h"
+#include "AtFittedTrack.h"
 #include "AtTabMain.h" // for AtTabMain::TEvePointSetPtr, AtTa...
 #include "AtTrack.h"
 #include "AtViewerManagerSubject.h" // for AtBranch
@@ -10,8 +10,8 @@
 #include <Rtypes.h>           // for THashConsistencyHolder, ClassDef...
 #include <TEveEventManager.h> // for TEveEventManager
 #include <TEvePointSet.h>     // for TEvePointSet
-#include <TH1F.h>
 #include <TGraph.h>
+#include <TH1F.h>
 
 #include <array>        // for array
 #include <memory>       // for make_unique

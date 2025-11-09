@@ -42,7 +42,7 @@ std::tuple<double, double> AtTools::AtPunchThroughChecker::GetLastHitZPosAndRadi
 
    int idxMaxRadius{0};
    int idx{0};
-   for (auto &hit: hits) {
+   for (auto &hit : hits) {
       auto currentPosition = hit->GetPosition();
       double currentRadiusSquared = currentPosition.Perp2();
 

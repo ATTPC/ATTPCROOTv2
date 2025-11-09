@@ -144,8 +144,8 @@ private:
 public:
    AtSidebarBranchControl(DataHandling::AtBranch &rawEvent, DataHandling::AtBranch &event,
                           DataHandling::AtBranch &patternEvent, DataHandling::AtBranch &trackingEvent,
-                          DataHandling::AtBranch &fitMetadata, const TGWindow *p = nullptr, UInt_t w = 1,
-                          UInt_t h = 1, UInt_t options = 0, Pixel_t back = GetDefaultFrameBackground());
+                          DataHandling::AtBranch &fitMetadata, const TGWindow *p = nullptr, UInt_t w = 1, UInt_t h = 1,
+                          UInt_t options = 0, Pixel_t back = GetDefaultFrameBackground());
 
    ~AtSidebarBranchControl();
 

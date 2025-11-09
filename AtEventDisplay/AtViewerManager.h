@@ -35,13 +35,13 @@ private:
    using TabVec = std::vector<std::unique_ptr<AtTabBase>>;
 
    /** Data subjects we own and send around on update **/
-   DataHandling::AtTreeEntry fEntry{0};          //< Observing
-   DataHandling::AtBranch fRawEventBranch{};     //< Not observing
-   DataHandling::AtBranch fEventBranch{};        //< Not observing
-   DataHandling::AtBranch fPatternEventBranch{}; //< Not observing
-   DataHandling::AtBranch fTrackingEventBranch{};//< Not observing
-   DataHandling::AtBranch fFitMetadataBranch{};  //< Not observing
-   DataHandling::AtPadNum fPadNum{-1};           //< Not Observing
+   DataHandling::AtTreeEntry fEntry{0};           //< Observing
+   DataHandling::AtBranch fRawEventBranch{};      //< Not observing
+   DataHandling::AtBranch fEventBranch{};         //< Not observing
+   DataHandling::AtBranch fPatternEventBranch{};  //< Not observing
+   DataHandling::AtBranch fTrackingEventBranch{}; //< Not observing
+   DataHandling::AtBranch fFitMetadataBranch{};   //< Not observing
+   DataHandling::AtPadNum fPadNum{-1};            //< Not Observing
 
    AtEventSidebar *fSidebar;
    AtEventSidebar *fBasebar;

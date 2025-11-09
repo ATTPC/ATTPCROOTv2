@@ -52,7 +52,7 @@ protected:
    double fMassAmu{0};
 
 public:
-   AtELossModel(double density, std::string name = "noName") : fDensity(density), fELossModelName(name) {};
+   AtELossModel(double density, std::string name = "noName") : fDensity(density), fELossModelName(name){};
    virtual ~AtELossModel() = default;
 
    virtual void SetDensity(double density);
@@ -61,7 +61,6 @@ public:
    virtual void SetChargeNumber(int z);
    virtual void SetAtomicMassNumber(int a);
    virtual void SetMassAmu(double mass);
-
 
    virtual double GetDensity();
    virtual std::string GetELossModelName();
@@ -145,12 +144,13 @@ public:
     * is 0.1mm.
     * @param[in] totalFractionELoss Consider particle stopped when energy drops below energy*totalFractionELoss.
     * @param[in] minRange If minRange is 0, the Bragg curve is computed only until the particle has stopped. If it's
-    * different than 0, then it will add dE/dx=0 until x=minRange after the actual Bragg curve in case it has not reached
-    * that value yet. Default value is 0.
+    * different than 0, then it will add dE/dx=0 until x=minRange after the actual Bragg curve in case it has not
+    * reached that value yet. Default value is 0.
     * @return A vector of pairs (dE/dx, distance) representing the Bragg curve (MeV/mm, mm).
     */
-   virtual std::vector<std::pair<double, double>>
-   GetBraggCurve(double energy, double rangeStepSize = 0.1, double totalFractionELoss = 0.001, double minRange = 0) const;
+   virtual std::vector<std::pair<double, double>> GetBraggCurve(double energy, double rangeStepSize = 0.1,
+                                                                double totalFractionELoss = 0.001,
+                                                                double minRange = 0) const;
 
    /**
     * Get the Bragg curve for a given energy and integrate the dE/dx over bins of given width.
@@ -159,11 +159,13 @@ public:
     * @param[in] valuesPerBin How many values the of dE/dx will be calculated for each bin. Default is 200.
     * @param[in] totalFractionELoss Consider particle stopped when energy drops below energy*totalFractionELoss.
     * @param[in] minRange If minRange is 0, the Bragg curve is computed only until the particle has stopped. If it's
-    * different than 0, then it will add dE/dx=0 until x=minRange after the actual Bragg curve in case it has not reached
-    * that value yet. Default value is 0.
+    * different than 0, then it will add dE/dx=0 until x=minRange after the actual Bragg curve in case it has not
+    * reached that value yet. Default value is 0.
     * @return A vector of pairs (ELoss, distance) representing the integrated Bragg curve (MeV, mm).
     */
-   virtual std::vector<std::pair<double, double>> GetIntegratedELoss(double energy, double binSize, int valuesPerBin = 200, double totalFractionELoss = 0.001, double minRange = 0) const;
+   virtual std::vector<std::pair<double, double>>
+   GetIntegratedELoss(double energy, double binSize, int valuesPerBin = 200, double totalFractionELoss = 0.001,
+                      double minRange = 0) const;
 };
 } // namespace AtTools
 
