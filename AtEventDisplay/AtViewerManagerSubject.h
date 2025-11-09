@@ -32,6 +32,13 @@ public:
 using AtPadNum = AtSimpleType<int>;
 
 /**
+ * @brief Subject for the track number currently selected.
+ *
+ * @ingroup DataHandling
+ */
+using AtTrackNum = AtSimpleType<int>;
+
+/**
  * @brief Subject for the branch in the FairRoot tree.
  * @ingroup DataHandling
  */

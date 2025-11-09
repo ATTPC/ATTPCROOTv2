@@ -62,6 +62,7 @@ AtViewerManager::AtViewerManager(std::shared_ptr<AtMap> map) : fMap(std::move(ma
    fSidebar = new AtEventSidebar();
    fSidebar->AddSidebarFrame(new AtSidebarRunInfo(fSidebar));
    fSidebar->AddSidebarFrame(new AtSidebarPadControl(fPadNum, fSidebar));
+   fSidebar->AddSidebarFrame(new AtSidebarTrackControl(fTrackNum, fSidebar));
 
    browser->StopEmbedding();
    browser->SetTabTitle("Control", TRootBrowser::kLeft);
@@ -164,6 +165,7 @@ void AtViewerManager::GotoEventImpl()
       tab->Exec();
 
    fPadNum.Notify(); // Inform everyone they should act as is the pad changed
+   fTrackNum.Notify(); // Inform everyone they should act as is the track changed
 }
 
 void AtViewerManager::Update(DataHandling::AtSubject *subject)

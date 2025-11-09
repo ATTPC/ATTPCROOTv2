@@ -118,6 +118,49 @@ void AtSidebarPadControl::SelectPad()
    fPadNum.Notify();
 }
 
+AtSidebarTrackControl::AtSidebarTrackControl(DataHandling::AtTrackNum &trackNum, const TGWindow *p, UInt_t w, UInt_t h,
+                                         UInt_t options, Pixel_t back)
+   : AtVerticalSidebarFrame(p, w, h, options, back), fTrackNum(trackNum)
+{
+   fTrackNum.Attach(this);
+}
+AtSidebarTrackControl::~AtSidebarTrackControl()
+{
+   fTrackNum.Detach(this);
+}
+
+void AtSidebarTrackControl::FillFrame()
+{
+   /**** Pad Selection *****/
+   fCurrentTrackFrame = new TGHorizontalFrame(this);
+   fCurrentTrackLabel = new TGLabel(fCurrentTrackFrame, "Current Track: ");
+
+   fCurrentTrackEntry =
+      new TGNumberEntry(fCurrentTrackFrame, 0., 6, -1, TGNumberFormat::kNESInteger, TGNumberFormat::kNEAAnyNumber,
+                        TGNumberFormat::kNELLimitMinMax, -1, 200);
+
+   fCurrentTrackEntry->Connect("ValueSet(Long_t)", "AtSidebarTrackControl", this, "SelectTrack()");
+
+   fCurrentTrackFrame->AddFrame(fCurrentTrackLabel, new TGLayoutHints(kLHintsLeft | kLHintsCenterY, 1, 2, 1, 1));
+   fCurrentTrackFrame->AddFrame(fCurrentTrackEntry);
+
+   fRedrawTrackButton = new TGTextButton(fCurrentTrackFrame, "Redraw Track info");
+   fRedrawTrackButton->Connect("Clicked()", "AtSidebarTrackControl", this, "SelectTrack()");
+   fCurrentTrackFrame->AddFrame(fRedrawTrackButton, new TGLayoutHints(kLHintsCenterY, 1, 1, 1, 1));
+   this->AddFrame(fCurrentTrackFrame, new TGLayoutHints());
+}
+
+void AtSidebarTrackControl::Update(DataHandling::AtSubject *changedSubject)
+{
+   if (changedSubject == &fTrackNum && fCurrentTrackEntry)
+      fCurrentTrackEntry->SetIntNumber(fTrackNum.Get());
+}
+void AtSidebarTrackControl::SelectTrack()
+{
+   fTrackNum.Set(fCurrentTrackEntry->GetIntNumber(), false);
+   fTrackNum.Notify();
+}
+
 AtSidebarEventControl::AtSidebarEventControl(DataHandling::AtTreeEntry &entryNum, const TGWindow *p, UInt_t w, UInt_t h,
                                              UInt_t options, Pixel_t back)
    : AtVerticalSidebarFrame(p, w, h, options, back), fEntryNumber(entryNum)

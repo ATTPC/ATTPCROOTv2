@@ -31,7 +31,7 @@ protected:
    TH1F *fHistELossVRange{nullptr};
    TGraph *fFittedELossGraph{nullptr};
 
-   int fTrackIdx{-1};
+   DataHandling::AtTrackNum *fTrackNum;
    DataHandling::AtBranch *fTrackingEventBranch;
    DataHandling::AtBranch *fFitMetadataBranch;
 
