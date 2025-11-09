@@ -111,6 +111,25 @@ public:
    void SelectPad(); //< Pad TGNumberEntry/Button callback
 };
 
+class AtSidebarTrackControl : public AtVerticalSidebarFrame, public DataHandling::AtObserver {
+   DataHandling::AtTrackNum &fTrackNum;
+
+   TGHorizontalFrame *fCurrentTrackFrame{nullptr};
+   TGLabel *fCurrentTrackLabel{nullptr};
+   TGNumberEntry *fCurrentTrackEntry{nullptr};
+   TGTextButton *fRedrawTrackButton{nullptr};
+
+public:
+   AtSidebarTrackControl(DataHandling::AtTrackNum &trackNum, const TGWindow *p = nullptr, UInt_t w = 1, UInt_t h = 1,
+                       UInt_t options = 0, Pixel_t back = GetDefaultFrameBackground());
+   ~AtSidebarTrackControl();
+
+   void Update(DataHandling::AtSubject *changedSubject) override;
+   void FillFrame() override;
+
+   void SelectTrack(); //< Pad TGNumberEntry/Button callback
+};
+
 class AtSidebarEventControl : public AtVerticalSidebarFrame, public DataHandling::AtObserver {
 private:
    DataHandling::AtTreeEntry &fEntryNumber;

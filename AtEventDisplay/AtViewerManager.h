@@ -42,6 +42,7 @@ private:
    DataHandling::AtBranch fTrackingEventBranch{}; //< Not observing
    DataHandling::AtBranch fFitMetadataBranch{};   //< Not observing
    DataHandling::AtPadNum fPadNum{-1};            //< Not Observing
+   DataHandling::AtTrackNum fTrackNum{-1};        //< Not Observing
 
    AtEventSidebar *fSidebar;
    AtEventSidebar *fBasebar;
@@ -77,6 +78,7 @@ public:
    DataHandling::AtBranch &GetFitMetadataBranch() { return fFitMetadataBranch; }
    DataHandling::AtTreeEntry &GetCurrentEntry() { return fEntry; }
    DataHandling::AtPadNum &GetPadNum() { return fPadNum; }
+   DataHandling::AtTrackNum &GetTrackNum() { return fTrackNum; }
 
    void SetCheckBranch(DataHandling::AtBranch &branch)
    {
