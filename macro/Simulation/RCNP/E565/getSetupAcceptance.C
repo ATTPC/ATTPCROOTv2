@@ -1,26 +1,60 @@
-
 TGraph* ReadKinematics(TString kineFile);
+Double_t omega(Double_t x, Double_t y, Double_t z);
+std::tuple<double, double> kine_2b(Double_t m1, Double_t m2, Double_t m3, Double_t m4, Double_t K_proj, Double_t thetalab, Double_t K_eject);
 
 void getSetupAcceptance()
 {
    FairRunAna *run = new FairRunAna(); // Forcing a dummy run
 
+   // Relevant masses, beam energy, etc...
+   const double u_to_MeV = 931.49401;
+
+   const double m_12Be = 12.02473  * u_to_MeV;
+   const double m_d    = 2.0135532 * u_to_MeV;
+   const double m_13Be = 13.03394  * u_to_MeV;
+   const double m_p    = 1.00783   * u_to_MeV;
+
+   const double EBeam = 21.0 * 12.02473; // MeV
+
+   // ELoss model for kine_2b calculations.
+   //double density = 1.4232e-3; // 500Torr
+   //double density = 1.7078e-3; // 600Torr
+   double density = 1.9924e-3; // 700Torr
+   std::vector<std::tuple<int, int, int>> materialComponents;
+   materialComponents.push_back(std::make_tuple(12, 6, 3));
+   materialComponents.push_back(std::make_tuple(2, 1, 8));
+
+   //std::unique_ptr<AtTools::AtELossCATIMA> eLossModelC3D8_12Be = std::make_unique<AtTools::AtELossCATIMA>(density, "CATima_C3D8_500Torr_12Be");
+   //std::unique_ptr<AtTools::AtELossCATIMA> eLossModelC3D8_12Be = std::make_unique<AtTools::AtELossCATIMA>(density, "CATima_C3D8_600Torr_12Be");
+   std::unique_ptr<AtTools::AtELossCATIMA> eLossModelC3D8_12Be = std::make_unique<AtTools::AtELossCATIMA>(density, "CATima_C3D8_700Torr_12Be");
+   eLossModelC3D8_12Be->SetMaterial(materialComponents);
+   eLossModelC3D8_12Be->SetProjectile(12, 4, 12.02473);
+   eLossModelC3D8_12Be->SetPDGCode("1000040120");
+
    // Histogram definitions.
    TH2F *histVertexZvTrackThetaLABTotalSimulation = new TH2F("histVertexZvTrackThetaLABTotalSimulation", "histVertexZvTrackThetaLABTotalSimulation", 100, 0, 1000, 180, 0, 180);
    TH2F *histTrackKinematicsTotalSimulation = new TH2F("histTrackKinematicsTotalSimulation", "histTrackKinematicsTotalSimulation", 180, 0, 180, 80, 0, 20);
+   TH1F *histThetaCMTotalSimulation = new TH1F("histThetaCMTotalSimulation", "histThetaCMTotalSimulation", 180, 0, 180);
+   TH1F *histExTotalSimulation = new TH1F("histExTotalSimulation", "histExTotalSimulation", 100, -4, 10);
 
    TH2F *histVertexZvTrackThetaLABSiArray = new TH2F("histVertexZvTrackThetaLABSiArray", "histVertexZvTrackThetaLABSiArray", 100, 0, 1000, 180, 0, 180);
    TH2F *histTrackKinematicsSiArray = new TH2F("histTrackKinematicsSiArray", "histTrackKinematicsSiArray", 180, 0, 180, 80, 0, 20);
+   TH1F *histThetaCMSiArray = new TH1F("histThetaCMSiArray", "histThetaCMSiArray", 180, 0, 180);
+   TH1F *histExSiArray = new TH1F("histExSiArray", "histExSiArray", 100, -4, 10);
 
    TH2F *histVertexZvTrackThetaLABATTPC = new TH2F("histVertexZvTrackThetaLABATTPC", "histVertexZvTrackThetaLABATTPC", 100, 0, 1000, 180, 0, 180);
    TH2F *histTrackKinematicsATTPC = new TH2F("histTrackKinematicsATTPC", "histTrackKinematicsATTPC", 180, 0, 180, 80, 0, 20);
+   TH1F *histThetaCMATTPC = new TH1F("histThetaCMATTPC", "histThetaCMATTPC", 180, 0, 180);
+   TH1F *histExATTPC = new TH1F("histExATTPC", "histExATTPC", 100, -4, 10);
 
    TH2F *histVertexZvTrackThetaLABTotalAcceptance = new TH2F("histVertexZvTrackThetaLABTotalAcceptance", "histVertexZvTrackThetaLABTotalAcceptance", 100, 0, 1000, 180, 0, 180);
    TH2F *histTrackKinematicsTotalAcceptance = new TH2F("histTrackKinematicsTotalAcceptance", "histTrackKinematicsTotalAcceptance", 180, 0, 180, 80, 0, 20);
+   TH1F *histThetaCMTotalAcceptance = new TH1F("histThetaCMTotalAcceptance", "histThetaCMTotalAcceptance", 180, 0, 180);
+   TH1F *histExTotalAcceptance = new TH1F("histExTotalAcceptance", "histExTotalAcceptance", 100, -4, 10);
 
    TH1F *histChi2 = new TH1F("histChi2", "histChi2", 100, 0, 1000);
 
-   TH1F *histHeavyELoss = new TH1F("histHeavyELoss", "histHeavyELoss", 100, 0, 1000);
+   TH1F *histHeavyELoss = new TH1F("histHeavyELoss", "histHeavyELoss", 100, 0, 10);
 
    // Open the TCutFiles that may be needed.
    TFile *fileKinematicCuts = new TFile("./TCutFiles/kinematicsTCuts.root", "READ");
@@ -33,18 +67,18 @@ void getSetupAcceptance()
    Double_t ThetaMaxCMS = 40.0;
 
    // Open the digitalization file and get the TTree.
-   TString digiFileName = TString::Format("/data/ATTPCROOTv2_results/E565/Simulation/digiFiles/output_digi_rcnp_13Be_p_%.1f_%.1f_500Torr_9mmBinning.root", ThetaMinCMS, ThetaMaxCMS);
+   //TString digiFileName = TString::Format("/data/ATTPCROOTv2_results/E565/Simulation/digiFiles/output_digi_rcnp_13Be_p_%.1f_%.1f_500Torr_9mmBinning.root", ThetaMinCMS, ThetaMaxCMS);
    //TString digiFileName = TString::Format("/data/ATTPCROOTv2_results/E565/Simulation/digiFiles/output_digi_rcnp_13Be_p_%.1f_%.1f_600Torr_9mmBinning.root", ThetaMinCMS, ThetaMaxCMS);
-   //TString digiFileName = TString::Format("/data/ATTPCROOTv2_results/E565/Simulation/digiFiles/output_digi_rcnp_13Be_p_%.1f_%.1f_700Torr_9mmBinning.root", ThetaMinCMS, ThetaMaxCMS);
+   TString digiFileName = TString::Format("/data/ATTPCROOTv2_results/E565/Simulation/digiFiles/output_digi_rcnp_13Be_p_%.1f_%.1f_700Torr_9mmBinning.root", ThetaMinCMS, ThetaMaxCMS);
    TFile *digiFile = new TFile(digiFileName, "READ");
    TTree *digiTree = (TTree *)digiFile->Get("cbmsim");
    int nDigiEvents = digiTree->GetEntries();
    std::cout << " Number of reconstructed events : " << double(nDigiEvents) / 2 << std::endl;
 
    // Open the MC file and get the TTree.
-   TString mcFileName = TString::Format("/data/ATTPCROOTv2_results/E565/Simulation/simFiles/attpcsim_13Be_p_%.1f_%.1f_500Torr.root", ThetaMinCMS, ThetaMaxCMS);
+   //TString mcFileName = TString::Format("/data/ATTPCROOTv2_results/E565/Simulation/simFiles/attpcsim_13Be_p_%.1f_%.1f_500Torr.root", ThetaMinCMS, ThetaMaxCMS);
    //TString mcFileName = TString::Format("/data/ATTPCROOTv2_results/E565/Simulation/simFiles/attpcsim_13Be_p_%.1f_%.1f_600Torr.root", ThetaMinCMS, ThetaMaxCMS);
-   //TString mcFileName = TString::Format("/data/ATTPCROOTv2_results/E565/Simulation/simFiles/attpcsim_13Be_p_%.1f_%.1f_700Torr.root", ThetaMinCMS, ThetaMaxCMS);
+   TString mcFileName = TString::Format("/data/ATTPCROOTv2_results/E565/Simulation/simFiles/attpcsim_13Be_p_%.1f_%.1f_700Torr.root", ThetaMinCMS, ThetaMaxCMS);
    TFile *mcFile = new TFile(mcFileName, "READ");
    TTree *mcTree = (TTree *)mcFile->Get("cbmsim");
    int nMcEvents = mcTree->GetEntries();
@@ -140,17 +174,23 @@ void getSetupAcceptance()
       double kineticEnergyScattered = (mcTrackScattered->GetEnergy() - mcTrackScattered->GetMass()) * 1000;
       double thetaScattered = 180 - TMath::ASin(mcTrackScattered->GetPt() / mcTrackScattered->GetP()) * TMath::RadToDeg();
 
+      auto [ex_energy_sim, thetaCM_sim] = kine_2b(m_12Be, m_d, m_p, m_13Be, eLossModelC3D8_12Be->GetEnergy(EBeam, 1000 - mcVertexZ), thetaScattered * TMath::DegToRad(), kineticEnergyScattered);
+
       bool goodSiMeasurement{false};
       if (nSi1 && nSi2) {
          goodSiMeasurement = true;
 
          histVertexZvTrackThetaLABSiArray->Fill(mcVertexZ, thetaScattered);
          histTrackKinematicsSiArray->Fill(thetaScattered, kineticEnergyScattered);
+         histThetaCMSiArray->Fill(thetaCM_sim);
+         histExSiArray->Fill(ex_energy_sim);
       }
 
       // In any case, fill the total simulation histograms.
       histVertexZvTrackThetaLABTotalSimulation->Fill(mcVertexZ, thetaScattered);
       histTrackKinematicsTotalSimulation->Fill(thetaScattered, kineticEnergyScattered);
+      histThetaCMTotalSimulation->Fill(thetaCM_sim);
+      histExTotalSimulation->Fill(ex_energy_sim);
 
       // Now we take a look into the reconstructed AtTrackingEvent.
       AtTrackingEvent *trackingEvent = (AtTrackingEvent *)trackingArray->At(0);
@@ -196,6 +236,8 @@ void getSetupAcceptance()
 
          double chi2 = braggFitMetadata->GetChi2();
 
+         auto [ex_energy_track, thetaCM_track] = kine_2b(m_12Be, m_d, m_p, m_13Be, eLossModelC3D8_12Be->GetEnergy(EBeam, 1000 - vertex.Z()), trackThetaLAB * TMath::DegToRad(), trackKineticEnergy);
+
          histChi2->Fill(chi2);
 
          // Store event IDs depending on different cuts.
@@ -225,11 +267,15 @@ void getSetupAcceptance()
 
          histVertexZvTrackThetaLABATTPC->Fill(vertex.Z(), trackThetaLAB);
          histTrackKinematicsATTPC->Fill(trackThetaLAB, trackKineticEnergy);
+         histThetaCMATTPC->Fill(thetaCM_track);
+         histExATTPC->Fill(ex_energy_track);
 
          // Finally, if there is good Si array measurement, fill the coincidence histograms.
          if (goodSiMeasurement) {
             histVertexZvTrackThetaLABTotalAcceptance->Fill(vertex.Z(), trackThetaLAB);
             histTrackKinematicsTotalAcceptance->Fill(trackThetaLAB, trackKineticEnergy);
+            histThetaCMTotalAcceptance->Fill(thetaCM_track);
+            histExTotalAcceptance->Fill(ex_energy_track);
          }
       }
 
@@ -250,9 +296,9 @@ void getSetupAcceptance()
    histVertexZvTrackThetaLABATTPC->GetYaxis()->SetTitle("#theta_{LAB} [deg]");
 
    TGraph *kineGSStart = ReadKinematics("./kineFiles/12Be_dp_gs_21MeVu_start.txt");
-   TGraph *kineGSEnd = ReadKinematics("./kineFiles/12Be_dp_gs_21MeVu_end_500torr.txt");
+   //TGraph *kineGSEnd = ReadKinematics("./kineFiles/12Be_dp_gs_21MeVu_end_500torr.txt");
    //TGraph *kineGSEnd = ReadKinematics("./kineFiles/12Be_dp_gs_21MeVu_end_600torr.txt");
-   //TGraph *kineGSEnd = ReadKinematics("./kineFiles/12Be_dp_gs_21MeVu_end_700torr.txt");
+   TGraph *kineGSEnd = ReadKinematics("./kineFiles/12Be_dp_gs_21MeVu_end_700torr.txt");
 
    TCanvas *c2 = new TCanvas();
    histTrackKinematicsATTPC->Draw("zcol");
@@ -264,15 +310,23 @@ void getSetupAcceptance()
    histTrackKinematicsATTPC->GetYaxis()->SetTitle("K_{LAB} [MeV]");
 
    TCanvas *c3 = new TCanvas();
+   histThetaCMATTPC->Draw();
+   histThetaCMATTPC->GetXaxis()->SetTitle("#theta_{CM} [deg]");
+
+   TCanvas *c4 = new TCanvas();
+   histExATTPC->Draw();
+   histExATTPC->GetXaxis()->SetTitle("E_{ex} [MeV]");
+
+   TCanvas *c5 = new TCanvas();
    histChi2->Draw();
    histChi2->GetXaxis()->SetTitle("#chi^{2}");
 
-   TCanvas *c4 = new TCanvas();
+   TCanvas *c6 = new TCanvas();
    histVertexZvTrackThetaLABSiArray->Draw("zcol");
    histVertexZvTrackThetaLABSiArray->GetXaxis()->SetTitle("Z_{vertex} [mm]");
    histVertexZvTrackThetaLABSiArray->GetYaxis()->SetTitle("#theta_{LAB} [deg]");
 
-   TCanvas *c5 = new TCanvas();
+   TCanvas *c7 = new TCanvas();
    histTrackKinematicsSiArray->Draw("zcol");
    kineGSStart->Draw("same");
    kineGSEnd->Draw("same");
@@ -281,12 +335,20 @@ void getSetupAcceptance()
    histTrackKinematicsSiArray->GetXaxis()->SetTitle("#theta_{LAB} [deg]");
    histTrackKinematicsSiArray->GetYaxis()->SetTitle("K_{LAB} [MeV]");
 
-   TCanvas *c6 = new TCanvas();
+   TCanvas *c8 = new TCanvas();
+   histThetaCMSiArray->Draw();
+   histThetaCMSiArray->GetXaxis()->SetTitle("#theta_{CM} [deg]");
+
+   TCanvas *c9 = new TCanvas();
+   histExSiArray->Draw();
+   histExSiArray->GetXaxis()->SetTitle("E_{ex} [MeV]");
+
+   TCanvas *c10 = new TCanvas();
    histVertexZvTrackThetaLABTotalAcceptance->Draw("zcol");
    histVertexZvTrackThetaLABTotalAcceptance->GetXaxis()->SetTitle("Z_{vertex} [mm]");
    histVertexZvTrackThetaLABTotalAcceptance->GetYaxis()->SetTitle("#theta_{LAB} [deg]");
 
-   TCanvas *c7 = new TCanvas();
+   TCanvas *c11 = new TCanvas();
    histTrackKinematicsTotalAcceptance->Draw("zcol");
    kineGSStart->Draw("same");
    kineGSEnd->Draw("same");
@@ -295,12 +357,20 @@ void getSetupAcceptance()
    histTrackKinematicsTotalAcceptance->GetXaxis()->SetTitle("#theta_{LAB} [deg]");
    histTrackKinematicsTotalAcceptance->GetYaxis()->SetTitle("K_{LAB} [MeV]");
 
-   TCanvas *c8 = new TCanvas();
+   TCanvas *c12 = new TCanvas();
+   histThetaCMTotalAcceptance->Draw();
+   histThetaCMTotalAcceptance->GetXaxis()->SetTitle("#theta_{CM} [deg]");
+
+   TCanvas *c13 = new TCanvas();
+   histExTotalAcceptance->Draw();
+   histExTotalAcceptance->GetXaxis()->SetTitle("E_{ex} [MeV]");
+
+   TCanvas *c14 = new TCanvas();
    histVertexZvTrackThetaLABTotalSimulation->Draw("zcol");
    histVertexZvTrackThetaLABTotalSimulation->GetXaxis()->SetTitle("Z_{vertex} [mm]");
    histVertexZvTrackThetaLABTotalSimulation->GetYaxis()->SetTitle("#theta_{LAB} [deg]");
 
-   TCanvas *c9 = new TCanvas();
+   TCanvas *c15 = new TCanvas();
    histTrackKinematicsTotalSimulation->Draw("zcol");
    kineGSStart->Draw("same");
    kineGSEnd->Draw("same");
@@ -309,7 +379,15 @@ void getSetupAcceptance()
    histTrackKinematicsTotalSimulation->GetXaxis()->SetTitle("#theta_{LAB} [deg]");
    histTrackKinematicsTotalSimulation->GetYaxis()->SetTitle("K_{LAB} [MeV]");
 
-   TCanvas *c10 = new TCanvas();
+   TCanvas *c16 = new TCanvas();
+   histThetaCMTotalSimulation->Draw();
+   histThetaCMTotalSimulation->GetXaxis()->SetTitle("#theta_{CM} [deg]");
+
+   TCanvas *c17 = new TCanvas();
+   histExTotalSimulation->Draw();
+   histExTotalSimulation->GetXaxis()->SetTitle("E_{ex} [MeV]");
+
+   TCanvas *c18 = new TCanvas();
    histHeavyELoss->Draw();
    histHeavyELoss->GetXaxis()->SetTitle("ELoss_{heavy} [idk]");
 
@@ -341,4 +419,45 @@ TGraph* ReadKinematics(TString kineFile)
 
    TGraph *kine = new TGraph(numKin, ThetaLabRec, EnerLabRec);
    return kine;
+}
+
+Double_t omega(Double_t x, Double_t y, Double_t z)
+{
+   return sqrt(x * x + y * y + z * z - 2 * x * y - 2 * y * z - 2 * x * z);
+}
+
+std::tuple<double, double>
+kine_2b(Double_t m1, Double_t m2, Double_t m3, Double_t m4, Double_t K_proj, Double_t thetalab, Double_t K_eject)
+{
+
+   // in this definition: m1(projectile); m2(target); m3(ejectile); and m4(recoil);
+   double Et1 = K_proj + m1;
+   double Et2 = m2;
+   double Et3 = K_eject + m3;
+   double Et4 = Et1 + Et2 - Et3;
+   double m4_ex, Ex, theta_cm;
+   double s, t, u; //---Mandelstam variables
+
+   s = pow(m1, 2) + pow(m2, 2) + 2 * m2 * Et1;
+   u = pow(m2, 2) + pow(m3, 2) - 2 * m2 * Et3;
+
+   m4_ex = sqrt((cos(thetalab) * omega(s, pow(m1, 2), pow(m2, 2)) * omega(u, pow(m2, 2), pow(m3, 2)) -
+                 (s - pow(m1, 2) - pow(m2, 2)) * (pow(m2, 2) + pow(m3, 2) - u)) /
+                   (2 * pow(m2, 2)) +
+                s + u - pow(m2, 2));
+   Ex = m4_ex - m4;
+
+   t = pow(m2, 2) + pow(m4_ex, 2) - 2 * m2 * Et4;
+
+   // for inverse kinematics Note: this angle corresponds to the recoil
+    theta_cm = TMath::Pi() - acos((pow(s, 2) + s * (2 * t - pow(m1, 2) - pow(m2, 2) - pow(m3, 2) - pow(m4_ex, 2)) +
+                                  (pow(m1, 2) - pow(m2, 2)) * (pow(m3, 2) - pow(m4_ex, 2))) /
+                                 (omega(s, pow(m1, 2), pow(m2, 2)) * omega(s, pow(m3, 2), pow(m4_ex, 2))));
+
+   /*theta_cm = acos((pow(s, 2) + s * (2 * u - pow(m1, 2) - pow(m2, 2) - pow(m3, 2) - pow(m4_ex, 2)) +
+                                  (pow(m1, 2) - pow(m2, 2)) * (pow(m4_ex, 2) - pow(m3, 2))) /
+                                 (omega(s, pow(m1, 2), pow(m2, 2)) * omega(s, pow(m4_ex, 2), pow(m3, 2))));*/
+
+   theta_cm = theta_cm * TMath::RadToDeg();
+   return std::make_tuple(Ex, theta_cm);
 }
