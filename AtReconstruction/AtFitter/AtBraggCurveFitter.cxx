@@ -68,22 +68,15 @@ AtFittedTrack *EventFit::AtBraggCurveFitter::GetFittedTrack(AtTrack *track, AtFi
    fNBins = braggCurve.nBins;
    fBinSize = braggCurve.binSize;
 
-   // The minimum range where we should be able to get ELoss values for.
-   fMinimumRange = fHoleRadius / TMath::Sin(track->GetGeoTheta());
-
-   // Get the index with maximum ELoss, and get the associated range.
-   int maxELossIndex =
-      std::max_element(fExperimentalIntegratedELossValues.begin(), fExperimentalIntegratedELossValues.end()) -
-      fExperimentalIntegratedELossValues.begin();
-   double estimatedRange = fExperimentalRangeValues[maxELossIndex];
-
-   // Clear the set in case it's filled from previous track.
-   BraggFitMetadatasSet trackMetadatasSet = std::set<AtBraggFitMetadata *, std::function<bool(AtBraggFitMetadata *, AtBraggFitMetadata *)>>(CompareTrackFitsFunction);
-
-   // In case the AtTrack has punched through, we simply set it in the metadata and we skip the fitting.
+   // Check for punsh through.
    Bool_t isPunchThrough = fPunchThroughChecker->IsPunchThrough(track);
-   if (isPunchThrough) {
-      LOG(info) << "Track with ID " << track->GetTrackID() << " has punched through. Skipping the fitting and adding empty fit metadatas!";
+
+   // In case the AtTrack has punched through or the ELoss profile has not been reconstructed for any reason, we do not fit and return "empty" metadatas and fitted track.
+   if (isPunchThrough || !fBinSize) {
+      if (isPunchThrough)
+         LOG(info) << "Track with ID " << track->GetTrackID() << " has punched through. Skipping the fitting and adding empty fit metadatas!";
+      else
+         LOG(info) << "Track with ID " << track->GetTrackID() << " has does not have a reconstructed ELoss profile. Skipping the fitting and adding empty fit metadatas!";
 
       // We add an empty entry to the AtFitMetadata for each ELoss model anyways.
       if (fitMetadata) {
@@ -92,6 +85,7 @@ AtFittedTrack *EventFit::AtBraggCurveFitter::GetFittedTrack(AtTrack *track, AtFi
          while (fProjectileIdx < fELossModels.size()) {
             std::unique_ptr<AtBraggFitMetadata> uniqueBraggFitMetadata = std::make_unique<AtBraggFitMetadata>();
             uniqueBraggFitMetadata->SetIsPunchThrough(isPunchThrough);
+            uniqueBraggFitMetadata->SetIsReconstructedELoss(fBinSize);
             uniqueBraggFitMetadata->SetFitConverged(kFALSE);
             uniqueBraggFitMetadata->SetTrackID(track->GetTrackID());
             uniqueBraggFitMetadata->SetFitID(fProjectileIdx);
@@ -106,6 +100,7 @@ AtFittedTrack *EventFit::AtBraggCurveFitter::GetFittedTrack(AtTrack *track, AtFi
       // Also, empty AtBraggFitMetadata for the AtFittedTrack that is required.
       std::unique_ptr<AtBraggFitMetadata> uniqueBestFitMetadata = std::make_unique<AtBraggFitMetadata>();
       uniqueBestFitMetadata->SetIsPunchThrough(isPunchThrough);
+      uniqueBestFitMetadata->SetIsReconstructedELoss(fBinSize);
       uniqueBestFitMetadata->SetFitConverged(kFALSE);
       uniqueBestFitMetadata->SetTrackID(track->GetTrackID());
 
@@ -114,6 +109,20 @@ AtFittedTrack *EventFit::AtBraggCurveFitter::GetFittedTrack(AtTrack *track, AtFi
       notFittedTrack->SetTrackMetadata(std::move(uniqueBestFitMetadata));
       return notFittedTrack;
    }
+
+
+
+   // The minimum range where we should be able to get ELoss values for.
+   fMinimumRange = fHoleRadius / TMath::Sin(track->GetGeoTheta());
+
+   // Get the index with maximum ELoss, and get the associated range.
+   int maxELossIndex =
+      std::max_element(fExperimentalIntegratedELossValues.begin(), fExperimentalIntegratedELossValues.end()) -
+      fExperimentalIntegratedELossValues.begin();
+   double estimatedRange = fExperimentalRangeValues[maxELossIndex];
+
+   // Clear the set in case it's filled from previous track.
+   BraggFitMetadatasSet trackMetadatasSet = std::set<AtBraggFitMetadata *, std::function<bool(AtBraggFitMetadata *, AtBraggFitMetadata *)>>(CompareTrackFitsFunction);
 
    // Now, we iterate over all possible particles that this AtTrack may be.
    fProjectileIdx = 0;
@@ -145,7 +154,6 @@ AtFittedTrack *EventFit::AtBraggCurveFitter::GetFittedTrack(AtTrack *track, AtFi
       braggFitMetadata->SetTrackID(track->GetTrackID());
       braggFitMetadata->SetFitID(fProjectileIdx);
       braggFitMetadata->SetFitConverged(kTRUE); // I'm setting to true by default because I don't know how to check with minuit :C
-      braggFitMetadata->SetIsPunchThrough(isPunchThrough);
 
       //braggFitMetadata->SetPValue(pvalue???); // will be calculated in the future.
       //braggFitMetadata->SetNdf(ndf???); // ""
@@ -159,6 +167,8 @@ AtFittedTrack *EventFit::AtBraggCurveFitter::GetFittedTrack(AtTrack *track, AtFi
       braggFitMetadata->SetAtomicMassNumber(fELossModels[fProjectileIdx]->GetAtomicMassNumber());
       braggFitMetadata->SetChargeNumber(fELossModels[fProjectileIdx]->GetChargeNumber());
       braggFitMetadata->SetMassAmu(fELossModels[fProjectileIdx]->GetMassAmu());
+      braggFitMetadata->SetIsPunchThrough(isPunchThrough);
+      braggFitMetadata->SetIsReconstructedELoss(fBinSize);
 
       // Compute the ELoss profile that best fits the experimental values and store them in the metadata.
       auto integratedELossValues = fELossModels[fProjectileIdx]->GetIntegratedELoss(fitPar[0], fBinSize, fValuesPerBin, 0.001, fNBins * fBinSize);
