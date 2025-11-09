@@ -33,14 +33,18 @@ void getSetupAcceptance()
    Double_t ThetaMaxCMS = 40.0;
 
    // Open the digitalization file and get the TTree.
-   TString digiFileName = TString::Format("/data/ATTPCROOTv2_results/E565/Simulation/digiFiles/output_digi_rcnp_13Be_p_%.1f_%.1f_600Torr_9mmBinning.root", ThetaMinCMS, ThetaMaxCMS);
+   TString digiFileName = TString::Format("/data/ATTPCROOTv2_results/E565/Simulation/digiFiles/output_digi_rcnp_13Be_p_%.1f_%.1f_500Torr_9mmBinning.root", ThetaMinCMS, ThetaMaxCMS);
+   //TString digiFileName = TString::Format("/data/ATTPCROOTv2_results/E565/Simulation/digiFiles/output_digi_rcnp_13Be_p_%.1f_%.1f_600Torr_9mmBinning.root", ThetaMinCMS, ThetaMaxCMS);
+   //TString digiFileName = TString::Format("/data/ATTPCROOTv2_results/E565/Simulation/digiFiles/output_digi_rcnp_13Be_p_%.1f_%.1f_700Torr_9mmBinning.root", ThetaMinCMS, ThetaMaxCMS);
    TFile *digiFile = new TFile(digiFileName, "READ");
    TTree *digiTree = (TTree *)digiFile->Get("cbmsim");
    int nDigiEvents = digiTree->GetEntries();
    std::cout << " Number of reconstructed events : " << double(nDigiEvents) / 2 << std::endl;
 
    // Open the MC file and get the TTree.
-   TString mcFileName = TString::Format("/data/ATTPCROOTv2_results/E565/Simulation/simFiles/attpcsim_13Be_p_%.1f_%.1f_600Torr.root", ThetaMinCMS, ThetaMaxCMS);
+   TString mcFileName = TString::Format("/data/ATTPCROOTv2_results/E565/Simulation/simFiles/attpcsim_13Be_p_%.1f_%.1f_500Torr.root", ThetaMinCMS, ThetaMaxCMS);
+   //TString mcFileName = TString::Format("/data/ATTPCROOTv2_results/E565/Simulation/simFiles/attpcsim_13Be_p_%.1f_%.1f_600Torr.root", ThetaMinCMS, ThetaMaxCMS);
+   //TString mcFileName = TString::Format("/data/ATTPCROOTv2_results/E565/Simulation/simFiles/attpcsim_13Be_p_%.1f_%.1f_700Torr.root", ThetaMinCMS, ThetaMaxCMS);
    TFile *mcFile = new TFile(mcFileName, "READ");
    TTree *mcTree = (TTree *)mcFile->Get("cbmsim");
    int nMcEvents = mcTree->GetEntries();
@@ -216,8 +220,8 @@ void getSetupAcceptance()
          //if(chi2 < 90 || chi2 > 170) continue;
          //if(chi2 < 190 || chi2 > 220) continue;
 
-         int nZSection = 5;
-         if(100 * nZSection > vertex.Z() || vertex.Z() > 100 * (nZSection + 1)) continue;
+         int nZSection = 0;
+         //if(100 * nZSection > vertex.Z() || vertex.Z() > 100 * (nZSection + 1)) continue;
 
          histVertexZvTrackThetaLABATTPC->Fill(vertex.Z(), trackThetaLAB);
          histTrackKinematicsATTPC->Fill(trackThetaLAB, trackKineticEnergy);
@@ -246,7 +250,9 @@ void getSetupAcceptance()
    histVertexZvTrackThetaLABATTPC->GetYaxis()->SetTitle("#theta_{LAB} [deg]");
 
    TGraph *kineGSStart = ReadKinematics("./kineFiles/12Be_dp_gs_21MeVu_start.txt");
-   TGraph *kineGSEnd = ReadKinematics("./kineFiles/12Be_dp_gs_21MeVu_end.txt");
+   TGraph *kineGSEnd = ReadKinematics("./kineFiles/12Be_dp_gs_21MeVu_end_500torr.txt");
+   //TGraph *kineGSEnd = ReadKinematics("./kineFiles/12Be_dp_gs_21MeVu_end_600torr.txt");
+   //TGraph *kineGSEnd = ReadKinematics("./kineFiles/12Be_dp_gs_21MeVu_end_700torr.txt");
 
    TCanvas *c2 = new TCanvas();
    histTrackKinematicsATTPC->Draw("zcol");

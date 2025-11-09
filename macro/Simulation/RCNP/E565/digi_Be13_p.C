@@ -6,9 +6,13 @@ void digi_Be13_p(int nEvent = 10000)
    Double_t ThetaMaxCMS = 40.0;
 
    //TString mcFile = TString::Format("./simData/attpcsim_13Be_p_%.1f_%.1f_600Torr.root", ThetaMinCMS, ThetaMaxCMS);
-   TString mcFile = TString::Format("/data/ATTPCROOTv2_results/E565/Simulation/simFiles/attpcsim_13Be_p_%.1f_%.1f_600Torr.root", ThetaMinCMS, ThetaMaxCMS);
+   TString mcFile = TString::Format("/data/ATTPCROOTv2_results/E565/Simulation/simFiles/attpcsim_13Be_p_%.1f_%.1f_500Torr.root", ThetaMinCMS, ThetaMaxCMS);
+   //TString mcFile = TString::Format("/data/ATTPCROOTv2_results/E565/Simulation/simFiles/attpcsim_13Be_p_%.1f_%.1f_600Torr.root", ThetaMinCMS, ThetaMaxCMS);
+   //TString mcFile = TString::Format("/data/ATTPCROOTv2_results/E565/Simulation/simFiles/attpcsim_13Be_p_%.1f_%.1f_700Torr.root", ThetaMinCMS, ThetaMaxCMS);
    //TString outputFile = TString::Format("./digiFiles/output_digi_rcnp_13Be_p_%.1f_%.1f_600Torr_9mmBinning.root", ThetaMinCMS, ThetaMaxCMS);
-   TString outputFile = TString::Format("/data/ATTPCROOTv2_results/E565/Simulation/digiFiles/output_digi_rcnp_13Be_p_%.1f_%.1f_600Torr_9mmBinning.root", ThetaMinCMS, ThetaMaxCMS);
+   TString outputFile = TString::Format("/data/ATTPCROOTv2_results/E565/Simulation/digiFiles/output_digi_rcnp_13Be_p_%.1f_%.1f_500Torr_9mmBinning.root", ThetaMinCMS, ThetaMaxCMS);
+   //TString outputFile = TString::Format("/data/ATTPCROOTv2_results/E565/Simulation/digiFiles/output_digi_rcnp_13Be_p_%.1f_%.1f_600Torr_9mmBinning.root", ThetaMinCMS, ThetaMaxCMS);
+   //TString outputFile = TString::Format("/data/ATTPCROOTv2_results/E565/Simulation/digiFiles/output_digi_rcnp_13Be_p_%.1f_%.1f_700Torr_9mmBinning.root", ThetaMinCMS, ThetaMaxCMS);
 
    TString scriptfile = "RCNP2025.xml";
    TString paramFile = "ATTPC.E656_RCNP.SIM.par";
@@ -81,36 +85,48 @@ void digi_Be13_p(int nEvent = 10000)
    // Create the AtFitterTask task.
    std::vector<std::unique_ptr<AtTools::AtELossModel>> eLossModels;
 
-   double density = 1.7078e-3; // 600Torr
+   double density = 1.4232e-3; // 500Torr
+   //double density = 1.7078e-3; // 600Torr
+   //double density = 1.9924e-3; // 700Torr
    std::vector<std::tuple<int, int, int>> materialComponents;
    materialComponents.push_back(std::make_tuple(12, 6, 3));
    materialComponents.push_back(std::make_tuple(2, 1, 8));
 
-   std::unique_ptr<AtTools::AtELossCATIMA> eLossModelC3D8_p = std::make_unique<AtTools::AtELossCATIMA>(density, "CATima_C3D8_600Torr_p");
+   std::unique_ptr<AtTools::AtELossCATIMA> eLossModelC3D8_p = std::make_unique<AtTools::AtELossCATIMA>(density, "CATima_C3D8_500Torr_p");
+   //std::unique_ptr<AtTools::AtELossCATIMA> eLossModelC3D8_p = std::make_unique<AtTools::AtELossCATIMA>(density, "CATima_C3D8_600Torr_p");
+   //std::unique_ptr<AtTools::AtELossCATIMA> eLossModelC3D8_p = std::make_unique<AtTools::AtELossCATIMA>(density, "CATima_C3D8_700Torr_p");
    eLossModelC3D8_p->SetMaterial(materialComponents);
    eLossModelC3D8_p->SetProjectile(1, 1, 1.007825031898);
    eLossModelC3D8_p->SetPDGCode("1000010010");
    eLossModels.push_back(std::move(eLossModelC3D8_p));
 
-   std::unique_ptr<AtTools::AtELossCATIMA> eLossModelC3D8_d = std::make_unique<AtTools::AtELossCATIMA>(density, "CATima_C3D8_600Torr_d");
+   std::unique_ptr<AtTools::AtELossCATIMA> eLossModelC3D8_d = std::make_unique<AtTools::AtELossCATIMA>(density, "CATima_C3D8_500Torr_d");
+   //std::unique_ptr<AtTools::AtELossCATIMA> eLossModelC3D8_d = std::make_unique<AtTools::AtELossCATIMA>(density, "CATima_C3D8_600Torr_d");
+   //std::unique_ptr<AtTools::AtELossCATIMA> eLossModelC3D8_d = std::make_unique<AtTools::AtELossCATIMA>(density, "CATima_C3D8_700Torr_d");
    eLossModelC3D8_d->SetMaterial(materialComponents);
    eLossModelC3D8_d->SetProjectile(2, 1, 2.014101777844);
    eLossModelC3D8_d->SetPDGCode("1000010020");
    //eLossModels.push_back(std::move(eLossModelC3D8_d));
 
-   std::unique_ptr<AtTools::AtELossCATIMA> eLossModelC3D8_t = std::make_unique<AtTools::AtELossCATIMA>(density, "CATima_C3D8_600Torr_t");
+   std::unique_ptr<AtTools::AtELossCATIMA> eLossModelC3D8_t = std::make_unique<AtTools::AtELossCATIMA>(density, "CATima_C3D8_500Torr_t");
+   //std::unique_ptr<AtTools::AtELossCATIMA> eLossModelC3D8_t = std::make_unique<AtTools::AtELossCATIMA>(density, "CATima_C3D8_600Torr_t");
+   //std::unique_ptr<AtTools::AtELossCATIMA> eLossModelC3D8_t = std::make_unique<AtTools::AtELossCATIMA>(density, "CATima_C3D8_700Torr_t");
    eLossModelC3D8_t->SetMaterial(materialComponents);
    eLossModelC3D8_t->SetProjectile(3, 1, 3.01604928132);
    eLossModelC3D8_t->SetPDGCode("1000010030");
    //eLossModels.push_back(std::move(eLossModelC3D8_t));
 
-   std::unique_ptr<AtTools::AtELossCATIMA> eLossModelC3D8_4He = std::make_unique<AtTools::AtELossCATIMA>(density, "CATima_C3D8_600Torr_4He");
+   std::unique_ptr<AtTools::AtELossCATIMA> eLossModelC3D8_4He = std::make_unique<AtTools::AtELossCATIMA>(density, "CATima_C3D8_500Torr_4He");
+   //std::unique_ptr<AtTools::AtELossCATIMA> eLossModelC3D8_4He = std::make_unique<AtTools::AtELossCATIMA>(density, "CATima_C3D8_600Torr_4He");
+   //std::unique_ptr<AtTools::AtELossCATIMA> eLossModelC3D8_4He = std::make_unique<AtTools::AtELossCATIMA>(density, "CATima_C3D8_700Torr_4He");
    eLossModelC3D8_4He->SetMaterial(materialComponents);
    eLossModelC3D8_4He->SetProjectile(4, 2, 4.00260325413);
    eLossModelC3D8_4He->SetPDGCode("1000020040");
    //eLossModels.push_back(std::move(eLossModelC3D8_4He));
 
-   std::unique_ptr<AtTools::AtELossCATIMA> eLossModelC3D8_12Be = std::make_unique<AtTools::AtELossCATIMA>(density, "CATima_C3D8_600Torr_12Be");
+   std::unique_ptr<AtTools::AtELossCATIMA> eLossModelC3D8_12Be = std::make_unique<AtTools::AtELossCATIMA>(density, "CATima_C3D8_500Torr_12Be");
+   //std::unique_ptr<AtTools::AtELossCATIMA> eLossModelC3D8_12Be = std::make_unique<AtTools::AtELossCATIMA>(density, "CATima_C3D8_600Torr_12Be");
+   //std::unique_ptr<AtTools::AtELossCATIMA> eLossModelC3D8_12Be = std::make_unique<AtTools::AtELossCATIMA>(density, "CATima_C3D8_700Torr_12Be");
    eLossModelC3D8_12Be->SetMaterial(materialComponents);
    eLossModelC3D8_12Be->SetProjectile(12, 4, 12.026922082);
    eLossModelC3D8_12Be->SetPDGCode("1000040120");
