@@ -267,8 +267,8 @@ void AtTabBraggCurve::PrintFittedTrackInfo(AtFittedTrack fittedTrack)
    std::cout << "   - phi = " << kinematics.phi * 180 / TMath::Pi() << " deg" << std::endl;
 
    // Vertex.
-   //XYZVector vertex = fittedTrack.GetVertex();
-   //std::cout << "Vertex = (" << vertex.X() << ", " << vertex.Y() << ", " << vertex.Z() << ") [mm]" << std::endl;
+   XYZVector vertex = fittedTrack.GetVertex();
+   std::cout << "Vertex = (" << vertex.X() << ", " << vertex.Y() << ", " << vertex.Z() << ") [mm]" << std::endl;
 
    std::cout << std::endl;
 }

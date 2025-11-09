@@ -63,7 +63,7 @@ protected:
    void ProcessHit(XYZPoint vertex, AtHit hit, AtTrack &modifiedTrack, AtRawEvent *rawEvent);
    void ProcessHit(XYZPoint vertex, AtHit hit, AtTrack &modifiedTrack);
 
-   void GenerateBraggCurveHistogram(AtTrack &modifiedTrack);
+   void GenerateBraggCurveHistogram(AtTrack &modifiedTrack, XYZPoint vertex);
 
    void InitializePSA();
 };

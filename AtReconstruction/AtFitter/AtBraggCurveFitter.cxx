@@ -9,6 +9,8 @@
 
 #include <algorithm>
 
+using XYZVector = ROOT::Math::XYZVector;
+
 // Initialization of all static members, so that AtReconstruction doesn't die.
 EventFit::AtBraggCurveFitter::ELossModelsVector EventFit::AtBraggCurveFitter::fELossModels;
 int EventFit::AtBraggCurveFitter::fProjectileIdx{0};
@@ -196,7 +198,7 @@ AtFittedTrack *EventFit::AtBraggCurveFitter::GetFittedTrack(AtTrack *track, AtFi
    fittedTrack->SetTrackID(track->GetTrackID());
    fittedTrack->SetKinematics(bestFitTrackMetadata->GetKineticEnergy(), track->GetGeoTheta(), track->GetGeoPhi());
    fittedTrack->SetParticleInfo(bestFitTrackMetadata->GetPDGCode().Data(), bestFitTrackMetadata->GetChargeNumber(), bestFitTrackMetadata->GetMassAmu());
-   //fittedTrack->SetVertex(???); //TO-DO
+   fittedTrack->SetVertex(XYZVector(braggCurve.vertexX, braggCurve.vertexY, braggCurve.vertexZ));
    //fittedTrack->SetTrackPropertiesStruct(???); //TO-DO
    std::unique_ptr<AtBraggFitMetadata> uniqueBestFitMetadata = std::make_unique<AtBraggFitMetadata>(*bestFitTrackMetadata);
    fittedTrack->SetTrackMetadata(std::move(uniqueBestFitMetadata));

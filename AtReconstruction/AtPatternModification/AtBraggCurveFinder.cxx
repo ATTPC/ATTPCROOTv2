@@ -58,7 +58,7 @@ AtTrack AtBraggCurveFinder::GetModifiedTrack(const AtTrack &track, AtPatternEven
    }
 
    // Make the Bragg curve histogram.
-   GenerateBraggCurveHistogram(modifiedTrack);
+   GenerateBraggCurveHistogram(modifiedTrack, vertex);
 
    // Return the modified track.
    return modifiedTrack;
@@ -132,7 +132,7 @@ void AtBraggCurveFinder::ProcessHit(XYZPoint vertex, AtHit hit, AtTrack &modifie
    modifiedTrack.AddBraggCurvePair(range, eLoss);
 }
 
-void AtBraggCurveFinder::GenerateBraggCurveHistogram(AtTrack &modifiedTrack)
+void AtBraggCurveFinder::GenerateBraggCurveHistogram(AtTrack &modifiedTrack, XYZPoint vertex)
 {
 
    // Define the histogram where to integrate the charge over bins.
@@ -178,6 +178,9 @@ void AtBraggCurveFinder::GenerateBraggCurveHistogram(AtTrack &modifiedTrack)
    braggCurve.nBins = nBins;
    braggCurve.binSize = fBinSize;
    braggCurve.smoothingSteps = fNumSmoothingSteps;
+   braggCurve.vertexX = vertex.X();
+   braggCurve.vertexY = vertex.Y();
+   braggCurve.vertexZ = vertex.Z();
 
    modifiedTrack.SetBraggCurve(braggCurve);
 }
