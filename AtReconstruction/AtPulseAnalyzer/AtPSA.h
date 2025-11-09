@@ -46,6 +46,7 @@ protected:
    Int_t fEntTB{};            //< Timebucket of the entrance window
    Double_t fDriftVelocity{}; //< drift velocity of electron in cm/us
    Double_t fZk{};            //< Relative position of micromegas-cathode
+   Int_t fIsTPCInverted{};    //< Whether or not the TPC is inverted with respect the usual convention [0/1]
 
    using HitVector = std::vector<std::unique_ptr<AtHit>>;
 
@@ -81,7 +82,7 @@ protected:
 
    virtual double getZhitVariance(double zLoc, double zLocVar) const;
    virtual std::pair<double, double> getXYhitVariance() const;
-   ClassDef(AtPSA, 5)
+   ClassDef(AtPSA, 6)
 };
 
 #endif

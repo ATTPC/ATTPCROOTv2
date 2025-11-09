@@ -50,6 +50,7 @@ void AtPSA::Init()
    fEField = fPar->GetEField();
    fZk = fPar->GetZPadPlane();
    fEntTB = (Int_t)fPar->GetTBEntrance();
+   fIsTPCInverted = fPar->GetIsTPCInverted(); //[0/1]
 
    auto timeToPadPlane = fZk / (fDriftVelocity * 1e-2); //[ns]
    fTB0 = fEntTB - timeToPadPlane / fTBTime;
@@ -62,6 +63,7 @@ void AtPSA::Init()
    std::cout << " ==== Entrance TB : " << fEntTB << std::endl;
    std::cout << " ==== Pad plane TB : " << fTB0 << std::endl;
    std::cout << " ==== NumTbs : " << fNumTbs << std::endl;
+   std::cout << " ==== Is TPC inverted? : " << fIsTPCInverted << " (0 = false; 1 = true)" << std::endl;
 }
 
 void AtPSA::SetSimulatedEvent(TClonesArray *MCSimPointArray)
@@ -84,11 +86,15 @@ void AtPSA::SetThresholdLow(Int_t thresholdlow)
 
 Double_t AtPSA::CalculateZ(Double_t peakIdx)
 {
+   if (fIsTPCInverted)
+      return fZk - (fNumTbs - peakIdx) * fTBTime * fDriftVelocity / 100.;
    return (fNumTbs - peakIdx) * fTBTime * fDriftVelocity / 100.;
 }
 
 Double_t AtPSA::CalculateZGeo(Double_t peakIdx)
 {
+   if (fIsTPCInverted)
+      return (fEntTB - peakIdx) * fTBTime * fDriftVelocity / 100.;
    return fZk - (fEntTB - peakIdx) * fTBTime * fDriftVelocity / 100.;
 }
 
