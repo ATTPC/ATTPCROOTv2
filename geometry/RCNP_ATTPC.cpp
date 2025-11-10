@@ -23,13 +23,13 @@
 #include <iostream>
 
 // Name of geometry version and output file
-const TString geoVersion = "RCNP_ATTPC_600torr";
+const TString geoVersion = "RCNP_ATTPC_494_3torr";
 const TString FileName = geoVersion + ".root";
 const TString FileName1 = geoVersion + "_geomanager.root";
 
 // Names of the different used materials which are used to build the modules
 // The materials are defined in the global media.geo file
-const TString MediumGas = "ATTPCDPropane_600torr";
+const TString MediumGas = "ATTPCDPropane_494_3torr";
 const TString CylinderVolumeMedium = "steel";
 const TString MediumVacuum = "vacuum4";
 const TString MediumWindow = "aramid";
@@ -119,7 +119,7 @@ void create_materials_from_media_file()
    FairGeoMedia *geoMedia = geoFace->getMedia();
    FairGeoBuilder *geoBuild = geoLoad->getGeoBuilder();
 
-   FairGeoMedium *disobutane = geoMedia->getMedium("ATTPCDPropane_600torr");
+   FairGeoMedium *disobutane = geoMedia->getMedium("ATTPCDPropane_494_3torr");
    FairGeoMedium *steel = geoMedia->getMedium("steel");
    FairGeoMedium *vacuum4 = geoMedia->getMedium("vacuum4");
    FairGeoMedium *aramid = geoMedia->getMedium("aramid");
