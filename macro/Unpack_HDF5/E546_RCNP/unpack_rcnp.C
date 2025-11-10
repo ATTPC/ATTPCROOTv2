@@ -15,7 +15,7 @@ void unpack_rcnp(int run_num = 52){
   timer.Start();
 
   TString fileName = TString::Format("run_%04d", run_num);
-  TString parameterFile = "ATTPC.E546.par";
+  TString parameterFile = "RCNP/ATTPC.E546.par";
   TString mappath = "";
   TString filepath = "/media/aurio/Cris/E546/";
   TString fileExt = ".h5";
