@@ -18,15 +18,15 @@ void getSetupAcceptance()
 
    // ELoss model for kine_2b calculations.
    //double density = 1.4232e-3; // 500Torr
-   //double density = 1.7078e-3; // 600Torr
-   double density = 1.9924e-3; // 700Torr
+   double density = 1.7078e-3; // 600Torr
+   //double density = 1.9924e-3; // 700Torr
    std::vector<std::tuple<int, int, int>> materialComponents;
    materialComponents.push_back(std::make_tuple(12, 6, 3));
    materialComponents.push_back(std::make_tuple(2, 1, 8));
 
    //std::unique_ptr<AtTools::AtELossCATIMA> eLossModelC3D8_12Be = std::make_unique<AtTools::AtELossCATIMA>(density, "CATima_C3D8_500Torr_12Be");
-   //std::unique_ptr<AtTools::AtELossCATIMA> eLossModelC3D8_12Be = std::make_unique<AtTools::AtELossCATIMA>(density, "CATima_C3D8_600Torr_12Be");
-   std::unique_ptr<AtTools::AtELossCATIMA> eLossModelC3D8_12Be = std::make_unique<AtTools::AtELossCATIMA>(density, "CATima_C3D8_700Torr_12Be");
+   std::unique_ptr<AtTools::AtELossCATIMA> eLossModelC3D8_12Be = std::make_unique<AtTools::AtELossCATIMA>(density, "CATima_C3D8_600Torr_12Be");
+   //std::unique_ptr<AtTools::AtELossCATIMA> eLossModelC3D8_12Be = std::make_unique<AtTools::AtELossCATIMA>(density, "CATima_C3D8_700Torr_12Be");
    eLossModelC3D8_12Be->SetMaterial(materialComponents);
    eLossModelC3D8_12Be->SetProjectile(12, 4, 12.02473);
    eLossModelC3D8_12Be->SetPDGCode("1000040120");
@@ -68,8 +68,9 @@ void getSetupAcceptance()
 
    // Open the digitalization file and get the TTree.
    //TString digiFileName = TString::Format("/data/ATTPCROOTv2_results/E565/Simulation/digiFiles/output_digi_rcnp_13Be_p_%.1f_%.1f_500Torr_9mmBinning.root", ThetaMinCMS, ThetaMaxCMS);
-   //TString digiFileName = TString::Format("/data/ATTPCROOTv2_results/E565/Simulation/digiFiles/output_digi_rcnp_13Be_p_%.1f_%.1f_600Torr_9mmBinning.root", ThetaMinCMS, ThetaMaxCMS);
-   TString digiFileName = TString::Format("/data/ATTPCROOTv2_results/E565/Simulation/digiFiles/output_digi_rcnp_13Be_p_%.1f_%.1f_700Torr_9mmBinning.root", ThetaMinCMS, ThetaMaxCMS);
+   TString digiFileName = TString::Format("/data/ATTPCROOTv2_results/E565/Simulation/digiFiles/output_digi_rcnp_13Be_p_%.1f_%.1f_600Torr_9mmBinning.root", ThetaMinCMS, ThetaMaxCMS);
+   //TString digiFileName = TString::Format("/data/ATTPCROOTv2_results/E565/Simulation/digiFiles/output_digi_rcnp_13Be_p_%.1f_%.1f_700Torr_9mmBinning.root", ThetaMinCMS, ThetaMaxCMS);
+   //TString digiFileName = TString::Format("/data/ATTPCROOTv2_results/E565/Simulation/digiFiles/output_digi_rcnp_13Be_p_%.1f_%.1f_600Torr_9mmBinning_2_53MeV.root", ThetaMinCMS, ThetaMaxCMS);
    TFile *digiFile = new TFile(digiFileName, "READ");
    TTree *digiTree = (TTree *)digiFile->Get("cbmsim");
    int nDigiEvents = digiTree->GetEntries();
@@ -77,8 +78,9 @@ void getSetupAcceptance()
 
    // Open the MC file and get the TTree.
    //TString mcFileName = TString::Format("/data/ATTPCROOTv2_results/E565/Simulation/simFiles/attpcsim_13Be_p_%.1f_%.1f_500Torr.root", ThetaMinCMS, ThetaMaxCMS);
-   //TString mcFileName = TString::Format("/data/ATTPCROOTv2_results/E565/Simulation/simFiles/attpcsim_13Be_p_%.1f_%.1f_600Torr.root", ThetaMinCMS, ThetaMaxCMS);
-   TString mcFileName = TString::Format("/data/ATTPCROOTv2_results/E565/Simulation/simFiles/attpcsim_13Be_p_%.1f_%.1f_700Torr.root", ThetaMinCMS, ThetaMaxCMS);
+   TString mcFileName = TString::Format("/data/ATTPCROOTv2_results/E565/Simulation/simFiles/attpcsim_13Be_p_%.1f_%.1f_600Torr.root", ThetaMinCMS, ThetaMaxCMS);
+   //TString mcFileName = TString::Format("/data/ATTPCROOTv2_results/E565/Simulation/simFiles/attpcsim_13Be_p_%.1f_%.1f_700Torr.root", ThetaMinCMS, ThetaMaxCMS);
+   //TString mcFileName = TString::Format("/data/ATTPCROOTv2_results/E565/Simulation/simFiles/attpcsim_13Be_p_%.1f_%.1f_600Torr_2_53MeV.root", ThetaMinCMS, ThetaMaxCMS);
    TFile *mcFile = new TFile(mcFileName, "READ");
    TTree *mcTree = (TTree *)mcFile->Get("cbmsim");
    int nMcEvents = mcTree->GetEntries();
@@ -112,6 +114,7 @@ void getSetupAcceptance()
    // Number of fails.
    int nPunchThrough{};
    int nNotReconstructedELoss{};
+   int nNotSilicon{};
 
    // Current event real MC vertex.
    double mcVertexZ{0};
@@ -184,7 +187,7 @@ void getSetupAcceptance()
          histTrackKinematicsSiArray->Fill(thetaScattered, kineticEnergyScattered);
          histThetaCMSiArray->Fill(thetaCM_sim);
          histExSiArray->Fill(ex_energy_sim);
-      }
+      } else nNotSilicon++;
 
       // In any case, fill the total simulation histograms.
       histVertexZvTrackThetaLABTotalSimulation->Fill(mcVertexZ, thetaScattered);
@@ -295,10 +298,12 @@ void getSetupAcceptance()
    histVertexZvTrackThetaLABATTPC->GetXaxis()->SetTitle("Z_{vertex} [mm]");
    histVertexZvTrackThetaLABATTPC->GetYaxis()->SetTitle("#theta_{LAB} [deg]");
 
-   TGraph *kineGSStart = ReadKinematics("./kineFiles/12Be_dp_gs_21MeVu_start.txt");
+   //TGraph *kineGSStart = ReadKinematics("./kineFiles/12Be_dp_gs_21MeVu_start.txt");
+   TGraph *kineGSStart = ReadKinematics("./kineFiles/12Be_dp_2_53MeV_21MeVu_start.txt");
    //TGraph *kineGSEnd = ReadKinematics("./kineFiles/12Be_dp_gs_21MeVu_end_500torr.txt");
    //TGraph *kineGSEnd = ReadKinematics("./kineFiles/12Be_dp_gs_21MeVu_end_600torr.txt");
-   TGraph *kineGSEnd = ReadKinematics("./kineFiles/12Be_dp_gs_21MeVu_end_700torr.txt");
+   //TGraph *kineGSEnd = ReadKinematics("./kineFiles/12Be_dp_gs_21MeVu_end_700torr.txt");
+   TGraph *kineGSEnd = ReadKinematics("./kineFiles/12Be_dp_2_53MeV_21MeVu_end_600torr.txt");
 
    TCanvas *c2 = new TCanvas();
    histTrackKinematicsATTPC->Draw("zcol");
@@ -394,6 +399,7 @@ void getSetupAcceptance()
    // Print stats.
    std::cout << "Percentage of punch-through: " << double(nPunchThrough) * 2 / nDigiEvents << std::endl;
    std::cout << "Percentage of no ELoss reconstructed: " << double(nNotReconstructedELoss) * 2 / nDigiEvents << std::endl;
+   std::cout << "Percentage of no Silicon: " << double(nNotSilicon) * 2 / nDigiEvents << std::endl;
 }
 
 TGraph* ReadKinematics(TString kineFile)

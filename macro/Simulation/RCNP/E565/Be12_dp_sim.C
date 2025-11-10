@@ -10,15 +10,17 @@ void Be12_dp_sim(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
 
    // Output file name
    //TString outFile = TString::Format("./simData/attpcsim_13Be_p_%.1f_%.1f_600Torr.root", ThetaMinCMS, ThetaMaxCMS);
-   TString outFile = TString::Format("/data/ATTPCROOTv2_results/E565/Simulation/simFiles/attpcsim_13Be_p_%.1f_%.1f_500Torr.root", ThetaMinCMS, ThetaMaxCMS);
+   //TString outFile = TString::Format("/data/ATTPCROOTv2_results/E565/Simulation/simFiles/attpcsim_13Be_p_%.1f_%.1f_500Torr.root", ThetaMinCMS, ThetaMaxCMS);
    //TString outFile = TString::Format("/data/ATTPCROOTv2_results/E565/Simulation/simFiles/attpcsim_13Be_p_%.1f_%.1f_600Torr.root", ThetaMinCMS, ThetaMaxCMS);
    //TString outFile = TString::Format("/data/ATTPCROOTv2_results/E565/Simulation/simFiles/attpcsim_13Be_p_%.1f_%.1f_700Torr.root", ThetaMinCMS, ThetaMaxCMS);
+   TString outFile = TString::Format("/data/ATTPCROOTv2_results/E565/Simulation/simFiles/attpcsim_13Be_p_%.1f_%.1f_600Torr_2_53MeV.root", ThetaMinCMS, ThetaMaxCMS);
 
    // Parameter file name
    //TString parFile = TString::Format("./simData/attpcpar_13Be_p_%.1f_%.1f_600Torr.root", ThetaMinCMS, ThetaMaxCMS);
-   TString parFile = TString::Format("/data/ATTPCROOTv2_results/E565/Simulation/simFiles/attpcpar_13Be_p_%.1f_%.1f_500Torr.root", ThetaMinCMS, ThetaMaxCMS);
+   //TString parFile = TString::Format("/data/ATTPCROOTv2_results/E565/Simulation/simFiles/attpcpar_13Be_p_%.1f_%.1f_500Torr.root", ThetaMinCMS, ThetaMaxCMS);
    //TString parFile = TString::Format("/data/ATTPCROOTv2_results/E565/Simulation/simFiles/attpcpar_13Be_p_%.1f_%.1f_600Torr.root", ThetaMinCMS, ThetaMaxCMS);
    //TString parFile = TString::Format("/data/ATTPCROOTv2_results/E565/Simulation/simFiles/attpcpar_13Be_p_%.1f_%.1f_700Torr.root", ThetaMinCMS, ThetaMaxCMS);
+   TString parFile = TString::Format("/data/ATTPCROOTv2_results/E565/Simulation/simFiles/attpcpar_13Be_p_%.1f_%.1f_600Torr_2_53MeV.root", ThetaMinCMS, ThetaMaxCMS);
 
    // -----   Timer   --------------------------------------------------------
    TStopwatch timer;
@@ -45,8 +47,8 @@ void Be12_dp_sim(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
    run->AddModule(cave);
 
    FairDetector* ATTPC = new AtTpc("ATTPC", kTRUE);
-   ATTPC->SetGeometryFileName("RCNP_ATTPC_500torr.root");
-   //ATTPC->SetGeometryFileName("RCNP_ATTPC_600torr.root");
+   //ATTPC->SetGeometryFileName("RCNP_ATTPC_500torr.root");
+   ATTPC->SetGeometryFileName("RCNP_ATTPC_600torr.root");
    //ATTPC->SetGeometryFileName("RCNP_ATTPC_700torr.root");
    run->AddModule(ATTPC);
 
@@ -73,8 +75,8 @@ void Be12_dp_sim(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
 	Double_t pz = 2.392/a;  // Z-Momentum / per nucleon!!!!!!
   	Double_t BExcEner = 0.0;
    Double_t Bmass = 12.02473; //
-   Double_t NomEnergy = 60.1658; //Used to force the beam to stop within a certain energy range. 500torr
-   //Double_t NomEnergy = 74.52; //Used to force the beam to stop within a certain energy range. 600torr
+   //Double_t NomEnergy = 60.1658; //Used to force the beam to stop within a certain energy range. 500torr
+   Double_t NomEnergy = 74.52; //Used to force the beam to stop within a certain energy range. 600torr
    //Double_t NomEnergy = 89.39; //Used to force the beam to stop within a certain energy range. 700torr
 
    AtTPCIonGenerator* ionGen = new AtTPCIonGenerator("Ion",z,a,q,m,px,py,pz,BExcEner,Bmass,NomEnergy);
@@ -129,7 +131,8 @@ void Be12_dp_sim(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
    Pyp.push_back(0.0);
    Pzp.push_back(0.0);
    Mass.push_back(13.03394);
-   ExE.push_back(0.0);
+   //ExE.push_back(0.0);
+   ExE.push_back(2.53);
 
 
    // ---- Recoil -----
@@ -194,7 +197,8 @@ void Be12_dp_sim(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
    aB = 13;
    massDecayB = 13.03394;
    massTarget = 0.0;
-   exEnergy = 0.0; // NB: Set to zero for sequential decay
+   //exEnergy = 0.0; // NB: Set to zero for sequential decay
+   exEnergy = 2.53; // NB: Set to zero for sequential decay
 
    SepEne.push_back(-0.50774236); // Separation energy for the first decay
    zDecay.at(0).push_back(4);
@@ -252,9 +256,10 @@ void Be12_dp_sim(Int_t nEvents = 10000, TString mcEngine = "TGeant4")
 
   //You can export your ROOT geometry ot a separate file
   //run->CreateGeometryFile("./simData/RCNP_geo_e565.root");
-  run->CreateGeometryFile("/data/ATTPCROOTv2_results/E565/Simulation/simFiles/RCNP_geo_e565_500torr.root");
+  //run->CreateGeometryFile("/data/ATTPCROOTv2_results/E565/Simulation/simFiles/RCNP_geo_e565_500torr.root");
   //run->CreateGeometryFile("/data/ATTPCROOTv2_results/E565/Simulation/simFiles/RCNP_geo_e565_600torr.root");
   //run->CreateGeometryFile("/data/ATTPCROOTv2_results/E565/Simulation/simFiles/RCNP_geo_e565_700torr.root");
+  run->CreateGeometryFile("/data/ATTPCROOTv2_results/E565/Simulation/simFiles/RCNP_geo_e565_600torr_2_53MeV.root");
   // ------------------------------------------------------------------------
 
   // -----   Finish   -------------------------------------------------------
