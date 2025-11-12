@@ -1,23 +1,12 @@
-/*#include "TString.h"
-#include "AtEventDrawTask.h"
-#include "AtEventManager.h"
-
-#include "FairLogger.h"
-#include "FairParRootFileIo.h"
-#include "FairRunAna.h"
-*/
-
-//void run_eve(int runNum = 174, TString OutputDataFile = "./data/output.reco_display.root")
-void run_eve(int runNum = 52, TString OutputDataFile = "./run_0052_display.root")  
+void run_eve(int runNum = 1001, TString OutputDataFile = "./run_1001_display.root")
 {
-  //  TString OutputDataFile = "./run_0038_display.root";
-  TString InputDataFile = TString::Format("./decode_data/run_%04d.root", runNum);
+  TString InputDataFile = TString::Format("/data/ATTPCROOTv2_results/E565/UnpackerOutput/run_%04d_testSiUnpacker_noTraces.root", runNum);
+  //TString InputDataFile = TString::Format("/data/ATTPCROOTv2_results/E565/UnpackerOutput/run_%04d_testSiUnpacker.root", runNum);
   std::cout << "Opening: " << InputDataFile << std::endl;
 
    TString dir = getenv("VMCWORKDIR");
-   TString geoFile = "ATTPC_C4H10_57_7torr_geomanager.root";
-   //   TString mapFile = "RCNP2025.xml";
-   TString mapFile = "rcnp_map.xml";   
+   TString geoFile = "RCNP_ATTPC_494_3torr_geomanager.root";
+   TString mapFile = "rcnp_map.xml";
 
    TString InputDataPath = InputDataFile;
    TString OutputDataPath = OutputDataFile;
@@ -33,7 +22,6 @@ void run_eve(int runNum = 52, TString OutputDataFile = "./run_0052_display.root"
 
    FairRuntimeDb *rtdb = fRun->GetRuntimeDb();
    FairParRootFileIo *parIo1 = new FairParRootFileIo();
-   // parIo1->open("param.dummy.root");
    rtdb->setFirstInput(parIo1);
 
    auto fMap = std::make_shared<AtTpcMap>();
@@ -46,11 +34,14 @@ void run_eve(int runNum = 52, TString OutputDataFile = "./run_0052_display.root"
    auto tabBraggCurve = std::make_unique<AtTabBraggCurve>();
    tabBraggCurve->SetMultiHit(100);
 
+   //auto tabSiArray = std::make_unique<AtTabPad>();
+   //tabSiArray->DrawAuxADC("Si_10_1_1_0", 0, 0);
+
    eveMan->AddTab(std::move(tabMain));
    eveMan->AddTab(std::move(tabBraggCurve));
+   //eveMan->AddTab(std::move(tabSiArray));
 
    eveMan->Init();
 
    std::cout << "Finished init" << std::endl;
-   // eveMan->RunEvent(27);
 }

@@ -24,7 +24,7 @@ void AtFRIBSiUnpacker::processSiChannel(std::size_t chIndex)
    AtPadReference PadRef = {rawadc[0], rawadc[1], rawadc[2], rawadc[3]};
 
    TString pad_name = TString::Format("Si_%d_%d_%d_%d", PadRef.cobo, PadRef.asad, PadRef.aget, PadRef.ch);
-   LOG(debug) << "Processing Si channel: " << pad_name;
+   LOG(info) << "Processing Si channel: " << pad_name;
 
    auto pad = fRawEvent->AddAuxPad(pad_name.Data()).first;
    setAdc(pad, rawadc);

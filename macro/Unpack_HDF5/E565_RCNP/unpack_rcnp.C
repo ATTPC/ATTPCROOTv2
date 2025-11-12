@@ -7,7 +7,7 @@ bool reduceFunc(AtRawEvent *evt){
   return (evt->GetNumPads() > 0) && evt->IsGood();
 }
 
-void unpack_rcnp(int run_num = 1){
+void unpack_rcnp(int run_num = 1001){
   // Load the library for unpacking and reconstruction
   gSystem->Load("libAtRecoMediumnstruction.so");
 
@@ -15,24 +15,25 @@ void unpack_rcnp(int run_num = 1){
   timer.Start();
 
   TString fileName = TString::Format("run_%04d", run_num);
-  TString parameterFile = "ATTPC.E565.par";
+  TString parameterFile = "RCNP/ATTPC.E565.par";
   TString mappath = "";
-  TString filepath = "/mnt/merger/E565/h5/";
+  //TString filepath = "/mnt/merger/E565/h5/";
+  TString filepath = "/data/tempMergedData/E565/";
   TString fileExt = ".h5";
   TString outputpath = "/data/ATTPCROOTv2_results/E565/UnpackerOutput/";
 
   TString inputFile = filepath + fileName + fileExt;
-  TString scriptfile = "RCNP2025.xml";
+  TString scriptfile = "rcnp_map.xml";
   TString dir = getenv("VMCWORKDIR");
   TString mapDir = dir + "/scripts/" + scriptfile;
   TString scriptdir = dir + "/scripts/" + scriptfile;
   TString dataDir = dir + "/macro/data/";
   TString geomDir = dir + "/geometry/";
   gSystem->Setenv("GEOMPATH", geomDir.Data());
-  TString outputFile = outputpath + fileName + ".root";
+  TString outputFile = outputpath + fileName + "_testSiUnpacker_noTraces.root";
   TString loggerFile = dataDir + "ATTPCLog.log";
   TString digiParFile = dir + "/parameters/" + parameterFile;
-  TString geoManFile = dir + "/geometry/ATTPC_C4H10_57_7torr.root";
+  TString geoManFile = dir + "/geometry/RCNP_ATTPC_494_3torr.root";
 
   // Specific paths for three LUT for electric field correction
   TString zlutFile = dir + "/resources/corrections/a1954/zLUT.txt";
@@ -59,13 +60,14 @@ void unpack_rcnp(int run_num = 1){
   fAtMapPtr->GeneratePadPlane();
 
   //auto unpacker = std::make_unique<AtHDFUnpacker>(fAtMapPtr);
-  auto unpacker = std::make_unique<AtFRIBLinkedHDFUnpacker>(fAtMapPtr);
+  //auto unpacker = std::make_unique<AtFRIBLinkedHDFUnpacker>(fAtMapPtr);
+  auto unpacker = std::make_unique<AtFRIBSiUnpacker>(fAtMapPtr);
   unpacker->SetInputFileName(inputFile.Data());
   unpacker->SetNumberTimestamps(2);
   unpacker->SetBaseLineSubtraction(true);
 
   auto unpackTask = new AtUnpackTask(std::move(unpacker));
-  unpackTask->SetPersistence(true); // true
+  unpackTask->SetPersistence(false); // true
 
   AtFilterSubtraction *filter = new AtFilterSubtraction(fAtMapPtr);
   filter->SetThreshold(50);
@@ -75,7 +77,7 @@ void unpack_rcnp(int run_num = 1){
   filterTask->SetPersistence(false);
   filterTask->SetFilterAux(false);
 
-  auto threshold = 80;
+  auto threshold = 30;
 
   // auto psa = new AtPSASimple2();
   auto psa = new AtPSAMax();
@@ -96,7 +98,7 @@ void unpack_rcnp(int run_num = 1){
   AtRansacTask *ransacTask = new AtRansacTask();
   ransacTask->SetPersistence(kTRUE);
   ransacTask->SetVerbose(kTRUE);
-  ransacTask->SetDistanceThreshold(15.0); //12
+  ransacTask->SetDistanceThreshold(20.0); //12
   ransacTask->SetMinHitsLine(30); //10
   // in AtRansacTask pattern tyepe set to line: auto patternType = AtPatternType::kLine;
   //1=Homemade Ransac(default); 2=Homemade Mlesac; 3=Homemade Lmeds; //4
@@ -109,8 +111,9 @@ void unpack_rcnp(int run_num = 1){
   //Create the AtPatternModification task.
   std::vector<std::unique_ptr<AtPatternModification>> patternModifications;
   auto braggCurveFinder = std::make_unique<AtBraggCurveFinder>();
-  braggCurveFinder->SetBinSize(3.0);
+  braggCurveFinder->SetBinSize(6.0);
   braggCurveFinder->SetNumSmoothingSteps(200);
+  braggCurveFinder->SetTSSemiWidth(15); // Looking at the traces width in the run_eve macro.
   patternModifications.push_back(std::move(braggCurveFinder));
   AtPatternModificationTask *patternModTask = new AtPatternModificationTask(std::move(patternModifications));
   //  patternModTask->SetOutputBranch("AtPatternEvent");
@@ -135,8 +138,8 @@ void unpack_rcnp(int run_num = 1){
    eLossModels.push_back(std::move(eLossModelC3D8_12Be));
 
    std::unique_ptr<EventFit::AtBraggCurveFitter> braggCurveFitter = std::make_unique<EventFit::AtBraggCurveFitter>(std::move(eLossModels));
-   braggCurveFitter->SetEstimatedAmplitudeFactor(6000);
-   braggCurveFitter->SetEstimatedAmplitudeFactorPrecision(1000);
+   braggCurveFitter->SetEstimatedAmplitudeFactor(50000);
+   braggCurveFitter->SetEstimatedAmplitudeFactorPrecision(8000);
    braggCurveFitter->SetDistanceThreshold(10);
    braggCurveFitter->Init();
 
