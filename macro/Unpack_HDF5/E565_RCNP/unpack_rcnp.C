@@ -20,7 +20,7 @@ void unpack_rcnp(int run_num = 1001){
   //TString filepath = "/mnt/merger/E565/h5/";
   TString filepath = "/data/tempMergedData/E565/";
   TString fileExt = ".h5";
-  TString outputpath = "/data/ATTPCROOTv2_results/E565/UnpackerOutput/";
+  TString outputpath = "/data/ATTPCROOTv2_results/E565/UnpackerOutput/reUnpack/";
 
   TString inputFile = filepath + fileName + fileExt;
   TString scriptfile = "rcnp_map.xml";
@@ -30,7 +30,7 @@ void unpack_rcnp(int run_num = 1001){
   TString dataDir = dir + "/macro/data/";
   TString geomDir = dir + "/geometry/";
   gSystem->Setenv("GEOMPATH", geomDir.Data());
-  TString outputFile = outputpath + fileName + "_testSiUnpacker_noTraces.root";
+  TString outputFile = outputpath + fileName + ".root";
   TString loggerFile = dataDir + "ATTPCLog.log";
   TString digiParFile = dir + "/parameters/" + parameterFile;
   TString geoManFile = dir + "/geometry/RCNP_ATTPC_494_3torr.root";
@@ -69,6 +69,13 @@ void unpack_rcnp(int run_num = 1001){
   auto unpackTask = new AtUnpackTask(std::move(unpacker));
   unpackTask->SetPersistence(false); // true
 
+  /*auto thresholdSi = 50;
+  auto psaSi = std::make_unique<AtPSAMax>();
+  psaSi->SetThreshold(thresholdSi);
+
+  AtSiTask *siTask = new AtSiTask(std::move(psaSi));
+  siTask->SetPersistence(kTRUE);*/
+
   AtFilterSubtraction *filter = new AtFilterSubtraction(fAtMapPtr);
   filter->SetThreshold(50);
   filter->SetIsGood(false);
@@ -98,16 +105,17 @@ void unpack_rcnp(int run_num = 1001){
   AtRansacTask *ransacTask = new AtRansacTask();
   ransacTask->SetPersistence(kTRUE);
   ransacTask->SetVerbose(kTRUE);
-  ransacTask->SetDistanceThreshold(20.0); //12
+  ransacTask->SetDistanceThreshold(12.0); //12
   ransacTask->SetMinHitsLine(30); //10
   // in AtRansacTask pattern tyepe set to line: auto patternType = AtPatternType::kLine;
   //1=Homemade Ransac(default); 2=Homemade Mlesac; 3=Homemade Lmeds; //4
   ransacTask->SetAlgorithm(1);
   // SampleMethod{kUniform=0,kChargeWeighted=1,kGaussian=2, kWeightGaussian=3, kWeightedY=4};//2
   ransacTask->SetRanSamMode(5);
-  ransacTask->SetChargeThreshold(1); //150
+  ransacTask->SetChargeThreshold(20); //150
   // ransacTask->SetNumItera(500);
 
+/*
   //Create the AtPatternModification task.
   std::vector<std::unique_ptr<AtPatternModification>> patternModifications;
   auto braggCurveFinder = std::make_unique<AtBraggCurveFinder>();
@@ -146,15 +154,16 @@ void unpack_rcnp(int run_num = 1001){
    AtFitterTask *fitterTask = new AtFitterTask(std::move(braggCurveFitter));
    fitterTask->SetPersistence(kTRUE);
    fitterTask->SetInputBranch("AtPatternEventModified");
-   fitterTask->SetFitMetadataBranch("AtFitMetadata");
+   fitterTask->SetFitMetadataBranch("AtFitMetadata");*/
 
   run->AddTask(unpackTask);
+  //run->AddTask(siTask);
   // run->AddTask(filterTask);
   run->AddTask(psaTask);
   run->AddTask(SCTask);
   run->AddTask(ransacTask);
-  run->AddTask(patternModTask);
-  run->AddTask(fitterTask);
+  //run->AddTask(patternModTask);
+  //run->AddTask(fitterTask);
 
   std::cout << "***** Starting Init ******" << std::endl;
   run->Init();
@@ -179,3 +188,4 @@ void unpack_rcnp(int run_num = 1001){
   cout << endl;
   // ------------------------------------------------------------------------
 }
+
