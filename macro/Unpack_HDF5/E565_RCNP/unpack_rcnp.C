@@ -20,7 +20,7 @@ void unpack_rcnp(int run_num = 1001){
   //TString filepath = "/mnt/merger/E565/h5/";
   TString filepath = "/data/tempMergedData/E565/";
   TString fileExt = ".h5";
-  TString outputpath = "/data/ATTPCROOTv2_results/E565/UnpackerOutput/reUnpack/";
+  TString outputpath = "/data/ATTPCROOTv2_results/E565/UnpackerOutput/reUnpackWithSiAna/";
 
   TString inputFile = filepath + fileName + fileExt;
   TString scriptfile = "rcnp_map.xml";
@@ -69,12 +69,12 @@ void unpack_rcnp(int run_num = 1001){
   auto unpackTask = new AtUnpackTask(std::move(unpacker));
   unpackTask->SetPersistence(false); // true
 
-  /*auto thresholdSi = 50;
-  auto psaSi = std::make_unique<AtPSAMax>();
+  auto thresholdSi = 50;
+  auto psaSi = std::make_unique<AtPSASi>();
   psaSi->SetThreshold(thresholdSi);
 
   AtSiTask *siTask = new AtSiTask(std::move(psaSi));
-  siTask->SetPersistence(kTRUE);*/
+  siTask->SetPersistence(kTRUE);
 
   AtFilterSubtraction *filter = new AtFilterSubtraction(fAtMapPtr);
   filter->SetThreshold(50);
@@ -157,7 +157,7 @@ void unpack_rcnp(int run_num = 1001){
    fitterTask->SetFitMetadataBranch("AtFitMetadata");*/
 
   run->AddTask(unpackTask);
-  //run->AddTask(siTask);
+  run->AddTask(siTask);
   // run->AddTask(filterTask);
   run->AddTask(psaTask);
   run->AddTask(SCTask);

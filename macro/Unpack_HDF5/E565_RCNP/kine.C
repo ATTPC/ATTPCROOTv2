@@ -29,16 +29,31 @@ void kine()
    int numTracksPerVtx = 1;
    AtFindVertex findVtx(lineDistThreshold);
 
+   // Punch through filter.
+   double punchThroughThreshold = 20;
+   AtTools::AtPunchThroughChecker punchThroughChecker = AtTools::AtPunchThroughChecker();
+   punchThroughChecker.SetDistanceThreshold(punchThroughThreshold);
+
    // ELoss model for kinetic energy estimations.
    double density = 1.4232e-3; // 500Torr
    std::vector<std::tuple<int, int, int>> materialComponents;
    materialComponents.push_back(std::make_tuple(12, 6, 3));
    materialComponents.push_back(std::make_tuple(2, 1, 8));
 
+   std::unique_ptr<AtTools::AtELossCATIMA> eLossModelC3D8_p = std::make_unique<AtTools::AtELossCATIMA>(density, "CATima_C3D8_500Torr_p");
+   eLossModelC3D8_p->SetMaterial(materialComponents);
+   eLossModelC3D8_p->SetProjectile(1, 1, 1.007825031898);
+   eLossModelC3D8_p->SetPDGCode("1000010010");
+
    std::unique_ptr<AtTools::AtELossCATIMA> eLossModelC3D8_d = std::make_unique<AtTools::AtELossCATIMA>(density, "CATima_C3D8_500Torr_d");
    eLossModelC3D8_d->SetMaterial(materialComponents);
    eLossModelC3D8_d->SetProjectile(2, 1, 2.0135532);
    eLossModelC3D8_d->SetPDGCode("1000020010");
+
+   std::unique_ptr<AtTools::AtELossCATIMA> eLossModelC3D8_3He = std::make_unique<AtTools::AtELossCATIMA>(density, "CATima_C3D8_500Torr_3He");
+   eLossModelC3D8_3He->SetMaterial(materialComponents);
+   eLossModelC3D8_3He->SetProjectile(3, 2, 3.01602932197);
+   eLossModelC3D8_3He->SetPDGCode("1000020010");
 
    // Cut files.
    TFile *cutKineFile = new TFile("./cutFiles/cutKine.root", "READ");
@@ -52,7 +67,14 @@ void kine()
    TCutG *cutPIDC = (TCutG *)cutPIDFile->Get("cutPIDC");
    TCutG *cutPIDD = (TCutG *)cutPIDFile->Get("cutPIDD");
    TCutG *cutPIDE = (TCutG *)cutPIDFile->Get("cutPIDE");
+   TCutG *cutPIDF = (TCutG *)cutPIDFile->Get("cutPIDF");
+   TCutG *cutPIDG = (TCutG *)cutPIDFile->Get("cutPIDG");
    cutPIDFile->Close();
+
+   TFile *cutSiPIDFile = new TFile("./cutFiles/SiPID.root", "READ");
+   TCutG *cutSi12Be = (TCutG *)cutSiPIDFile->Get("cutSiPID12Be");
+   TCutG *cutSiALi = (TCutG *)cutSiPIDFile->Get("cutSiPIDALi");
+   cutSiPIDFile->Close();
 
    // Histogram definitions.
    TH2F *histRangeVThetaLAB = new TH2F("histRangeVThetaLAB", "histRangeVThetaLAB", 180, 0, 180, 1030, 0, 1030);
@@ -62,27 +84,33 @@ void kine()
    TH2F *histEstimatedKinEVThetaLABC = new TH2F("histEstimatedKinEVThetaLABC", "histEstimatedKinEVThetaLABC", 180, 0, 180, 500, 0, 20);
    TH2F *histEstimatedKinEVThetaLABD = new TH2F("histEstimatedKinEVThetaLABD", "histEstimatedKinEVThetaLABD", 180, 0, 180, 500, 0, 20);
    TH2F *histEstimatedKinEVThetaLABE = new TH2F("histEstimatedKinEVThetaLABE", "histEstimatedKinEVThetaLABE", 180, 0, 180, 500, 0, 20);
-   TH2F *histdEdxVRange = new TH2F("histdEdxVRange", "histdEdxVRange", 515, 0, 1030, 1600, 0, 8000);
+   TH2F *histEstimatedKinEVThetaLABF = new TH2F("histEstimatedKinEVThetaLABF", "histEstimatedKinEVThetaLABF", 180, 0, 180, 500, 0, 20);
+   TH2F *histEstimatedKinEVThetaLABG = new TH2F("histEstimatedKinEVThetaLABG", "histEstimatedKinEVThetaLABG", 180, 0, 180, 500, 0, 20);
+   TH2F *histdEdxVTotalRange = new TH2F("histdEdxVTotalRange", "histdEdxVTotalRange", 515, 0, 1030, 1600, 0, 8000);
+   TH2F *histESmallVTotalRange = new TH2F("histESmallVTotalRange", "histESmallVTotalRange", 515, 0, 1030, 1600, 0, 160000);
+   TH2F *histEBigVBigRange = new TH2F("histEBigVBigRange", "histEBigVBigRange", 515, 0, 1030, 1600, 0, 160000);
+
+   TH2F *histSiPIDTraceIntegral = new TH2F("histSiPIDTraceIntegral", "histSiPIDTraceIntegral", 4000, 0, 90000, 4000, 0, 140000);
+   TH2F *histSiPIDADCMax = new TH2F("histSiPIDADCMax", "histSiPIDADCMax", 4000, 0, 4000, 4000, 0, 4000);
+   TH1F *histSiMultiplicityFront1 = new TH1F("histSiMultiplicityFront1", "histSiMultiplicityFront1", 5, 0, 5);
+   TH1F *histSiMultiplicityFront2 = new TH1F("histSiMultiplicityFront2", "histSiMultiplicityFront2", 5, 0, 5);
 
    TH1F *histBraggChi2 = new TH1F("histBraggChi2", "histBraggChi2", 1000, 0, 10000);
    TH2F *histBraggKinematicsATTPC = new TH2F("histBraggKinematicsATTPC", "histBraggKinematicsATTPC", 360, 0, 180, 200, 0, 20);
 
-   std::vector runNums = {1001, 1002, 1003, 1004, 1005, 1006,
-                          1008, 1009, 1010,
-                          1016, 1017, 1018,
-                          1024, 1025, 1026, 1027, 1028, 1029, 1030, 1031, 1032, 1033,
-                          1035, 1036, 1037, 1038, 1039, 1040,
-                          1042, 1043, 1044,     1046,      1050, 1051,
-                          1056, 1057, 1058, 1059, 1060};
-   //std::vector runNums = {1050, 1051, 1056, 1057, 1058, 1059, 1060};
+   // Only events with good processed Si data in them.
+   std::vector runNums = {1024, 1025, 1027, 1028, 1029, 1030, 1031, 1032, 1033,
+                          1035, 1036, 1037, 1038, 1040,
+                          1042, 1043, 1044, 1045, 1046, 1047, 1048, 1049, 1050, 1051,
+                          1056, 1057, 1058, 1059, 1060,
+                          1072, 1073,
+                          1077, 1076, 1077, 1078, 1079, 1080, 1081, 1082};
 
    int numKineBProton{};
    int numKineAElastic{};
-
    for (int runNum: runNums) {
       // Open the digitalization file and get the TTree.
-      //TString unpackFileName = TString::Format("/data/ATTPCROOTv2_results/E565/UnpackerOutput/here/run_%04d.root", runNum);
-      TString unpackFileName = TString::Format("/data/ATTPCROOTv2_results/E565/UnpackerOutput/reUnpack/run_%04d.root", runNum);
+      TString unpackFileName = TString::Format("/data/ATTPCROOTv2_results/E565/UnpackerOutput/reUnpackWithSiAna/run_%04d.root", runNum);
       TFile *unpackFile = new TFile(unpackFileName, "READ");
       TTree *unpackTree = (TTree *)unpackFile->Get("cbmsim");
       int nUnpackEvents = unpackTree->GetEntries();
@@ -90,12 +118,41 @@ void kine()
 
       // Creare the TTreeReader to read the AtTrackingEvents and simulation.
       TTreeReader unpackReader("cbmsim", unpackFile);
+      TTreeReaderValue<TClonesArray> siArray(unpackReader, "AtSiEvent");
       TTreeReaderValue<TClonesArray> patternArray(unpackReader, "AtPatternEvent");
       //TTreeReaderValue<TClonesArray> trackingArray(unpackReader, "AtTrackingEvent");
 
       // Loop over events.
       for (int i = 0; i < nUnpackEvents; i++) {
          unpackReader.Next();
+
+         // Check the Si data first.
+         AtSiEvent *siEvent = (AtSiEvent *)siArray->At(0);
+
+         // VERY IMPORTANT, THE ASSIGNMENT WAS INVERTED ON THE ATSITASK FROM RUN 1024 TO RUN 1082!
+         // IT IS FIXED NOW, SO IF YOU UNPACK NEW RUNS, THEY WOULD HAVE INVERTED ASSIGNMENTS
+         // AS TO THE PREVIOUS ONES. I RECOMMEND RE-UNPACKING THE OLD RUNS AND THEN FLIPPING
+         // THIS ASSIGNMENT FOR ALL RUNS.
+         Int_t multiplicityFront1 = siEvent->GetMultiplicityFront2();
+         Int_t multiplicityFront2 = siEvent->GetMultiplicityFront1();
+
+         histSiMultiplicityFront1->Fill(multiplicityFront1);
+         histSiMultiplicityFront2->Fill(multiplicityFront2);
+
+         if (multiplicityFront1 != 1 || multiplicityFront2 != 1)
+            continue;
+
+         Double_t maxADCFront1 = siEvent->GetADCMaxFront2(0);
+         Double_t maxADCFront2 = siEvent->GetADCMaxFront1(0);
+
+         Double_t EFront1 = siEvent->GetEFront2(0);
+         Double_t EFront2 = siEvent->GetEFront1(0);
+
+         histSiPIDTraceIntegral->Fill(EFront2, EFront1);
+         histSiPIDADCMax->Fill(maxADCFront2, maxADCFront1);
+
+         if (!cutSi12Be->IsInside(maxADCFront2, maxADCFront1)) continue;
+         //if (!cutSiALi->IsInside(maxADCFront2, maxADCFront1)) continue;
 
          // First, we obtain some rough kinematics just by using the AtPatternEvent.
          AtPatternEvent *patternEvent = (AtPatternEvent *)patternArray->At(0);
@@ -130,6 +187,9 @@ void kine()
             if (!foundVertex)
                continue;*/
 
+            bool isPunchThrough = punchThroughChecker.IsPunchThrough(&track);
+            if (isPunchThrough) continue;
+
             auto *pattern = track.GetPattern();
 
             auto firstPoint = track.GetFirstPoint();
@@ -140,25 +200,41 @@ void kine()
 
             //if (trackThetaLAB < 100) continue;
 
-            double estimatedKinE{0.1};
-            while (eLossModelC3D8_d->GetRange(estimatedKinE) < roughRangeEstimation)
-               estimatedKinE += 0.01;
-
-            double totalCharge{};
+            double smallPadCharge{};
+            double bigPadCharge{};
             auto braggCurvePairs = track.GetBraggCurveValues();
             auto &hits = track.GetHitArray();
             double rangeInSmallPads{};
 	         for (auto &hit: hits) {
                int padNum = hit->GetPadNum();
                int sizeID = map->GetPadSize(padNum);
-               if (sizeID == 1)
+               if (sizeID == 1) {
+                  bigPadCharge += hit->GetCharge();
                   continue;
-               totalCharge += hit->GetCharge();
+               }
+               smallPadCharge += hit->GetCharge();
                double currentRangeInSmallPads = pattern->DistanceAlongPattern(hit->GetPosition(), firstPoint);
                if (currentRangeInSmallPads > rangeInSmallPads)
                   rangeInSmallPads = currentRangeInSmallPads;
             }
-            double dEdx = totalCharge / rangeInSmallPads;
+            double dEdx = smallPadCharge / rangeInSmallPads;
+
+            double rangeInBigPads = roughRangeEstimation - rangeInSmallPads;
+            bool reachedBigPads = true;
+            if (rangeInBigPads / roughRangeEstimation < 0.05)
+               reachedBigPads = false;
+
+            double estimatedKinE{0.1};
+            if (cutPIDF->IsInside(roughRangeEstimation, dEdx) || cutPIDG->IsInside(roughRangeEstimation, dEdx)) {
+               while (eLossModelC3D8_3He->GetRange(estimatedKinE) < roughRangeEstimation)
+                  estimatedKinE += 0.01;
+            } else if (cutPIDB->IsInside(roughRangeEstimation, dEdx)) {
+               while (eLossModelC3D8_p->GetRange(estimatedKinE) < roughRangeEstimation)
+                  estimatedKinE += 0.01;
+            } else {
+               while (eLossModelC3D8_d->GetRange(estimatedKinE) < roughRangeEstimation)
+                  estimatedKinE += 0.01;
+            }
 
             //if (!cutElastic->IsInside(trackThetaLAB, roughRangeEstimation)) continue;
             //if (cutPseudoProton->IsInside(roughRangeEstimation, dEdx)) continue;
@@ -166,8 +242,13 @@ void kine()
             //if (totalCharge > 50000) continue;
 
             histRangeVThetaLAB->Fill(trackThetaLAB, roughRangeEstimation);
-            histdEdxVRange->Fill(roughRangeEstimation, dEdx);
+            histdEdxVTotalRange->Fill(roughRangeEstimation, dEdx);
             histEstimatedKinEVThetaLABTotal->Fill(trackThetaLAB, estimatedKinE);
+
+            if (!reachedBigPads)
+               histESmallVTotalRange->Fill(roughRangeEstimation, smallPadCharge);
+            else
+               histEBigVBigRange->Fill(rangeInBigPads, bigPadCharge);
 
             if (cutPIDA->IsInside(roughRangeEstimation, dEdx)) {
                histEstimatedKinEVThetaLABA->Fill(trackThetaLAB, estimatedKinE);
@@ -189,6 +270,12 @@ void kine()
 
             if (cutPIDE->IsInside(roughRangeEstimation, dEdx))
                histEstimatedKinEVThetaLABE->Fill(trackThetaLAB, estimatedKinE);
+
+            if (cutPIDF->IsInside(roughRangeEstimation, dEdx))
+               histEstimatedKinEVThetaLABF->Fill(trackThetaLAB, estimatedKinE);
+
+            if (cutPIDG->IsInside(roughRangeEstimation, dEdx))
+               histEstimatedKinEVThetaLABG->Fill(trackThetaLAB, estimatedKinE);
 
          }
 /*
@@ -238,9 +325,12 @@ void kine()
    }
 
    // Kinematic lines.
+   TGraph *kine_pp = ReadKinematics("./12Be_pp_gs.txt");
    TGraph *kine_dd = ReadKinematics("./12Be_dd_gs.txt");
    TGraph *kine_iso_dp = ReadKinematics("./12Beiso_dp_gs.txt");
    TGraph *kine_dp = ReadKinematics("./12Be_dp_gs.txt");
+   TGraph *kine_d3He = ReadKinematics("./12Be_d3He_gs.txt");
+   TGraph *kine_d4He = ReadKinematics("./12Be_d4He_gs.txt");
    TGraph *kine_12C12C = ReadKinematics("./12Be_12C12C_gs.txt");
 
    // Draw histograms in TCanvas.
@@ -270,10 +360,10 @@ void kine()
 
    TCanvas *c4 = new TCanvas();
    histEstimatedKinEVThetaLABB->Draw("zcol");
+   kine_pp->Draw("same");
    kine_dd->Draw("same");
    kine_dp->Draw("same");
    kine_iso_dp->Draw("same");
-   kine_12C12C->Draw("same");
    cutKineBProton->Draw("same");
    histEstimatedKinEVThetaLABB->GetXaxis()->SetTitle("#theta_{LAB} [deg]");
    histEstimatedKinEVThetaLABB->GetYaxis()->SetTitle("roughKinE [MeV]");
@@ -306,25 +396,58 @@ void kine()
    histEstimatedKinEVThetaLABE->GetYaxis()->SetTitle("roughKinE [MeV]");
 
    TCanvas *c8 = new TCanvas();
-   histdEdxVRange->Draw("zcol");
+   histEstimatedKinEVThetaLABF->Draw("zcol");
+   kine_d3He->Draw("same");
+   kine_d4He->Draw("same");
+   histEstimatedKinEVThetaLABF->GetXaxis()->SetTitle("#theta_{LAB} [deg]");
+   histEstimatedKinEVThetaLABF->GetYaxis()->SetTitle("roughKinE [MeV]");
+
+   TCanvas *c9 = new TCanvas();
+   histEstimatedKinEVThetaLABG->Draw("zcol");
+   kine_d3He->Draw("same");
+   kine_d4He->Draw("same");
+   histEstimatedKinEVThetaLABG->GetXaxis()->SetTitle("#theta_{LAB} [deg]");
+   histEstimatedKinEVThetaLABG->GetYaxis()->SetTitle("roughKinE [MeV]");
+
+   TCanvas *c10 = new TCanvas();
+   histdEdxVTotalRange->Draw("zcol");
    cutPIDA->Draw("same");
    cutPIDB->Draw("same");
    cutPIDC->Draw("same");
    cutPIDD->Draw("same");
    cutPIDE->Draw("same");
-   histdEdxVRange->GetXaxis()->SetTitle("roughRange [mm]");
-   histdEdxVRange->GetYaxis()->SetTitle("#frac{dE}{dx} [ADC/mm]");
+   cutPIDF->Draw("same");
+   cutPIDG->Draw("same");
+   histdEdxVTotalRange->GetXaxis()->SetTitle("roughRange [mm]");
+   histdEdxVTotalRange->GetYaxis()->SetTitle("#frac{dE}{dx} [ADC/mm]");
 
-   TCanvas *c9 = new TCanvas();
-   histBraggKinematicsATTPC->Draw("zcol");
-   kine_dd->Draw("same");
-   kine_dp->Draw("same");
-   histBraggKinematicsATTPC->GetXaxis()->SetTitle("#theta_{LAB} [deg]");
-   histBraggKinematicsATTPC->GetYaxis()->SetTitle("BraggKinE [MeV]");
+   TCanvas *c11 = new TCanvas();
+   histESmallVTotalRange->Draw("zcol");
+   histESmallVTotalRange->GetXaxis()->SetTitle("smallRange [mm]");
+   histESmallVTotalRange->GetYaxis()->SetTitle("E^{small}_{Loss} [ADC]");
 
-   TCanvas *c10 = new TCanvas();
-   histBraggChi2->Draw();
-   histBraggChi2->GetXaxis()->SetTitle("#chi^{2}");
+   TCanvas *c12 = new TCanvas();
+   histEBigVBigRange->Draw("zcol");
+   histEBigVBigRange->GetXaxis()->SetTitle("bigRange [mm]");
+   histEBigVBigRange->GetYaxis()->SetTitle("E^{big}_{Loss} [ADC]");
+
+   TCanvas *c13 = new TCanvas();
+   histSiPIDTraceIntegral->Draw("zcol");
+   cutSi12Be->Draw("same");
+   histSiPIDTraceIntegral->GetXaxis()->SetTitle("E2 [ADC]");
+   histSiPIDTraceIntegral->GetYaxis()->SetTitle("E1 [ADC]");
+
+   TCanvas *c14 = new TCanvas();
+   histSiPIDADCMax->Draw("zcol");
+   cutSi12Be->Draw("same");
+   histSiPIDADCMax->GetXaxis()->SetTitle("ADC^{max}_{2} [ADC]");
+   histSiPIDADCMax->GetYaxis()->SetTitle("ADC^{max}_{1} [ADC]");
+
+   TCanvas *c15 = new TCanvas();
+   histSiMultiplicityFront1->Draw();
+
+   TCanvas *c16 = new TCanvas();
+   histSiMultiplicityFront2->Draw();
 
    std::cout << "Number of events in elastic region of kinematics A is " << numKineAElastic << "." <<std::endl;
    std::cout << "Number of events in proton region of kinematics B is " << numKineBProton << "." <<std::endl;
