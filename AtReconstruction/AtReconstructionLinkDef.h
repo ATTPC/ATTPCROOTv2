@@ -24,6 +24,7 @@
 #pragma link C++ class AtPSADeconvFit - !;
 #pragma link C++ class AtPSAIterDeconv - !;
 #pragma link C++ class AtPSAComposite - !;
+#pragma link C++ class AtPSASi + ;
 
 #pragma link C++ nestedclass;
 #pragma link C++ nestedtypedef;
@@ -82,5 +83,6 @@
 #pragma link C++ class AtCopyTreeTask + ;
 #pragma link C++ class AtLinkDAQTask + ;
 #pragma link C++ class AtCopyAuxTreeTask + ;
+#pragma link C++ class AtSiTask - !;
 
 #endif

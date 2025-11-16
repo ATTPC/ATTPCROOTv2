@@ -56,6 +56,7 @@ set(SRCS
   AtPulseAnalyzer/AtPSADeconvFit.cxx
   AtPulseAnalyzer/AtPSAIterDeconv.cxx
   AtPulseAnalyzer/AtPSAComposite.cxx
+  AtPulseAnalyzer/AtPSASi.cxx
 
   AtFilter/AtFilter.cxx
   AtFilter/AtFilterSubtraction.cxx
@@ -78,6 +79,8 @@ set(SRCS
   AtHDF5WriteTask.cxx
   AtMacroTask.cxx
   AtCopyAuxTreeTask.cxx
+
+  AtSiTask.cxx
 
   AtPatternRecognition/AtPRA.cxx
   AtPatternRecognition/AtSampleConsensus.cxx
