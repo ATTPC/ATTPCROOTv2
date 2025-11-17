@@ -84,5 +84,6 @@
 #pragma link C++ class AtLinkDAQTask + ;
 #pragma link C++ class AtCopyAuxTreeTask + ;
 #pragma link C++ class AtSiTask - !;
+#pragma link C++ class AtGaggTask - !;
 
 #endif

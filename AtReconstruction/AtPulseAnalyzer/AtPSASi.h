@@ -2,6 +2,7 @@
 #define AtPSASI_H
 
 #include "AtPSA.h"
+#include "AtGenericTrace.h"
 
 #include <Rtypes.h> // for Bool_t, THashConsistencyHolder, ClassDefOverride
 
@@ -28,6 +29,7 @@ private:
 public:
    virtual HitVector AnalyzePad(AtPad *pad) override;
    std::unique_ptr<AtPSA> Clone() override { return std::make_unique<AtPSASi>(*this); }
+   virtual HitVector AnalyzeGenTrace(AtGenericTrace *genTrace);
 
    void SetTimeCorrection(Bool_t value) { fIsTimeCorr = value; }
    void SetPositivePolarity(Bool_t value) { fPositivePolarity = value; }

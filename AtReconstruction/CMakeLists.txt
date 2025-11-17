@@ -81,6 +81,7 @@ set(SRCS
   AtCopyAuxTreeTask.cxx
 
   AtSiTask.cxx
+  AtGaggTask.cxx
 
   AtPatternRecognition/AtPRA.cxx
   AtPatternRecognition/AtSampleConsensus.cxx

@@ -25,7 +25,7 @@ class TMemberInspector;
  * @defgroup PSA
  */
 class AtPSA {
-private:
+protected:
    // Access in PSA methods through getThreshold()
    Int_t fThreshold{-1};    ///< threshold of ADC value
    Int_t fThresholdlow{-1}; ///< threshold for Central pads

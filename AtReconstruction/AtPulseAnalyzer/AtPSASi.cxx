@@ -32,7 +32,7 @@ AtPSASi::HitVector AtPSASi::AnalyzePad(AtPad *pad)
    auto maxAdcIt = std::max_element(floatADC.begin() + 20, floatADC.end() - 12);
    Int_t maxAdcIdx = std::distance(floatADC.begin(), maxAdcIt);
 
-   if (!shouldSaveHit(*maxAdcIt, getThreshold(pad->GetSizeID()), maxAdcIdx))
+   if (!shouldSaveHit(*maxAdcIt, fThreshold, maxAdcIdx))
       return {};
 
    // Calculation of the mean value of the peak time by interpolating the pulse
@@ -81,6 +81,38 @@ Double_t AtPSASi::getTBCorr(AtPad::trace &adc, int maxAdcIdx)
          tbAvg += adc[tb] / qTot * (tb - tbAvg);
       }
    return tbAvg;
+}
+
+AtPSASi::HitVector AtPSASi::AnalyzeGenTrace(AtGenericTrace *genTrace)
+{
+   XYZPoint pos(0, 0, 0);
+
+   std::array<Double_t, 512> floatADC;
+   std::vector<Double_t> floatADCVector = genTrace->GetADC();
+   for(int i=0; i<512; i++) 
+	   floatADC[i] = floatADCVector[i];
+   auto maxAdcIt = std::max_element(floatADC.begin() + 20, floatADC.end() - 12);
+   Int_t maxAdcIdx = std::distance(floatADC.begin(), maxAdcIt);
+
+   if (!shouldSaveHit(*maxAdcIt, fThreshold, maxAdcIdx))
+      return {};
+
+   // Calculation of the mean value of the peak time by interpolating the pulse
+   Double_t timemax = 0.5 * (floatADC[maxAdcIdx - 1] - floatADC[maxAdcIdx + 1]) /
+                      (floatADC[maxAdcIdx - 1] + floatADC[maxAdcIdx + 1] - 2 * floatADC[maxAdcIdx]);
+   Double_t TBCorr = getTBCorr(floatADC, maxAdcIdx);
+   Double_t QHitTot = std::accumulate(floatADC.begin(), floatADC.end(), 0);
+
+   auto hit = std::make_unique<AtHit>(0, pos, *maxAdcIt);
+
+   hit->SetTimeStamp(maxAdcIdx);
+   hit->SetTimeStampCorr(TBCorr);
+   hit->SetTimeStampCorrInter(timemax);
+   hit->SetTraceIntegral(QHitTot);
+
+   HitVector ret;
+   ret.push_back(std::move(hit));
+   return ret;
 }
 
 ClassImp(AtPSASi);
