@@ -23,7 +23,7 @@ void unpack_rcnp(int run_num = 1001){
   TString outputpath = "/data/ATTPCROOTv2_results/E565/UnpackerOutput/reUnpackWithSiAna/";
 
   TString inputFile = filepath + fileName + fileExt;
-  TString scriptfile = "rcnp_map.xml";
+  TString scriptfile = "rcnp_map_size.xml";
   TString dir = getenv("VMCWORKDIR");
   TString mapDir = dir + "/scripts/" + scriptfile;
   TString scriptdir = dir + "/scripts/" + scriptfile;
