@@ -14,4 +14,4 @@ for runNum in "$@"; do
 	root -b -q -l "unpack_rcnp.C($runNum)" > >(tail -n 1000 > $logFile) 2>&1
 done
 
-echo "Unpacking is completed (>=<)"
+echo "Unpacking is completed (>=<)  \(>.<)/"
