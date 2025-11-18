@@ -75,7 +75,7 @@ void unpack_rcnp(int run_num = 2011){
   AtSiTask *siTask = new AtSiTask(std::move(psaSi));
   siTask->SetPersistence(kTRUE);
 
-  auto thresholdGagg = 50;
+  auto thresholdGagg = 10;
   auto psaGagg = std::make_unique<AtPSASi>();
   psaGagg->SetThreshold(thresholdGagg);
   AtGaggTask *gaggTask = new AtGaggTask(std::move(psaGagg));
@@ -177,7 +177,7 @@ void unpack_rcnp(int run_num = 2011){
 
   // Get the number of events and unpack the whole run
   auto numEvents = unpackTask->GetNumEvents();
-  //numEvents = 100;
+  //numEvents = 1000;
   std::cout << "Unpacking " << numEvents << " events. " << std::endl;
 
   run->Run(0, numEvents);

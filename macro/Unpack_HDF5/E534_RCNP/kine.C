@@ -54,6 +54,10 @@ void kine()
    TCutG *cutSiC = (TCutG *)cutSiPIDFile->Get("cutSiPIDC");
    cutSiPIDFile->Close();
 
+   TFile *cutGaggPIDFile = new TFile("./cutFiles/GAGGPID.root", "READ");
+   TCutG *cutGaggC = (TCutG *)cutGaggPIDFile->Get("cutGAGGC");
+   cutGaggPIDFile->Close();
+
    // Histogram definitions.
    TH2F *histRangeVThetaLAB = new TH2F("histRangeVThetaLAB", "histRangeVThetaLAB", 180, 0, 180, 1030, 0, 1030);
    TH2F *histEstimatedKinEVThetaLABTotal = new TH2F("histEstimatedKinEVThetaLABTotal", "histEstimatedKinEVThetaLABTotal", 360, 0, 180, 500, 0, 20);
@@ -67,17 +71,18 @@ void kine()
    TH1F *histSiMultiplicityFront1 = new TH1F("histSiMultiplicityFront1", "histSiMultiplicityFront1", 5, 0, 5);
    TH1F *histSiMultiplicityFront2 = new TH1F("histSiMultiplicityFront2", "histSiMultiplicityFront2", 5, 0, 5);
 
-   TH1F *histGaggMultiplicity1 = new TH1F("histGaggMultiplicity1", "histGaggMultiplicity1", 5, 0, 5);
-   TH1F *histGaggMultiplicity2 = new TH1F("histGaggMultiplicity2", "histGaggMultiplicity2", 5, 0, 5);
-   TH2F *histGaggPIDTraceIntegral = new TH2F("histGaggPIDTraceIntegral", "histGaggPIDTraceIntegral", 4000, 0, 90000, 4000, 0, 140000);
-   TH2F *histGaggPIDADCMax = new TH2F("histGaggPIDADCMax", "histGaggPIDADCMax", 4000, 0, 4000, 4000, 0, 4000);
-   TH2F *histSiGagg1ADC = new TH2F("histSiGagg1ADC", "histSiGagg1ADC", 4000, 0, 4000, 4000, 0, 4000);
-   TH2F *histSiGagg2ADC = new TH2F("histSiGagg2ADC", "histSiGagg2ADC", 4000, 0, 4000, 4000, 0, 4000);
+   TH1F *histGaggMultiplicity1 = new TH1F("histGaggMultiplicity1", "histGaggMultiplicity1", 25, 0, 25);
+   TH1F *histGaggMultiplicity2 = new TH1F("histGaggMultiplicity2", "histGaggMultiplicity2", 16, 0, 16);
+   TH2F *histGaggPIDADCMax = new TH2F("histGaggPIDADCMax", "histGaggPIDADCMax", 5000, 0, 10000, 4000, 0, 4000);
 
-   // Only events with good processed Si data in them.
-   std::vector runNums = {2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 
-	   2020, 2021, 2022, 2023, 2024, 2025, 2026, 2027, 2028, 2029, 2030};
-   //std::vector runNums = {2009, 2010};
+   // All events?
+   std::vector runNums = {2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019,
+                          2020, 2021, 2022, 2023, 2024, 2025, 2026, 2027, 2028, 2029, 2030
+                          };
+
+   // Only events with good processed GAGG data in them.
+   //std::vector runNums = {2034};//, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019,
+                          //2020, 2021, 2022, 2023, 2024, 2025, 2026, 2027, 2028, 2029, 2030};
 
    for (int runNum: runNums) {
       // Open the digitalization file and get the TTree.
@@ -90,12 +95,31 @@ void kine()
       // Creare the TTreeReader to read the AtTrackingEvents and simulation.
       TTreeReader unpackReader("cbmsim", unpackFile);
       TTreeReaderValue<TClonesArray> siArray(unpackReader, "AtSiEvent");
-      TTreeReaderValue<TClonesArray> gaggArray(unpackReader, "AtGaggEvent");
+      //TTreeReaderValue<TClonesArray> gaggArray(unpackReader, "AtGaggEvent");
       TTreeReaderValue<TClonesArray> patternArray(unpackReader, "AtPatternEvent");
 
+      // Open the GAGG file of this run.
+      TString gaggFileName = TString::Format("/data/sustech/user/zzc/frib/frib-decode/data/hit%04d.root", runNum);
+      TFile *gaggFile = new TFile(gaggFileName, "READ");
+      TTree *gaggTree = (TTree *)gaggFile->Get("tree");
+      int nGaggEvents = gaggTree->GetEntries();
+      std::cout << " Number of unpacked GAGG events in run " << runNum << ": " << nGaggEvents << std::endl;
+
+      Int_t idGagg1[25];
+      Int_t idGagg2[16];
+      Double_t gaggADCMax1[25];
+      Double_t gaggADCMax2[16];
+
+      gaggTree->SetBranchAddress("id_g1", idGagg1);
+      gaggTree->SetBranchAddress("id_g2", idGagg2);
+      gaggTree->SetBranchAddress("ADC_max_g1", gaggADCMax1);
+      gaggTree->SetBranchAddress("ADC_max_g2", gaggADCMax2);
+
       // Loop over events.
-      for (int i = 0; i < nUnpackEvents; i++) {
+      //for (int i = 0; i < nUnpackEvents; i++) {
+      for (int i = 0; i < nGaggEvents; i++) {
          unpackReader.Next();
+         gaggTree->GetEntry(i);
 
          // Check the Si data first.
          AtSiEvent *siEvent = (AtSiEvent *)siArray->At(0);
@@ -118,10 +142,29 @@ void kine()
          histSiPIDADCMax->Fill(maxADCFront2, maxADCFront1);
 
          //if (!cutSiN->IsInside(maxADCFront2, maxADCFront1)) continue;
-         //if (!cutSiC->IsInside(maxADCFront2, maxADCFront1)) continue;
+         if (!cutSiC->IsInside(maxADCFront2, maxADCFront1)) continue;
 
-         // Check the GAGG data 
-         AtGaggEvent *gaggEvent = (AtGaggEvent *)gaggArray->At(0);
+         // Check the GAGG data directly from the GAGG decoder.
+         Double_t totalMaxADCGagg1{};
+         for (int j = 0; j < 25; j++) {
+            if (idGagg1[j])
+               totalMaxADCGagg1 += gaggADCMax1[j];
+         }
+
+         Double_t totalMaxADCGagg2{};
+         for (int j = 0; j < 16; j++) {
+            if (idGagg1[j])
+               totalMaxADCGagg2 += gaggADCMax2[j];
+         }
+
+         Double_t totalMaxADCGagg = totalMaxADCGagg1 + totalMaxADCGagg2;
+         if (totalMaxADCGagg)
+            histGaggPIDADCMax->Fill(totalMaxADCGagg, maxADCFront2);
+
+         if (!cutGaggC->IsInside(totalMaxADCGagg, maxADCFront2)) continue;
+
+         // Check the GAGG data
+         /*AtGaggEvent *gaggEvent = (AtGaggEvent *)gaggArray->At(0);
 
          Int_t multiGagg1 = gaggEvent->GetMultiplicity1();
          Int_t multiGagg2 = gaggEvent->GetMultiplicity2();
@@ -129,17 +172,30 @@ void kine()
          histGaggMultiplicity1->Fill(multiGagg1);
          histGaggMultiplicity2->Fill(multiGagg2);
 
+         std::cout << " Multiplicity GAGG1: " << multiGagg1 <<std::endl;
+
          //if (multiGagg1 != 1) continue;
-         Double_t maxADCGagg1 = gaggEvent->GetADCMax1(0);
-         Double_t maxADCGagg2 = gaggEvent->GetADCMax2(0);
+         Double_t maxADCGagg1, maxADCGagg2;
+         Double_t gaggADC1{-1}, gaggADC2{-1};
+         Double_t totalMaxADCGagg{};
+         for(int imul = 0; imul < multiGagg1; imul++) {
+            maxADCGagg1 = gaggEvent->GetADCMax1(imul);
+            gaggADC1 += maxADCGagg1;
+            totalMaxADCGagg += maxADCGagg1;
+            std::cout << " ADC entry = " << maxADCGagg1 << std::endl;
+         }
+	      for(int imul = 0; imul < multiGagg2; imul++) {
+            maxADCGagg2 = gaggEvent->GetADCMax2(imul);
+            gaggADC2 += maxADCGagg2;
+            totalMaxADCGagg += maxADCGagg2;
+         }
+         Double_t totalMaxADCGagg{};
+         if (gaggADC1 != -1)
+            totalMaxADCGagg += gaggADC1;
+         if (gaggADC2 != -1)
+            totalMaxADCGagg += gaggADC2;
 
-         Double_t EGagg1 = gaggEvent->GetE1(0);
-         Double_t EGagg2 = gaggEvent->GetE2(0);
-
-         histGaggPIDTraceIntegral->Fill(EGagg1, EGagg2);
-         histGaggPIDADCMax->Fill(maxADCGagg2, maxADCGagg1);
-         histSiGagg1ADC->Fill(maxADCGagg1, maxADCFront2);
-         histSiGagg2ADC->Fill(maxADCGagg2, maxADCFront2);
+         histGaggPIDADCMax->Fill(totalMaxADCGagg, maxADCFront2);*/
 
 
          // First, we obtain some rough kinematics just by using the AtPatternEvent.
@@ -219,6 +275,7 @@ void kine()
       }
       // Close files.
       unpackFile->Close();
+      gaggFile->Close();
    }
 
    // Kinematic lines.
@@ -283,15 +340,16 @@ void kine()
    histSiMultiplicityFront2->Draw();
 
    TCanvas *c11 = new TCanvas();
-   c11->Divide(2,1);
-   c11->cd(1);
-   histSiGagg1ADC->Draw("colz");
-   histSiGagg1ADC->GetXaxis()->SetTitle("Gagg1 (ch)");
-   histSiGagg1ADC->GetYaxis()->SetTitle("Si2 (ch)");
-   c11->cd(2);
-   histSiGagg2ADC->Draw("colz");
-   histSiGagg2ADC->GetXaxis()->SetTitle("Gagg2 (ch)");
-   histSiGagg2ADC->GetYaxis()->SetTitle("Si2 (ch)");
+   histGaggPIDADCMax->Draw("colz");
+   cutGaggC->Draw("same");
+   histGaggPIDADCMax->GetXaxis()->SetTitle("#Sigma ADC^{max}_{Gagg} [ADC]");
+   histGaggPIDADCMax->GetYaxis()->SetTitle("ADC^{max}_{2} [ADC]");
+
+   TCanvas *c12 = new TCanvas();
+   histGaggMultiplicity1->Draw();
+
+   TCanvas *c13 = new TCanvas();
+   histGaggMultiplicity2->Draw();
 }
 
 TGraph* ReadKinematics(TString kineFile)

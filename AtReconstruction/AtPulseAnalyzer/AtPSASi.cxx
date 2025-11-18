@@ -87,26 +87,43 @@ AtPSASi::HitVector AtPSASi::AnalyzeGenTrace(AtGenericTrace *genTrace)
 {
    XYZPoint pos(0, 0, 0);
 
-   std::array<Double_t, 512> floatADC;
+   std::array<Double_t, 256> floatADC;
    std::vector<Double_t> floatADCVector = genTrace->GetADC();
-   for(int i=0; i<512; i++) 
-	   floatADC[i] = floatADCVector[i];
+   //std::cout << "GAGG ADC entries: " << floatADCVector.size() <<  std::endl;
+   if (floatADCVector.size() >= 256) {
+      for(int i=0; i<256; i++)
+         floatADC[i] = floatADCVector[i];
+   } else {
+      LOG(error) << "There are not 256 ADC values in the GAGG trace. Skipping!";
+      return {};
+   }
+
+   // Get baseline value.
+   double baseline{};
+   for (int i = 10; i < 20; i++)
+      baseline += floatADC[i];
+   baseline /= 10;
+   //std::cout << "baseline = " << baseline <<  std::endl;
+
    auto maxAdcIt = std::max_element(floatADC.begin() + 20, floatADC.end() - 12);
    Int_t maxAdcIdx = std::distance(floatADC.begin(), maxAdcIt);
+   //std::cout << " Max ADC = " << *maxAdcIt << std::endl;
 
-   if (!shouldSaveHit(*maxAdcIt, fThreshold, maxAdcIdx))
+   //std::cout << " Diff ADC = " << *maxAdcIt - baseline << std::endl;
+
+   if (!shouldSaveHit(*maxAdcIt, baseline + fThreshold, maxAdcIdx)) {
+      LOG(debug) << "GAGG trace did not pass threshold.";
       return {};
+   }
 
    // Calculation of the mean value of the peak time by interpolating the pulse
    Double_t timemax = 0.5 * (floatADC[maxAdcIdx - 1] - floatADC[maxAdcIdx + 1]) /
                       (floatADC[maxAdcIdx - 1] + floatADC[maxAdcIdx + 1] - 2 * floatADC[maxAdcIdx]);
-   Double_t TBCorr = getTBCorr(floatADC, maxAdcIdx);
    Double_t QHitTot = std::accumulate(floatADC.begin(), floatADC.end(), 0);
 
-   auto hit = std::make_unique<AtHit>(0, pos, *maxAdcIt);
+   auto hit = std::make_unique<AtHit>(0, pos, *maxAdcIt - baseline);
 
    hit->SetTimeStamp(maxAdcIdx);
-   hit->SetTimeStampCorr(TBCorr);
    hit->SetTimeStampCorrInter(timemax);
    hit->SetTraceIntegral(QHitTot);
 

@@ -78,7 +78,7 @@ void AtGaggTask::Exec(Option_t *opt)
       return;
    }
 
-   LOG(debug) << "Staring GAGG analysis on event Number: " << rawEvent->GetEventID() << " with " << rawEvent->GetNumPads()
+   LOG(info) << "Staring GAGG analysis on event Number: " << rawEvent->GetEventID() << " with " << rawEvent->GetNumPads()
               << " valid pads";
 
    // Get the AtGenTrace that contain the GAGG data and get the trace integrals.
@@ -107,7 +107,7 @@ void AtGaggTask::Exec(Option_t *opt)
       }
 
 
-      if (idx1 >= 25 || idx2 >= 16)
+      if (idx1 >= 25 && idx2 >= 16)
          break;
 
    }
