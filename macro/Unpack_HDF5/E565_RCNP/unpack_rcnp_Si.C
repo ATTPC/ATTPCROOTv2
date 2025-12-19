@@ -30,7 +30,7 @@ void unpack_rcnp_Si(int run_num = 1001){
   TString dataDir = dir + "/macro/data/";
   TString geomDir = dir + "/geometry/";
   gSystem->Setenv("GEOMPATH", geomDir.Data());
-  TString outputFile = outputpath + fileName + "_onlySiData.root";
+  TString outputFile = outputpath + fileName + "_onlyRawEvent.root";
   TString loggerFile = dataDir + "ATTPCLog.log";
   TString digiParFile = dir + "/parameters/" + parameterFile;
   TString geoManFile = dir + "/geometry/RCNP_ATTPC_494_3torr.root";
