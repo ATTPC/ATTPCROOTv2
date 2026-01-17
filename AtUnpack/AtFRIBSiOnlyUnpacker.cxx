@@ -23,7 +23,7 @@ void AtFRIBSiOnlyUnpacker::processSiChannel(std::size_t chIndex)
    auto rawadc = pad_raw_data(chIndex);
    AtPadReference PadRef = {rawadc[0], rawadc[1], rawadc[2], rawadc[3]};
 
-   TString pad_name = TString::Format("Si_%d_%d_%d_%d", PadRef.cobo, PadRef.asad, PadRef.aget, PadRef.ch);
+   TString pad_name = TString::Format("Si_%02d_%d_%d_%02d", PadRef.cobo, PadRef.asad, PadRef.aget, PadRef.ch);
    LOG(info) << "Processing Si channel: " << pad_name;
 
    auto pad = fRawEvent->AddAuxPad(pad_name.Data()).first;
@@ -34,6 +34,11 @@ void AtFRIBSiOnlyUnpacker::processData()
 {
    TString event_name = TString::Format("event_%lld", fDataEventID);
    fRawEvent->SetEventName(event_name.Data());
+
+   // Loop through and grab all of the generic traces in the event
+   for (auto &sis : fFribPaths) {
+      processSIS(event_name.Data(), sis);
+   }
 
    // Add all the Si channels as aux pads. For now the naming scheme is "CoBo_AsAd_AGet_Ch"
    // Maybe this should change with the mapping?

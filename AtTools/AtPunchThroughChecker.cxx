@@ -25,6 +25,12 @@ bool AtTools::AtPunchThroughChecker::IsPunchThrough(AtTrack *track)
    if (distanceToBorderPlane < fDistanceThreshold)
       return true;
 
+   if (lastHitZPos < 0)
+      return true;
+
+   if (lastHitZPos > fTPCLength)
+      return true;
+
    // If every if statement failed, then it did not punch through.
    return false;
 }

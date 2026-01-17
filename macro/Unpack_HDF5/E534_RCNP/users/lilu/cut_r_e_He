@@ -1,0 +1,20 @@
+{
+//========= Macro generated from object: CUTG/Graph
+//========= by ROOT version6.26/10
+   
+   cutg = new TCutG("CUTG",9);
+   cutg->SetVarX("histEBigVBigRange");
+   cutg->SetVarY("");
+   cutg->SetTitle("Graph");
+   cutg->SetFillStyle(1000);
+   cutg->SetPoint(0,68.6175,73277.3);
+   cutg->SetPoint(1,39.1046,51848.7);
+   cutg->SetPoint(2,9.59168,26638.7);
+   cutg->SetPoint(3,116.576,43865.5);
+   cutg->SetPoint(4,181.135,65714.3);
+   cutg->SetPoint(5,146.089,86302.5);
+   cutg->SetPoint(6,66.7729,74537.8);
+   cutg->SetPoint(7,68.6175,74537.8);
+   cutg->SetPoint(8,68.6175,73277.3);
+   cutg->Draw("root");
+}

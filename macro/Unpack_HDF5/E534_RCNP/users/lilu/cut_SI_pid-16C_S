@@ -1,0 +1,18 @@
+{
+//========= Macro generated from object: CUTG/Graph
+//========= by ROOT version6.26/10
+   
+   TCutG *cutg = new TCutG("CUTG",7);
+   cutg->SetVarX("histSiPIDADCMax");
+   cutg->SetVarY("");
+   cutg->SetTitle("Graph");
+   cutg->SetFillStyle(1000);
+   cutg->SetPoint(0,2272.39,1116.49);
+   cutg->SetPoint(1,3612.73,1388.69);
+   cutg->SetPoint(2,3662.8,1223.43);
+   cutg->SetPoint(3,2295.95,917.207);
+   cutg->SetPoint(4,2248.82,1106.77);
+   cutg->SetPoint(5,2263.55,1131.08);
+   cutg->SetPoint(6,2272.39,1116.49);
+   cutg->Draw("");
+}
