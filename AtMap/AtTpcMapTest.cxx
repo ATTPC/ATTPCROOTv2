@@ -22,7 +22,7 @@ TEST(AtTpcMapTest, TEST_InhibitBeamPads_RCNP)
    // Check all pads and count how many are actually inhibited.
    Int_t actuallyInhibitedPadsCount{};
    for (int i = 0; i < map->GetNumPads(); i++)
-      if (map->IsInhibited(i) != AtMap::InhibitType::kNone)
+      if (map->IsInhibited(i) == AtMap::InhibitType::kXTalk)
          actuallyInhibitedPadsCount++;
 
    EXPECT_EQ(inhibitedPadsCount, actuallyInhibitedPadsCount);
@@ -31,7 +31,7 @@ TEST(AtTpcMapTest, TEST_InhibitBeamPads_RCNP)
 
 TEST(AtTpcMapTest, TEST_InhibitBeamPads_e23031)
 {
-   // Construct an AtTpcMap object, parse the RCNP mapping and parse the beam pad list.
+   // Construct an AtTpcMap object, parse the e23031 mapping and parse the beam pad list.
    TString dir = getenv("VMCWORKDIR");
    TString scriptFile = "e23031_pad_map_size.xml";
    TString mapDir = dir + "/scripts/" + scriptFile;
@@ -45,7 +45,7 @@ TEST(AtTpcMapTest, TEST_InhibitBeamPads_e23031)
    // Check all pads and count how many are actually inhibited.
    Int_t actuallyInhibitedPadsCount{};
    for (int i = 0; i < map->GetNumPads(); i++)
-      if (map->IsInhibited(i) != AtMap::InhibitType::kNone)
+      if (map->IsInhibited(i) == AtMap::InhibitType::kXTalk)
          actuallyInhibitedPadsCount++;
 
    EXPECT_EQ(inhibitedPadsCount, actuallyInhibitedPadsCount);
