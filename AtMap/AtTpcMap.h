@@ -27,6 +27,8 @@ public:
    virtual ROOT::Math::XYPoint CalcPadCenter(Int_t PadRef) override;
    virtual Int_t BinToPad(Int_t binval) override { return binval - 1; };
 
+   Int_t InhibitBeamPads(TString beamPadsFilePath);
+
    ClassDefOverride(AtTpcMap, 1);
 
 protected:
