@@ -7,6 +7,7 @@
 
 #ifndef ATKINEMATICS_H
 #define ATKINEMATICS_H
+#include <Math/Vector3D.h>
 #include <Math/Vector4D.h>
 #include <Math/Vector4Dfwd.h> // for PxPyPzEVector
 #include <Rtypes.h>           // for Double_t, THashConsistencyHolder, Int_t, ClassDef
@@ -64,6 +65,8 @@ public:
 
 namespace Kinematics {
 
+static constexpr double fC = 299792458.0; // Speed of light in m/s
+
 double GetGamma(double KE, double m1, double m2);
 double GetGamma(double beta);
 double GetVelocity(double gamma);
@@ -73,6 +76,26 @@ double GetBeta(double p, double mass);
 double GetRelMom(double gamma, double mass);
 double AtoE(double Amu);
 double EtoA(double mass);
+double GetSpeed(double p, double mass); /// Calculate the speed of a particle given its momentum and mass in m/s
+
+/**
+ * Calculate the kinetic energy of a particle given its momentum and mass.
+ * @param mom Momentum vector (in MeV/c)
+ * @param mass Mass of the particle (in MeV/c^2)
+ * @returns Kinetic energy in MeV
+ */
+double KE(ROOT::Math::XYZVector mom, double mass);
+double KE(double mom, double mass);
+
+double GetRelMomFromKE(double KE, double mass);
+
+/**
+ * Calculate the velocity vector from momentum and mass
+ * @param mom Momentum vector (in MeV/c)
+ * @param mass Mass of the particle (in MeV/c^2)
+ * @returns Velocity vector in m/s
+ */
+ROOT::Math::XYZVector GetVel(ROOT::Math::XYZVector mom, double mass);
 
 template <class Vector>
 ROOT::Math::PxPyPzEVector Get4Vector(Vector mom, double m)

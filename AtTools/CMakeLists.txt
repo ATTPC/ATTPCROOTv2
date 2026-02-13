@@ -19,6 +19,7 @@ set(SRCS
   AtEDistortionModel.cxx
   AtVirtualTerminal.cxx
   AtKinematics.cxx
+  AtPropagator.cxx
 
   AtFormat.cxx
   AtSpline.cxx
@@ -77,6 +78,7 @@ Set(INCLUDE_DIR
 set(TEST_SRCS
   DataCleaning/AtkNNTest.cxx
   AtELossTableTest.cxx
+  AtPropagatorTest.cxx
 )
 if(CATIMA_FOUND)
   set(TEST_SRCS ${TEST_SRCS}

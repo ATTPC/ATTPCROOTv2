@@ -51,6 +51,8 @@ public:
 
    [[deprecated]] double GetEnergyOld(double energyIni, double distance) const;
 
+   const tk::spline &GetSpline() const { return fdXdE; }
+
 private:
    void LoadTable(const std::vector<double> &energy, const std::vector<double> &dEdX);
    void LoadRangeVariance(const std::vector<double> &energy, const std::vector<double> &rangeVariance)

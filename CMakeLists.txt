@@ -126,20 +126,40 @@ find_package2(PUBLIC CATIMA)
 find_package2(PUBLIC Eigen3 3.3 NO_MODULE)
 
 # If catima was not found, then download and build it locally
+set(CATIMA_LOCAL_SOURCE "${CMAKE_BINARY_DIR}/_deps/catima-src")
+set(CATIMA_USE_LOCAL ON)
+if(NOT EXISTS "${CATIMA_LOCAL_SOURCE}/CMakeLists.txt" AND ${CATIMA_USE_LOCAL})
+  message(WARNING "Local cmake requested, but the source could not be found at ${CATIMA_LOCAL_SOURCE}.")
+  message(INFO EXISTS "${CATIMA_LOCAL_SOURCE}/CMakeLists.txt" )
+  SET(CATIMA_USE_LOCAL OFF)
+endif()
+
 if(NOT CATIMA_FOUND)
   message(STATUS "CATIMA not found, downloading and building locally")
-  FetchContent_Declare(catima
-    GIT_REPOSITORY https://github.com/hrosiak/catima.git
-    GIT_TAG master)
+  if(${CATIMA_USE_LOCAL})
+    FetchContent_Declare(catima
+      SOURCE_DIR ${CATIMA_LOCAL_DIR})
+  else()
+    FetchContent_Declare(catima
+      GIT_REPOSITORY https://github.com/hrosiak/catima.git
+      GIT_TAG master
+      SOURCE_DIR ${CATIMA_LOCAL_DIR})
+  endif()
+
   
   # Set CATIMA build options before making it available
   set(TESTS OFF CACHE BOOL "Disable CATIMA tests" FORCE)
   set(EXAMPLES OFF CACHE BOOL "Disable CATIMA examples" FORCE)
   set(APPS OFF CACHE BOOL "Disable CATIMA applications" FORCE)
   set(GENERATE_DATA OFF CACHE BOOL "Disable CATIMA data generator" FORCE)
-  
-  FetchContent_MakeAvailable(catima)
 
+  
+FetchContent_GetProperties(catima)
+  if (NOT catima_POPULATED)
+    message(STATUS "Populating CATIMA")
+    FetchContent_Populate(catima)
+    add_subdirectory(${catima_SOURCE_DIR} ${catima_BINARY_DIR})
+  endif()
   # Suppress shadow warnings for CATIMA target
   if(TARGET catima)
     get_target_property(catima_compile_options catima COMPILE_OPTIONS)

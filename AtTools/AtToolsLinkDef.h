@@ -27,6 +27,7 @@
 #pragma link C++ class AtEDistortionModel - !;
 
 #pragma link C++ class AtTools::AtKinematics + ;
+#pragma link C++ class AtTools::AtPropagator - !;
 #pragma link C++ class AtTools::AtVirtualTerminal + ;
 
 #pragma link C++ class RandomSample::AtSample - !;

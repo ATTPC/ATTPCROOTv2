@@ -45,6 +45,7 @@ public:
    virtual double GetRangeVariance(double energy) const override;
    virtual double GetElossStraggling(double energyIni, double energyFin) const override;
    virtual double GetdEdxStraggling(double energyIni, double energyFin) const override;
+   double GetdEdxStragglingCATIMA(double energy, double distance) const;
 
    virtual std::vector<std::pair<double, double>>
    GetBraggCurve(double energy, double rangeStepSize = 0, double totalFractionELoss = 0.001) const override;

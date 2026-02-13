@@ -18,10 +18,12 @@
 
 namespace kf {
 namespace util {
-template <int32_t ROWS, int32_t COLS>
-void copyToColumn(const int32_t colIdx, Matrix<ROWS, COLS> &lhsSigmaX, const Vector<ROWS> &rhsVecX)
+template <int32_t ROWS, int32_t COLS, int32_t ROWS_COPY>
+void copyToColumn(const int32_t colIdx, Matrix<ROWS, COLS> &lhsSigmaX, const Vector<ROWS_COPY> &rhsVecX)
 {
-   for (int32_t i{0}; i < ROWS; ++i) { // rows
+   assert(colIdx < COLS);                   // assert if colIdx is out of boundary
+   assert(ROWS_COPY <= ROWS);               // assert if rhsVecX is larger than lhsSigmaX
+   for (int32_t i{0}; i < ROWS_COPY; ++i) { // rows
       lhsSigmaX(i, colIdx) = rhsVecX[i];
    }
 }

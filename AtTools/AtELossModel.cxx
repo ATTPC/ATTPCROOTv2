@@ -1,10 +1,12 @@
 #include "AtELossModel.h"
 
+#include "FairLogger.h"
+
 #include <stdexcept>
 namespace AtTools {
 
 /**
- * Set the density of the material we are calculating energy losses for in mg/cm^3.
+ * Set the density of the material we are calculating energy losses for in g/cm^3.
  * Likely not fully tested, but I want to keep it around to remind myself of it.
  */
 void AtELossModel::SetDensity(double density)

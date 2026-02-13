@@ -70,6 +70,7 @@ TEST_F(AtELossCATIMATestFixture, TestEnergyLossStragglingDistance)
 {
    double expectedSigma = 0.0084 * mass;                                  // Expected sigma from LISE
    double eloss_straggling = model.GetElossStragglingDistance(1.0, 50.0); // 1 MeV over 10 mm
+   LOG(info) << "Straggling over 5 cm: " << eloss_straggling;
    ASSERT_NEAR(eloss_straggling, expectedSigma, 0.1 * expectedSigma);
 
    expectedSigma = 0.0376 * mass;
@@ -92,6 +93,22 @@ TEST_F(AtELossCATIMATestFixture, TestdEdxStraggling)
    double e_min = expected_dE - E_st;
    double e_min_dedx = dE - dedx_straggling * 50;
    ASSERT_NEAR(e_min, e_min_dedx, 0.01 * e_min); // Check minimum energy loss
+}
+
+TEST_F(AtELossCATIMATestFixture, TestdEdxStragglingCalc)
+{
+   double intDistance = 10;                                     // 1 mm integration distance.
+   auto Eout = model.GetEnergy(5.0, intDistance);               // Initialize the model with a known energy
+   double dedx_straggling = model.GetdEdxStraggling(5.0, Eout); // Get over small range
+   double dedx_st_calc = model.GetdEdxStragglingCATIMA(5.0, intDistance);
+
+   LOG(info) << "Energy after " << intDistance << " mm: " << Eout << " MeV (" << Eout / mass << " MeV/u)";
+   LOG(info) << "Energy loss: " << 5.0 - Eout << " MeV";
+   LOG(info) << "Straggling factor: " << dedx_straggling * intDistance / (5.0 - Eout);
+   LOG(info) << "Straggling factor: " << dedx_straggling / model.GetdEdx(5.0);
+   LOG(info) << "Energy straggling calc: " << dedx_st_calc * intDistance << " MeV";
+   LOG(info) << "Energy straggling range: " << dedx_straggling * intDistance << " MeV";
+   ASSERT_NEAR(dedx_straggling, dedx_st_calc, 1e-4); // Check dEdx straggling
 }
 
 TEST(AtELossCATIMATest, LISE_Match)

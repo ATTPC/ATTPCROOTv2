@@ -17,7 +17,7 @@
 #include <stdint.h>
 
 namespace kf {
-using float32_t = float;
+using float32_t = double;
 
 template <int32_t ROW, int32_t COL>
 using Matrix = Eigen::Matrix<float32_t, ROW, COL>;

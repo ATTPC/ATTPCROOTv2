@@ -18,10 +18,13 @@
 namespace kf {
 template <int32_t DIM_X, int32_t DIM_Z>
 class KalmanFilter {
-public:
-   KalmanFilter() {}
 
-   ~KalmanFilter() {}
+protected:
+   Vector<DIM_X> m_vecX{Vector<DIM_X>::Zero()};               /// @brief estimated state vector
+   Matrix<DIM_X, DIM_X> m_matP{Matrix<DIM_X, DIM_X>::Zero()}; /// @brief state covariance matrix
+public:
+   KalmanFilter() = default;
+   ~KalmanFilter() = default;
 
    virtual Vector<DIM_X> &vecX() { return m_vecX; }
    virtual const Vector<DIM_X> &vecX() const { return m_vecX; }
@@ -88,10 +91,6 @@ public:
       m_vecX = m_vecX + matKk * (vecZ - measurementModelFunc(m_vecX));
       m_matP = (matI - matKk * matJcobH) * m_matP;
    }
-
-protected:
-   Vector<DIM_X> m_vecX{Vector<DIM_X>::Zero()};               /// @brief estimated state vector
-   Matrix<DIM_X, DIM_X> m_matP{Matrix<DIM_X, DIM_X>::Zero()}; /// @brief state covariance matrix
 };
 } // namespace kf
 

@@ -291,6 +291,11 @@ double GetRelMom(double gamma, double mass)
 {
    return std::sqrt(gamma * gamma - 1) * mass;
 }
+double GetRelMomFromKE(double KE, double mass)
+{
+
+   return std::sqrt((KE + mass) * (KE + mass) - mass * mass);
+}
 
 /**
  * Get the mass in MeV of a fragment of mass in amu (or A)
@@ -303,5 +308,22 @@ double EtoA(double mass)
 {
    return mass / 931.5;
 }
-
+double GetSpeed(double p, double mass)
+{
+   // Calculate the speed of a particle given its momentum and mass in m/s
+   double beta = GetBeta(p, mass);
+   return beta * fC; // Speed in m/s
+}
+ROOT::Math::XYZVector GetVel(ROOT::Math::XYZVector mom, double mass)
+{
+   return mom / Get4Vector(mom, mass).E() * fC;
+}
+double KE(ROOT::Math::XYZVector mom, double mass)
+{
+   return std::sqrt(mom.Mag2() + mass * mass) - mass; // Kinetic energy in MeV
+}
+double KE(double mom, double mass)
+{
+   return std::sqrt(mom * mom + mass * mass) - mass;
+}
 } // namespace AtTools::Kinematics

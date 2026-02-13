@@ -26,7 +26,7 @@ void AtELossTable::SetDensity(double density)
       elem = fScaling / elem; // scale dx/de by the density
    }
    for (auto &elem : r_var) {
-      LOG(info) << "Scaling range variance by " << fScaling * fScaling;
+      LOG(debug) << "Scaling range variance by " << fScaling * fScaling;
       elem = elem / (fScaling * fScaling); // scale range variance by the density
    }
    LoadTable(x, y);
@@ -198,7 +198,7 @@ void AtELossTable::LoadSrimTable(std::string fileName)
       try {
          if (atConversion && tokens.at(1) == "MeV" && tokens.at(3) == "mm") {
             conversion = std::stod(tokens.at(0));
-            LOG(info) << "Using conversion factor of " << conversion;
+            LOG(info) << "Using conversion factor of " << conversion << " from " << tokens.at(0);
             break;
          }
 
@@ -221,8 +221,13 @@ void AtELossTable::LoadSrimTable(std::string fileName)
       }
    } // end loop over file
 
-   for (auto &dedx : dEdX)
+   for (auto &dedx : dEdX) {
       dedx *= conversion;
+   }
+
+   for (int i = 0; i < dEdX.size(); ++i) {
+      LOG(debug) << "Energy: " << energy[i] << " MeV dEdX: " << dEdX[i] << " MeV/mm";
+   }
 
    LoadTable(energy, dEdX);
    LoadRangeVariance(energy, rangeVar);

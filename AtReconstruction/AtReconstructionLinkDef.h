@@ -45,6 +45,8 @@
 
 #pragma link C++ namespace kf;
 #pragma link C++ namespace kf::util;
+#pragma link C++ class kf::TrackFitterUKFBase - !;
+#pragma link C++ class kf::TrackFitterUKF - !;
 
 /* Classes that depend on Genfit2 */
 #pragma link C++ class genfit::AtSpacepointMeasurement + ;

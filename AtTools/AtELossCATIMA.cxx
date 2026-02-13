@@ -129,6 +129,27 @@ double AtELossCATIMA::GetdEdxStraggling(double energyIni, double energyFin) cons
    auto factor = dE_st / (energyIni - energyFin);
    return factor * dedx_min;
 }
+double AtELossCATIMA::GetdEdxStragglingCATIMA(double energy, double intDistance) const
+{
+   if (fProjectile == nullptr || fMaterial == nullptr) {
+      LOG(error) << "Projectile or material not set. dEdx straggling is 0.";
+      return 0;
+   }
+   catima::Result result = catima::calculate(*fProjectile, *fMaterial, energy / fProjectileMassAmu);
+   double dEdxi = result.dEdxi; // MeV/(g/cm^2)
+
+   intDistance *= 10 * fDensity; // Convert to g/cm^2.
+
+   auto oldT = fProjectile->T;
+   fProjectile->T = energy / fProjectileMassAmu;                     // Set the projectile's
+   auto dE_st = catima::domega2dx(*fProjectile, *fMaterial) / dEdxi; // domega in MeV/(g/cm^2)
+   fProjectile->T = oldT;                                            // Restore the projectile's T
+
+   dE_st /= intDistance;         // Get the variance in stopping power (MeV/(g/cm^2))
+   dE_st *= fDensity * fDensity; // Convert to MeV^2/cm^2
+   dE_st *= 100;                 // Convert to MeV^2/mm^2
+   return std::sqrt(dE_st);      // Returns the factor for dEdx straggling
+}
 
 std::vector<std::pair<double, double>>
 AtELossCATIMA::GetBraggCurve(double energy, double rangeStepSize, double totalFractionELoss) const

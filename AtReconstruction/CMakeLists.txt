@@ -125,6 +125,8 @@ if(TARGET Eigen3::Eigen)
   set(SRCS ${SRCS}
   AtPatternRecognition/triplclust/src/orthogonallsq.cxx
   AtFitter/AtOpenKFTest.cxx
+  AtFitter/OpenKF/kalman_filter/TrackFitterUKF.cxx
+  
   )
   message(STATUS "Current sources: ${SRCS}")
 
@@ -143,6 +145,7 @@ if(TARGET Eigen3::Eigen)
    set(TEST_SRCS_OPENKF
     AtFitter/OpenKF/kalman_filter/kalman_filter_test.cxx
     AtFitter/OpenKF/kalman_filter/unscented_kalman_filter_test.cxx
+    AtFitter/OpenKF/kalman_filter/TrackFitterUKFTest.cxx
     )
  
  attpcroot_generate_tests(OpenKFTests
