@@ -107,6 +107,10 @@ void AtHDFUnpacker::processPad(std::size_t ipad)
    std::vector<int16_t> rawadc = pad_raw_data(ipad);
    AtPadReference PadRef = {rawadc[0], rawadc[1], rawadc[2], rawadc[3]};
 
+   // If this pad was inhibited, skip it.
+   if (fMap->IsInhibited(PadRef) != AtMap::InhibitType::kNone)
+      return;
+
    auto pad = createPadAndSetIsAux(PadRef);
    setDimensions(pad);
    setAdc(pad, rawadc);
