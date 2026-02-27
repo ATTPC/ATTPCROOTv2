@@ -34,6 +34,7 @@ set(SRCS
   AtFRIBSiUnpacker.cxx
   AtROOTUnpacker.cxx
   AtGRAWUnpacker.cxx
+  AtMergeENCourseTask.cxx
 
   GETDecoder2/GETDecoder2.cxx
   GETDecoder2/GETFrameInfo.cxx

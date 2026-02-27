@@ -31,6 +31,8 @@
 #pragma link C++ class AtFittedTrack + ;
 #pragma link C++ class AtFissionEvent + ;
 #pragma link C++ class AtGenericTrace + ;
+#pragma link C++ class AtENCourseEvent + ;
+#pragma link C++ class AtPPACPair + ;
 
 #pragma link C++ class AtPatterns::AtPattern + ;
 #pragma link C++ class AtPatterns::AtPatternLine + ;
