@@ -38,6 +38,8 @@ set(SRCS
   AtPatternEvent.cxx
   AtGenericTrace.cxx
   AtICEvent.cxx
+  AtENCourseEvent.cxx
+  AtPPACPair.cxx
 
   AtProtoQuadrant.cxx
   AtTrack.cxx
