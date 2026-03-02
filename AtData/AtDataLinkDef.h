@@ -33,6 +33,8 @@
 #pragma link C++ class AtGenericTrace + ;
 #pragma link C++ class AtSiEvent + ;
 #pragma link C++ class AtGaggEvent + ;
+#pragma link C++ class AtENCourseEvent + ;
+#pragma link C++ class AtPPACPair + ;
 
 #pragma link C++ class AtPatterns::AtPattern + ;
 #pragma link C++ class AtPatterns::AtPatternLine + ;
