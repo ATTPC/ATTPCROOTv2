@@ -9,6 +9,7 @@
 #include <Rtypes.h>
 #include <TClonesArray.h>
 #include <TFile.h>
+#include <TTree.h>
 
 #include <memory>
 #include <string>
