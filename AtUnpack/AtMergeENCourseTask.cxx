@@ -13,10 +13,7 @@ using XYPoint = ROOT::Math::XYPoint;
 
 ClassImp(AtMergeENCourseTask);
 
-AtMergeENCourseTask::AtMergeENCourseTask()
-   : fOutputENCourseEventArray(TClonesArray("AtENCourseEvent", 1))
-{
-}
+AtMergeENCourseTask::AtMergeENCourseTask() : fOutputENCourseEventArray(TClonesArray("AtENCourseEvent", 1)) {}
 
 InitStatus AtMergeENCourseTask::Init()
 {
@@ -36,6 +33,8 @@ InitStatus AtMergeENCourseTask::Init()
    fENCourseTree = std::unique_ptr<TTree>((TTree *)fENCourseFile->Get("tree"));
    fENCourseTree->SetBranchAddress("eve", &eve);
    fENCourseTree->SetBranchAddress("ppac_pos_cal", ppac_pos_cal);
+   fENCourseTree->SetBranchAddress("rf", rf);
+   fENCourseTree->SetBranchAddress("ref_tdc", &ref_tdc);
 
    ioMan->Register(fOuputBranchName, "ENCourse", &fOutputENCourseEventArray, fIsPersistent);
 
@@ -57,18 +56,16 @@ void AtMergeENCourseTask::Exec(Option_t *opt)
    XYPoint F2EntrancePoint(ppac_pos_cal[0][0], ppac_pos_cal[0][1]);
    XYPoint F2ExitPoint(ppac_pos_cal[1][0], ppac_pos_cal[1][1]);
    std::unique_ptr<AtPPACPair> F2PPACs = std::make_unique<AtPPACPair>(F2EntrancePoint, F2ExitPoint, fF2PPACsDistance);
-   //F2PPACs->SetTimeOfFlight(TOFF2U?, 0);
-   //F2PPACs->SetTimeOfFlight(TOFF2D?, 1);
 
    XYPoint F3EntrancePoint(ppac_pos_cal[2][0], ppac_pos_cal[2][1]);
    XYPoint F3ExitPoint(ppac_pos_cal[3][0], ppac_pos_cal[3][1]);
    std::unique_ptr<AtPPACPair> F3PPACs = std::make_unique<AtPPACPair>(F3EntrancePoint, F3ExitPoint, fF3PPACsDistance);
-   //F3PPACs->SetTimeOfFlight(TOFF3U?, 0);
-   //F3PPACs->SetTimeOfFlight(TOFF3D?, 1);
 
    ENCourseEvent->SetF2PPACs(std::move(F2PPACs));
    ENCourseEvent->SetF3PPACs(std::move(F3PPACs));
    ENCourseEvent->SetEventID(eve);
-   //ENCourseEvent->SetTimestamp(ENTS?);
-
+   // ENCourseEvent->SetTimestamp(ENTS?);
+   for (int i = 0; i < 4; i++)
+      ENCourseEvent->SetRFToF(rf[i], i);
+   ENCourseEvent->SetTDCRef(ref_tdc);
 }

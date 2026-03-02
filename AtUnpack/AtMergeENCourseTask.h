@@ -25,6 +25,8 @@ private:
    std::unique_ptr<TTree> fENCourseTree{nullptr};
    Int_t eve;
    Float_t ppac_pos_cal[4][2];
+   Int_t rf[4];
+   Int_t ref_tdc;
    ULong64_t fLastTreeEntryNum{};
 
    Double_t fF2PPACsDistance{500}; // [mm]
