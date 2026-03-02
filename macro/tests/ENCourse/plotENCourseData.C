@@ -12,6 +12,18 @@ void plotENCourseData()
    TH1F *histF3PolarAngle = new TH1F("histF3PolarAngle", "histF3PolarAngle", 180, 0, 180);
    TH1F *histF3AzimutalAngle = new TH1F("histF3AzimutalAngle", "histF3AzimutalAngle", 360, -180, 180);
 
+   TH1F *histTDCRef = new TH1F("histTDCRef", "histTDCRef", 3000, 0, 150000);
+
+   TH1F *histRF0 = new TH1F("histRF0", "histRF0", 3000, 0, 150000);
+   TH1F *histRF1 = new TH1F("histRF1", "histRF1", 3000, 0, 150000);
+   TH1F *histRF2 = new TH1F("histRF2", "histRF2", 3000, 0, 150000);
+   TH1F *histRF3 = new TH1F("histRF3", "histRF3", 3000, 0, 150000);
+
+   TH1F *histTDCRefRF0 = new TH1F("histTDCRefRF0", "histTDCRefRF0", 3000, 0, 6000);
+   TH1F *histTDCRefRF1 = new TH1F("histTDCRefRF1", "histTDCRefRF1", 4000, 0, 8000);
+   TH1F *histTDCRefRF2 = new TH1F("histTDCRefRF2", "histTDCRefRF2", 5000, 0, 10000);
+   TH1F *histTDCRefRF3 = new TH1F("histTDCRefRF3", "histTDCRefRF3", 6000, 0, 12000);
+
    // All runs.
    std::vector runNums = {5074};
 
@@ -54,6 +66,19 @@ void plotENCourseData()
          histF3ExitPosition->Fill(F3ExitPosition.X(), F3ExitPosition.Y());
          histF3PolarAngle->Fill(trackF3PolarAngle);
          histF3AzimutalAngle->Fill(trackF3AzimutalAngle);
+
+         histTDCRef->Fill(ENEvent->GetTDCRef());
+
+         histRF0->Fill(ENEvent->GetRFToF(0));
+         histRF1->Fill(ENEvent->GetRFToF(1));
+         histRF2->Fill(ENEvent->GetRFToF(2));
+         histRF3->Fill(ENEvent->GetRFToF(3));
+
+         histTDCRefRF0->Fill(ENEvent->GetTDCRefRFToF(0));
+         histTDCRefRF1->Fill(ENEvent->GetTDCRefRFToF(1));
+         histTDCRefRF2->Fill(ENEvent->GetTDCRefRFToF(2));
+         histTDCRefRF3->Fill(ENEvent->GetTDCRefRFToF(3));
+
       }
       unpackFile->Close();
    }
@@ -94,4 +119,40 @@ void plotENCourseData()
    TCanvas *c8 = new TCanvas();
    histF3AzimutalAngle->Draw();
    histF3AzimutalAngle->GetXaxis()->SetTitle("#phi [deg]");
+
+   TCanvas *c9 = new TCanvas();
+   histTDCRef->Draw();
+   histTDCRef->GetXaxis()->SetTitle("TDC_{ref} [a.u.]");
+
+   TCanvas *c10 = new TCanvas();
+   histRF0->Draw();
+   histRF0->GetXaxis()->SetTitle("ToF_{RF}[0] [a.u.]");
+
+   TCanvas *c11 = new TCanvas();
+   histRF1->Draw();
+   histRF1->GetXaxis()->SetTitle("ToF_{RF}[1] [a.u.]");
+
+   TCanvas *c12 = new TCanvas();
+   histRF2->Draw();
+   histRF2->GetXaxis()->SetTitle("ToF_{RF}[2] [a.u.]");
+
+   TCanvas *c13 = new TCanvas();
+   histRF3->Draw();
+   histRF3->GetXaxis()->SetTitle("ToF_{RF}[3] [a.u.]");
+
+   TCanvas *c14 = new TCanvas();
+   histTDCRefRF0->Draw();
+   histTDCRefRF0->GetXaxis()->SetTitle("ToF_{RF}[0] - TDC_{ref} [a.u.]");
+
+   TCanvas *c15 = new TCanvas();
+   histTDCRefRF1->Draw();
+   histTDCRefRF1->GetXaxis()->SetTitle("ToF_{RF}[1] - TDC_{ref} [a.u.]");
+
+   TCanvas *c16 = new TCanvas();
+   histTDCRefRF2->Draw();
+   histTDCRefRF2->GetXaxis()->SetTitle("ToF_{RF}[2] - TDC_{ref} [a.u.]");
+
+   TCanvas *c17 = new TCanvas();
+   histTDCRefRF3->Draw();
+   histTDCRefRF3->GetXaxis()->SetTitle("ToF_{RF}[3] - TDC_{ref} [a.u.]");
 }

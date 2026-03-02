@@ -23,7 +23,6 @@ protected:
    XYZVector fTrackDirection;
    Double_t fTrackPolarAngle;
    Double_t fTrackAzimutalAngle;
-   Double_t fTOF[2];
 
    // Geometrical parameters.
    Double_t fSeparationDistance{500}; // [mm]. Distance between the 2 PPACs.
@@ -59,7 +58,6 @@ public:
       fSeparationDistance = separationDistance;
       CalculateDirection();
    }
-   void SetTimeOfFlight(Double_t TOF, Int_t idxPPAC = 0) { fTOF[idxPPAC] = TOF; }
 
    const XYPoint GetEntrancePosition() const { return fEntrancePosition; }
    const XYPoint GetExitPosition() const { return fExitPosition; }
@@ -67,7 +65,6 @@ public:
    const Double_t GetTrackPolarAngle() const { return fTrackPolarAngle; }
    const Double_t GetTrackAzimutalAngle() const { return fTrackAzimutalAngle; }
    const Double_t GetSeparationDistance() const { return fSeparationDistance; }
-   const Double_t GetTimeOfFlight(Int_t idxPPAC = 0) const { return fTOF[idxPPAC]; }
 
 private:
    void CalculateDirection();
