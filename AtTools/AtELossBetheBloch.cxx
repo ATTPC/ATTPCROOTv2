@@ -7,8 +7,7 @@
 
 namespace AtTools {
 
-AtELossBetheBloch::AtELossBetheBloch(double part_q, double part_mass, int mat_Z, int mat_A,
-                                     double density, double I_eV)
+AtELossBetheBloch::AtELossBetheBloch(double part_q, double part_mass, int mat_Z, int mat_A, double density, double I_eV)
    : AtELossModel(density), fPart_q(part_q), fPart_mass(part_mass)
 {
    SetMaterial(mat_Z, mat_A, density, I_eV);
@@ -101,8 +100,7 @@ double AtELossBetheBloch::GetdEdx_heavy(double energy) const
       return 0;
 
    // Maximum kinetic energy transferable in a single collision (PDG 2022, Eq. 34.2)
-   double Tmax = 2.0 * kM_e * beta2 * gamma * gamma /
-                 (1.0 + 2.0 * gamma * kM_e / M + (kM_e / M) * (kM_e / M));
+   double Tmax = 2.0 * kM_e * beta2 * gamma * gamma / (1.0 + 2.0 * gamma * kM_e / M + (kM_e / M) * (kM_e / M));
 
    // Argument of logarithm: 2mₑc²β²γ²Tmax / I²
    double logArg = 2.0 * kM_e * beta2 * gamma * gamma * Tmax / (fI_MeV * fI_MeV);
@@ -111,8 +109,8 @@ double AtELossBetheBloch::GetdEdx_heavy(double energy) const
 
    double z = fPart_q;
    // Standard Bethe-Bloch in MeV/cm (PDG 2022, Eq. 34.1), density correction neglected
-   double dedx_cm = kK * z * z * (static_cast<double>(fMat_Z) / fMat_A) * fDensity / beta2 *
-                    (0.5 * std::log(logArg) - beta2);
+   double dedx_cm =
+      kK * z * z * (static_cast<double>(fMat_Z) / fMat_A) * fDensity / beta2 * (0.5 * std::log(logArg) - beta2);
 
    if (dedx_cm <= 0)
       return 0;
@@ -132,8 +130,7 @@ double AtELossBetheBloch::GetdEdx_electron(double energy) const
       return 0;
 
    // Møller exchange correction (Leo 1994, Eq. 2.38)
-   double Fminus = (1.0 + tau * tau / 8.0 - (2.0 * tau + 1.0) * std::log(2.0)) /
-                   ((tau + 1.0) * (tau + 1.0));
+   double Fminus = (1.0 + tau * tau / 8.0 - (2.0 * tau + 1.0) * std::log(2.0)) / ((tau + 1.0) * (tau + 1.0));
 
    // Argument of logarithm: τ√(τ+2)·mₑc² / (√2·I)
    double logArg = tau * std::sqrt(tau + 2.0) * kM_e / (std::sqrt(2.0) * fI_MeV);
@@ -141,8 +138,7 @@ double AtELossBetheBloch::GetdEdx_electron(double energy) const
       return 0;
 
    // Modified Bethe formula for electrons in MeV/cm
-   double dedx_cm = kK * (static_cast<double>(fMat_Z) / fMat_A) * fDensity / beta2 *
-                    (std::log(logArg) + Fminus);
+   double dedx_cm = kK * (static_cast<double>(fMat_Z) / fMat_A) * fDensity / beta2 * (std::log(logArg) + Fminus);
 
    if (dedx_cm <= 0)
       return 0;
@@ -186,7 +182,7 @@ double AtELossBetheBloch::GetEnergy(double energyIni, double distance) const
    for (int i = 0; i < maxIt; ++i) {
       double range = GetRange(energyIni, guessEnergy);
       if (std::fabs(range - distance) < distErr) {
-         LOG(info) << "Energy converged in " << i + 1 << " iterations.";
+         LOG(debug) << "Energy converged in " << i + 1 << " iterations.";
          return guessEnergy;
       }
       guessEnergy += GetdEdx(guessEnergy) * (range - distance);
@@ -196,8 +192,8 @@ double AtELossBetheBloch::GetEnergy(double energyIni, double distance) const
       }
    }
 
-   LOG(error) << "Energy calculation (" << energyIni << " MeV through " << distance
-              << " mm) failed to converge in " << maxIt << " iterations!";
+   LOG(error) << "Energy calculation (" << energyIni << " MeV through " << distance << " mm) failed to converge in "
+              << maxIt << " iterations!";
    return -1;
 }
 
