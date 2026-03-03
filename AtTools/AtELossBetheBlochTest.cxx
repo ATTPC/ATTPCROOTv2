@@ -60,31 +60,67 @@ TEST_F(AtELossBetheBlochFixture, AlphaParticle)
    EXPECT_NEAR(range10, 657.0, 0.20 * 657.0); // within 20% of CATIMA
 }
 
-TEST_F(AtELossBetheBlochFixture, PionRange)
+/**
+ * Charged pion (π⁺): q=1, mass=139.57 MeV/c² in Ar gas (Z=18, A=40, ρ=1.65e-3 g/cm³, I=188 eV).
+ *
+ * Expected dEdx computed analytically from PDG Bethe-Bloch (Eq. 34.1):
+ *
+ *   T=1 MeV:  β²=0.01418, Tmax=0.01459 MeV, logArg=6069
+ *             ½ln(6069) − β² = 4.341
+ *             −dE/dx = 0.307075 × 0.45 × 1.65e-3 / 0.01418 × 4.341 = 6.98e-3 MeV/mm
+ *
+ *   T=10 MeV: β²=0.12930, Tmax=0.15059 MeV, logArg=646570
+ *             ½ln(646570) − β² = 6.561
+ *             −dE/dx = 0.307075 × 0.45 × 1.65e-3 / 0.12930 × 6.561 = 1.157e-3 MeV/mm
+ */
+TEST_F(AtELossBetheBlochFixture, PiondEdx)
 {
-   // Charged pion: q=1, mass=139.57 MeV/c², in Ar at STP density
    AtELossBetheBloch pionModel(1.0, 139.57, 18, 40, 1.65e-3, 188.0);
 
-   double dedx = pionModel.GetdEdx(1.0);
-   double range = pionModel.GetRange(1.0);
+   // Analytic Bethe-Bloch values, tolerance 2% (accounts for spline interpolation)
+   EXPECT_NEAR(pionModel.GetdEdx(1.0), 6.98e-3, 0.02 * 6.98e-3);
+   EXPECT_NEAR(pionModel.GetdEdx(10.0), 1.157e-3, 0.02 * 1.157e-3);
 
-   EXPECT_GT(dedx, 0.0);
-   EXPECT_GT(range, 0.0);
-   // Range should be a physically sensible positive number (mm)
-   EXPECT_LT(range, 1e6);
+   // dEdx must fall with increasing energy in this non-relativistic regime
+   EXPECT_GT(pionModel.GetdEdx(1.0), pionModel.GetdEdx(10.0));
+
+   // Self-consistency: traveling to half-range and back gives the right energy
+   double halfRange = pionModel.GetRange(10.0) / 2.0;
+   double eMid = pionModel.GetEnergy(10.0, halfRange);
+   EXPECT_NEAR(pionModel.GetRange(10.0, eMid), halfRange, 0.01 * halfRange);
 }
 
-TEST_F(AtELossBetheBlochFixture, ElectronFormula)
+/**
+ * Electron in H₂ (same material as fixture): triggers the Leo 1994 modified formula.
+ *
+ * Expected dEdx from Leo 1994 Eq. 2.38 (F⁻ = Møller exchange correction):
+ *
+ *   T=1 MeV:  τ=1.957, β²=0.8858, F⁻=−0.2204, logArg=73268
+ *             −dE/dx = 0.307075 × 1 × 6.5643e-5 / 0.8858 × (ln(73268) − 0.2204)
+ *                    = 2.499e-5 MeV/mm
+ *
+ *   T=5 MeV:  τ=9.786, β²=0.9915, F⁻=−0.01107, logArg=632450
+ *             −dE/dx = 0.307075 × 1 × 6.5643e-5 / 0.9915 × (ln(632450) − 0.01107)
+ *                    = 2.714e-5 MeV/mm
+ *
+ * The minimum of electron stopping power occurs near 1 MeV (minimum-ionizing point),
+ * so dEdx(1 MeV) < dEdx(5 MeV) and dEdx(1 MeV) < dEdx(0.5 MeV).
+ */
+TEST_F(AtELossBetheBlochFixture, ElectrondEdx)
 {
-   // Electron in H₂: triggers Leo 1994 formula (different from heavy particle formula)
    AtELossBetheBloch eModel(1.0, 0.51099895069, 1, 1, 6.5643e-5, 19.2);
 
-   double dedxElec = eModel.GetdEdx(1.0);
-   double dedxProt = model.GetdEdx(1.0); // proton fixture
+   // Analytic Leo 1994 values, tolerance 2%
+   EXPECT_NEAR(eModel.GetdEdx(1.0), 2.499e-5, 0.02 * 2.499e-5);
+   EXPECT_NEAR(eModel.GetdEdx(5.0), 2.714e-5, 0.02 * 2.714e-5);
 
-   EXPECT_GT(dedxElec, 0.0);
-   // Electron and proton dE/dx at 1 MeV must differ (different formulas + very different kinematics)
-   EXPECT_NE(dedxElec, dedxProt);
+   // Electron minimum-ionizing: dEdx has a minimum near 1 MeV
+   // → dEdx rises on both sides of the minimum
+   EXPECT_GT(eModel.GetdEdx(0.5), eModel.GetdEdx(1.0)); // falling towards minimum
+   EXPECT_GT(eModel.GetdEdx(5.0), eModel.GetdEdx(1.0)); // rising away from minimum
+
+   // Electron formula gives different result from the heavy-particle proton formula
+   EXPECT_GT(std::abs(eModel.GetdEdx(1.0) - model.GetdEdx(1.0)) / model.GetdEdx(1.0), 0.01);
 }
 
 TEST_F(AtELossBetheBlochFixture, BohrStragglingSanity)
