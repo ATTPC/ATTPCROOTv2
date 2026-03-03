@@ -38,6 +38,8 @@ set(SRCS
 
   DataCleaning/AtDataCleaner.cxx
   DataCleaning/AtkNN.cxx
+
+  AtELossBetheBloch.cxx
   )
 
 Set(DEPENDENCIES
@@ -77,6 +79,7 @@ Set(INCLUDE_DIR
 set(TEST_SRCS
   DataCleaning/AtkNNTest.cxx
   AtELossTableTest.cxx
+  AtELossBetheBlochTest.cxx
 )
 if(CATIMA_FOUND)
   set(TEST_SRCS ${TEST_SRCS}
