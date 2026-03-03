@@ -123,6 +123,28 @@ TEST_F(AtELossBetheBlochFixture, ElectrondEdx)
    EXPECT_GT(std::abs(eModel.GetdEdx(1.0) - model.GetdEdx(1.0)) / model.GetdEdx(1.0), 0.01);
 }
 
+TEST_F(AtELossBetheBlochFixture, SettersRebuildSpline)
+{
+   // Start with proton in H₂ (same as fixture)
+   AtELossBetheBloch m(1.0, kProtonMass, 1, 1, 6.5643e-5, 19.2);
+   double dedx_h2 = m.GetdEdx(1.0);
+
+   // SetMaterial: switch to Ar — dEdx must change immediately without calling BuildSpline manually
+   m.SetMaterial(18, 40, 1.65e-3, 188.0);
+   EXPECT_NE(m.GetdEdx(1.0), dedx_h2);
+
+   // SetDensity: double the Ar density — dEdx must scale proportionally
+   double dedx_ar = m.GetdEdx(1.0);
+   m.SetDensity(2.0 * 1.65e-3);
+   EXPECT_NEAR(m.GetdEdx(1.0), 2.0 * dedx_ar, 0.01 * dedx_ar);
+
+   // SetI: restore original density, then change I — dEdx must change
+   m.SetDensity(1.65e-3);
+   double dedx_before = m.GetdEdx(1.0);
+   m.SetI(100.0); // different I value
+   EXPECT_NE(m.GetdEdx(1.0), dedx_before);
+}
+
 TEST_F(AtELossBetheBlochFixture, BohrStragglingSanity)
 {
    double E0 = 5.0;

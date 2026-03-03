@@ -12,7 +12,6 @@ AtELossBetheBloch::AtELossBetheBloch(double part_q, double part_mass, int mat_Z,
    : AtELossModel(density), fPart_q(part_q), fPart_mass(part_mass)
 {
    SetMaterial(mat_Z, mat_A, density, I_eV);
-   BuildSpline();
 }
 
 void AtELossBetheBloch::SetMaterial(int mat_Z, int mat_A, double density, double I_eV)
@@ -24,6 +23,19 @@ void AtELossBetheBloch::SetMaterial(int mat_Z, int mat_A, double density, double
       fI_MeV = 13.5 * mat_Z * 1e-6; // Bloch approximation: I ≈ 13.5·Z eV
    else
       fI_MeV = I_eV * 1e-6;
+   BuildSpline();
+}
+
+void AtELossBetheBloch::SetI(double I_eV)
+{
+   fI_MeV = I_eV * 1e-6;
+   BuildSpline();
+}
+
+void AtELossBetheBloch::SetDensity(double density)
+{
+   fDensity = density;
+   BuildSpline();
 }
 
 void AtELossBetheBloch::BuildSpline(double E_min_MeV, double E_max_MeV, int nPoints)

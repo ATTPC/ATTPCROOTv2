@@ -43,7 +43,8 @@ public:
                      double I_eV = -1);
 
    void SetMaterial(int mat_Z, int mat_A, double density, double I_eV = -1);
-   void SetI(double I_eV) { fI_MeV = I_eV * 1e-6; }
+   void SetI(double I_eV);
+   virtual void SetDensity(double density) override;
 
    /**
     * (Re)build the internal dx/dE spline over [E_min, E_max] with nPoints log-spaced samples.
