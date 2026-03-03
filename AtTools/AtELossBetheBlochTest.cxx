@@ -32,7 +32,7 @@ TEST_F(AtELossBetheBlochFixture, ProtonRange_vs_SRIM)
 
    EXPECT_GT(range1, 0.0);
    EXPECT_GT(range10, 0.0);
-   EXPECT_NEAR(range1, 133.0, 0.20 * 133.0);   // within 20% of CATIMA
+   EXPECT_NEAR(range1, 133.0, 0.20 * 133.0);    // within 20% of CATIMA
    EXPECT_NEAR(range10, 7888.0, 0.20 * 7888.0); // within 20% of CATIMA
 }
 

@@ -19,7 +19,7 @@ namespace AtTools {
  */
 class AtELossBetheBloch : public AtELossModel {
 protected:
-   static constexpr double kK = 0.307075;       // MeV cm²/mol (4πNₐrₑ²mₑc²)
+   static constexpr double kK = 0.307075;        // MeV cm²/mol (4πNₐrₑ²mₑc²)
    static constexpr double kM_e = 0.51099895069; // electron mass MeV/c²
 
    double fPart_q;    // projectile charge in units of e
@@ -39,8 +39,7 @@ public:
     * @param density   Density of target material in g/cm³.
     * @param I_eV      Mean excitation energy in eV. If ≤ 0, uses Bloch approx: I ≈ 13.5·Z eV.
     */
-   AtELossBetheBloch(double part_q, double part_mass, int mat_Z, int mat_A, double density,
-                     double I_eV = -1);
+   AtELossBetheBloch(double part_q, double part_mass, int mat_Z, int mat_A, double density, double I_eV = -1);
 
    void SetMaterial(int mat_Z, int mat_A, double density, double I_eV = -1);
    void SetI(double I_eV);
@@ -61,8 +60,8 @@ public:
 
 private:
    bool IsElectron() const { return std::abs(fPart_mass - kM_e) < 0.01; }
-   double GetdEdx_formula(double energy) const; // analytic Bethe-Bloch, used by BuildSpline
-   double GetdEdx_heavy(double energy) const;   // heavy particle variant (PDG 2022, Eq. 34.1)
+   double GetdEdx_formula(double energy) const;  // analytic Bethe-Bloch, used by BuildSpline
+   double GetdEdx_heavy(double energy) const;    // heavy particle variant (PDG 2022, Eq. 34.1)
    double GetdEdx_electron(double energy) const; // electron variant (Leo 1994, Eq. 2.38)
 };
 
