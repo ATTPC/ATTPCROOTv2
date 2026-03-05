@@ -76,6 +76,7 @@ void testENCourseMerger(int run_num = 5074){
   mergeENCourseTask->SetPersistence(true);
   mergeENCourseTask->SetF2PPACsDistance(500); // [mm]
   mergeENCourseTask->SetF3PPACsDistance(500); // [mm]
+  mergeENCourseTask->SetMaxDeltaTimeDifference(5); // [us]
 
   auto thresholdSi = 50;
   auto psaSi = std::make_unique<AtPSASi>();
@@ -147,6 +148,8 @@ void testENCourseMerger(int run_num = 5074){
   std::cout << "Unpacking " << numEvents << " events. " << std::endl;
 
   run->Run(0, numEvents);
+
+  mergeENCourseTask->CloseENRootFile();
 
   std::cout << std::endl << std::endl;
   std::cout << "Done unpacking events" << std::endl << std::endl;
