@@ -15,10 +15,9 @@ void testENCourseMerger(int run_num = 5074){
   timer.Start();
 
   TString fileName = TString::Format("run_%04d", run_num);
-  //TString parameterFile = "RCNP/ATTPC.E510.par";
-  TString parameterFile = "ATTPC.a1954.par";
+  TString parameterFile = "RCNP/ATTPC.E510.par";
   TString mappath = "";
-  TString filepath = "/media/aurio/Cris/E510/UnpackerOutput/h5/";
+  TString filepath = "/media/aurio/Cris/E510/h5/";
   TString ENCoursePath = "/media/aurio/Cris/E510/rootEN/";
   TString fileExt = ".h5";
   TString outputpath = "/media/aurio/Cris/E510/UnpackerOutput/";
@@ -32,12 +31,10 @@ void testENCourseMerger(int run_num = 5074){
   TString dataDir = dir + "/macro/data/";
   TString geomDir = dir + "/geometry/";
   gSystem->Setenv("GEOMPATH", geomDir.Data());
-  // TString outputFile = outputpath + fileName + "_reUnpack.root";
   TString outputFile = outputpath + fileName + "_testENCourseMerger.root";
   TString loggerFile = dataDir + "ATTPCLog.log";
   TString digiParFile = dir + "/parameters/" + parameterFile;
-  //TString geoManFile = dir + "/geometry/RCNP_ATTPC_494_3torr.root";
-  TString geoManFile = dir + "/geometry/ATTPC_C3D8_550torr.root";
+  TString geoManFile = dir + "/geometry/RCNP_ATTPC_494_3torr.root";
 
   // Specific paths for three LUT for electric field correction
   TString zlutFile = dir + "/resources/corrections/a1954/zLUT.txt";
@@ -62,7 +59,7 @@ void testENCourseMerger(int run_num = 5074){
   auto fAtMapPtr = std::make_shared<AtTpcMap>();
   fAtMapPtr->ParseXMLMap(mapDir.Data());
   fAtMapPtr->GeneratePadPlane();
-/*
+
   //auto unpacker = std::make_unique<AtHDFUnpacker>(fAtMapPtr);
   //auto unpacker = std::make_unique<AtFRIBLinkedHDFUnpacker>(fAtMapPtr);
   auto unpacker = std::make_unique<AtFRIBSiUnpacker>(fAtMapPtr);
@@ -72,15 +69,16 @@ void testENCourseMerger(int run_num = 5074){
 
   auto unpackTask = new AtUnpackTask(std::move(unpacker));
   unpackTask->SetPersistence(false); // true
-*/
+
   auto mergeENCourseTask = new AtMergeENCourseTask();
   mergeENCourseTask->SetInputFileName(ENCourseFile);
   mergeENCourseTask->SetOuputBranchName("AtENCourseEvent");
   mergeENCourseTask->SetPersistence(true);
   mergeENCourseTask->SetF2PPACsDistance(500); // [mm]
   mergeENCourseTask->SetF3PPACsDistance(500); // [mm]
+  mergeENCourseTask->SetMaxDeltaTimeDifference(5); // [us]
 
-  /*auto thresholdSi = 50;
+  auto thresholdSi = 50;
   auto psaSi = std::make_unique<AtPSASi>();
   psaSi->SetThreshold(thresholdSi);
 
@@ -91,7 +89,7 @@ void testENCourseMerger(int run_num = 5074){
   auto psaGagg = std::make_unique<AtPSASi>();
   psaGagg->SetThreshold(thresholdGagg);
   AtGaggTask *gaggTask = new AtGaggTask(std::move(psaGagg));
-  gaggTask->SetPersistence(kTRUE);*/
+  gaggTask->SetPersistence(kTRUE);
 
   AtFilterSubtraction *filter = new AtFilterSubtraction(fAtMapPtr);
   filter->SetThreshold(50);
@@ -132,25 +130,26 @@ void testENCourseMerger(int run_num = 5074){
   ransacTask->SetChargeThreshold(20); //150
   // ransacTask->SetNumItera(500);
 
-  //run->AddTask(unpackTask);
+  run->AddTask(unpackTask);
   run->AddTask(mergeENCourseTask);
-  //run->AddTask(siTask);
-  //run->AddTask(gaggTask);
-  //run->AddTask(psaTask);
+  run->AddTask(siTask);
+  run->AddTask(gaggTask);
+  run->AddTask(psaTask);
   //run->AddTask(SCTask);
-  //run->AddTask(ransacTask);
+  run->AddTask(ransacTask);
 
   std::cout << "***** Starting Init ******" << std::endl;
   run->Init();
   std::cout << "***** Ending Init ******" << std::endl;
 
   // Get the number of events and unpack the whole run
-  //auto numEvents = unpackTask->GetNumEvents();
+  auto numEvents = unpackTask->GetNumEvents();
   //numEvents = 1000;
-  Int_t numEvents = 90647;
   std::cout << "Unpacking " << numEvents << " events. " << std::endl;
 
   run->Run(0, numEvents);
+
+  mergeENCourseTask->CloseENRootFile();
 
   std::cout << std::endl << std::endl;
   std::cout << "Done unpacking events" << std::endl << std::endl;

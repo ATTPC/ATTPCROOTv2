@@ -24,6 +24,11 @@ void plotENCourseData()
    TH1F *histTDCRefRF2 = new TH1F("histTDCRefRF2", "histTDCRefRF2", 5000, 0, 10000);
    TH1F *histTDCRefRF3 = new TH1F("histTDCRefRF3", "histTDCRefRF3", 6000, 0, 12000);
 
+   TH1F *histDeltaTEN_ATTPC2 = new TH1F("histDeltaTEN_ATTPC2", "histDeltaTEN_ATTPC2", 10000, 18.4, 18.5);
+   TH1F *histDeltaTEN_ENPrev = new TH1F("histDeltaTEN_ENPrev", "histDeltaTEN_ENPrev", 1000, -1, 2);
+   TH1F *histDeltaTATTPC2_ATTPC2Prev = new TH1F("histDeltaTATTPC2_ATTPC2Prev", "histDeltaTATTPC2_ATTPC2Prev", 1000, -1, 2);
+   TH1F *histDeltaTEN_EnPrev_ATTPC2_ATTPC2Prev = new TH1F("histDeltaTEN_EnPrev_ATTPC2_ATTPC2Prev", "histDeltaTEN_EnPrev_ATTPC2_ATTPC2Prev", 90, -10, 80);
+
    // All runs.
    std::vector runNums = {5074};
 
@@ -38,12 +43,18 @@ void plotENCourseData()
       // Creare the TTreeReader to read the AtENCourseEvents.
       TTreeReader unpackReader("cbmsim", unpackFile);
       TTreeReaderValue<TClonesArray> ENCourseEventArray(unpackReader, "AtENCourseEvent");
+      TTreeReaderValue<TClonesArray> EventArray(unpackReader, "AtEventH");
 
       // Loop over events.
+      ULong64_t prevENTS{};
+      ULong64_t prevATTPC2TS{};
       for (int i = 0; i < nUnpackEvents; i++) {
          unpackReader.Next();
 
          AtENCourseEvent *ENEvent = (AtENCourseEvent *)ENCourseEventArray->At(0);
+         AtEvent *event = (AtEvent *)EventArray->At(0);
+
+         if (!ENEvent->IsGood()) continue;
 
          auto F2PPACs = ENEvent->GetF2PPACs();
          auto F2EntrancePosition = F2PPACs.GetEntrancePosition();
@@ -79,6 +90,13 @@ void plotENCourseData()
          histTDCRefRF2->Fill(ENEvent->GetTDCRefRFToF(2));
          histTDCRefRF3->Fill(ENEvent->GetTDCRefRFToF(3));
 
+         histDeltaTEN_ATTPC2->Fill(ENEvent->GetTimestamp()/1E6 - event->GetTimestamp(1)/1E6);
+         histDeltaTEN_ENPrev->Fill(ENEvent->GetTimestamp()/1E6 - prevENTS/1E6);
+         histDeltaTATTPC2_ATTPC2Prev->Fill(event->GetTimestamp(1)/1E6 - prevATTPC2TS/1E6);
+         histDeltaTEN_EnPrev_ATTPC2_ATTPC2Prev->Fill(ENEvent->GetTimestamp() - prevENTS - event->GetTimestamp(1) + prevATTPC2TS);
+
+         prevENTS = ENEvent->GetTimestamp();
+         prevATTPC2TS = event->GetTimestamp(1);
       }
       unpackFile->Close();
    }
@@ -155,4 +173,20 @@ void plotENCourseData()
    TCanvas *c17 = new TCanvas();
    histTDCRefRF3->Draw();
    histTDCRefRF3->GetXaxis()->SetTitle("ToF_{RF}[3] - TDC_{ref} [a.u.]");
+
+   TCanvas *c18 = new TCanvas();
+   histDeltaTEN_ATTPC2->Draw();
+   histDeltaTEN_ATTPC2->GetXaxis()->SetTitle("t_{EN} - t_{ATTPC2} [s]");
+
+   TCanvas *c19 = new TCanvas();
+   histDeltaTEN_ENPrev->Draw();
+   histDeltaTEN_ENPrev->GetXaxis()->SetTitle("t_{EN} - t_{ENPrev} [s]");
+
+   TCanvas *c20 = new TCanvas();
+   histDeltaTATTPC2_ATTPC2Prev->Draw();
+   histDeltaTATTPC2_ATTPC2Prev->GetXaxis()->SetTitle("t_{ATTPC2} - t_{ATTPC2Prev} [s]");
+
+   TCanvas *c21 = new TCanvas();
+   histDeltaTEN_EnPrev_ATTPC2_ATTPC2Prev->Draw();
+   histDeltaTEN_EnPrev_ATTPC2_ATTPC2Prev->GetXaxis()->SetTitle("t_{EN} - t_{ENPrev} - (t_{ATTPC2} - t_{ATTPC2Prev}) [#mus]");
 }
