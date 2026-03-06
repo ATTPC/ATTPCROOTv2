@@ -70,6 +70,9 @@ void testENCourseMerger(int run_num = 5074){
   auto unpackTask = new AtUnpackTask(std::move(unpacker));
   unpackTask->SetPersistence(false); // true
 
+  auto ICTask = new AtICTask();
+  ICTask->SetPersistence(true);
+
   auto mergeENCourseTask = new AtMergeENCourseTask();
   mergeENCourseTask->SetInputFileName(ENCourseFile);
   mergeENCourseTask->SetOuputBranchName("AtENCourseEvent");
@@ -131,6 +134,7 @@ void testENCourseMerger(int run_num = 5074){
   // ransacTask->SetNumItera(500);
 
   run->AddTask(unpackTask);
+  run->AddTask(ICTask);
   run->AddTask(mergeENCourseTask);
   run->AddTask(siTask);
   run->AddTask(gaggTask);

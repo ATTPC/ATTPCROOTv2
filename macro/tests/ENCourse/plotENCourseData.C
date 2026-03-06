@@ -24,6 +24,8 @@ void plotENCourseData()
    TH1F *histTDCRefRF2 = new TH1F("histTDCRefRF2", "histTDCRefRF2", 5000, 0, 10000);
    TH1F *histTDCRefRF3 = new TH1F("histTDCRefRF3", "histTDCRefRF3", 6000, 0, 12000);
 
+   TH2F *histBeamPID = new TH2F("histBeamPID", "histBeamPID", 3000, 0, 12000, 400, 0, 2000);
+
    TH1F *histDeltaTEN_ATTPC2 = new TH1F("histDeltaTEN_ATTPC2", "histDeltaTEN_ATTPC2", 10000, 18.4, 18.5);
    TH1F *histDeltaTEN_ENPrev = new TH1F("histDeltaTEN_ENPrev", "histDeltaTEN_ENPrev", 1000, -1, 2);
    TH1F *histDeltaTATTPC2_ATTPC2Prev = new TH1F("histDeltaTATTPC2_ATTPC2Prev", "histDeltaTATTPC2_ATTPC2Prev", 1000, -1, 2);
@@ -43,6 +45,7 @@ void plotENCourseData()
       // Creare the TTreeReader to read the AtENCourseEvents.
       TTreeReader unpackReader("cbmsim", unpackFile);
       TTreeReaderValue<TClonesArray> ENCourseEventArray(unpackReader, "AtENCourseEvent");
+      TTreeReaderValue<TClonesArray> ICEventArray(unpackReader, "AtICEvent");
       TTreeReaderValue<TClonesArray> EventArray(unpackReader, "AtEventH");
 
       // Loop over events.
@@ -52,6 +55,7 @@ void plotENCourseData()
          unpackReader.Next();
 
          AtENCourseEvent *ENEvent = (AtENCourseEvent *)ENCourseEventArray->At(0);
+         AtICEvent *ICEvent = (AtICEvent *)ICEventArray->At(0);
          AtEvent *event = (AtEvent *)EventArray->At(0);
 
          if (!ENEvent->IsGood()) continue;
@@ -89,6 +93,8 @@ void plotENCourseData()
          histTDCRefRF1->Fill(ENEvent->GetTDCRefRFToF(1));
          histTDCRefRF2->Fill(ENEvent->GetTDCRefRFToF(2));
          histTDCRefRF3->Fill(ENEvent->GetTDCRefRFToF(3));
+
+         histBeamPID->Fill(ENEvent->GetTDCRefRFToF(3), ICEvent->GetADC());
 
          histDeltaTEN_ATTPC2->Fill(ENEvent->GetTimestamp()/1E6 - event->GetTimestamp(1)/1E6);
          histDeltaTEN_ENPrev->Fill(ENEvent->GetTimestamp()/1E6 - prevENTS/1E6);
@@ -175,18 +181,23 @@ void plotENCourseData()
    histTDCRefRF3->GetXaxis()->SetTitle("ToF_{RF}[3] - TDC_{ref} [a.u.]");
 
    TCanvas *c18 = new TCanvas();
+   histBeamPID->Draw("zcol");
+   histBeamPID->GetXaxis()->SetTitle("ToF_{RF}[3] - TDC_{ref} [a.u.]");
+   histBeamPID->GetYaxis()->SetTitle("ADC_{IC} [a.u.]");
+
+   TCanvas *c19 = new TCanvas();
    histDeltaTEN_ATTPC2->Draw();
    histDeltaTEN_ATTPC2->GetXaxis()->SetTitle("t_{EN} - t_{ATTPC2} [s]");
 
-   TCanvas *c19 = new TCanvas();
+   TCanvas *c20 = new TCanvas();
    histDeltaTEN_ENPrev->Draw();
    histDeltaTEN_ENPrev->GetXaxis()->SetTitle("t_{EN} - t_{ENPrev} [s]");
 
-   TCanvas *c20 = new TCanvas();
+   TCanvas *c21 = new TCanvas();
    histDeltaTATTPC2_ATTPC2Prev->Draw();
    histDeltaTATTPC2_ATTPC2Prev->GetXaxis()->SetTitle("t_{ATTPC2} - t_{ATTPC2Prev} [s]");
 
-   TCanvas *c21 = new TCanvas();
+   TCanvas *c22 = new TCanvas();
    histDeltaTEN_EnPrev_ATTPC2_ATTPC2Prev->Draw();
    histDeltaTEN_EnPrev_ATTPC2_ATTPC2Prev->GetXaxis()->SetTitle("t_{EN} - t_{ENPrev} - (t_{ATTPC2} - t_{ATTPC2Prev}) [#mus]");
 }
