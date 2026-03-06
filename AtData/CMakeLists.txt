@@ -41,6 +41,7 @@ set(SRCS
   AtGaggEvent.cxx
   AtENCourseEvent.cxx
   AtPPACPair.cxx
+  AtICEvent.cxx
 
   AtProtoQuadrant.cxx
   AtTrack.cxx
