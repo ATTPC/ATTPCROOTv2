@@ -10,6 +10,8 @@
 #include <Rtypes.h>
 #include <TObject.h>
 
+#include <memory>
+
 class AtPPACPair : public TObject {
 public:
    using XYPoint = ROOT::Math::XYPoint;
