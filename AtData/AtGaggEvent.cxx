@@ -11,8 +11,8 @@ ClassImp(AtGaggEvent);
 
 AtGaggEvent::AtGaggEvent() : AtBaseEvent("AtGaggEvent") {}
 
-AtGaggEvent::AtGaggEvent(const AtGaggEvent &copy) : AtBaseEvent(copy),
-                                              fMultiplicity1(copy.fMultiplicity1), fMultiplicity2(copy.fMultiplicity2)
+AtGaggEvent::AtGaggEvent(const AtGaggEvent &copy)
+   : AtBaseEvent(copy), fMultiplicity1(copy.fMultiplicity1), fMultiplicity2(copy.fMultiplicity2)
 {
    for (int i = 0; i < 25; i++) {
       fE1[i] = copy.fE1[i];
