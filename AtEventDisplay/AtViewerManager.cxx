@@ -164,7 +164,7 @@ void AtViewerManager::GotoEventImpl()
    for (auto &tab : fTabs)
       tab->Exec();
 
-   fPadNum.Notify(); // Inform everyone they should act as is the pad changed
+   fPadNum.Notify();   // Inform everyone they should act as is the pad changed
    fTrackNum.Notify(); // Inform everyone they should act as is the track changed
 }
 

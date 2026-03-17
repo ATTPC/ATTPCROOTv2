@@ -89,9 +89,9 @@ AtPSASi::HitVector AtPSASi::AnalyzeGenTrace(AtGenericTrace *genTrace)
 
    std::array<Double_t, 256> floatADC;
    std::vector<Double_t> floatADCVector = genTrace->GetADC();
-   //std::cout << "GAGG ADC entries: " << floatADCVector.size() <<  std::endl;
+   // std::cout << "GAGG ADC entries: " << floatADCVector.size() <<  std::endl;
    if (floatADCVector.size() >= 256) {
-      for(int i=0; i<256; i++)
+      for (int i = 0; i < 256; i++)
          floatADC[i] = floatADCVector[i];
    } else {
       LOG(error) << "There are not 256 ADC values in the GAGG trace. Skipping!";
@@ -103,13 +103,13 @@ AtPSASi::HitVector AtPSASi::AnalyzeGenTrace(AtGenericTrace *genTrace)
    for (int i = 10; i < 20; i++)
       baseline += floatADC[i];
    baseline /= 10;
-   //std::cout << "baseline = " << baseline <<  std::endl;
+   // std::cout << "baseline = " << baseline <<  std::endl;
 
    auto maxAdcIt = std::max_element(floatADC.begin() + 20, floatADC.end() - 12);
    Int_t maxAdcIdx = std::distance(floatADC.begin(), maxAdcIt);
-   //std::cout << " Max ADC = " << *maxAdcIt << std::endl;
+   // std::cout << " Max ADC = " << *maxAdcIt << std::endl;
 
-   //std::cout << " Diff ADC = " << *maxAdcIt - baseline << std::endl;
+   // std::cout << " Diff ADC = " << *maxAdcIt - baseline << std::endl;
 
    if (!shouldSaveHit(*maxAdcIt, baseline + fThreshold, maxAdcIdx)) {
       LOG(debug) << "GAGG trace did not pass threshold.";

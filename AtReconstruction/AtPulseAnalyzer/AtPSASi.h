@@ -1,8 +1,8 @@
 #ifndef AtPSASI_H
 #define AtPSASI_H
 
-#include "AtPSA.h"
 #include "AtGenericTrace.h"
+#include "AtPSA.h"
 
 #include <Rtypes.h> // for Bool_t, THashConsistencyHolder, ClassDefOverride
 

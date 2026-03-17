@@ -121,7 +121,7 @@ class AtSidebarTrackControl : public AtVerticalSidebarFrame, public DataHandling
 
 public:
    AtSidebarTrackControl(DataHandling::AtTrackNum &trackNum, const TGWindow *p = nullptr, UInt_t w = 1, UInt_t h = 1,
-                       UInt_t options = 0, Pixel_t back = GetDefaultFrameBackground());
+                         UInt_t options = 0, Pixel_t back = GetDefaultFrameBackground());
    ~AtSidebarTrackControl();
 
    void Update(DataHandling::AtSubject *changedSubject) override;

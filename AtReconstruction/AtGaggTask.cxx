@@ -1,8 +1,8 @@
 #include "AtGaggTask.h"
 
 #include "AtGaggEvent.h"
-#include "AtRawEvent.h"
 #include "AtGenericTrace.h"
+#include "AtRawEvent.h"
 
 #include <FairLogger.h>
 #include <FairRootManager.h> // for FairRootManager
@@ -10,9 +10,9 @@
 #include <TClonesArray.h>
 #include <TObject.h> // for TObject
 
-#include <utility> // for move
-#include <string>
 #include <map>
+#include <string>
+#include <utility> // for move
 
 constexpr auto cRED = "\033[1;31m";
 constexpr auto cYELLOW = "\033[1;33m";
@@ -20,7 +20,8 @@ constexpr auto cNORMAL = "\033[0m";
 constexpr auto cGREEN = "\033[1;32m";
 
 AtGaggTask::AtGaggTask(std::unique_ptr<AtPSASi> psa)
-   : fInputBranchName("AtRawEvent"), fOutputBranchName("AtGaggEvent"), fGaggEventArray(TClonesArray("AtGaggEvent", 1)), fPSA(std::move(psa)), fIsPersistence(kFALSE)
+   : fInputBranchName("AtRawEvent"), fOutputBranchName("AtGaggEvent"), fGaggEventArray(TClonesArray("AtGaggEvent", 1)),
+     fPSA(std::move(psa)), fIsPersistence(kFALSE)
 {
 }
 
@@ -78,14 +79,14 @@ void AtGaggTask::Exec(Option_t *opt)
       return;
    }
 
-   LOG(info) << "Staring GAGG analysis on event Number: " << rawEvent->GetEventID() << " with " << rawEvent->GetNumPads()
-              << " valid pads";
+   LOG(info) << "Staring GAGG analysis on event Number: " << rawEvent->GetEventID() << " with "
+             << rawEvent->GetNumPads() << " valid pads";
 
    // Get the AtGenTrace that contain the GAGG data and get the trace integrals.
    auto &genTraces = rawEvent->GetGenTraces();
    int idx1{};
    int idx2{};
-   for (auto &genTrace: genTraces) {
+   for (auto &genTrace : genTraces) {
 
       auto pseudoHits = fPSA->AnalyzeGenTrace(genTrace.get());
       double traceCharge{};
@@ -93,23 +94,19 @@ void AtGaggTask::Exec(Option_t *opt)
       if (pseudoHits.size()) {
          traceCharge = pseudoHits[0]->GetTraceIntegral();
          maxADC = pseudoHits[0]->GetCharge();
-      }
-      else
+      } else
          continue;
 
       if (idx1 < 25) {
-          gaggEvent->SetE1(idx1, traceCharge);
-          gaggEvent->SetADCMax1(idx1++, maxADC);
+         gaggEvent->SetE1(idx1, traceCharge);
+         gaggEvent->SetADCMax1(idx1++, maxADC);
+      } else if (idx2 < 16) {
+         gaggEvent->SetE2(idx2, traceCharge);
+         gaggEvent->SetADCMax2(idx2++, maxADC);
       }
-      else if (idx2 < 16) {
-          gaggEvent->SetE2(idx2, traceCharge);
-          gaggEvent->SetADCMax2(idx2++, maxADC);
-      }
-
 
       if (idx1 >= 25 && idx2 >= 16)
          break;
-
    }
    gaggEvent->SetMultiplicity1(idx1);
    gaggEvent->SetMultiplicity2(idx2);

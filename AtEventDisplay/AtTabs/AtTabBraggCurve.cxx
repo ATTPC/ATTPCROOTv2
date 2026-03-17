@@ -204,14 +204,15 @@ void AtTabBraggCurve::UpdatePatternEventElements()
       return;
    }
 
-   if(fTrackNum->Get() == -1) {
+   if (fTrackNum->Get() == -1) {
       LOG(warning) << "Selected track num is -1. No Bragg curve will be drawn.";
       DrawHistELossVRange();
       return;
    }
 
-   if(fTrackNum->Get() >= tracks.size()) {
-      LOG(warning) << "Selected track num is " << fTrackNum->Get() << ", but we have " << tracks.size() << " tracks. The Bragg curve for the last one will be drawn.";
+   if (fTrackNum->Get() >= tracks.size()) {
+      LOG(warning) << "Selected track num is " << fTrackNum->Get() << ", but we have " << tracks.size()
+                   << " tracks. The Bragg curve for the last one will be drawn.";
       DrawHistELossVRange(tracks[tracks.size() - 1].GetBraggCurve());
       return;
    }
@@ -236,13 +237,14 @@ void AtTabBraggCurve::UpdateTrackingEventElements()
       return;
    }
 
-   if(fTrackNum->Get() == -1) {
+   if (fTrackNum->Get() == -1) {
       LOG(warning) << "Selected track num is -1. No fitted track information will be printed.";
       return;
    }
 
-   if(fTrackNum->Get() >= fittedTracks.size()) {
-      LOG(warning) << "Selected track num is " << fTrackNum->Get() << ", but we have " << fittedTracks.size() << " fitted tracks. The information for the last fitted track will be printed.";
+   if (fTrackNum->Get() >= fittedTracks.size()) {
+      LOG(warning) << "Selected track num is " << fTrackNum->Get() << ", but we have " << fittedTracks.size()
+                   << " fitted tracks. The information for the last fitted track will be printed.";
       PrintFittedTrackInfo(*fittedTracks.at(fittedTracks.size() - 1));
       DrawBestFittingELoss(*fittedTracks.at(fittedTracks.size() - 1));
       return;
@@ -264,7 +266,7 @@ void AtTabBraggCurve::UpdateFitMetadata()
       return;
    }
 
-   if(fTrackNum->Get() == -1) {
+   if (fTrackNum->Get() == -1) {
       LOG(warning) << "Selected track num is -1. No fit metadata will be printed.";
       return;
    }
@@ -338,8 +340,9 @@ void AtTabBraggCurve::DrawBestFittingELoss(AtFittedTrack fittedTrack)
 void AtTabBraggCurve::PrintFittedTrackMetadata(AtFitMetadata *fitMetadata)
 {
    int trackIdx{fTrackNum->Get()};
-   if(fTrackNum->Get() >= fitMetadata->GetNumEntries()) {
-      LOG(warning) << "Selected track num is " << fTrackNum->Get() << ", but we have " << fitMetadata->GetNumEntries() << " metadata entries. The metadata for the last fitted track will be printed.";
+   if (fTrackNum->Get() >= fitMetadata->GetNumEntries()) {
+      LOG(warning) << "Selected track num is " << fTrackNum->Get() << ", but we have " << fitMetadata->GetNumEntries()
+                   << " metadata entries. The metadata for the last fitted track will be printed.";
       trackIdx = fitMetadata->GetNumEntries() - 1;
    }
 

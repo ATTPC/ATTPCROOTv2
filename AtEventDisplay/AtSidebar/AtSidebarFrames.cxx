@@ -119,7 +119,7 @@ void AtSidebarPadControl::SelectPad()
 }
 
 AtSidebarTrackControl::AtSidebarTrackControl(DataHandling::AtTrackNum &trackNum, const TGWindow *p, UInt_t w, UInt_t h,
-                                         UInt_t options, Pixel_t back)
+                                             UInt_t options, Pixel_t back)
    : AtVerticalSidebarFrame(p, w, h, options, back), fTrackNum(trackNum)
 {
    fTrackNum.Attach(this);
@@ -135,9 +135,8 @@ void AtSidebarTrackControl::FillFrame()
    fCurrentTrackFrame = new TGHorizontalFrame(this);
    fCurrentTrackLabel = new TGLabel(fCurrentTrackFrame, "Current Track: ");
 
-   fCurrentTrackEntry =
-      new TGNumberEntry(fCurrentTrackFrame, 0., 6, -1, TGNumberFormat::kNESInteger, TGNumberFormat::kNEAAnyNumber,
-                        TGNumberFormat::kNELLimitMinMax, -1, 200);
+   fCurrentTrackEntry = new TGNumberEntry(fCurrentTrackFrame, 0., 6, -1, TGNumberFormat::kNESInteger,
+                                          TGNumberFormat::kNEAAnyNumber, TGNumberFormat::kNELLimitMinMax, -1, 200);
 
    fCurrentTrackEntry->Connect("ValueSet(Long_t)", "AtSidebarTrackControl", this, "SelectTrack()");
 

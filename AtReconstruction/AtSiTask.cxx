@@ -1,9 +1,9 @@
 #include "AtSiTask.h"
 
-#include "AtSiEvent.h"
-#include "AtRawEvent.h"
-#include "AtPad.h"
 #include "AtAuxPad.h"
+#include "AtPad.h"
+#include "AtRawEvent.h"
+#include "AtSiEvent.h"
 
 #include <FairLogger.h>
 #include <FairRootManager.h> // for FairRootManager
@@ -11,9 +11,9 @@
 #include <TClonesArray.h>
 #include <TObject.h> // for TObject
 
-#include <utility> // for move
-#include <string>
 #include <map>
+#include <string>
+#include <utility> // for move
 
 constexpr auto cRED = "\033[1;31m";
 constexpr auto cYELLOW = "\033[1;33m";
@@ -21,7 +21,8 @@ constexpr auto cNORMAL = "\033[0m";
 constexpr auto cGREEN = "\033[1;32m";
 
 AtSiTask::AtSiTask(std::unique_ptr<AtPSA> psa)
-   : fInputBranchName("AtRawEvent"), fOutputBranchName("AtSiEvent"), fSiEventArray(TClonesArray("AtSiEvent", 1)), fPSA(std::move(psa)), fIsPersistence(kFALSE)
+   : fInputBranchName("AtRawEvent"), fOutputBranchName("AtSiEvent"), fSiEventArray(TClonesArray("AtSiEvent", 1)),
+     fPSA(std::move(psa)), fIsPersistence(kFALSE)
 {
 }
 
@@ -86,7 +87,7 @@ void AtSiTask::Exec(Option_t *opt)
    auto &auxPadsMap = rawEvent->GetAuxPads();
    int idx1{};
    int idx2{};
-   for (auto &auxPadMapEntry: auxPadsMap) {
+   for (auto &auxPadMapEntry : auxPadsMap) {
       auto auxPadName = auxPadMapEntry.first;
       auto auxPad = auxPadMapEntry.second;
 
@@ -96,7 +97,8 @@ void AtSiTask::Exec(Option_t *opt)
       int channel = std::stoi(auxPadName.substr(10, 2));
 
       // Focus on positive traces for now.
-      if (asad == 0) continue;
+      if (asad == 0)
+         continue;
 
       auto pseudoHits = fPSA->AnalyzePad(&auxPad);
       double traceCharge{};
@@ -104,8 +106,7 @@ void AtSiTask::Exec(Option_t *opt)
       if (pseudoHits.size()) {
          traceCharge = pseudoHits[0]->GetTraceIntegral();
          maxADC = pseudoHits[0]->GetCharge();
-      }
-      else
+      } else
          continue;
 
       if (channel < 11 || (22 < channel && channel < 45) || 56 < channel) {
