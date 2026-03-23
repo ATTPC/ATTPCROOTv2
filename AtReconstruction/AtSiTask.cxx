@@ -100,6 +100,15 @@ void AtSiTask::Exec(Option_t *opt)
       if (asad == 0)
          continue;
 
+      /* TO-DO:
+      if (silicon channel has positive parity)
+         fPSA->SetPositivePolarity(true);
+      else if (silicon channel has negative parity)
+         fPSA->SetPositivePolarity(false);
+
+      Probably re-implement the following code.
+      */
+
       auto pseudoHits = fPSA->AnalyzePad(&auxPad);
       double traceCharge{};
       double maxADC{};

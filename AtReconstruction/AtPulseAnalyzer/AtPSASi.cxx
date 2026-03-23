@@ -105,13 +105,21 @@ AtPSASi::HitVector AtPSASi::AnalyzeGenTrace(AtGenericTrace *genTrace)
    baseline /= 10;
    // std::cout << "baseline = " << baseline <<  std::endl;
 
-   auto maxAdcIt = std::max_element(floatADC.begin() + 20, floatADC.end() - 12);
+   Double_t *maxAdcIt{nullptr};
+   Double_t charge{-999};
+   if (fPositivePolarity) {
+      maxAdcIt = std::max_element(floatADC.begin() + 20, floatADC.end() - 12);
+      charge = *maxAdcIt;
+   } else {
+      maxAdcIt = std::min_element(floatADC.begin() + 20, floatADC.end() - 12);
+      charge = -(*maxAdcIt);
+   }
    Int_t maxAdcIdx = std::distance(floatADC.begin(), maxAdcIt);
    // std::cout << " Max ADC = " << *maxAdcIt << std::endl;
 
    // std::cout << " Diff ADC = " << *maxAdcIt - baseline << std::endl;
 
-   if (!shouldSaveHit(*maxAdcIt, baseline + fThreshold, maxAdcIdx)) {
+   if (!shouldSaveHit(charge, baseline + fThreshold, maxAdcIdx)) {
       LOG(debug) << "GAGG trace did not pass threshold.";
       return {};
    }
@@ -119,9 +127,9 @@ AtPSASi::HitVector AtPSASi::AnalyzeGenTrace(AtGenericTrace *genTrace)
    // Calculation of the mean value of the peak time by interpolating the pulse
    Double_t timemax = 0.5 * (floatADC[maxAdcIdx - 1] - floatADC[maxAdcIdx + 1]) /
                       (floatADC[maxAdcIdx - 1] + floatADC[maxAdcIdx + 1] - 2 * floatADC[maxAdcIdx]);
-   Double_t QHitTot = std::accumulate(floatADC.begin(), floatADC.end(), 0);
+   Double_t QHitTot = std::abs(std::accumulate(floatADC.begin(), floatADC.end(), 0));
 
-   auto hit = std::make_unique<AtHit>(0, pos, *maxAdcIt - baseline);
+   auto hit = std::make_unique<AtHit>(0, pos, charge - baseline);
 
    hit->SetTimeStamp(maxAdcIdx);
    hit->SetTimeStampCorrInter(timemax);
