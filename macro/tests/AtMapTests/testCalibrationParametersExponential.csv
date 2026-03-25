@@ -1,0 +1,4 @@
+PadID,Amplitude,ExponentFactor
+1,10,0.1
+2,20,-0.05,14
+3,67
