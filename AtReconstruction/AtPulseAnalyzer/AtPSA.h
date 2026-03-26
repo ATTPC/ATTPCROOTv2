@@ -2,6 +2,7 @@
 #define AtPSA_H
 
 #include "AtHit.h" // IWYU pragma: keep
+#include "AtMap.h"
 
 #include <Rtypes.h>
 
@@ -25,6 +26,10 @@ class TMemberInspector;
  * @defgroup PSA
  */
 class AtPSA {
+protected:
+   using mapPtr = std::shared_ptr<AtMap>;
+   using HitVector = std::vector<std::unique_ptr<AtHit>>;
+
 private:
    // Access in PSA methods through getThreshold()
    Int_t fThreshold{-1};    ///< threshold of ADC value
@@ -47,7 +52,8 @@ protected:
    Double_t fDriftVelocity{}; //< drift velocity of electron in cm/us
    Double_t fZk{};            //< Relative position of micromegas-cathode
 
-   using HitVector = std::vector<std::unique_ptr<AtHit>>;
+   // AtMap that may be set in order to apply calibration.
+   mapPtr fMap{nullptr};
 
 public:
    AtPSA() = default;
@@ -69,6 +75,9 @@ public:
    // virtual HitVector AnalyzeTrace(const std::vector<double> &trace) = 0;
    virtual std::unique_ptr<AtPSA> Clone() = 0;
 
+   void SetMap(mapPtr map) { fMap = std::move(map); }
+   void ApplyCalibration(std::unique_ptr<AtHit> &hit);
+
 protected:
    // Protected functions
    void TrackMCPoints(std::multimap<Int_t, std::size_t> &map,
@@ -81,7 +90,7 @@ protected:
 
    virtual double getZhitVariance(double zLoc, double zLocVar) const;
    virtual std::pair<double, double> getXYhitVariance() const;
-   ClassDef(AtPSA, 5)
+   ClassDef(AtPSA, 6)
 };
 
 #endif
