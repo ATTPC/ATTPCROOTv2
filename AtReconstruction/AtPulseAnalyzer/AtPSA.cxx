@@ -167,6 +167,9 @@ void AtPSA::Analyze(AtRawEvent *rawEvent, AtEvent *event)
             TrackMCPoints(mcPointsMap, *(hit.get()));
          }
 
+         // Before adding to AtEvent, if a calibration map was passed, then apply the calibration.
+         ApplyCalibration(hit);
+
          event->AddHit(std::move(hit));
       }
    }
@@ -180,6 +183,22 @@ void AtPSA::Analyze(AtRawEvent *rawEvent, AtEvent *event)
    event->SetMultiplicityMap(PadMultiplicity);
    event->SetRhoVariance(RhoVariance);
    event->SetEventCharge(QEventTot);
+}
+
+void AtPSA::ApplyCalibration(std::unique_ptr<AtHit> &hit)
+{
+   if (!fMap) {
+      LOG(debug) << "The mapping was not set, so no calibration will be applied!";
+      return;
+   }
+
+   if (!fMap->IsCalibrationSet()) {
+      LOG(debug) << "The mapping does not have a calibration, so no calibration will be applied!";
+      return;
+   }
+
+   Double_t calibratedELoss = fMap->GetCalibratedELoss(hit->GetPadNum(), hit->GetCharge());
+   hit->SetCalibratedELoss(calibratedELoss);
 }
 
 Double_t AtPSA::getThreshold(int padSize)

@@ -2,6 +2,7 @@
 #define AtPSA_H
 
 #include "AtHit.h" // IWYU pragma: keep
+#include "AtMap.h"
 
 #include <Rtypes.h>
 
@@ -26,6 +27,10 @@ class TMemberInspector;
  */
 class AtPSA {
 protected:
+   using mapPtr = std::shared_ptr<AtMap>;
+   using HitVector = std::vector<std::unique_ptr<AtHit>>;
+
+private:
    // Access in PSA methods through getThreshold()
    Int_t fThreshold{-1};    ///< threshold of ADC value
    Int_t fThresholdlow{-1}; ///< threshold for Central pads
@@ -48,7 +53,8 @@ protected:
    Double_t fZk{};            //< Relative position of micromegas-cathode
    Int_t fIsTPCInverted{};    //< Whether or not the TPC is inverted with respect the usual convention [0/1]
 
-   using HitVector = std::vector<std::unique_ptr<AtHit>>;
+   // AtMap that may be set in order to apply calibration.
+   mapPtr fMap{nullptr};
 
 public:
    AtPSA() = default;
@@ -69,6 +75,9 @@ public:
 
    // virtual HitVector AnalyzeTrace(const std::vector<double> &trace) = 0;
    virtual std::unique_ptr<AtPSA> Clone() = 0;
+
+   void SetMap(mapPtr map) { fMap = std::move(map); }
+   void ApplyCalibration(std::unique_ptr<AtHit> &hit);
 
 protected:
    // Protected functions
