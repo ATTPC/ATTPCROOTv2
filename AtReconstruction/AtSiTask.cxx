@@ -20,7 +20,7 @@ constexpr auto cYELLOW = "\033[1;33m";
 constexpr auto cNORMAL = "\033[0m";
 constexpr auto cGREEN = "\033[1;32m";
 
-AtSiTask::AtSiTask(std::unique_ptr<AtPSA> psa)
+AtSiTask::AtSiTask(std::unique_ptr<AtPSASi> psa)
    : fInputBranchName("AtRawEvent"), fOutputBranchName("AtSiEvent"), fSiEventArray(TClonesArray("AtSiEvent", 1)),
      fPSA(std::move(psa)), fIsPersistence(kFALSE)
 {
