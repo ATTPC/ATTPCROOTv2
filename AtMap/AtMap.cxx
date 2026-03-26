@@ -43,6 +43,8 @@ std::ostream &operator<<(std::ostream &os, const AtMap::InhibitType &t)
 AtMap::AtMap() : AtPadCoord(boost::extents[10240][3][2]), fPadPlane(nullptr)
 {
    fCalibrationFunction = [](double *x, double *params) -> double {
+      LOG(error)
+         << "The calibration function was not set! Returning -999 by default. Please set the calibration function!";
       return -999;
    }; // Setting a default calibration function.
 }
@@ -300,15 +302,16 @@ Bool_t AtMap::ParseCalibrationParameters(TString calibrationFilePath, int calibr
    return true;
 }
 
-double AtMap::GetCalibratedELoss(int padID, double ADC)
+double AtMap::GetCalibratedELoss(int padID, double ADC) const
 {
-   if (fCalibrationParametersMap.find(padID) == fCalibrationParametersMap.end()) {
+   auto entry = fCalibrationParametersMap.find(padID);
+   if (entry == fCalibrationParametersMap.end()) {
       LOG(warning) << "Pad " << padID
                    << " did not have an entry in the calibration parameters file... Returning ELoss = -999 by default.";
       return -999;
    }
 
-   std::vector<double> parameters = fCalibrationParametersMap[padID];
+   std::vector<double> parameters = entry->second;
    if (parameters.empty()) {
       LOG(warning) << "Pad " << padID
                    << " had an issue when reading the calibration parameters file... Returning ELoss = -999 by "
@@ -317,6 +320,11 @@ double AtMap::GetCalibratedELoss(int padID, double ADC)
    }
 
    return fCalibrationFunction(&ADC, &parameters[0]);
+}
+
+bool AtMap::IsCalibrationSet() const
+{
+   return !fCalibrationParametersMap.empty();
 }
 
 Bool_t AtMap::DumpAtTPCMap()

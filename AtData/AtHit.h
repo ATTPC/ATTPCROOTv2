@@ -37,6 +37,7 @@ protected:
    XYZVector fPositionVariance{}; //< Position variance (unused by AtHitCluster)
    Int_t fHitID;                  //< Unique ID of hit
    Int_t fPadNum;                 //< Pad that generated hit
+   Double_t fCalibratedELoss{-1}; //< Calibrated ELoss from calibration function in AtMap
 
    Double_t fTraceIntegral{-1};     //< Integrated pulse charge of full trace
    Int_t fHitMult{1};               //< Hit multiplicity in the pad where the hit was found
@@ -66,6 +67,7 @@ public:
    virtual void SetPositionVariance(const XYZVector &vec) { fPositionVariance = vec; }
    void SetHitID(Int_t hitID) { fHitID = hitID; }
    void SetPadNum(Int_t padNum) { fPadNum = padNum; }
+   void SetCalibratedELoss(Double_t calibratedELoss) { fCalibratedELoss = calibratedELoss; }
 
    void SetTraceIntegral(Double_t integral) { fTraceIntegral = integral; }
    void SetHitMult(Int_t HitMult) { fHitMult = HitMult; }
@@ -81,6 +83,7 @@ public:
    XYZVector GetPositionSigma() const;
    Double_t GetCharge() const { return fCharge; }
    Int_t GetPadNum() const { return fPadNum; }
+   Double_t GetCalibratedELoss() const { return fCalibratedELoss; }
    Double_t GetTraceIntegral() const { return fTraceIntegral; }
    Int_t GetHitMult() const { return fHitMult; }
    Int_t GetTimeStamp() const { return fTimeStamp; }
@@ -116,7 +119,7 @@ public:
       }
    };
 
-   ClassDef(AtHit, 5);
+   ClassDef(AtHit, 6);
 };
 
 /**

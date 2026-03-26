@@ -97,7 +97,8 @@ public:
 
    Bool_t ParseCalibrationParameters(TString calibrationFilePath, int calibrationParameterNumber);
    void SetCalibrationFunction(std::function<double(double *, double *)> function) { fCalibrationFunction = function; }
-   double GetCalibratedELoss(int padID, double ADC);
+   double GetCalibratedELoss(int padID, double ADC) const;
+   bool IsCalibrationSet() const;
 
    std::string GetAuxName(const AtPadReference &ref) const;
 
