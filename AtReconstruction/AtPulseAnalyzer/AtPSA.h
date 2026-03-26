@@ -30,12 +30,10 @@ protected:
    using mapPtr = std::shared_ptr<AtMap>;
    using HitVector = std::vector<std::unique_ptr<AtHit>>;
 
-private:
    // Access in PSA methods through getThreshold()
    Int_t fThreshold{-1};    ///< threshold of ADC value
    Int_t fThresholdlow{-1}; ///< threshold for Central pads
 
-protected:
    TClonesArray *fMCSimPointArray{};
 
    Bool_t fUsingLowThreshold{false};
