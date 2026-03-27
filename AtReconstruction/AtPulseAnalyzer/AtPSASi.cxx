@@ -100,14 +100,8 @@ AtPSASi::HitVector AtPSASi::AnalyzeGenTrace(AtGenericTrace *genTrace)
 
    std::array<Double_t, 256> floatADC;
    std::vector<Double_t> floatADCVector = genTrace->GetADC();
-   // std::cout << "GAGG ADC entries: " << floatADCVector.size() <<  std::endl;
-   /*if (floatADCVector.size() >= 256) {
-      for (int i = 0; i < 256; i++)
-         floatADC[i] = floatADCVector[i];
-   } else {
-      LOG(error) << "There are not 256 ADC values in the GAGG trace. Skipping!";
-      return {};
-   }*/
+   for (int i = 0; i < 256; i++)
+      floatADC[i] = floatADCVector[i];
 
    // Get baseline value.
    double baseline{};
