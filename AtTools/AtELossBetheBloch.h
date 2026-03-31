@@ -28,7 +28,8 @@ protected:
    int fMat_A;        // target mass number (g/mol)
    double fI_MeV;     // mean excitation energy in MeV
 
-   tk::spline fdXdE; // spline of dx/dE vs. energy; integral cached for O(log n) GetRange
+   tk::spline fdXdE;          // spline of dx/dE vs. energy; integral cached for O(log n) GetRange
+   tk::spline fRangeVariance; // spline of Ω²(E) [mm²] vs. energy; accumulated Bohr range variance
 
 public:
    /**
@@ -57,6 +58,7 @@ public:
    virtual double GetEnergy(double energyIni, double distance) const override;
    virtual double GetElossStraggling(double energyIni, double energyFin) const override;
    virtual double GetdEdxStraggling(double energyIni, double energyFin) const override;
+   virtual double GetRangeVariance(double energy) const override;
 
 private:
    bool IsElectron() const { return std::abs(fPart_mass - kM_e) < 0.01; }
