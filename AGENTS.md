@@ -1,27 +1,24 @@
-# CLAUDE.md
+# AGENTS.md
 
 ATTPCROOT is a ROOT/FairRoot-based C++ framework for simulation and analysis of Active Target Time Projection Chamber (AT-TPC) detector data.
 
 ## Documentation
 
-Full developer documentation lives in `docs/`. See [docs/index.md](../docs/index.md) for the full map. Quick topic links:
+Full developer documentation lives in `docs/development/`:
 
 | Topic | File |
 |-------|------|
-| First-time install | [tooling/installation.md](../docs/tooling/installation.md) |
-| Daily use (build/test) | [tooling/daily-use.md](../docs/tooling/daily-use.md) |
-| Testing patterns | [tooling/testing.md](../docs/tooling/testing.md) |
-| Contributor guide | [contributing/guide.md](../docs/contributing/guide.md) |
-| Adding a new module | [contributing/new-module.md](../docs/contributing/new-module.md) |
-| Code style | [contributing/code-style.md](../docs/contributing/code-style.md) |
-| Module overview | [reference/modules.md](../docs/reference/modules.md) |
-| Data model | [reference/data-model.md](../docs/reference/data-model.md) |
-| Branch I/O contracts | [reference/branch-io-contracts.md](../docs/reference/branch-io-contracts.md) |
-| Simulation pipeline | [subsystems/simulation-pipeline.md](../docs/subsystems/simulation-pipeline.md) |
-| Reconstruction pipeline | [subsystems/reconstruction-pipeline.md](../docs/subsystems/reconstruction-pipeline.md) |
-| Event generators | [subsystems/generators.md](../docs/subsystems/generators.md) |
-| Pulse shape analysis | [subsystems/psa.md](../docs/subsystems/psa.md) |
-| Energy loss | [subsystems/energy-loss.md](../docs/subsystems/energy-loss.md) |
+| Environment setup | [docs/development/setup.md](../docs/development/setup.md) |
+| Build & test commands | [docs/development/building.md](../docs/development/building.md) |
+| Module overview | [docs/development/modules.md](../docs/development/modules.md) |
+| Simulation pipeline | [docs/development/simulation-pipeline.md](../docs/development/simulation-pipeline.md) |
+| Reconstruction pipeline | [docs/development/reconstruction-pipeline.md](../docs/development/reconstruction-pipeline.md) |
+| Event generators | [docs/development/generators.md](../docs/development/generators.md) |
+| Pulse shape analysis | [docs/development/psa.md](../docs/development/psa.md) |
+| Energy loss | [docs/development/energy-loss.md](../docs/development/energy-loss.md) |
+| Adding a new module | [docs/development/new-module.md](../docs/development/new-module.md) |
+| Code style | [docs/development/code-style.md](../docs/development/code-style.md) |
+| Testing | [docs/development/testing.md](../docs/development/testing.md) |
 
 ## Quick Reference: Build & Test
 

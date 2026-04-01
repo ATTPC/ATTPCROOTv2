@@ -1,0 +1,867 @@
+
+╭─── Claude Code v2.1.63 ──────────────────────────────────────────────────────╮
+│                                                    │ Tips for getting        │
+│                 Welcome back Adam!                 │ started                 │
+│                                                    │ Run /init to create a … │
+│                       ▐▛███▜▌                      │ ─────────────────────── │
+│                      ▝▜█████▛▘                     │ Recent activity         │
+│                        ▘▘ ▝▝                       │ No recent activity      │
+│                                                    │                         │
+│  Sonnet 4.6 · Claude Pro · aanthony3@gmail.com's   │                         │
+│  Organization                                      │                         │
+│             ~/fair_install/ATTPCROOTv2             │                         │
+╰──────────────────────────────────────────────────────────────────────────────╯
+
+❯ This branch is implementing a Kalman Filter for use in TPCs. You can see  
+  tests showing how it is being used to fit tracks in @macro/tests/UKF/.    
+  The class itself is located in                                            
+  @AtReconstruction/AtFitter/OpenKF/kalman_filter/TrackFitterUKF*  and it   
+  depends on the propagator defined in @AtTools/AtPropagator*. This fitter  
+  needs to be integrated into the task system of the codebase. The output   
+  will be an AtFittedTrack which has a proposed class in the PR #254 which  
+  is to merge the branch RealAurio:fitterRefactor. Please make a plan to    
+  finalize this refactor and implement a task that will run the kalman      
+  filter on tracks. The AtFitter task should share a base with the other    
+  fitter tasks. At least the GenFit version, but also the MCFitter if it    
+  combines well.                                                            
+  ⎿  Listed directory macro/tests/UKF/
+
+● 3 Explore agents finished (ctrl+o to expand)
+   ├─ Explore UKF fitter and propagator classes · 12 tool uses · 55.6k tokens
+   │  ⎿  Done
+   ├─ Explore existing fitter tasks and task system · 25 tool uses · 50.2k
+   tokens
+   │  ⎿  Done
+   └─ Explore AtFittedTrack and PR #254 branch · 43 tool uses · 55.1k tokens
+      ⎿  Done
+
+● Let me read the critical files directly before designing the plan.
+
+● Read 6 files (ctrl+o to expand)
+
+● Now let me look at the CMakeLists files and the existing OpenKFTest to
+  understand build system integration:
+
+● Searched for 2 patterns, read 1 file (ctrl+o to expand)
+
+● Let me check the AtHitCluster and AtTrack data to understand what information
+  is available for UKF:
+
+● Searched for 2 patterns, read 1 file (ctrl+o to expand)
+
+● Now let me look at TrackFitterUKF's physics-specific interface in detail:
+
+● Searched for 1 pattern, read 1 file (ctrl+o to expand)
+
+● Now let me quickly check the ELoss model setup and check what the AtGenfit
+  does for momentum estimation:
+
+● Searched for 4 patterns (ctrl+o to expand)
+
+● Before finalizing the plan, I need to clarify a few key decisions:
+  ⎿  Tool use rejected with user message: The user wants to clarify these 
+     questions.
+         This means they may have additional information, context or questions 
+     for you.
+         Take their response into account and then reformulate the questions if 
+     appropriate.
+         Start by asking them what they would like to clarify.
+
+         Questions asked:
+     - "The fitterRefactor PR (#254) changes ~100+ files (namespace rename 
+     AtFITTER→EventFit, AtFitter interface change from ProcessTracks() to 
+     FitEvent()/GetFittedTrack(), new AtFittedTrack nested structs, removes PRA 
+     data). How much of this refactor should we adopt?"
+       (No answer provided)
+     - "The UKF needs an initial momentum magnitude as a seed. What is the 
+     primary strategy for providing this?"
+       (No answer provided)
+     - "What UKF output should be stored in AtFittedTrack beyond the standard 
+     vertex state (energy, theta, phi, position)?"
+       (No answer provided)
+
+● What would you like to clarify about the questions I asked?
+
+✻ Baked for 4m 23s
+
+❯ I think you are comparing the wrong things. main is not the main branch,  
+  develop is. Main is very old and should be ignored. That PR only touches  
+  36 files, not 100. Those changes are all important to understand to       
+  construct a plan against them. To set the initial momentum, we will use a 
+   circle fit like we do in the getfit case (PRA). Give me your options for 
+   the last question again.                                                 
+
+● Good point - let me look at the fitterRefactor changes properly (against
+  develop) and how GenFit uses the circle fit for initial momentum.
+
+● Bash(git log --oneline RealAurio/fitterRefactor ^develop | head -20)
+  ⎿  11b7a6f9 Removed stuff from AtFitter that ended up being too case spec
+     ific to make sense to keep in the base class. Also fixed some serious
+     bugs that I found while actually implementing a fitter class in the br
+     … +16 lines (ctrl+o to expand)
+
+● Bash(git diff --name-only RealAurio/fitterRefactor develop -- 2>/dev/null |
+      head -50)
+  ⎿  AtData/AtDataLinkDef.h
+     AtData/AtFitMetadata.cxx
+     AtData/AtFitMetadata.h
+     … +27 lines (ctrl+o to expand)
+
+● Bash(git show RealAurio/fitterRefactor:AtReconstruction/AtFitter/AtFitter.h)
+  ⎿  #ifndef AtFITTER_H
+     #define AtFITTER_H
+     … +40 lines (ctrl+o to expand)
+
+● Bash(git show RealAurio/fitterRefactor:AtData/AtFittedTrack.h)
+  ⎿  #ifndef ATFITTEDTRACK_H
+     #define ATFITTEDTRACK_H
+     … +162 lines (ctrl+o to expand)
+
+● Bash(git show RealAurio/fitterRefactor:AtReconstruction/AtFitterTask.h && echo
+       "---" && git show
+      RealAurio/fitterRefactor:AtReconstruction/AtFitterTask.cxx)
+  ⎿  /*********************************************************************
+      *   Fitter Task AtFitterTask.hh                                *
+      *   Author: Y. Ayyad ayyadlim@frib.msu.edu                             *
+     … +95 lines (ctrl+o to expand)
+
+● Bash(git show RealAurio/fitterRefactor:AtData/AtFitTrackMetadata.h && echo
+      "---" && git show RealAurio/fitterRefactor:AtData/AtFitMetadata.h)
+  ⎿  #ifndef ATFITTRACKMETADATA_H
+     #define ATFITTRACKMETADATA_H
+     … +39 lines (ctrl+o to expand)
+
+● Bash(git show RealAurio/fitterRefactor:AtReconstruction/AtFitter/AtFitter.cxx)
+  ⎿  #include "AtFitter.h"
+
+     #include "AtPatternEvent.h"
+     … +25 lines (ctrl+o to expand)
+
+● Searched for 2 patterns, read 1 file (ctrl+o to expand)
+
+● I now have the full picture. Here's the re-ask on output storage:
+
+● User answered Claude's questions:
+  ⎿  · What UKF output should be stored in AtFittedTrack beyond the 
+     standard vertex state (Kinematics + Vertex + TrackProperties already 
+     in the refactored class)? → Vertex + smoothed positions (Recommended)
+
+● Bash(git show RealAurio/fitterRefactor:AtReconstruction/AtFitter/AtGenfit.h |
+      head -60)
+  ⎿  #ifndef ATGENFIT_H
+     #define ATGENFIT_H
+     … +36 lines (ctrl+o to expand)
+
+● Bash(git show RealAurio/fitterRefactor:AtData/AtTrack.h | grep -n
+      "smoothed\|Smooth\|UKF\|fSmooth\|fFitted" | head -20)
+  ⎿  (No output)
+
+● Bash(git show
+      RealAurio/fitterRefactor:AtReconstruction/AtFitter/AtFitterOld.h)
+  ⎿  #ifndef AtFITTEROLD_H
+     #define AtFITTEROLD_H
+     … +37 lines (ctrl+o to expand)
+
+● Bash(git show RealAurio/fitterRefactor:AtData/AtTrackingEventOld.h | head -30)
+  ⎿  #ifndef AtTRACKINGEVENTOLD_H
+     #define AtTRACKINGEVENTOLD_H
+     … +27 lines (ctrl+o to expand)
+
+● Searched for 1 pattern (ctrl+o to expand)
+
+● Now I have everything I need. Let me write the plan:
+
+● Updated plan
+  ⎿  /plan to preview
+  ⎿  User rejected Claude's plan:
+     ╭─────────────────────────────────────────────────────────────────────────╮
+     │ Plan: Integrate UKF Track Fitter into Task System                       │
+     │                                                                         │
+     │ Context                                                                 │
+     │                                                                         │
+     │ The UKF track fitter (kf::TrackFitterUKF) is fully implemented as a     │
+     │ standalone physics class and tested via macros in macro/tests/UKF/. It  │
+     │ needs to be integrated into the FairTask-based reconstruction pipeline  │
+     │ so it can be run event-by-event on data.                                │
+     │                                                                         │
+     │ In parallel, PR #254 (RealAurio/fitterRefactor) proposes a clean        │
+     │ refactored fitter architecture with a new EventFit::AtFitter base class │
+     │  and a redesigned AtFittedTrack. The UKF task should be implemented     │
+     │ against this new interface rather than the deprecated                   │
+     │ AtFITTER::AtFitter.                                                     │
+     │                                                                         │
+     │ Outcome: A complete EventFit::AtFitterUKF class that reads an           │
+     │ AtPatternEvent (via AtFitterTask), fits each track with the UKF using a │
+     │  Brho-based momentum seed, and writes an AtTrackingEvent with           │
+     │ AtFittedTrack objects containing vertex kinematics and smoothed         │
+     │ trajectory positions.                                                   │
+     │                                                                         │
+     │ ---                                                                     │
+     │ Step 1 — Merge fitterRefactor (PR #254) into OpenKF-Claude              │
+     │                                                                         │
+     │ Merge RealAurio/fitterRefactor into the OpenKF-Claude branch. This      │
+     │ brings in all 36 changed files. Key files introduced/changed:           │
+     │                                                                         │
+     │ File: AtData/AtFittedTrack.h/cxx                                        │
+     │ Change: New nested-struct design (Kinematics, ParticleInfo,             │
+     │ TrackProperties)                                                        │
+     │ ────────────────────────────────────────                                │
+     │ File: AtData/AtFitMetadata.h/cxx                                        │
+     │ Change: New: event-level fit metadata                                   │
+     │ ────────────────────────────────────────                                │
+     │ File: AtData/AtFitTrackMetadata.h/cxx                                   │
+     │ Change: New: per-track fit statistics                                   │
+     │ ────────────────────────────────────────                                │
+     │ File: AtData/AtFittedTrackOld.h/cxx                                     │
+     │ Change: Backward-compat alias for old AtFittedTrack                     │
+     │ ────────────────────────────────────────                                │
+     │ File: AtData/CMakeLists.txt                                             │
+     │ Change: Adds new data classes                                           │
+     │ ────────────────────────────────────────                                │
+     │ File: AtData/AtDataLinkDef.h                                            │
+     │ Change: Adds ROOT dictionary entries                                    │
+     │ ────────────────────────────────────────                                │
+     │ File: AtReconstruction/AtFitter/AtFitter.h/cxx                          │
+     │ Change: New EventFit::AtFitter with FitEvent()/GetFittedTrack()         │
+     │ ────────────────────────────────────────                                │
+     │ File: AtReconstruction/AtFitter/AtFitterOld.h/cxx                       │
+     │ Change: Old AtFITTER::AtFitter kept for backward compat                 │
+     │ ────────────────────────────────────────                                │
+     │ File: AtReconstruction/AtFitter/AtGenfit.h                              │
+     │ Change: Now inherits AtFitterOld (deprecated, not changed)              │
+     │ ────────────────────────────────────────                                │
+     │ File: AtReconstruction/AtFitter/AtMCFitter.cxx                          │
+     │ Change: Minor updates                                                   │
+     │ ────────────────────────────────────────                                │
+     │ File: AtReconstruction/AtFitterTask.h/cxx                               │
+     │ Change: Updated to use EventFit::AtFitter; adds optional                │
+     │   RawEvent/Event/FitMetadata branches                                   │
+     │ ────────────────────────────────────────                                │
+     │ File: AtReconstruction/AtReconstructionLinkDef.h                        │
+     │ Change: Updated LinkDef                                                 │
+     │ ────────────────────────────────────────                                │
+     │ File: AtReconstruction/AtPatternModification/*                          │
+     │ Change: New BraggCurveFinder task (independent)                         │
+     │ ────────────────────────────────────────                                │
+     │ File: AtEventDisplay/AtTabs/*                                           │
+     │ Change: Tab updates (independent)                                       │
+     │                                                                         │
+     │ Resolve any merge conflicts; most conflict risk is in CMakeLists and    │
+     │ LinkDef files.                                                          │
+     │                                                                         │
+     │ ---                                                                     │
+     │ Step 2 — Add Smoothed Positions to AtFittedTrack::TrackProperties       │
+     │                                                                         │
+     │ File: AtData/AtFittedTrack.h                                            │
+     │                                                                         │
+     │ Add to TrackProperties struct:                                          │
+     │ std::vector<ROOT::Math::XYZPoint> fSmoothedPositions; // UKF-fitted     │
+     │ positions at each cluster                                               │
+     │                                                                         │
+     │ Add corresponding setter/getter to AtFittedTrack:                       │
+     │ void SetSmoothedPositions(std::vector<ROOT::Math::XYZPoint> pos) {      │
+     │ fTrackProperties.fSmoothedPositions = std::move(pos); }                 │
+     │ const std::vector<ROOT::Math::XYZPoint>& GetSmoothedPositions() const { │
+     │  return fTrackProperties.fSmoothedPositions; }                          │
+     │                                                                         │
+     │ Bump ClassDef(AtFittedTrack, 3).                                        │
+     │                                                                         │
+     │ ---                                                                     │
+     │ Step 3 — Implement AtFitterUKF                                          │
+     │                                                                         │
+     │ New files:                                                              │
+     │ - AtReconstruction/AtFitter/AtFitterUKF.h                               │
+     │ - AtReconstruction/AtFitter/AtFitterUKF.cxx                             │
+     │                                                                         │
+     │ Header                                                                  │
+     │                                                                         │
+     │ namespace EventFit {                                                    │
+     │                                                                         │
+     │ class AtFitterUKF : public AtFitter {                                   │
+     │ public:                                                                 │
+     │    AtFitterUKF(double charge, double mass_MeV,                          │
+     │                std::unique_ptr<AtTools::AtELossModel> elossModel);      │
+     │                                                                         │
+     │    void SetBField(ROOT::Math::XYZVector bField); // Tesla               │
+     │    void SetEField(ROOT::Math::XYZVector eField); // V/m (default 0)     │
+     │    void SetUKFParameters(double alpha, double beta, double kappa);      │
+     │    void SetMeasurementSigma(double sigma_mm);    // default 1.0 mm      │
+     │    void SetMomentumSigmaFrac(double frac);       // fractional, default │
+     │  0.1                                                                    │
+     │    void SetMinClusters(int n);                   // default 3           │
+     │                                                                         │
+     │    void Init() override {}                                              │
+     │                                                                         │
+     │ protected:                                                              │
+     │    AtFittedTrack *GetFittedTrack(AtTrack *track,                        │
+     │                                  AtFitMetadata *fitMetadata = nullptr,  │
+     │                                  AtRawEvent *rawEvent = nullptr,        │
+     │                                  AtEvent *event = nullptr) override;    │
+     │ private:                                                                │
+     │    // Helpers                                                           │
+     │    std::unique_ptr<kf::TrackFitterUKF> CreateUKF() const;               │
+     │    ROOT::Math::XYZPoint  GetInitialPosition(AtTrack *track) const;      │
+     │    ROOT::Math::XYZVector GetInitialMomentum(AtTrack *track) const;      │
+     │    TMatrixD              GetInitialCovariance(double p_mag_MeV) const;  │
+     │    TMatrixD              GetMeasCovariance() const;                     │
+     │    double                GetBrho(AtTrack *track) const;                 │
+     │                                                                         │
+     │    // Particle / detector config                                        │
+     │    double fCharge;                                        // charge in  │
+     │ units of e                                                              │
+     │    double fMass_MeV;                                      // rest mass  │
+     │ in MeV/c²                                                               │
+     │    ROOT::Math::XYZVector fBField{0, 0, 2.85};            // Tesla       │
+     │    ROOT::Math::XYZVector fEField{0, 0, 0};               // V/m         │
+     │    std::unique_ptr<AtTools::AtELossModel> fELossModel;                  │
+     │                                                                         │
+     │    // UKF tuning                                                        │
+     │    double fAlpha{1e-3}, fBeta{2.0}, fKappa{0.0};                        │
+     │    double fMeasSigma_mm{1.0};                                           │
+     │    double fMomSigmaFrac{0.1};                                           │
+     │    int    fMinClusters{3};                                              │
+     │                                                                         │
+     │    AtTools::AtKinematics fKinematics; // for GetMomFromBrho             │
+     │ };                                                                      │
+     │                                                                         │
+     │ } // namespace EventFit                                                 │
+     │                                                                         │
+     │ Implementation logic in GetFittedTrack()                                │
+     │                                                                         │
+     │ 1. Get clusters: auto *clusters = track->GetHitClusterArray();          │
+     │ track->SortClusterHitArrayZ();                                          │
+     │ Skip track if clusters->size() < fMinClusters.                          │
+     │ 2. Seed momentum from circle fit (same as GenFit):                      │
+     │ radius = track->GetGeoRadius() / 1000.0  // mm → m                      │
+     │ theta  = track->GetGeoTheta()                                           │
+     │ phi    = track->GetGeoPhi()                                             │
+     │ brho   = fBField.Z() * radius / sin(theta)  // T·m                      │
+     │ [p_GeV, KE_GeV] = fKinematics.GetMomFromBrho(mass_amu, charge, brho)    │
+     │ p_MeV = p_GeV * 1000.0                                                  │
+     │ 3. Initial position: clusters->front().GetPosition() (in mm).           │
+     │ 4. Initial momentum direction: unit vector from (theta, phi); magnitude │
+     │  = p_MeV.                                                               │
+     │ 5. Create and configure UKF:                                            │
+     │ auto ukf = CreateUKF();   // new kf::TrackFitterUKF with                │
+     │ AtPropagator+AtRK4AdaptiveStepper                                       │
+     │ ukf->setParameters(fAlpha, fBeta, fKappa);                              │
+     │ ukf->SetInitialState(initialPos, initialMom,                            │
+     │ GetInitialCovariance(p_MeV));                                           │
+     │ ukf->SetMeasCov(GetMeasCovariance());                                   │
+     │ ukf->fEnableEnStraggling = true;                                        │
+     │ 6. Filter loop:                                                         │
+     │ for (size_t i = 1; i < clusters->size(); ++i) {                         │
+     │     XYZPoint measPt = clusters->at(i).GetPosition(); // mm              │
+     │     ukf->predictUKF(measPt);                                            │
+     │     ukf->correctUKF(measPt);                                            │
+     │ }                                                                       │
+     │ ukf->smoothUKF();                                                       │
+     │ 6. Wrap in try/catch for Cholesky failures → mark fitConverged = false. │
+     │ 7. Build AtFittedTrack:                                                 │
+     │   - From smoothedStates[0] = [x, y, z, p, theta_s, phi_s]:              │
+     │       - KE = sqrt(p*p + m*m) - m                                        │
+     │     - SetKinematics(KE, theta_s, phi_s)                                 │
+     │     - SetVertex(XYZVector{x, y, z})                                     │
+     │   - SetParticleInfo(pdg_string, charge, mass_amu)                       │
+     │   - Extract smoothed positions from all states →                        │
+     │ SetSmoothedPositions(...)                                               │
+     │   - Compute trackLength as sum of distances between consecutive         │
+     │ smoothed positions                                                      │
+     │   - SetTrackPropertiesStruct(...) with initialPosition, trackLength,    │
+     │ trackPoints = clusters->size()                                          │
+     │   - Create AtFitTrackMetadata: set trackID, fitConverged; chi² = sum of │
+     │  squared smoothed residuals / ndf; SetTrackMetadata()                   │
+     │ 8. Optionally store metadata in AtFitMetadata (if non-null) via         │
+     │ SetTrackMetadatasVector(trackID, ...).                                  │
+     │                                                                         │
+     │ ---                                                                     │
+     │ Step 4 — Update Build System                                            │
+     │                                                                         │
+     │ File: AtReconstruction/CMakeLists.txt                                   │
+     │ - Add AtFitter/AtFitterUKF.cxx to SRCS                                  │
+     │                                                                         │
+     │ File: AtReconstruction/AtReconstructionLinkDef.h                        │
+     │ - Add #pragma link C++ class EventFit::AtFitterUKF+;                    │
+     │                                                                         │
+     │ ---                                                                     │
+     │ Step 5 — Write Usage Macro                                              │
+     │                                                                         │
+     │ New file: macro/tests/UKF/UKFTask.C                                     │
+     │                                                                         │
+     │ Demonstrates:                                                           │
+     │ auto eloss = std::make_unique<AtTools::AtELossCATIMA>(3.553e-5);        │
+     │ eloss->SetProjectile(1, 1, 1);                                          │
+     │ eloss->SetMaterial({{1, 1, 1}});                                        │
+     │                                                                         │
+     │ auto fitter = std::make_unique<EventFit::AtFitterUKF>(1.0, 938.272,     │
+     │ std::move(eloss));                                                      │
+     │ fitter->SetBField({0, 0, 2.85});                                        │
+     │ fitter->SetUKFParameters(1e-3, 2, 0);                                   │
+     │ fitter->SetMeasurementSigma(1.0);                                       │
+     │                                                                         │
+     │ auto task = new AtFitterTask(std::move(fitter));                        │
+     │ task->SetPersistence(kTRUE);                                            │
+     │ run->AddTask(task);                                                     │
+     │                                                                         │
+     │ ---                                                                     │
+     │ MCFitter Assessment                                                     │
+     │                                                                         │
+     │ AtMCFitter uses stochastic multi-iteration Monte Carlo optimization and │
+     │  produces AtMCResult arrays — not per-track AtFittedTrack objects. Its  │
+     │ Exec(AtPatternEvent&) pattern is fundamentally different from           │
+     │ GetFittedTrack(AtTrack*). It does not combine well with the new         │
+     │ EventFit::AtFitter base and should remain separate (AtMCFitterTask).    │
+     │                                                                         │
+     │ ---                                                                     │
+     │ Verification                                                            │
+     │                                                                         │
+     │ 1. Build: cmake --build build -j$(nproc) — must compile without errors. │
+     │ 2. Existing macro: Run macro/tests/UKF/UKFSingleTrack.C to confirm      │
+     │ TrackFitterUKF still works standalone.                                  │
+     │ 3. New macro: Run macro/tests/UKF/UKFTask.C end-to-end on a simulation  │
+     │ file; inspect the AtTrackingEvent branch in the output ROOT file —      │
+     │ verify AtFittedTrack contains non-trivial kinematics and smoothed       │
+     │ positions.                                                              │
+     │ 4. Check merge: Verify AtGenfit still compiles (it uses AtFitterOld     │
+     │ which is unchanged).                                                    │
+     ╰─────────────────────────────────────────────────────────────────────────╯
+
+❯ To this plan, I think we should emphasize the need for proper tests using 
+   the gtest stuff we use other places in the code-base.                    
+
+● Explore(Explore gtest structure in codebase)
+  ⎿  Done (30 tool uses · 52.4k tokens · 1m 4s)
+  (ctrl+o to expand)
+
+● Good. Let me also read the existing UKF test file to understand what's already
+   covered:
+
+● Read 1 file (ctrl+o to expand)
+
+● Now I have a complete picture of the test infrastructure. Let me update the
+  plan with a proper testing section:
+
+● Updated plan
+  ⎿  /plan to preview
+  ⎿  User rejected Claude's plan:
+     ╭─────────────────────────────────────────────────────────────────────────╮
+     │ Plan: Integrate UKF Track Fitter into Task System                       │
+     │                                                                         │
+     │ Context                                                                 │
+     │                                                                         │
+     │ The UKF track fitter (kf::TrackFitterUKF) is fully implemented as a     │
+     │ standalone physics class and tested via macros in macro/tests/UKF/. It  │
+     │ needs to be integrated into the FairTask-based reconstruction pipeline  │
+     │ so it can be run event-by-event on data.                                │
+     │                                                                         │
+     │ In parallel, PR #254 (RealAurio/fitterRefactor) proposes a clean        │
+     │ refactored fitter architecture with a new EventFit::AtFitter base class │
+     │  and a redesigned AtFittedTrack. The UKF task should be implemented     │
+     │ against this new interface rather than the deprecated                   │
+     │ AtFITTER::AtFitter.                                                     │
+     │                                                                         │
+     │ Outcome: A complete EventFit::AtFitterUKF class that reads an           │
+     │ AtPatternEvent (via AtFitterTask), fits each track with the UKF using a │
+     │  Brho-based momentum seed, and writes an AtTrackingEvent with           │
+     │ AtFittedTrack objects containing vertex kinematics and smoothed         │
+     │ trajectory positions.                                                   │
+     │                                                                         │
+     │ ---                                                                     │
+     │ Step 1 — Merge fitterRefactor (PR #254) into OpenKF-Claude              │
+     │                                                                         │
+     │ Merge RealAurio/fitterRefactor into the OpenKF-Claude branch. This      │
+     │ brings in all 36 changed files. Key files introduced/changed:           │
+     │                                                                         │
+     │ File: AtData/AtFittedTrack.h/cxx                                        │
+     │ Change: New nested-struct design (Kinematics, ParticleInfo,             │
+     │ TrackProperties)                                                        │
+     │ ────────────────────────────────────────                                │
+     │ File: AtData/AtFitMetadata.h/cxx                                        │
+     │ Change: New: event-level fit metadata                                   │
+     │ ────────────────────────────────────────                                │
+     │ File: AtData/AtFitTrackMetadata.h/cxx                                   │
+     │ Change: New: per-track fit statistics                                   │
+     │ ────────────────────────────────────────                                │
+     │ File: AtData/AtFittedTrackOld.h/cxx                                     │
+     │ Change: Backward-compat alias for old AtFittedTrack                     │
+     │ ────────────────────────────────────────                                │
+     │ File: AtData/CMakeLists.txt                                             │
+     │ Change: Adds new data classes                                           │
+     │ ────────────────────────────────────────                                │
+     │ File: AtData/AtDataLinkDef.h                                            │
+     │ Change: Adds ROOT dictionary entries                                    │
+     │ ────────────────────────────────────────                                │
+     │ File: AtReconstruction/AtFitter/AtFitter.h/cxx                          │
+     │ Change: New EventFit::AtFitter with FitEvent()/GetFittedTrack()         │
+     │ ────────────────────────────────────────                                │
+     │ File: AtReconstruction/AtFitter/AtFitterOld.h/cxx                       │
+     │ Change: Old AtFITTER::AtFitter kept for backward compat                 │
+     │ ────────────────────────────────────────                                │
+     │ File: AtReconstruction/AtFitter/AtGenfit.h                              │
+     │ Change: Now inherits AtFitterOld (deprecated, not changed)              │
+     │ ────────────────────────────────────────                                │
+     │ File: AtReconstruction/AtFitter/AtMCFitter.cxx                          │
+     │ Change: Minor updates                                                   │
+     │ ────────────────────────────────────────                                │
+     │ File: AtReconstruction/AtFitterTask.h/cxx                               │
+     │ Change: Updated to use EventFit::AtFitter; adds optional                │
+     │   RawEvent/Event/FitMetadata branches                                   │
+     │ ────────────────────────────────────────                                │
+     │ File: AtReconstruction/AtReconstructionLinkDef.h                        │
+     │ Change: Updated LinkDef                                                 │
+     │ ────────────────────────────────────────                                │
+     │ File: AtReconstruction/AtPatternModification/*                          │
+     │ Change: New BraggCurveFinder task (independent)                         │
+     │ ────────────────────────────────────────                                │
+     │ File: AtEventDisplay/AtTabs/*                                           │
+     │ Change: Tab updates (independent)                                       │
+     │                                                                         │
+     │ Resolve any merge conflicts; most conflict risk is in CMakeLists and    │
+     │ LinkDef files.                                                          │
+     │                                                                         │
+     │ ---                                                                     │
+     │ Step 2 — Add Smoothed Positions to AtFittedTrack::TrackProperties       │
+     │                                                                         │
+     │ File: AtData/AtFittedTrack.h                                            │
+     │                                                                         │
+     │ Add to TrackProperties struct:                                          │
+     │ std::vector<ROOT::Math::XYZPoint> fSmoothedPositions; // UKF-fitted     │
+     │ positions at each cluster                                               │
+     │                                                                         │
+     │ Add corresponding setter/getter to AtFittedTrack:                       │
+     │ void SetSmoothedPositions(std::vector<ROOT::Math::XYZPoint> pos) {      │
+     │ fTrackProperties.fSmoothedPositions = std::move(pos); }                 │
+     │ const std::vector<ROOT::Math::XYZPoint>& GetSmoothedPositions() const { │
+     │  return fTrackProperties.fSmoothedPositions; }                          │
+     │                                                                         │
+     │ Bump ClassDef(AtFittedTrack, 3).                                        │
+     │                                                                         │
+     │ ---                                                                     │
+     │ Step 3 — Implement AtFitterUKF                                          │
+     │                                                                         │
+     │ New files:                                                              │
+     │ - AtReconstruction/AtFitter/AtFitterUKF.h                               │
+     │ - AtReconstruction/AtFitter/AtFitterUKF.cxx                             │
+     │                                                                         │
+     │ Header                                                                  │
+     │                                                                         │
+     │ namespace EventFit {                                                    │
+     │                                                                         │
+     │ class AtFitterUKF : public AtFitter {                                   │
+     │ public:                                                                 │
+     │    AtFitterUKF(double charge, double mass_MeV,                          │
+     │                std::unique_ptr<AtTools::AtELossModel> elossModel);      │
+     │                                                                         │
+     │    void SetBField(ROOT::Math::XYZVector bField); // Tesla               │
+     │    void SetEField(ROOT::Math::XYZVector eField); // V/m (default 0)     │
+     │    void SetUKFParameters(double alpha, double beta, double kappa);      │
+     │    void SetMeasurementSigma(double sigma_mm);    // default 1.0 mm      │
+     │    void SetMomentumSigmaFrac(double frac);       // fractional, default │
+     │  0.1                                                                    │
+     │    void SetMinClusters(int n);                   // default 3           │
+     │                                                                         │
+     │    void Init() override {}                                              │
+     │                                                                         │
+     │ protected:                                                              │
+     │    AtFittedTrack *GetFittedTrack(AtTrack *track,                        │
+     │                                  AtFitMetadata *fitMetadata = nullptr,  │
+     │                                  AtRawEvent *rawEvent = nullptr,        │
+     │                                  AtEvent *event = nullptr) override;    │
+     │ private:                                                                │
+     │    // Helpers                                                           │
+     │    std::unique_ptr<kf::TrackFitterUKF> CreateUKF() const;               │
+     │    ROOT::Math::XYZPoint  GetInitialPosition(AtTrack *track) const;      │
+     │    ROOT::Math::XYZVector GetInitialMomentum(AtTrack *track) const;      │
+     │    TMatrixD              GetInitialCovariance(double p_mag_MeV) const;  │
+     │    TMatrixD              GetMeasCovariance() const;                     │
+     │    double                GetBrho(AtTrack *track) const;                 │
+     │                                                                         │
+     │    // Particle / detector config                                        │
+     │    double fCharge;                                        // charge in  │
+     │ units of e                                                              │
+     │    double fMass_MeV;                                      // rest mass  │
+     │ in MeV/c²                                                               │
+     │    ROOT::Math::XYZVector fBField{0, 0, 2.85};            // Tesla       │
+     │    ROOT::Math::XYZVector fEField{0, 0, 0};               // V/m         │
+     │    std::unique_ptr<AtTools::AtELossModel> fELossModel;                  │
+     │                                                                         │
+     │    // UKF tuning                                                        │
+     │    double fAlpha{1e-3}, fBeta{2.0}, fKappa{0.0};                        │
+     │    double fMeasSigma_mm{1.0};                                           │
+     │    double fMomSigmaFrac{0.1};                                           │
+     │    int    fMinClusters{3};                                              │
+     │                                                                         │
+     │    AtTools::AtKinematics fKinematics; // for GetMomFromBrho             │
+     │ };                                                                      │
+     │                                                                         │
+     │ } // namespace EventFit                                                 │
+     │                                                                         │
+     │ Implementation logic in GetFittedTrack()                                │
+     │                                                                         │
+     │ 1. Get clusters: auto *clusters = track->GetHitClusterArray();          │
+     │ track->SortClusterHitArrayZ();                                          │
+     │ Skip track if clusters->size() < fMinClusters.                          │
+     │ 2. Seed momentum from circle fit (same as GenFit):                      │
+     │ radius = track->GetGeoRadius() / 1000.0  // mm → m                      │
+     │ theta  = track->GetGeoTheta()                                           │
+     │ phi    = track->GetGeoPhi()                                             │
+     │ brho   = fBField.Z() * radius / sin(theta)  // T·m                      │
+     │ [p_GeV, KE_GeV] = fKinematics.GetMomFromBrho(mass_amu, charge, brho)    │
+     │ p_MeV = p_GeV * 1000.0                                                  │
+     │ 3. Initial position: clusters->front().GetPosition() (in mm).           │
+     │ 4. Initial momentum direction: unit vector from (theta, phi); magnitude │
+     │  = p_MeV.                                                               │
+     │ 5. Create and configure UKF:                                            │
+     │ auto ukf = CreateUKF();   // new kf::TrackFitterUKF with                │
+     │ AtPropagator+AtRK4AdaptiveStepper                                       │
+     │ ukf->setParameters(fAlpha, fBeta, fKappa);                              │
+     │ ukf->SetInitialState(initialPos, initialMom,                            │
+     │ GetInitialCovariance(p_MeV));                                           │
+     │ ukf->SetMeasCov(GetMeasCovariance());                                   │
+     │ ukf->fEnableEnStraggling = true;                                        │
+     │ 6. Filter loop:                                                         │
+     │ for (size_t i = 1; i < clusters->size(); ++i) {                         │
+     │     XYZPoint measPt = clusters->at(i).GetPosition(); // mm              │
+     │     ukf->predictUKF(measPt);                                            │
+     │     ukf->correctUKF(measPt);                                            │
+     │ }                                                                       │
+     │ ukf->smoothUKF();                                                       │
+     │ 6. Wrap in try/catch for Cholesky failures → mark fitConverged = false. │
+     │ 7. Build AtFittedTrack:                                                 │
+     │   - From smoothedStates[0] = [x, y, z, p, theta_s, phi_s]:              │
+     │       - KE = sqrt(p*p + m*m) - m                                        │
+     │     - SetKinematics(KE, theta_s, phi_s)                                 │
+     │     - SetVertex(XYZVector{x, y, z})                                     │
+     │   - SetParticleInfo(pdg_string, charge, mass_amu)                       │
+     │   - Extract smoothed positions from all states →                        │
+     │ SetSmoothedPositions(...)                                               │
+     │   - Compute trackLength as sum of distances between consecutive         │
+     │ smoothed positions                                                      │
+     │   - SetTrackPropertiesStruct(...) with initialPosition, trackLength,    │
+     │ trackPoints = clusters->size()                                          │
+     │   - Create AtFitTrackMetadata: set trackID, fitConverged; chi² = sum of │
+     │  squared smoothed residuals / ndf; SetTrackMetadata()                   │
+     │ 8. Optionally store metadata in AtFitMetadata (if non-null) via         │
+     │ SetTrackMetadatasVector(trackID, ...).                                  │
+     │                                                                         │
+     │ ---                                                                     │
+     │ Step 4 — Update Build System                                            │
+     │                                                                         │
+     │ File: AtReconstruction/CMakeLists.txt                                   │
+     │ - Add AtFitter/AtFitterUKF.cxx to SRCS                                  │
+     │                                                                         │
+     │ File: AtReconstruction/AtReconstructionLinkDef.h                        │
+     │ - Add #pragma link C++ class EventFit::AtFitterUKF+;                    │
+     │                                                                         │
+     │ ---                                                                     │
+     │ Step 5 — GTest Unit Tests                                               │
+     │                                                                         │
+     │ New file: AtReconstruction/AtFitter/AtFitterUKFTest.cxx                 │
+     │                                                                         │
+     │ Register in AtReconstruction/CMakeLists.txt inside the existing         │
+     │ if(TARGET Eigen3::Eigen) block (same block as TrackFitterUKFTest.cxx):  │
+     │                                                                         │
+     │ set(OPENK_TEST_SRCS                                                     │
+     │   ...                                                                   │
+     │   AtFitter/TrackFitterUKFTest.cxx   # already there                     │
+     │   AtFitter/AtFitterUKFTest.cxx      # new                               │
+     │ )                                                                       │
+     │ attpcroot_generate_tests(OpenKFTests SRCS ${OPENK_TEST_SRCS} DEPS       │
+     │ AtReconstruction)                                                       │
+     │                                                                         │
+     │ Use the same test-class subclassing pattern as TrackFitterUKFTest.cxx:  │
+     │ define AtFitterUKFTestable that exposes internals.                      │
+     │                                                                         │
+     │ Test fixture                                                            │
+     │                                                                         │
+     │ class AtFitterUKFFixture : public testing::Test {                       │
+     │ protected:                                                              │
+     │    // Known proton track from simulation (same data used in             │
+     │ UKFSingleTrack.C macro)                                                 │
+     │    // Start position in mm, momentum in MeV/c                           │
+     │    static constexpr double mass_p = 938.272;                            │
+     │    static constexpr double charge_p = 1.602176634e-19; // C             │
+     │    static constexpr double B_z = 2.85;                 // T             │
+     │    static constexpr double density = 3.553e-5;         // g/cm³ H2      │
+     │                                                                         │
+     │    std::unique_ptr<EventFit::AtFitterUKF> fitter;                       │
+     │    std::vector<ROOT::Math::XYZPoint> fMeasurements; // clusters from    │
+     │ simulation                                                              │
+     │                                                                         │
+     │    void SetUp() override {                                              │
+     │        // Build ELoss model                                             │
+     │        auto eloss = std::make_unique<AtTools::AtELossTable>(0);         │
+     │        eloss->LoadSrimTable(getEnergyPath());                           │
+     │                                                                         │
+     │        fitter = std::make_unique<EventFit::AtFitterUKF>(charge_p,       │
+     │ mass_p, std::move(eloss));                                              │
+     │        fitter->SetBField({0, 0, B_z});                                  │
+     │        fitter->SetUKFParameters(1e-3, 2, 0);                            │
+     │        fitter->SetMeasurementSigma(1.0);                                │
+     │                                                                         │
+     │        // Load known cluster positions from hits.txt (in mm)            │
+     │        fMeasurements = LoadHitsFromFile(getHitsPath());                 │
+     │    }                                                                    │
+     │                                                                         │
+     │    // Build a synthetic AtTrack from the known measurements             │
+     │    AtTrack BuildTrack();                                                │
+     │ };                                                                      │
+     │                                                                         │
+     │ Tests to implement                                                      │
+     │                                                                         │
+     │ ┌─────────────────────────────────────┬──────────────────────────────── │
+     │ ───┐                                                                    │
+     │ │              Test name              │          What is checked        │
+     │    │                                                                    │
+     │ ├─────────────────────────────────────┼──────────────────────────────── │
+     │ ───┤                                                                    │
+     │ │ Construction                        │ AtFitterUKF constructs without  │
+     │    │                                                                    │
+     │ │                                     │ throwing                        │
+     │    │                                                                    │
+     │ ├─────────────────────────────────────┼──────────────────────────────── │
+     │ ───┤                                                                    │
+     │ │ SkipsTrackWithFewClusters           │ Returns nullptr when cluster    │
+     │    │                                                                    │
+     │ │                                     │ count < fMinClusters            │
+     │    │                                                                    │
+     │ ├─────────────────────────────────────┼──────────────────────────────── │
+     │ ───┤                                                                    │
+     │ │                                     │ Fits synthetic proton track;    │
+     │    │                                                                    │
+     │ │ FittedTrackHasReasonableKinematics  │ asserts KE > 0, 0 < theta < π,  │
+     │    │                                                                    │
+     │ │                                     │ smoothed positions non-empty    │
+     │    │                                                                    │
+     │ ├─────────────────────────────────────┼──────────────────────────────── │
+     │ ───┤                                                                    │
+     │ │ FittedTrackKinematicsWithinToleranc │ Asserts fitted KE is within 20% │
+     │    │                                                                    │
+     │ │ e                                   │ of known true value (proton at  │
+     │    │                                                                    │
+     │ │                                     │ ~47 MeV/c from simulation)      │
+     │    │                                                                    │
+     │ ├─────────────────────────────────────┼──────────────────────────────── │
+     │ ───┤                                                                    │
+     │ │ SmoothedPositionsPopulated          │ GetSmoothedPositions().size()   │
+     │ ==  │                                                                   │
+     │ │                                     │ nClusters - 1                   │
+     │    │                                                                    │
+     │ ├─────────────────────────────────────┼──────────────────────────────── │
+     │ ───┤                                                                    │
+     │ │ MetadataConvergedSet                │                                 │
+     │ GetTrackMetadata()->GetFitConverg │                                     │
+     │ │                                     │ ed() == true for good track     │
+     │    │                                                                    │
+     │ ├─────────────────────────────────────┼──────────────────────────────── │
+     │ ───┤                                                                    │
+     │ │                                     │ SetKinematics(E,θ,φ) →          │
+     │    │                                                                    │
+     │ │ AtFittedTrackKinematicsRoundTrip    │ GetKinematics() returns the     │
+     │ same  │                                                                 │
+     │ │                                     │ values                          │
+     │    │                                                                    │
+     │ ├─────────────────────────────────────┼──────────────────────────────── │
+     │ ───┤                                                                    │
+     │ │ AtFittedTrackSmoothedPositionsRound │ SetSmoothedPositions(v) →       │
+     │    │                                                                    │
+     │ │ Trip                                │ GetSmoothedPositions() returns  │
+     │    │                                                                    │
+     │ │                                     │ same vector                     │
+     │    │                                                                    │
+     │ └─────────────────────────────────────┴──────────────────────────────── │
+     │ ───┘                                                                    │
+     │                                                                         │
+     │ The hits.txt file already exists in macro/tests/UKF/hits.txt and        │
+     │ contains the simulation cluster positions. Use $VMCWORKDIR env var or a │
+     │  relative fallback path (same pattern as getEnergyPath() in             │
+     │ TrackFitterUKFTest.cxx).                                                │
+     │                                                                         │
+     │ ---                                                                     │
+     │ Step 6 — Write Usage Macro                                              │
+     │                                                                         │
+     │ New file: macro/tests/UKF/UKFTask.C                                     │
+     │                                                                         │
+     │ Demonstrates:                                                           │
+     │ auto eloss = std::make_unique<AtTools::AtELossCATIMA>(3.553e-5);        │
+     │ eloss->SetProjectile(1, 1, 1);                                          │
+     │ eloss->SetMaterial({{1, 1, 1}});                                        │
+     │                                                                         │
+     │ auto fitter = std::make_unique<EventFit::AtFitterUKF>(charge_p, mass_p, │
+     │  std::move(eloss));                                                     │
+     │ fitter->SetBField({0, 0, 2.85});                                        │
+     │ fitter->SetUKFParameters(1e-3, 2, 0);                                   │
+     │ fitter->SetMeasurementSigma(1.0);                                       │
+     │                                                                         │
+     │ auto task = new AtFitterTask(std::move(fitter));                        │
+     │ task->SetPersistence(kTRUE);                                            │
+     │ run->AddTask(task);                                                     │
+     │                                                                         │
+     │ ---                                                                     │
+     │ MCFitter Assessment                                                     │
+     │                                                                         │
+     │ AtMCFitter uses stochastic multi-iteration Monte Carlo optimization and │
+     │  produces AtMCResult arrays — not per-track AtFittedTrack objects. Its  │
+     │ Exec(AtPatternEvent&) pattern is fundamentally different from           │
+     │ GetFittedTrack(AtTrack*). It does not combine well with the new         │
+     │ EventFit::AtFitter base and should remain separate (AtMCFitterTask).    │
+     │                                                                         │
+     │ ---                                                                     │
+     │ Verification                                                            │
+     │                                                                         │
+     │ 1. Build: cmake --build build -j$(nproc) — must compile without errors. │
+     │ 2. Existing macro: Run macro/tests/UKF/UKFSingleTrack.C to confirm      │
+     │ TrackFitterUKF still works standalone.                                  │
+     │ 3. New macro: Run macro/tests/UKF/UKFTask.C end-to-end on a simulation  │
+     │ file; inspect the AtTrackingEvent branch in the output ROOT file —      │
+     │ verify AtFittedTrack contains non-trivial kinematics and smoothed       │
+     │ positions.                                                              │
+     │ 4. Check merge: Verify AtGenfit still compiles (it uses AtFitterOld     │
+     │ which is unchanged).                                                    │
+     ╰─────────────────────────────────────────────────────────────────────────╯
+
+❯ I just added your CLAUDE.md file. I didn't realize it was missing. Please 
+   update your plan with the knowledge that you will always have that       
+  context                                                                   
+
+● Searched for 1 pattern, read 3 files (ctrl+o to expand)
+
+● Key impacts from CLAUDE.md on the plan:
+  1. Tests must not access external files — the hits.txt loading approach is
+  invalid; need to hardcode cluster data
+  2. LinkDef suffix rules — +; for persisted classes, -!; for tasks/algorithms
+  3. C++ types in non-persisted classes — use double/int/bool, not
+  Double_t/Int_t in AtFitterUKF
+  4. Build command is cmake --build build -j10
+  5. clang-format-17 must be run on all new files
+
+● Updated plan
+  ⎿  /plan to preview
+
+● Updated plan
+  ⎿  /plan to preview
+
+● Now fix the test section to remove file access and fix the build command in
+  verification:
+
+● Updated plan
+  ⎿  /plan to preview
+
+● Now fix the verification section to use the correct build command:
+
+● Updated plan
+  ⎿  /plan to preview
+
+● Also save relevant CLAUDE.md facts to memory before exiting plan mode:
+
+● Recalled 1 memory, wrote 1 memory (ctrl+o to expand)
+  ⎿  Tool use rejected with user message: /export
+
+● Skill(export)
+  ⎿  Initializing…
+  ⎿  Error: Skill export is not a prompt-based skill
+
+● I'm not familiar with a /export command in this context. Could you clarify
+  what you'd like to export, or what you meant?
+
+✻ Crunched for 3m 10s
