@@ -1,4 +1,5 @@
 #include "AtELossBetheBloch.h"
+
 #include "AtELossCATIMA.h"
 
 #include <catima/catima.h>
@@ -286,17 +287,16 @@ TEST_F(AtELossBetheBlochVsCATIMAFixture, CATIMAComparison_EnergyStraggling)
       double eIni, eFin;
    };
    const Case cases[] = {
-      {1.0, 0.75 * mass},     // narrow: ~25% energy loss
-      {5.0, 3.58164 * mass},  // narrow: ~28% energy loss
-      {5.0, 1.0},             // wide: 80% energy loss
-      {10.0, 1.0},            // wide: 90% energy loss, exercises Bragg-peak region
+      {1.0, 0.75 * mass},    // narrow: ~25% energy loss
+      {5.0, 3.58164 * mass}, // narrow: ~28% energy loss
+      {5.0, 1.0},            // wide: 80% energy loss
+      {10.0, 1.0},           // wide: 90% energy loss, exercises Bragg-peak region
    };
    for (auto &c : cases) {
       double bbSigma = bb.GetElossStraggling(c.eIni, c.eFin);
       double catimaSigma = catima.GetElossStraggling(c.eIni, c.eFin);
       ASSERT_GT(bbSigma, 0.0) << "BB straggling zero for E0=" << c.eIni;
       ASSERT_GT(catimaSigma, 0.0) << "CATIMA straggling zero for E0=" << c.eIni;
-      EXPECT_NEAR(bbSigma, catimaSigma, 0.10 * catimaSigma)
-         << "Energy straggling mismatch for E0=" << c.eIni << " MeV";
+      EXPECT_NEAR(bbSigma, catimaSigma, 0.10 * catimaSigma) << "Energy straggling mismatch for E0=" << c.eIni << " MeV";
    }
 }

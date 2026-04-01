@@ -44,7 +44,8 @@ double AtELossCATIMA::GetRange(double energyIni, double energyFin) const
    double remainingEnergy{energyIni};
    double range{0};
    while (remainingEnergy > energyFin) {
-      catima::Result result = catima::calculate(*fProjectile, *fMaterial, remainingEnergy / fProjectileMassAmu, fConfig);
+      catima::Result result =
+         catima::calculate(*fProjectile, *fMaterial, remainingEnergy / fProjectileMassAmu, fConfig);
       double dEdx = result.dEdxi * fDensity;
       double DE = dEdx * fRangeStepSize / 10.;
 
@@ -65,7 +66,8 @@ double AtELossCATIMA::GetEnergy(double energyIni, double distance) const
    double remainingEnergy{energyIni};
    double range{0};
    while (range < distance) {
-      catima::Result result = catima::calculate(*fProjectile, *fMaterial, remainingEnergy / fProjectileMassAmu, fConfig);
+      catima::Result result =
+         catima::calculate(*fProjectile, *fMaterial, remainingEnergy / fProjectileMassAmu, fConfig);
       double dEdx = result.dEdxi * fDensity;
       double DE{};
 
@@ -142,8 +144,9 @@ AtELossCATIMA::GetBraggCurve(double energy, double rangeStepSize, double totalFr
    double range{};
    while (remainingEnergy / energy > totalFractionELoss) {
 
-      catima::Result result = catima::calculate(*fProjectile, *fMaterial, remainingEnergy / fProjectileMassAmu, fConfig);
-      double dEdx = result.dEdxi * fDensity; // MeV/cm
+      catima::Result result =
+         catima::calculate(*fProjectile, *fMaterial, remainingEnergy / fProjectileMassAmu, fConfig);
+      double dEdx = result.dEdxi * fDensity;                    // MeV/cm
       braggCurve.push_back(std::make_pair(dEdx / 10.0, range)); // store in MeV/mm
 
       double DE = dEdx * rangeStepSize / 10.;
