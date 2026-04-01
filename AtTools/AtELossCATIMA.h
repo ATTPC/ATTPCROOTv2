@@ -5,6 +5,7 @@
 #include "AtELossModel.h"
 
 #include <catima/catima.h>
+#include <catima/config.h>
 #include <memory>
 #include <tuple>
 #include <vector>
@@ -19,6 +20,7 @@ protected:
    double fProjectileMassAmu{-1}; /// Mass of the projectile in amu (atomic mass units).
 
    double fRangeStepSize{0.1}; // mm
+   catima::Config fConfig{catima::default_config};
 
 public:
    /**
@@ -68,6 +70,7 @@ public:
     * @param[in] stepSize The step size used for ranges. It must be input in mm.
     */
    void SetRangeStepSize(double stepSize) { fRangeStepSize = stepSize; }
+   void SetConfig(catima::Config cfg) { fConfig = cfg; }
 };
 
 } // namespace AtTools

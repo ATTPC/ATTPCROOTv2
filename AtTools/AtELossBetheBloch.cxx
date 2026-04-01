@@ -85,16 +85,16 @@ void AtELossBetheBloch::BuildSpline(double E_min_MeV, double E_max_MeV, int nPoi
    double z = IsElectron() ? 1.0 : fPart_q;
    double omega2_unit = kK * z * z * (static_cast<double>(fMat_Z) / fMat_A) * (fDensity / 10.0) * kM_e;
 
-   // Integrate dΩ²/dE = ω²_unit / |dEdx(E)|³ using trapezoidal rule on the same log-spaced grid.
+   // Build spline of the integrand dΩ²/dE = 1/|dEdx|³, then integrate segment-by-segment using
+   // Simpson's rule (exact for cubics, O(h⁴)) rather than the O(h²) trapezoidal rule.
+   std::vector<double> integrandValues(nPoints);
+   for (int i = 0; i < nPoints; ++i)
+      integrandValues[i] = (dedxValues[i] > 0) ? 1.0 / (dedxValues[i] * dedxValues[i] * dedxValues[i]) : 0.0;
+   tk::spline integrand(energies, integrandValues);
+
    std::vector<double> rangeVar(nPoints, 0.0);
-   for (int i = 1; i < nPoints; ++i) {
-      double dE = energies[i] - energies[i - 1];
-      double d0 = dedxValues[i - 1];
-      double d1 = dedxValues[i];
-      double f0 = (d0 > 0) ? 1.0 / (d0 * d0 * d0) : 0.0;
-      double f1 = (d1 > 0) ? 1.0 / (d1 * d1 * d1) : 0.0;
-      rangeVar[i] = rangeVar[i - 1] + omega2_unit * 0.5 * (f0 + f1) * dE;
-   }
+   for (int i = 1; i < nPoints; ++i)
+      rangeVar[i] = rangeVar[i - 1] + omega2_unit * integrand.integrate(energies[i - 1], energies[i]);
    fRangeVariance = tk::spline(energies, rangeVar);
 }
 
@@ -222,7 +222,7 @@ double AtELossBetheBloch::GetElossStraggling(double energyIni, double energyFin)
    double omega2 = GetRangeVariance(energyIni) - GetRangeVariance(energyFin);
    if (omega2 <= 0)
       return 0;
-   return std::abs(GetdEdx(energyIni)) * std::sqrt(omega2);
+   return std::abs(GetdEdx(energyFin)) * std::sqrt(omega2);
 }
 
 double AtELossBetheBloch::GetdEdxStraggling(double energyIni, double energyFin) const
@@ -233,7 +233,7 @@ double AtELossBetheBloch::GetdEdxStraggling(double energyIni, double energyFin) 
    double omega2 = GetRangeVariance(energyIni) - GetRangeVariance(energyFin);
    if (omega2 <= 0)
       return 0;
-   return std::abs(GetdEdx(energyIni)) * std::sqrt(omega2) / dx_mm;
+   return std::abs(GetdEdx(energyFin)) * std::sqrt(omega2) / dx_mm;
 }
 
 double AtELossBetheBloch::GetRangeVariance(double energy) const

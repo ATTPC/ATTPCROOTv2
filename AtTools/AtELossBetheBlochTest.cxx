@@ -1,5 +1,8 @@
 #include "AtELossBetheBloch.h"
+#include "AtELossCATIMA.h"
 
+#include <catima/catima.h>
+#include <catima/config.h>
 #include <cmath>
 #include <gtest/gtest.h>
 
@@ -231,4 +234,69 @@ TEST_F(AtELossBetheBlochFixture, BlochApprox)
    EXPECT_GT(rangeBloch, 0.0);
    // Bloch approximation should agree to within 30% of the explicit I value
    EXPECT_NEAR(rangeBloch, rangeExact, 0.30 * rangeExact);
+}
+
+/**
+ * Benchmark fixture: compare AtELossBetheBloch against AtELossCATIMA configured for pure Bohr
+ * straggling (z_eff_type::none = bare charge, default calculation = bohr mode).
+ *
+ * System: proton in H₂ at 600 Torr (ρ = 6.5643e-5 g/cm³), identical to AtELossCATIMATestFixture.
+ * Expected agreement: within 10% (residual difference from Lindhard X × γ² ≈ 1 for protons at 1–10 MeV).
+ */
+class AtELossBetheBlochVsCATIMAFixture : public ::testing::Test {
+protected:
+   static constexpr double kProtonMassAmu = 1.007825031898;
+   static constexpr double kDensity = 6.5643e-5; // g/cm³
+
+   AtTools::AtELossBetheBloch bb;
+   AtTools::AtELossCATIMA catima;
+
+   AtELossBetheBlochVsCATIMAFixture()
+      : bb(1.0, kProtonMass, 1, 1, kDensity, 19.2), catima(kDensity, catima::Material(1, 1))
+   {
+      catima.SetProjectile(1, 1, kProtonMassAmu);
+
+      // Configure CATIMA to pure Bohr: bare charge (no effective-charge model),
+      // default calculation=bohr already disables the ATIMA correction.
+      catima::Config pureBohrCfg;
+      pureBohrCfg.z_effective = catima::z_eff_type::none;
+      catima.SetConfig(pureBohrCfg);
+   }
+};
+
+TEST_F(AtELossBetheBlochVsCATIMAFixture, CATIMAComparison_RangeVariance)
+{
+   // Compare accumulated Bohr range variance Ω²(E) [mm²] at three energies.
+   // Both models implement the same Bohr formula; agreement within 10% is expected.
+   for (double E : {1.0, 5.0, 10.0}) {
+      double bbVal = bb.GetRangeVariance(E);
+      double catimaVal = catima.GetRangeVariance(E);
+      ASSERT_GT(bbVal, 0.0) << "BB range variance zero at E=" << E;
+      ASSERT_GT(catimaVal, 0.0) << "CATIMA range variance zero at E=" << E;
+      EXPECT_NEAR(bbVal, catimaVal, 0.10 * catimaVal) << "Range variance mismatch at E=" << E << " MeV";
+   }
+}
+
+TEST_F(AtELossBetheBlochVsCATIMAFixture, CATIMAComparison_EnergyStraggling)
+{
+   // Reference energy pairs from AtELossCATIMATestFixture::TestEnergyLossStraggling.
+   // CATIMA (pure Bohr config) is used as the reference; BB must agree within 10%.
+   const double mass = kProtonMassAmu;
+   struct Case {
+      double eIni, eFin;
+   };
+   const Case cases[] = {
+      {1.0, 0.75 * mass},     // narrow: ~25% energy loss
+      {5.0, 3.58164 * mass},  // narrow: ~28% energy loss
+      {5.0, 1.0},             // wide: 80% energy loss
+      {10.0, 1.0},            // wide: 90% energy loss, exercises Bragg-peak region
+   };
+   for (auto &c : cases) {
+      double bbSigma = bb.GetElossStraggling(c.eIni, c.eFin);
+      double catimaSigma = catima.GetElossStraggling(c.eIni, c.eFin);
+      ASSERT_GT(bbSigma, 0.0) << "BB straggling zero for E0=" << c.eIni;
+      ASSERT_GT(catimaSigma, 0.0) << "CATIMA straggling zero for E0=" << c.eIni;
+      EXPECT_NEAR(bbSigma, catimaSigma, 0.10 * catimaSigma)
+         << "Energy straggling mismatch for E0=" << c.eIni << " MeV";
+   }
 }

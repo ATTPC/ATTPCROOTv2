@@ -23,7 +23,7 @@ double AtELossCATIMA::GetdEdx(double energy) const
       return 0;
    }
 
-   catima::Result result = catima::calculate(*fProjectile, *fMaterial, energy / fProjectileMassAmu);
+   catima::Result result = catima::calculate(*fProjectile, *fMaterial, energy / fProjectileMassAmu, fConfig);
    double dEdx = result.dEdxi * fDensity; // MeV/cm
    return dEdx / 10.0;                    // convert to MeV/mm
 }
@@ -38,13 +38,13 @@ double AtELossCATIMA::GetRange(double energyIni, double energyFin) const
 
    if (energyFin == 0) {
       fProjectile->T = energyIni / fProjectileMassAmu;
-      return catima::range(*fProjectile, *fMaterial) / fDensity * 10.;
+      return catima::range(*fProjectile, *fMaterial, fConfig) / fDensity * 10.;
    }
 
    double remainingEnergy{energyIni};
    double range{0};
    while (remainingEnergy > energyFin) {
-      catima::Result result = catima::calculate(*fProjectile, *fMaterial, remainingEnergy / fProjectileMassAmu);
+      catima::Result result = catima::calculate(*fProjectile, *fMaterial, remainingEnergy / fProjectileMassAmu, fConfig);
       double dEdx = result.dEdxi * fDensity;
       double DE = dEdx * fRangeStepSize / 10.;
 
@@ -65,7 +65,7 @@ double AtELossCATIMA::GetEnergy(double energyIni, double distance) const
    double remainingEnergy{energyIni};
    double range{0};
    while (range < distance) {
-      catima::Result result = catima::calculate(*fProjectile, *fMaterial, remainingEnergy / fProjectileMassAmu);
+      catima::Result result = catima::calculate(*fProjectile, *fMaterial, remainingEnergy / fProjectileMassAmu, fConfig);
       double dEdx = result.dEdxi * fDensity;
       double DE{};
 
@@ -90,7 +90,7 @@ double AtELossCATIMA::GetRangeVariance(double energy) const
       return 0;
    }
    auto range_var =
-      catima::range_variance(*fProjectile, energy / fProjectileMassAmu, *fMaterial); // range var in (g/cm^2)^2
+      catima::range_variance(*fProjectile, energy / fProjectileMassAmu, *fMaterial, fConfig); // range var in (g/cm^2)^2
    LOG(debug) << "Range variance in (g/cm^2)^2: " << range_var << " for energy: " << energy / fProjectileMassAmu
               << " MeV/u";
    range_var /= fDensity * fDensity; // convert to (cm)^2
@@ -110,7 +110,7 @@ double AtELossCATIMA::GetElossStraggling(double energyIni, double energyFin) con
       return 0;
    }
    auto energy_strag = catima::energy_straggling_from_E(*fProjectile, energyIni / fProjectileMassAmu,
-                                                        energyFin / fProjectileMassAmu, *fMaterial);
+                                                        energyFin / fProjectileMassAmu, *fMaterial, fConfig);
    return energy_strag;
 }
 double AtELossCATIMA::GetdEdxStraggling(double energyIni, double energyFin) const
@@ -142,7 +142,7 @@ AtELossCATIMA::GetBraggCurve(double energy, double rangeStepSize, double totalFr
    double range{};
    while (remainingEnergy / energy > totalFractionELoss) {
 
-      catima::Result result = catima::calculate(*fProjectile, *fMaterial, remainingEnergy / fProjectileMassAmu);
+      catima::Result result = catima::calculate(*fProjectile, *fMaterial, remainingEnergy / fProjectileMassAmu, fConfig);
       double dEdx = result.dEdxi * fDensity;
       braggCurve.push_back(std::make_pair(dEdx, range));
 
