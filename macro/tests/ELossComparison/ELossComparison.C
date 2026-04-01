@@ -26,6 +26,29 @@
  *   root -l -b -q ELossComparison.C
  *
  * Output: ELossComparison.pdf (four pages, one per scenario)
+ *
+ * Model notes
+ * -----------
+ * "Bethe-Bloch (Bohr)" — AtELossBetheBloch: pure PDG 2022 Eq. 34.1, bare projectile charge,
+ *   Bohr range-straggling integral (dω²/dE = K·z²·(Z/A)·ρ·mₑ / |dEdx|³), √E extrapolation
+ *   below the BB validity threshold.
+ *
+ * "CATIMA (default)" — AtELossCATIMA with catima::default_config:
+ *   - Effective charge: Pierce-Blann (z_eff → 0 for protons at low β — suppresses dEdx and
+ *     straggling proportionally to z_eff²).
+ *   - dEdx: Bethe-Bloch + shell corrections + Barkas term + density effect + Lindhard correction;
+ *     SRIM-85 tables at low energies.
+ *   - Straggling: Bohr × Lindhard-X factor (quantum correction, always active); Firsov formula
+ *     used as upper cap below 30 MeV/u — this is LOWER than pure Bohr and causes the straggling
+ *     to drop steeply toward zero at low energy.
+ *
+ * "CATIMA (bare, no corr)" — AtELossCATIMA with custom config:
+ *   - Effective charge: none (bare Z, matching BB).
+ *   - dEdx corrections disabled: no Barkas, no Lindhard, no shell corrections.
+ *   - Straggling: still Bohr × Lindhard-X + Firsov cap (not removable via config in the bundled
+ *     CATIMA version).  Low-energy dEdx still from SRIM-85 tables, not √E.
+ *   This is the closest CATIMA can get to a pure BB+Bohr calculation; any remaining gap versus the
+ *   red BB curve is due to the Firsov straggling correction and SRIM-85 vs √E extrapolation.
  */
 
 // ---------------------------------------------------------------------------
@@ -357,11 +380,43 @@ void ELossComparison()
    auto table_p_He = LoadSimpleSrimTable(Form("%s/proton_He_700torr.txt", resDir.Data()), kRho_He_700);
 
    // =========================================================================
+   // "CATIMA bare" config: bare charge + no dEdx corrections — closest analog
+   // to the pure Bethe-Bloch model available within the CATIMA library.
+   // Note: the Lindhard-X / Firsov straggling correction is always active in
+   // the bundled CATIMA source and cannot be disabled via Config.
+   // =========================================================================
+   catima::Config pureCfg;
+   pureCfg.z_effective = catima::z_eff_type::none; // bare Z, not Pierce-Blann
+   pureCfg.corrections =
+      catima::no_barkas | catima::no_lindhard | catima::no_shell_correction;
+
+   auto catimaPure_p_H2 =
+      new AtTools::AtELossCATIMA(kRho_H2_600, std::vector<std::tuple<int, int, int>>{{1, 1, 1}});
+   catimaPure_p_H2->SetProjectile(1, 1, kMproton_amu);
+   catimaPure_p_H2->SetConfig(pureCfg);
+
+   auto catimaPure_d_D2 =
+      new AtTools::AtELossCATIMA(kRho_D2_600, std::vector<std::tuple<int, int, int>>{{2, 1, 1}});
+   catimaPure_d_D2->SetProjectile(2, 1, kMdeuteron_amu);
+   catimaPure_d_D2->SetConfig(pureCfg);
+
+   auto catimaPure_a_D2 =
+      new AtTools::AtELossCATIMA(kRho_D2_600, std::vector<std::tuple<int, int, int>>{{2, 1, 1}});
+   catimaPure_a_D2->SetProjectile(4, 2, kMalpha_amu);
+   catimaPure_a_D2->SetConfig(pureCfg);
+
+   auto catimaPure_p_He =
+      new AtTools::AtELossCATIMA(kRho_He_700, std::vector<std::tuple<int, int, int>>{{4, 2, 1}});
+   catimaPure_p_He->SetProjectile(1, 1, kMproton_amu);
+   catimaPure_p_He->SetConfig(pureCfg);
+
+   // =========================================================================
    // Color / line-style scheme
    // =========================================================================
    const int kColBB = kRed + 1;
    const int kColCATIMA = kBlue + 1;
    const int kColTable = kGreen + 2;
+   const int kColCATIMApure = kMagenta + 1;
 
    // =========================================================================
    // Draw and save
@@ -369,9 +424,10 @@ void ELossComparison()
    auto *c1 = new TCanvas("c1", "Proton in H2", 1200, 900);
    {
       std::vector<ModelEntry> ents = {
-         {bb_p_H2, "Bethe-Bloch", kColBB, 1, true},
-         {catima_p_H2, "CATIMA", kColCATIMA, 2, true},
+         {bb_p_H2, "Bethe-Bloch (Bohr)", kColBB, 1, true},
+         {catima_p_H2, "CATIMA (default)", kColCATIMA, 2, true},
          {table_p_H2, "SRIM Table", kColTable, 3, true},
+         {catimaPure_p_H2, "CATIMA (bare, no corr)", kColCATIMApure, 7, true},
       };
       DrawScenario("Proton in H_{2} (600 Torr)", ents, 0.1, 10.0, 5.0, c1);
    }
@@ -379,8 +435,9 @@ void ELossComparison()
    auto *c2 = new TCanvas("c2", "Deuteron in D2", 1200, 900);
    {
       std::vector<ModelEntry> ents = {
-         {bb_d_D2, "Bethe-Bloch", kColBB, 1, true},
-         {catima_d_D2, "CATIMA", kColCATIMA, 2, true},
+         {bb_d_D2, "Bethe-Bloch (Bohr)", kColBB, 1, true},
+         {catima_d_D2, "CATIMA (default)", kColCATIMA, 2, true},
+         {catimaPure_d_D2, "CATIMA (bare, no corr)", kColCATIMApure, 7, true},
       };
       if (table_d_D2)
          ents.push_back({table_d_D2, "SRIM Table", kColTable, 3, false});
@@ -390,8 +447,9 @@ void ELossComparison()
    auto *c3 = new TCanvas("c3", "Alpha in D2", 1200, 900);
    {
       std::vector<ModelEntry> ents = {
-         {bb_a_D2, "Bethe-Bloch", kColBB, 1, true},
-         {catima_a_D2, "CATIMA", kColCATIMA, 2, true},
+         {bb_a_D2, "Bethe-Bloch (Bohr)", kColBB, 1, true},
+         {catima_a_D2, "CATIMA (default)", kColCATIMA, 2, true},
+         {catimaPure_a_D2, "CATIMA (bare, no corr)", kColCATIMApure, 7, true},
       };
       if (table_a_D2)
          ents.push_back({table_a_D2, "SRIM Table", kColTable, 3, false});
@@ -401,8 +459,9 @@ void ELossComparison()
    auto *c4 = new TCanvas("c4", "Proton in He", 1200, 900);
    {
       std::vector<ModelEntry> ents = {
-         {bb_p_He, "Bethe-Bloch", kColBB, 1, true},
-         {catima_p_He, "CATIMA", kColCATIMA, 2, true},
+         {bb_p_He, "Bethe-Bloch (Bohr)", kColBB, 1, true},
+         {catima_p_He, "CATIMA (default)", kColCATIMA, 2, true},
+         {catimaPure_p_He, "CATIMA (bare, no corr)", kColCATIMApure, 7, true},
       };
       if (table_p_He)
          ents.push_back({table_p_He, "SRIM Table", kColTable, 3, false});
