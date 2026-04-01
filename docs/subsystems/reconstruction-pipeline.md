@@ -28,21 +28,16 @@ The exact branch names and defaults are documented in [branch-io-contracts.md](.
 
 ## Pattern Recognition
 
-Two supported paths currently produce `AtPatternEvent`:
+Two supported paths produce `AtPatternEvent → TClonesArray[AtPatternEvent]`. Both populate `fHitArray` on each track and `fNoise` on the event with unassigned hits. They differ in which `AtTrack` fields they fill:
 
-```text
-AtPRAtask
-  │  PRA / triplclust-style pattern recognition
-  └─ output branch: AtPatternEvent -> TClonesArray[AtPatternEvent]
-```
+| | `AtPRAtask` | `AtSampleConsensusTask` |
+|-|-------------|-------------------------|
+| Algorithm | triplet/hierarchical clustering (TriplClust default; `SetPRAlgorithm(n)`) | sample consensus (`SetPatternType`, `SetEstimator`) |
+| `fPattern` | always `AtPatternCircle2D` | configurable: `kLine`, `kCircle2D`, `kRay`, `kY` |
+| `fGeoRadius`, `fGeoCenter`, `fGeoTheta`, `fGeoPhi` | **filled** — via internal RANSAC after clustering | **not filled** (remain zero) |
+| `fHitClusterArray` | populated | not populated |
 
-```text
-AtSampleConsensusTask
-  │  sample-consensus pattern recognition
-  └─ output branch: AtPatternEvent -> TClonesArray[AtPatternEvent]
-```
-
-These are both supported. The docs do not declare one of them to be the universal default.
+The `fGeo*` fields are the momentum-seed inputs for GenFit-based fitters. `AtSampleConsensusTask` leaves them empty, so it requires additional processing (e.g. `AtPatternModificationTask`) before a GenFit-based fitter can run.
 
 ## Fitting
 

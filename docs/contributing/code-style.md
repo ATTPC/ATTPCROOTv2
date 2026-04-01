@@ -1,6 +1,37 @@
 # Code Style
 
-This page covers formatting and static-analysis tools only. Contributor-critical ROOT and persistence rules live in [guide.md](guide.md).
+This page covers naming conventions, formatting, and static-analysis tools. Contributor-critical ROOT and persistence rules live in [guide.md](guide.md).
+
+## Naming Conventions
+
+### Libraries and Classes
+
+- **Libraries**: a folder named `AtFoo` produces shared object `libAtFoo`
+- **Classes**: non-namespaced classes use the `At` prefix in CamelCase — `AtBaseEvent`, `AtPSAMax`, `AtFitterTask`
+- Namespaced code (e.g., `EventFit::`, `kf::`) omits the `At` prefix
+
+### Data Members
+
+- Private and protected members: `f` prefix + capital letter — `fTrackID`, `fDriftVelocity`
+- Boolean flags: `k` prefix — `kIsGood`, `kInitialized`
+- Local variables and function parameters: no prefix, lowercase camelCase
+
+### Methods
+
+Follow ROOT naming conventions:
+- Getters: `GetXaxis()` not `GetXAxis()` (avoid back-to-back capitals)
+- Setters: `SetThreshold()`
+- Boolean queries: `IsValid()`, `HasHits()`
+
+### ClassDef / ClassImp
+
+Use `ClassDef` and `ClassImp` **only** for `TObject` subclasses. When the memory layout changes, increment the version number in `ClassDef`:
+
+```cpp
+ClassDef(AtMyData, 2);  // bump when adding/removing/reordering members
+```
+
+Non-persisted classes (tasks, algorithms, models) do not need `ClassDef`.
 
 ## Formatting
 

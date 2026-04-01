@@ -13,6 +13,9 @@ Agent-facing docs for the current branch state of ATTPCROOT.
 - understand runtime objects: [reference/data-model.md](reference/data-model.md)
 - find subsystem ownership: [reference/modules.md](reference/modules.md)
 - find an example macro: [reference/macro-cookbook.md](reference/macro-cookbook.md)
+- configure detector parameters: [reference/parameters.md](reference/parameters.md)
+- prepare detector geometry: [subsystems/geometry.md](subsystems/geometry.md)
+- browse data interactively: [subsystems/visualization.md](subsystems/visualization.md)
 
 ## Architecture
 
@@ -23,6 +26,9 @@ Agent-facing docs for the current branch state of ATTPCROOT.
 - generators: [subsystems/generators.md](subsystems/generators.md)
 - PSA: [subsystems/psa.md](subsystems/psa.md)
 - energy loss: [subsystems/energy-loss.md](subsystems/energy-loss.md)
+- geometry: [subsystems/geometry.md](subsystems/geometry.md)
+- visualization: [subsystems/visualization.md](subsystems/visualization.md)
+- parameters: [reference/parameters.md](reference/parameters.md)
 
 ## Branch-Specific Notes
 

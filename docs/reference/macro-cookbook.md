@@ -1,6 +1,6 @@
 # Macro Cookbook
 
-Example macro starting points referenced by these docs. This page is intentionally sparse.
+Example macro starting points referenced by these docs. 
 
 ## Notes
 

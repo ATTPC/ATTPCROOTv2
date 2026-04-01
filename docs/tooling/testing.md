@@ -47,6 +47,27 @@ These are listed and run separately from unit tests. Use them for:
 - simulation plus reconstruction flows
 - experiment-facing regression scenarios
 
+### Prerequisites
+
+Integration tests require geometry ROOT files that are **not** committed to the repo. Generate them first:
+
+```bash
+macro/tests/generateGeometry.sh
+```
+
+Some tests also require external data files that are too large for the repo:
+
+- **GADGETII tests**: require the fishtank dataset (available on FRIB/NSCL cluster only)
+- **SpecMAT tests**: require `TTreesGETrun_9993.root` placed in `macro/tests/SpecMAT/data/`
+
+### Running All Integration Tests
+
+```bash
+macro/tests/runAllTest.sh
+```
+
+Results are logged in each test subdirectory as `test.log`.
+
 See [macro-cookbook.md](macro-cookbook.md) for curated macro starting points.
 
 ## Continuous Integration

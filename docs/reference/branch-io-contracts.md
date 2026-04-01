@@ -1,33 +1,40 @@
 # Branch and IO Contracts
 
-This page records the current branch names and persistence defaults used by major tasks. These defaults come from the task constructors and `Init()` implementations in the current branch.
+Default branch names, contained types, and persistence settings for major tasks. These come from task constructors and `Init()` implementations in the current source.
 
-In most cases the branch object returned by `FairRootManager::GetObject(...)` is a `TClonesArray`, not a bare event object. The task then reads slot `0` as the current `AtRawEvent`, `AtEvent`, `AtPatternEvent`, or `AtTrackingEvent`.
+Every branch listed here is a `TClonesArray` holding one event object at slot `0` — not a bare pointer:
+
+```cpp
+auto *arr = dynamic_cast<TClonesArray *>(ioMan->GetObject("AtEventH"));
+auto *event = dynamic_cast<AtEvent *>(arr->At(0));
+```
 
 ## Reconstruction Tasks
 
-| Task | Input Branches | Output Branches | Persistence Default | Notes |
-|------|----------------|-----------------|---------------------|-------|
-| `AtUnpackTask` | external file via unpacker | `AtRawEvent` | `true` | Registers a `TClonesArray` holding `AtRawEvent` objects |
-| `AtFilterTask` | `AtRawEvent` | `AtRawEventFiltered` | `false` | Reads/writes `TClonesArray<AtRawEvent>`-style branches; can also filter aux/FPN pads |
-| `AtPSAtask` | `AtRawEvent` | `AtEventH` | `false` | Reads `TClonesArray` input, writes `TClonesArray("AtEvent", 1)` output; optionally looks for `AtTpcPoint` |
-| `AtDataCleaningTask` | `AtEventH` | `AtEventCleaned` | `true` | Reads the input event from a `TClonesArray` and writes a cleaned `AtEvent` copy |
-| `AtPRAtask` | `AtEventH` | `AtPatternEvent` | `false` | PRA-based pattern recognition path using `TClonesArray` event containers |
-| `AtSampleConsensusTask` | `AtEventH` | `AtPatternEvent` | `false` | Sample-consensus path using the same container pattern |
-| `AtFitterTask` | `AtPatternEvent` | `AtTrackingEvent` | `false` | Output is a `TClonesArray("AtTrackingEvent", 1)`; verify input-branch behavior in source before relying on setters |
-| `AtMCFitterTask` | `AtPatternEvent` | `AtMCResult`, `SimEvent`, `SimRawEvent` | `true`, `false`, `false` | Save toggles exist for each output branch |
+| Task | Input branch / type | Output branch / type | Persist default | Branch setters |
+|------|---------------------|----------------------|-----------------|----------------|
+| `AtUnpackTask` | external file via unpacker | `AtRawEvent` → `TClonesArray<AtRawEvent>` | **true** | — |
+| `AtFilterTask` | `AtRawEvent` → `TClonesArray<AtRawEvent>` | `AtRawEventFiltered` → `TClonesArray<AtRawEvent>` | false | `SetInputBranch`, `SetOutputBranch` |
+| `AtPSAtask` | `AtRawEvent` → `TClonesArray<AtRawEvent>` | `AtEventH` → `TClonesArray<AtEvent>` | false | `SetInputBranch`, `SetOutputBranch` |
+| `AtDataCleaningTask` | `AtEventH` → `TClonesArray<AtEvent>` | `AtEventCleaned` → `TClonesArray<AtEvent>` | **true** | `SetInputBranch`, `SetOutputBranch` |
+| `AtPRAtask` | `AtEventH` → `TClonesArray<AtEvent>` | `AtPatternEvent` → `TClonesArray<AtPatternEvent>` | false | `SetInputBranch`, `SetOutputBranch` |
+| `AtSampleConsensusTask` | `AtEventH` → `TClonesArray<AtEvent>` | `AtPatternEvent` → `TClonesArray<AtPatternEvent>` | false | `SetInputBranch`, `SetOutputBranch` |
+| `AtFitterTask` | `AtPatternEvent` → `TClonesArray<AtPatternEvent>` | `AtTrackingEvent` → `TClonesArray<AtTrackingEvent>` | false | `SetInputBranch`, `SetOutputBranch` |
+| `AtMCFitterTask` | `AtPatternEvent` → `TClonesArray<AtPatternEvent>` | `AtMCResult` (**true**), `SimEvent` (false), `SimRawEvent` (false) | per-branch | `SetPatternBranchName`, `SetSaveResult/Event/RawEvent` |
 
 ## Simulation and Digitization Tasks
 
-| Task | Input Branches | Output Branches | Persistence Default | Notes |
-|------|----------------|-----------------|---------------------|-------|
-| `AtClusterizeTask` | `AtTpcPoint` | `AtSimulatedPoint` | `false` | Reads the detector-specific `AtTpcPoint` `TClonesArray`, not a generic `AtMCPoint` branch |
-| `AtPulseTask` | `AtSimulatedPoint`, optional `AtTpcPoint` | `AtRawEvent`, optional re-registered `AtTpcPoint` | `true`, `false` | Reads branch containers, not bare objects; `SetSaveMCInfo()` enables MC mapping behavior |
+| Task | Input branch / type | Output branch / type | Persist default | Branch setters |
+|------|---------------------|----------------------|-----------------|----------------|
+| `AtClusterizeTask` | `AtTpcPoint` → `TClonesArray<AtMCPoint>` | `AtSimulatedPoint` → `TClonesArray<AtSimulatedPoint>` | false | `SetPersistence` |
+| `AtPulseTask` | `AtSimulatedPoint` → `TClonesArray<AtSimulatedPoint>`, optional `AtTpcPoint` → `TClonesArray<AtMCPoint>` | `AtRawEvent` → `TClonesArray<AtRawEvent>` (**true**); re-registers `AtTpcPoint` (false) | true / false | `SetOutputBranch`, `SetPersistence`, `SetPersistenceAtTpcPoint`, `SetSaveMCInfo` |
 
 ## Reading This Page
 
-- These are default names, not hard-coded universal laws.
-- Many tasks expose `SetInputBranch(...)`, `SetOutputBranch(...)`, or related setters.
-- Do not assume every setter is honored consistently; check the task source before automating branch-name rewrites.
-- If you add a task that reads/writes FairRoot branches, update this page.
-- For the runtime objects behind these branches, see [data-model.md](data-model.md).
+- These are defaults, not hard-coded universals. Most tasks expose `SetInputBranch` / `SetOutputBranch`.
+- `AtPRAtask` and `AtSampleConsensusTask` write the same output branch name — only one should be active per run.
+- `AtMCFitterTask` writes three separate branches; each has its own save toggle.
+- `AtFittedTrack` (inside `AtTrackingEvent`) is currently unstable — treat layout as best-effort.
+- In the AT-TPC path, `AtTpcPoint` is a branch name whose current container holds `AtMCPoint` objects.
+- If you add a task that reads or writes FairRoot branches, add a row above.
+- For what the contained objects hold (fields, ownership), see [data-model.md](data-model.md).
