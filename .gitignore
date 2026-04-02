@@ -58,3 +58,6 @@ macros/data
 .DS_Store
 .nfs*
 compiled/E20009Analysis/.NabinWorkDir/
+
+.claude/plans/*
+
