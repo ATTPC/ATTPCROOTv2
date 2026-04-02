@@ -22,6 +22,7 @@ Double_t fValue;
 ## ROOT Dictionaries
 
 Every class with `ClassDef` must appear in the appropriate `*LinkDef.h`.
+Classes listed in `*LinkDef.h` do not automatically need `ClassDef` or `ClassImp`.
 
 Preferred suffix rules for new or edited code:
 

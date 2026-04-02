@@ -25,13 +25,15 @@ Follow ROOT naming conventions:
 
 ### ClassDef / ClassImp
 
-Use `ClassDef` and `ClassImp` **only** for `TObject` subclasses. When the memory layout changes, increment the version number in `ClassDef`:
+Use `ClassDef` and `ClassImp` only for classes that need ROOT-generated class metadata or streamer support.
+
+For reflection-only classes, prefer a `-!` LinkDef entry. Use `+` only for classes written to disk.
+
+When a streamed class changes memory layout, increment the version number in `ClassDef`:
 
 ```cpp
 ClassDef(AtMyData, 2);  // bump when adding/removing/reordering members
 ```
-
-Non-persisted classes (tasks, algorithms, models) do not need `ClassDef`.
 
 ## Formatting
 

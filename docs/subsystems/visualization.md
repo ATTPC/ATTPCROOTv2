@@ -4,14 +4,14 @@ ATTPCROOT includes an interactive event display built on ROOT's TEve framework. 
 
 ## Architecture
 
-`AtViewerManager` is a singleton that owns a `FairRunAna` internally and steps through events. It is configured by attaching **tabs** (display panels) and optionally **tasks** (FairTask subclasses for online re-analysis). Branch names for the three standard data streams — `AtRawEvent`, `AtEvent`, and `AtPatternEvent` — are selected at runtime from dropdown menus in the GUI sidebar.
+`AtViewerManager` is a singleton GUI/controller. It uses `FairRunAna::Instance()` in `AddTask()` and `Init()`, so the macro must create and configure `FairRunAna` before constructing the viewer. Attach **tabs** (display panels) and optionally **tasks** (FairTask subclasses for online re-analysis). Branch names for the three standard data streams — `AtRawEvent`, `AtEvent`, and `AtPatternEvent` — are selected at runtime from dropdown menus in the GUI sidebar.
 
 The viewer requires a pad map (`AtMap`) loaded from an experiment-specific XML mapping file.
 
 ## Basic Setup
 
 ```cpp
-// Create the FairRoot run as usual
+// Create and configure the FairRoot run before constructing the viewer
 FairRunAna *fRun = new FairRunAna();
 fRun->SetSource(new FairFileSource(inputFile));
 fRun->SetSink(new FairRootFileSink(outputFile));
