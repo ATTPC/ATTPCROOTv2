@@ -84,7 +84,9 @@ function(generate_target_and_root_library target)
     endif()
     list(APPEND headers ${habs})
     get_filename_component(hName ${habs} NAME)
-    configure_file(${habs} "${CMAKE_BINARY_DIR}/include/${hName}")
+    execute_process(
+      COMMAND "${CMAKE_COMMAND}" -E copy_if_different "${habs}" "${CMAKE_BINARY_DIR}/include/${hName}"
+      OUTPUT_QUIET ERROR_QUIET)
   endforeach()
 
   
@@ -249,12 +251,44 @@ function(make_target_root_dictionary target)
 
   set(includeDirs $<REMOVE_DUPLICATES:$<TARGET_PROPERTY:${target},INCLUDE_DIRECTORIES>>)
     
-  # add a custom command to generate the dictionary using rootcling
+  # Write the list of input headers to a cmake file at configure time.
+  # The build-time stamp script reads this file to compute content hashes,
+  # avoiding semicolon/shell-escaping issues when passing long lists via -D.
+  set(_headersListFile ${CMAKE_CURRENT_BINARY_DIR}/${dictionary}_headers_list.cmake)
+  set(_headersListContent "set(DICT_HEADERS\n")
+  foreach(_h ${headers})
+    string(APPEND _headersListContent "  \"${_h}\"\n")
+  endforeach()
+  string(APPEND _headersListContent ")\n")
+  file(WRITE "${_headersListFile}.tmp" "${_headersListContent}")
+  execute_process(
+    COMMAND "${CMAKE_COMMAND}" -E copy_if_different
+      "${_headersListFile}.tmp" "${_headersListFile}"
+    OUTPUT_QUIET ERROR_QUIET)
+  file(REMOVE "${_headersListFile}.tmp")
+
+  set(stampFile ${CMAKE_CURRENT_BINARY_DIR}/${dictionary}_headers.stamp)
+
+  # Step 1: Update stamp only when header CONTENT changes (not just mtime).
+  # This prevents rootcling from rerunning after git pull or cmake reconfigure
+  # when header content is actually unchanged.
   # cmake-format: off
-  set(space " ")
-  #message(STATUS " Adding dictionary ${dictionaryFile} to target ${target}")
+  add_custom_command(
+    OUTPUT ${stampFile}
+    COMMAND ${CMAKE_COMMAND}
+      "-DHEADERS_LIST_FILE=${_headersListFile}"
+      "-DSTAMP_FILE=${stampFile}"
+      -P "${CMAKE_SOURCE_DIR}/cmake/modules/update_dict_stamp.cmake"
+    DEPENDS ${headers}
+    VERBATIM
+    COMMENT "Checking header content for ${dictionary}")
+  # cmake-format: on
+
+  # Step 2: Run rootcling only when stamp changes (i.e., header CONTENT changed).
+  # cmake-format: off
   add_custom_command(
     OUTPUT ${dictionaryFile} ${pcmFile} ${rootmapFile}
+    BYPRODUCTS ${CMAKE_CURRENT_BINARY_DIR}/${pcmBase}
     VERBATIM
     COMMAND ${CMAKE_COMMAND} -E env "LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:$ENV{LD_LIBRARY_PATH}"
     ${ROOT_rootcling_CMD}
@@ -267,7 +301,7 @@ function(make_target_root_dictionary target)
     ${headers}
     COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_BINARY_DIR}/${pcmBase} ${pcmFile}
     COMMAND_EXPAND_LISTS
-    DEPENDS ${headers})
+    DEPENDS ${stampFile})
   # cmake-format: on
 
   # add dictionary source to the target sources and suppress warnings
