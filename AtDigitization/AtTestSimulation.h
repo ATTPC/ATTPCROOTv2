@@ -61,6 +61,8 @@ public:
 private:
    void RegisterMCTrackBranch();
    void FillMCTracks();
+   bool SubmitInitialSensitivePoint(int trackID, int pdg, bool beamTrack, const ROOT::Math::XYZPoint &pos,
+                                    const ROOT::Math::PxPyPzEVector &mom);
    bool ProcessDetectorStep(const AtSimpleSimulation::TransportStep &step, int trackID, bool beamTrack, bool preSensitive,
                             bool postSensitive, bool entering, bool exiting);
    ROOT::Math::XYZPoint FindSensitiveEntry(const ROOT::Math::XYZPoint &pos, const ROOT::Math::PxPyPzEVector &mom) const;

@@ -135,6 +135,10 @@ void AtTestSimulation::Exec(Option_t *)
          LOG(info) << "Simulating particle Z=" << Z << " A=" << A << " with initial pos=" << pos << " mm and mom=" << mom
                    << " MeV/c";
          if (fDetector != nullptr) {
+            const bool beamTrack = isBeamEvent && p.trackID == 0;
+            if (IsSensitiveVolume(fSimulation->GetVolumeNameAt(pos)) &&
+                !SubmitInitialSensitivePoint(p.trackID, p.pdgCode, beamTrack, pos, mom))
+               continue;
             bool seenSensitiveVolume = false;
             fSimulation->TransportParticle(
                Z, A, pos, mom,
@@ -144,10 +148,10 @@ void AtTestSimulation::Exec(Option_t *)
                   const bool postSensitive = IsSensitiveVolume(step.postVolumeName);
                   const bool entering = !seenSensitiveVolume && postSensitive;
                   const bool exiting = seenSensitiveVolume && !postSensitive;
-                  const bool beamTrack = isBeamEvent && trackID == 0;
+                  const bool isBeamTrack = isBeamEvent && trackID == 0;
                   if (postSensitive)
                      seenSensitiveVolume = true;
-                  return ProcessDetectorStep(step, trackID, beamTrack, preSensitive, postSensitive, entering, exiting);
+                  return ProcessDetectorStep(step, trackID, isBeamTrack, preSensitive, postSensitive, entering, exiting);
                });
          } else {
             fSimulation->SimulateParticle(Z, A, pos, mom);
@@ -158,6 +162,36 @@ void AtTestSimulation::Exec(Option_t *)
          LOG(debug) << "AtTestSimulation: skipping particle Z=" << Z << " A=" << A << ": " << ex.what();
       }
    }
+}
+
+bool AtTestSimulation::SubmitInitialSensitivePoint(int trackID, int pdg, bool beamTrack, const XYZPoint &pos,
+                                                   const PxPyPzEVector &mom)
+{
+   if (fDetector == nullptr)
+      return true;
+
+   AtTpc::StepState detectorStep;
+   detectorStep.trackID = trackID;
+   detectorStep.pdg = pdg;
+   detectorStep.volumeName = fSimulation->GetVolumeNameAt(pos).c_str();
+   detectorStep.volumeID = kAtTpc;
+   detectorStep.detCopyID = 0;
+   detectorStep.beamTrack = beamTrack;
+   detectorStep.entering = true;
+   detectorStep.exiting = false;
+   detectorStep.stopping = (mom.E() - mom.M() <= 1e-3);
+   detectorStep.disappeared = false;
+   detectorStep.energyLoss = 0.0;
+   detectorStep.timeNs = 0.0;
+   detectorStep.trackLength = 0.0;
+   detectorStep.totalEnergy = mom.E() / 1000.;
+   detectorStep.trackMass = mom.M() / 1000.;
+   detectorStep.pos.SetXYZT(pos.X() / 10., pos.Y() / 10., pos.Z() / 10., 0.0);
+   detectorStep.mom.SetXYZT(mom.Px() / 1000., mom.Py() / 1000., mom.Pz() / 1000., mom.E() / 1000.);
+   detectorStep.posOut = detectorStep.pos;
+   detectorStep.momOut = detectorStep.mom;
+
+   return !fDetector->ProcessStep(detectorStep);
 }
 
 bool AtTestSimulation::ProcessDetectorStep(const AtSimpleSimulation::TransportStep &step, int trackID, bool beamTrack,

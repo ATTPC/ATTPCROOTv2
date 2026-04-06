@@ -23,6 +23,8 @@
 
 #include "AtELossModel.h"
 #include "AtMCTrack.h"
+#include "AtTpc/AtTpc.h"
+#include "AtVertexPropagator.h"
 
 #include <Math/Point3D.h>
 #include <Math/Vector4D.h>
@@ -308,4 +310,34 @@ TEST_F(AtSimTest, BeamMCTracksKeepBeamAtTrackZero)
    ASSERT_NE(beam, nullptr);
    EXPECT_EQ(beam->GetPdgCode(), 2212);
    EXPECT_EQ(beam->GetMotherId(), -1);
+}
+
+TEST_F(AtSimTest, InitialSensitivePointUsesTrackStartState)
+{
+   auto sim = std::make_unique<AtSimpleSimulation>();
+   AtTestSimulation task(std::move(sim));
+   AtTpc detector;
+   task.fDetector = &detector;
+
+   AtVertexPropagator::Instance()->ResetForTesting();
+   AtVertexPropagator::Instance()->SetBeamMass(16.014701);
+   AtVertexPropagator::Instance()->ResetVertex();
+
+   const double mass = 16.014701 * 931.494;
+   ROOT::Math::XYZPoint pos(0.0, 0.0, 1.0);
+   ROOT::Math::PxPyPzEVector mom(0.0, 0.0, 2297.0, std::sqrt(2297.0 * 2297.0 + mass * mass));
+
+   const bool keepTransporting = task.SubmitInitialSensitivePoint(0, 1000060160, true, pos, mom);
+
+   EXPECT_TRUE(keepTransporting);
+   auto *points = detector.GetCollection(0);
+   ASSERT_NE(points, nullptr);
+   ASSERT_EQ(points->GetEntriesFast(), 1);
+
+   auto *point = dynamic_cast<AtMCPoint *>(points->At(0));
+   ASSERT_NE(point, nullptr);
+   EXPECT_EQ(point->GetTrackID(), 0);
+   EXPECT_NEAR(point->GetZ() * 10., 1.0, 1e-9);
+   EXPECT_NEAR(point->GetLength() * 10., 0.0, 1e-9);
+   EXPECT_NEAR(point->GetEnergyLoss() * 1e6, 0.0, 1e-9);
 }
