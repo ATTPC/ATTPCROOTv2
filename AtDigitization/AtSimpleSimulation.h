@@ -60,6 +60,7 @@ protected:
 
    XYZVector fEField{0, 0, 0}; ///< Electric field in V/m (used by AtPropagator)
    XYZVector fBField{0, 0, 0}; ///< Magnetic field in T (used by AtPropagator)
+   double fMaxPropStep{1e-3};  ///< Max step size in m for the adaptive stepper (default 1 mm)
 
    // Variables to across an entire event
    static thread_local int fTrackID;
@@ -92,6 +93,8 @@ public:
 
    void SetElectricField(XYZVector eField) { fEField = eField; } ///< Electric field in V/m
    void SetMagneticField(XYZVector bField) { fBField = bField; } ///< Magnetic field in T
+   /// Maximum step size (m) for the RK4 adaptive stepper in curved-track mode (default: 1e-3 m = 1 mm).
+   void SetMaxPropagationStep(double stepM) { fMaxPropStep = stepM; }
 
    void NewEvent();
 

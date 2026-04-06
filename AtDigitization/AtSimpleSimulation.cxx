@@ -155,6 +155,7 @@ AtSimpleSimulation::SimulateParticle(const ParticleInfo &info, const XYZPoint &i
       prop.SetState(iniPos, iniMom.Vect());
 
       AtTools::AtRK4AdaptiveStepper stepper;
+      stepper.fMaxStep = fMaxPropStep;
       double length = 0;
 
       while (IsInVolume("drift_volume", prop.GetPosition())) {

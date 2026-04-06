@@ -444,7 +444,7 @@ AtPropagator::StepState AtRK4AdaptiveStepper::Step(const AtPropagator::StepState
          LOG(debug) << "New Position: " << result.fPos.X() << ", " << result.fPos.Y() << ", " << result.fPos.Z();
          LOG(debug) << "New Momentum: " << result.fMom.X() << ", " << result.fMom.Y() << ", " << result.fMom.Z();
 
-         result.h = hNew;                                         // Adjust the step size for the next iteration
+         result.h = std::clamp(hNew, fMinStep, fMaxStep);         // Adjust the step size for the next iteration
          result.hUsed = h;                                        // Store the step size used
          result.status = AtPropagator::StepStateStatus::kSuccess; // Step accepted
          return result;
