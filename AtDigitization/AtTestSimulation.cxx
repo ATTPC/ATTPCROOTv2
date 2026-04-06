@@ -81,6 +81,8 @@ void AtTestSimulation::Exec(Option_t *)
       PxPyPzEVector mom(p.px * 1000., p.py * 1000., p.pz * 1000., p.e * 1000.); // GeV → MeV
 
       try {
+         LOG(info) << "Simulating particle Z=" << Z << " A=" << A << " with initial pos=" << pos << " mm and mom=" << mom
+                   << " MeV/c";
          fSimulation->SimulateParticle(Z, A, pos, mom);
       } catch (const std::invalid_argument &ex) {
          // Particle may start outside the drift volume (e.g. beam upstream) — skip silently

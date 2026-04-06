@@ -1,23 +1,5 @@
 
 namespace {
-std::pair<int, int> GetZAFromPDG(int pdg)
-{
-   if (pdg > 1000000000) {
-      int A = (pdg / 10) % 1000;
-      int Z = (pdg / 10000) % 1000;
-      return {Z, A};
-   }
-
-   auto *particle = TDatabasePDG::Instance()->GetParticle(pdg);
-   if (particle) {
-      int Z = static_cast<int>(std::round(particle->Charge() / 3.0));
-      int A = static_cast<int>(std::round(particle->Mass() / 0.9315));
-      return {Z, std::max(A, 1)};
-   }
-
-   return {0, 0};
-}
-
 FairPrimaryGenerator *BuildElasticGenerator(Double_t thetaMinCmsDeg, Double_t thetaMaxCmsDeg)
 {
    constexpr Int_t z = 1;
@@ -57,72 +39,25 @@ FairPrimaryGenerator *BuildElasticGenerator(Double_t thetaMinCmsDeg, Double_t th
    return primGen;
 }
 
-void ConfigureHeLossModels(AtSimpleSimulation &sim)
+std::unique_ptr<AtSimpleSimulation> BuildSimpleSimulation(const TString &geoFile)
 {
+   auto sim = std::make_unique<AtSimpleSimulation>(geoFile.Data());
+
    constexpr double heDensity = 1.664e-4;
    std::vector<std::tuple<int, int, int>> material{{4, 2, 1}};
 
    auto protonModel = std::make_shared<AtTools::AtELossCATIMA>(heDensity, material);
    protonModel->SetProjectile(1, 1, 1.007276);
-   sim.AddModel(1, 1, protonModel, 1.007276);
+   sim->AddModel(1, 1, protonModel, 1.007276);
 
    auto heliumModel = std::make_shared<AtTools::AtELossCATIMA>(heDensity, material);
    heliumModel->SetProjectile(4, 2, 4.002602);
-   sim.AddModel(2, 4, heliumModel, 4.002602);
+   sim->AddModel(2, 4, heliumModel, 4.002602);
+   sim->SetMagneticField(ROOT::Math::XYZVector(0., 0., 2.0));
+   sim->SetMaxPropagationStep(1e-3);
+
+   return sim;
 }
-
-class SimpleSimTask : public FairTask {
-public:
-   explicit SimpleSimTask(FairPrimaryGenerator *primGen) : FairTask("SimpleSimTask"), fPrimGen(primGen) {}
-
-   InitStatus Init() override
-   {
-      fSimulation = std::make_unique<AtSimpleSimulation>();
-      ConfigureHeLossModels(*fSimulation);
-      fSimulation->SetMagneticField(ROOT::Math::XYZVector(0., 0., 2.0));
-      fSimulation->SetMaxPropagationStep(1e-3);
-      fSimulation->RegisterBranch();
-
-      if (fPrimGen) {
-         fMCHeader = std::make_unique<FairMCEventHeader>();
-         fPrimGen->SetEvent(fMCHeader.get());
-         fPrimGen->Init();
-      }
-
-      return kSUCCESS;
-   }
-
-   void Exec(Option_t *) override
-   {
-      fSimulation->NewEvent();
-      if (!fPrimGen)
-         return;
-
-      fCollector.Clear();
-      fPrimGen->GenerateEvent(&fCollector);
-
-      for (const auto &particle : fCollector.GetParticles()) {
-         auto [Z, A] = GetZAFromPDG(particle.pdgCode);
-         if (Z == 0 && A == 0)
-            continue;
-
-         ROOT::Math::XYZPoint pos(particle.vx * 10., particle.vy * 10., particle.vz * 10.);
-         ROOT::Math::PxPyPzEVector mom(particle.px * 1000., particle.py * 1000., particle.pz * 1000.,
-                                       particle.e * 1000.);
-
-         try {
-            fSimulation->SimulateParticle(Z, A, pos, mom);
-         } catch (const std::invalid_argument &) {
-         }
-      }
-   }
-
-private:
-   std::unique_ptr<AtSimpleSimulation> fSimulation;
-   FairPrimaryGenerator *fPrimGen{};
-   AtSimParticleCollector fCollector;
-   std::unique_ptr<FairMCEventHeader> fMCHeader;
-};
 } // namespace
 
 void simpleSim_fixed(Double_t thetaCms = 45.0, Int_t nEvents = 100, UInt_t seed = 42)
@@ -156,18 +91,22 @@ void simpleSim_fixed(Double_t thetaCms = 45.0, Int_t nEvents = 100, UInt_t seed 
    tpc->SetGeometryFileName((dir + "/geometry/ATTPC_He1bar.root").Data());
    run->AddModule(tpc);
 
-   run->SetGenerator(new FairPrimaryGenerator());
+   // FairRunSim still needs a generator object to drive the event loop, but the
+   // actual physics generator for the SimpleSim path is owned by AtTestSimulation.
+   auto *eventLoopDriver = new FairPrimaryGenerator();
+   run->SetGenerator(eventLoopDriver);
 
    auto *simPrimGen = BuildElasticGenerator(thetaCms, thetaCms);
-   run->AddTask(new SimpleSimTask(simPrimGen));
+   auto *simTask = new AtTestSimulation(BuildSimpleSimulation(dir + "/geometry/ATTPC_He1bar_geomanager.root"));
+   simTask->SetPrimaryGenerator(simPrimGen);
+   run->AddTask(simTask);
 
+   run->Init();
    auto *rtdb = run->GetRuntimeDb();
    Bool_t parameterMerged = kTRUE;
    auto *parOut = new FairParRootFileIo(parameterMerged);
    parOut->open(parFile.Data());
    rtdb->setOutput(parOut);
-
-   run->Init();
    run->Run(nEvents);
    rtdb->saveOutput();
 
