@@ -230,6 +230,11 @@ bool AtTpc::ProcessStep(const StepState &step)
       return true;
    }
 
+   // For this detector geometry, leaving the active gas means hitting the surrounding wall.
+   // The validation transport should terminate at the first exit from the reaction volume.
+   if (step.exiting && IsReactionVolume(fVolName))
+      return true;
+
    return false;
 }
 

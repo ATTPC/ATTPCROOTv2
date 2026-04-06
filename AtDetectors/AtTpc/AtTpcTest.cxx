@@ -112,6 +112,17 @@ TEST_F(AtTpcTest, ReactionEventTrackZeroExitDoesNotResetVertexState)
    EXPECT_DOUBLE_EQ(AtVertexPropagator::Instance()->GetPz(), 1.0);
 }
 
+TEST_F(AtTpcTest, ExitingReactionVolumeStopsTransport)
+{
+   auto step = MakeStep(1, 2212, "drift_volume", 0.0, 0.95, 20.0);
+   step.exiting = true;
+   step.posOut.SetXYZT(0.0, 0.0, 25.0, 0.0);
+
+   const bool stopTransport = detector.ProcessStep(step);
+
+   EXPECT_TRUE(stopTransport);
+}
+
 TEST_F(AtTpcTest, NonBeamTracksUseStoredMetadata)
 {
    AtVertexPropagator::Instance()->SetTrackEnergy(1, 7.5);

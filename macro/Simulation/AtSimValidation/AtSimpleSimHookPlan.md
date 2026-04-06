@@ -159,6 +159,12 @@ The shared detector-path refactor is now in place and the current local status i
 - `simpleSim_kinematic.C` now produces visible reaction tracks in
   `visualizeKinematic.C`; with `simpleSim_kinematic.C(10, 42)` the viewer reports
   `Drew 4 trajectories and 5 event points`.
+- The curved SimpleSim transport now uses a configurable low-energy stop tolerance in field mode.
+  This was required because the detector-coupled kinematic validation entered a pathological
+  stopping tail for the event-190 recoil proton. With the default `0.1 MeV` curved stop tolerance:
+  - `simpleSim_kinematic.C(190, 42)` completes in about `2.94 s`
+  - `simpleSim_kinematic.C(200, 42)` completes in about `2.98 s`
+  - the 200-event output still visualizes correctly in `visualizeKinematic.C`
 - The earlier failure mode was adapter-side:
   reaction-event `trackID == 0` was first handled by shifting products away from slot `0`, but
   that diverged from the Geant truth contract. The current fix keeps Geant-style IDs and instead

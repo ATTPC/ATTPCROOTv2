@@ -366,3 +366,36 @@ TEST(AtPropagatorTest, PropagateToPoint_Field)
    ASSERT_NEAR(finalPos.Z(), point.Z(), 1);
    std::cout << "Difference in position: " << measurementPoint.Distance(finalPos) << " mm" << std::endl;
 }
+
+TEST(AtPropagatorTest, PropagateToPointAdaptive_Field)
+{
+   double charge = charge_p;
+   double mass = mass_p;
+   auto elossModel = std::make_unique<AtTools::AtELossTable>(0);
+   elossModel->LoadSrimTable(getEnergyPath());
+   elossModel->SetDensity(3.3084e-05);
+   AtPropagator propagator(charge, mass, std::move(elossModel));
+   propagator.SetEField({0, 0, 0});
+   propagator.SetBField({0, 0, 2.85});
+   AtRK4AdaptiveStepper stepper;
+   stepper.fInitialStep = 1e-3;
+   stepper.fMaxStep = 1e-3;
+
+   XYZPoint startPos(-3.40046e-05, -1.49863e-05, 0.10018);
+   startPos *= 10;
+   XYZVector startMom(0.00935463, -0.0454279, 0.00826042);
+   startMom *= 1e3;
+
+   propagator.SetState(startPos, startMom);
+
+   XYZPoint point({-1.4895, -4.8787, 1.01217});
+   point *= 10;
+   AtMeasurementPoint measurementPoint(point);
+
+   propagator.PropagateToMeasurementSurface(measurementPoint, stepper);
+
+   auto finalPos = propagator.GetPosition();
+   ASSERT_NEAR(finalPos.X(), point.X(), 1);
+   ASSERT_NEAR(finalPos.Y(), point.Y(), 1);
+   ASSERT_NEAR(finalPos.Z(), point.Z(), 1);
+}

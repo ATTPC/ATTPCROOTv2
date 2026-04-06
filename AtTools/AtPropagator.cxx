@@ -339,7 +339,7 @@ AtPropagator::StepState AtRK4AdaptiveStepper::Step(const AtPropagator::StepState
 
       // anonymous lambda to calculate and store the kx and kp values. Input is SI units.
       auto calc_k = [&](const XYZPoint &x, const XYZVector &p, int i) {
-         auto [k_x, k_p] = fDeriv(x * 1e-3, p / fReltoSImom);
+         auto [k_x, k_p] = fDeriv(x * 1e3, p / fReltoSImom);
          kx[i] = k_x; // Store the position derivative (unitless)
          kp[i] = k_p; // Store the momentum derivative (SI units)
       };
@@ -359,7 +359,7 @@ AtPropagator::StepState AtRK4AdaptiveStepper::Step(const AtPropagator::StepState
 
       // Calculate kx and kp for each stage
       // build stage 0
-      calc_k(x_SI, p0, 0);
+      calc_k(x_SI, p_SI, 0);
 
       // build stage 1
       auto [x1, p1] = calc_xp(1);

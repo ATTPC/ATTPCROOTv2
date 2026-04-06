@@ -139,19 +139,19 @@ void AtTestSimulation::Exec(Option_t *)
             if (IsSensitiveVolume(fSimulation->GetVolumeNameAt(pos)) &&
                 !SubmitInitialSensitivePoint(p.trackID, p.pdgCode, beamTrack, pos, mom))
                continue;
-            bool seenSensitiveVolume = false;
             fSimulation->TransportParticle(
                Z, A, pos, mom,
-               [this, trackID = p.trackID, isBeamEvent, seenSensitiveVolume](const AtSimpleSimulation::TransportStep &step
-                                                                             ) mutable {
-                  const bool preSensitive = seenSensitiveVolume || IsSensitiveVolume(step.preVolumeName);
+               [this, trackID = p.trackID, isBeamEvent](const AtSimpleSimulation::TransportStep &step) {
+                  const bool preSensitive = IsSensitiveVolume(step.preVolumeName);
                   const bool postSensitive = IsSensitiveVolume(step.postVolumeName);
-                  const bool entering = !seenSensitiveVolume && postSensitive;
-                  const bool exiting = seenSensitiveVolume && !postSensitive;
+                  const bool entering = !preSensitive && postSensitive;
+                  const bool exiting = preSensitive && !postSensitive;
                   const bool isBeamTrack = isBeamEvent && trackID == 0;
-                  if (postSensitive)
-                     seenSensitiveVolume = true;
-                  return ProcessDetectorStep(step, trackID, isBeamTrack, preSensitive, postSensitive, entering, exiting);
+                  const bool keepTransporting =
+                     ProcessDetectorStep(step, trackID, isBeamTrack, preSensitive, postSensitive, entering, exiting);
+                  if (exiting && !postSensitive)
+                     return false;
+                  return keepTransporting;
                });
          } else {
             fSimulation->SimulateParticle(Z, A, pos, mom);

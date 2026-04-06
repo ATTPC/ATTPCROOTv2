@@ -12,6 +12,7 @@
 
 #include <TClonesArray.h> // for TClonesArray
 #include <TGeoManager.h>
+#include <TGeoNavigator.h>
 #include <TGeoNode.h>
 #include <TGeoVolume.h>
 #include <TObject.h> // for TObject
@@ -28,6 +29,12 @@ using ModelPtr = std::shared_ptr<AtTools::AtELossModel>;
 using XYZPoint = ROOT::Math::XYZPoint;
 using XYZVector = ROOT::Math::XYZVector;
 using PxPyPzEVector = ROOT::Math::PxPyPzEVector;
+
+namespace {
+constexpr int kMaxCurvedTransportSteps = 200000;
+constexpr int kMaxMinStepCurvedSteps = 4096;
+constexpr double kMinStepGuardScale = 1.01;
+}
 
 // ---------------------------------------------------------------------------
 // Thin wrapper so a shared_ptr<AtELossModel> can be passed to AtPropagator
@@ -67,11 +74,17 @@ AtSimpleSimulation::AtSimpleSimulation(std::string geoFile)
 
    if (gGeoManager == nullptr)
       LOG(fatal) << "Failed to load geometry file " << geoFile << " " << geo;
+
+   fGeoManager = gGeoManager;
+   fNavigator = nullptr;
 }
 AtSimpleSimulation::AtSimpleSimulation()
 {
    if (gGeoManager == nullptr)
       LOG(fatal) << "No geometry file loaded!";
+
+   fGeoManager = gGeoManager;
+   fNavigator = nullptr;
 }
 
 bool AtSimpleSimulation::ParticleID::operator<(const ParticleID &other) const
@@ -91,7 +104,15 @@ TGeoVolume *AtSimpleSimulation::GetVolume(const XYZPoint &point)
    auto pointCm = point / 10.;
    {
       std::lock_guard<std::mutex> lock(fGeoMutex);
-      TGeoNode *node = gGeoManager->FindNode(pointCm.X(), pointCm.Y(), pointCm.Z());
+      if (gGeoManager == nullptr)
+         return nullptr;
+
+      if (fGeoManager != gGeoManager || fNavigator == nullptr) {
+         fGeoManager = gGeoManager;
+         fNavigator = fGeoManager->AddNavigator();
+      }
+
+      TGeoNode *node = fNavigator->FindNode(pointCm.X(), pointCm.Y(), pointCm.Z());
       if (node == nullptr) {
          return nullptr;
       }
@@ -179,11 +200,20 @@ AtSimpleSimulation::SimulateParticle(const ParticleInfo &info, const XYZPoint &i
       AtTools::AtRK4AdaptiveStepper stepper;
       stepper.fInitialStep = fMaxPropStep;
       stepper.fMaxStep = fMaxPropStep;
+      const double minAcceptedStepMm = stepper.fMinStep * 1e3 * kMinStepGuardScale;
       double length = 0;
+      int numSteps = 0;
+      int minStepSteps = 0;
 
       while (IsInVolume("drift_volume", prop.GetPosition())) {
+         if (++numSteps > kMaxCurvedTransportSteps) {
+            LOG(warning) << "Aborting curved SimpleSim track after " << numSteps
+                         << " steps without leaving drift_volume";
+            break;
+         }
+
          double KE = AtTools::Kinematics::KE(prop.GetMomentum(), info.mass);
-         if (KE <= 1e-3)
+         if (KE <= fCurvedStopTol)
             break;
 
          auto mom4 = AtTools::Kinematics::Get4Vector(prop.GetMomentum(), info.mass);
@@ -207,6 +237,16 @@ AtSimpleSimulation::SimulateParticle(const ParticleInfo &info, const XYZPoint &i
             eLoss = 0; // magnetic field does no work
 
          double stepDist = (prop.GetPosition() - state.fLastPos).R(); // mm
+         if (stepDist <= minAcceptedStepMm || state.hUsed <= stepper.fMinStep * kMinStepGuardScale) {
+            if (++minStepSteps > kMaxMinStepCurvedSteps) {
+               LOG(warning) << "Aborting curved SimpleSim track after " << minStepSteps
+                            << " minimum-size steps at position " << prop.GetPosition() << " with KE "
+                            << KE_after << " MeV";
+               break;
+            }
+         } else {
+            minStepSteps = 0;
+         }
          length += stepDist;
 
          auto newMom4 = AtTools::Kinematics::Get4Vector(prop.GetMomentum(), info.mass);
@@ -270,11 +310,20 @@ AtSimpleSimulation::TransportParticle(const ParticleInfo &info, int pdg, const X
       AtTools::AtRK4AdaptiveStepper stepper;
       stepper.fInitialStep = fMaxPropStep;
       stepper.fMaxStep = fMaxPropStep;
+      const double minAcceptedStepMm = stepper.fMinStep * 1e3 * kMinStepGuardScale;
       double length = 0;
+      int numSteps = 0;
+      int minStepSteps = 0;
 
       while (GetVolume(prop.GetPosition()) != nullptr) {
+         if (++numSteps > kMaxCurvedTransportSteps) {
+            LOG(warning) << "Aborting curved SimpleSim transport track after " << numSteps
+                         << " steps without leaving the geometry";
+            break;
+         }
+
          double KE = AtTools::Kinematics::KE(prop.GetMomentum(), info.mass);
-         if (KE <= 1e-3)
+         if (KE <= fCurvedStopTol)
             break;
 
          auto momBefore = AtTools::Kinematics::Get4Vector(prop.GetMomentum(), info.mass);
@@ -300,6 +349,16 @@ AtSimpleSimulation::TransportParticle(const ParticleInfo &info, int pdg, const X
             eLoss = 0;
 
          double stepDist = (posAfter - state.fLastPos).R();
+         if (stepDist <= minAcceptedStepMm || state.hUsed <= stepper.fMinStep * kMinStepGuardScale) {
+            if (++minStepSteps > kMaxMinStepCurvedSteps) {
+               LOG(warning) << "Aborting curved SimpleSim transport track after " << minStepSteps
+                            << " minimum-size steps at position " << posAfter << " with KE " << KE_after
+                            << " MeV for PDG " << pdg << " track " << fTrackID;
+               break;
+            }
+         } else {
+            minStepSteps = 0;
+         }
          length += stepDist;
 
          if (callback) {

@@ -22,6 +22,8 @@ namespace AtTools {
 class AtELossModel;
 } // namespace AtTools
 class TGeoVolume;
+class TGeoManager;
+class TGeoNavigator;
 class AtSpaceChargeModel;
 
 /**
@@ -57,10 +59,13 @@ protected:
    SpaceChargeModel fSCModel{nullptr};
    double fDistStep{1.}; // Distance step in mm for straight-line propagation
    std::mutex fGeoMutex;
+   TGeoManager *fGeoManager{nullptr};
+   TGeoNavigator *fNavigator{nullptr};
 
    XYZVector fEField{0, 0, 0}; ///< Electric field in V/m (used by AtPropagator)
    XYZVector fBField{0, 0, 0}; ///< Magnetic field in T (used by AtPropagator)
    double fMaxPropStep{1e-3};  ///< Max step size in m for the adaptive stepper (default 1 mm)
+   double fCurvedStopTol{0.1}; ///< Curved-track stop tolerance in MeV; avoids pathological late stopping tails
 
    // Variables to across an entire event
    static thread_local int fTrackID;
@@ -111,6 +116,7 @@ public:
    void SetMagneticField(XYZVector bField) { fBField = bField; } ///< Magnetic field in T
    /// Maximum step size (m) for the RK4 adaptive stepper in curved-track mode (default: 1e-3 m = 1 mm).
    void SetMaxPropagationStep(double stepM) { fMaxPropStep = stepM; }
+   void SetCurvedStopTolerance(double stopTolMeV) { fCurvedStopTol = stopTolMeV; }
 
    void NewEvent();
 

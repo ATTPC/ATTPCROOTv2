@@ -4,7 +4,7 @@
 
 This directory now has Geant transport macros, comparison macros, and a first pass at `AtSimpleSim` transport for the same validation campaign. The next step is not to update framework-wide documentation yet. The next step is to make the local migration story real, test it against the current macros, and iterate until there is a clean path from an existing Geant-style simulation macro to `AtSimpleSim`.
 
-This document is the working plan for that effort. It records the current code state, how the `AtSimpleSim` hook works today, what is still ad hoc, and what must be implemented and verified before this can be described as a supported migration strategy.
+This document records the current validated state of the local migration and validation effort, how the `AtSimpleSim` hook works in practice, and which physics checks matter when comparing the SimpleSim and Geant transport paths.
 
 ## Current State of the Code
 
@@ -36,17 +36,16 @@ This document is the working plan for that effort. It records the current code s
 - The fixed SimpleSim validation macro now uses the detector-coupled adapter path instead of the
   collector-only branch writer.
 
-### What is still wrong with the current attempt
+### What was wrong and is now fixed
 
 - The SimpleSim validation macros originally introduced their own macro-local `SimpleSimTask` class instead of using `AtTestSimulation`.
-- That duplication has now been removed in this directory, but the migration still has to be validated against real physics parity with the Geant side.
-- The local plan document had drifted into a mix of intended architecture, stale assumptions, and partially outdated physics description.
-- The fixed validation macro now reaches the detector-side reaction trigger and produces both
-  beam-event and reaction-event `AtTpcPoint` output through the shared detector path.
-
-### Physics/configuration inconsistency to resolve during validation
-
-This directory should only be used for side-by-side validation once both paths are running the same physics setup. Earlier versions of the local note described proton-on-He elastic scattering, while the current Geant validation macros in this directory are configured around the `16C + p` example pattern. The SimpleSim side must be checked against the actual Geant configuration being used before any comparison plots are treated as meaningful validation.
+- That duplication has been removed.
+- The Geant detector path allowed transport to continue after active-volume exit, which is not the
+  intended physics for this validation geometry.
+- The comparison macros previously dropped zero-point events before truth matching and used an
+  unstable truth key based on proton start-state coordinates.
+- The fixed and kinematic validation macros now run the same `16C + p` configuration on both sides
+  and compare truth-matched reaction events by reaction index.
 
 ## How the AtSimpleSim Hook Was Added
 
@@ -69,7 +68,7 @@ One important implementation detail uncovered during this migration work: the ge
 
 This means the intended migration is to preserve the generator physics and replace only the transport mechanism.
 
-## What Has To Be Implemented Next
+## Working Migration Path
 
 ### 1. Keep the validation macros on the framework bridge
 
@@ -101,12 +100,13 @@ The migration attempt should answer:
 
 If the migration is still awkward after using `AtTestSimulation`, record the missing framework work as concrete follow-up items tied to observed problems. Do not invent a second local harness and do not promote any behavior to main docs before it has been exercised here.
 
-## Immediate Work Items
+## Actual Validation Procedure
 
-1. Re-run the local validation workflow and inspect output structure and physics behavior.
-2. Align the Geant and SimpleSim macros to the same reaction definition before trusting comparison plots.
-3. Update the migration draft with what worked and what did not.
-4. Only after the migration path is stable should any framework-wide documentation be proposed.
+1. Regenerate the Geant reference output with the current detector code.
+2. Regenerate the SimpleSim output with the same generator and geometry choices.
+3. Compare only truth-matched reaction events.
+4. Report usable pairs separately from generator-only and incomplete events.
+5. Inspect both kinematics and path-length distributions, not just whether the macro ran.
 
 ## Acceptance Criteria for a Viable Migration Strategy
 
@@ -127,7 +127,7 @@ Until those conditions are met, this work remains a local validation and design 
   - detector reaction triggering,
   - detector-side `AtVertexPropagator` writes and resets,
   - non-beam metadata lookup,
-  - SimpleSim callback transport outside the legacy direct-hit path.
+  - transport stop on active-volume exit.
 - `simpleSim_fixed.C` now produces non-empty beam-event `AtTpcPoint` output through the shared
   detector path.
 - `simpleSim_fixed.C` now triggers detector-side `AtVertexPropagator` handoff and produces
@@ -141,6 +141,27 @@ Until those conditions are met, this work remains a local validation and design 
   the shared `AtTpc` step payload. That avoids the earlier adapter bug where reaction-event
   `trackID == 0` was mistaken for the beam after `AtReactionGenerator` had already toggled
   `AtVertexPropagator` to the next event phase.
+- `AtTpc` now stops transport when a particle exits the active reaction volume. For this local
+  validation geometry that is the intended wall boundary condition.
 - `visualizeKinematic.C("./data/simpleSim_kinematic.root", 2, 4)` now finds the recoil-proton
   truth track. For the current 2-event spot check it reports `Drew 1 trajectories and 1 event
   points`; for the earlier 10-event run it reported `Drew 4 trajectories and 5 event points`.
+- The long-run kinematic validation no longer stalls around event 190. The failure was a curved-
+  transport stopping tail for very low-energy recoil protons in the detector-coupled SimpleSim
+  path. `AtSimpleSimulation` now stops curved tracks below a configurable `0.1 MeV` tolerance by
+  default, which avoids spending pathological CPU time on the last few millimeters of sub-100 keV
+  proton range. After that change:
+  - `simpleSim_kinematic.C(190, 42)` completes in about `2.94 s`
+  - `simpleSim_kinematic.C(200, 42)` completes in about `2.98 s`
+  - `visualizeKinematic.C("./data/simpleSim_kinematic.root", 2, 4)` still reports
+    `Drew 4 trajectories and 100 event points` on the 200-event output.
+- The validation comparison macros now match by `reactionIndex` and keep zero-point events in the
+  truth bookkeeping.
+- On regenerated outputs:
+  - `compareFixed.C` reports `50` usable truth-matched pairs with `0/0` generator-only and `0/0`
+    incomplete events.
+  - `compareKinematic.C` reports `100` usable truth-matched pairs with `0/0` generator-only and
+    `0/0` incomplete events for the reduced 200-event spot check.
+- The previous Geant path-length inflation disappeared once the detector-side active-volume stop was
+  enforced. Residual Geant vs SimpleSim path differences are now at the mm-to-tens-of-mm scale
+  instead of the earlier hundreds-to-thousands-of-mm scale.
