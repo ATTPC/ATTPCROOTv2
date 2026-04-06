@@ -24,26 +24,10 @@
  *   nEventsMax   — maximum events to read from each file (0 = all)
  */
 
-#include "AtMCPoint.h"
-
-#include <FairMCPoint.h>
-
-#include <TCanvas.h>
-#include <TFile.h>
-#include <TH1D.h>
-#include <TH2D.h>
-#include <TLegend.h>
-#include <TProfile.h>
-#include <TString.h>
-#include <TStyle.h>
-#include <TTree.h>
-
-#include <TClonesArray.h>
-
 #include <algorithm>
 #include <iostream>
+#include <map>
 #include <string>
-#include <vector>
 
 // ---------------------------------------------------------------------------
 // Helper: fill histograms from one file
