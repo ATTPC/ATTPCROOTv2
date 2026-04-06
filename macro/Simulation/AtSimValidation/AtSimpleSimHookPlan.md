@@ -142,6 +142,31 @@ Even if the same `FairPrimaryGenerator` object is reused, that is not enough. Th
 
 So the current bridge is preserving generator syntax, but not the simulation contract.
 
+## Verified on This Branch
+
+The shared detector-path refactor is now in place and the current local status is:
+
+- `AtTpc` owns the shared step-processing logic for both VMC and the SimpleSim adapter.
+- `AtTestSimulation` now preserves the canonical track-ID convention:
+  - beam is `trackID == 0`,
+  - the reaction-event scattered ion also remains `trackID == 0`,
+  - the recoil proton is `trackID == 1`,
+  - the standard `MCTrack` branch is filled through the existing stack-owned branch name.
+- The shared detector step now carries explicit beam-phase information from the transport adapter.
+  This is required because `AtReactionGenerator::ReadEvent()` toggles
+  `AtVertexPropagator::IsBeamEvent()` before transport starts, so detector stepping cannot infer
+  the current transport phase from the singleton alone.
+- `simpleSim_kinematic.C` now produces visible reaction tracks in
+  `visualizeKinematic.C`; with `simpleSim_kinematic.C(10, 42)` the viewer reports
+  `Drew 4 trajectories and 5 event points`.
+- The earlier failure mode was adapter-side:
+  reaction-event `trackID == 0` was first handled by shifting products away from slot `0`, but
+  that diverged from the Geant truth contract. The current fix keeps Geant-style IDs and instead
+  prevents reaction-event `trackID == 0` from tripping beam-only detector semantics by carrying the
+  beam/reaction phase explicitly into the shared detector-step path. A duplicate `MCTrack`
+  registration had also caused ROOT to rename the truth branches away from the canonical
+  `MCTrack` name expected by the visualizer.
+
 ## Proposed Integration Strategy
 
 ### Design principle
@@ -415,12 +440,14 @@ Do not use physics plots to hide a broken contract.
 Current verified state:
 
 - the custom collector can reuse generator syntax
-- the current fixed SimpleSim macro can be made to run with `TGeant3`
-- the current collector-based bridge can call `AtSimpleSimulation`
+- `AtTpc` now exposes a transport-neutral detector-side step path
+- unit tests cover detector-trigger logic, vertex handoff state writes, and the new SimpleSim callback transport
+- the fixed SimpleSim macro can be made to run with `TGeant3`
+- the detector-coupled SimpleSim adapter now produces non-empty beam-event `AtTpcPoint` output through shared detector logic
+- the fixed validation macro now triggers detector-side reaction handoff and reaches `AtTPC2Body` with non-zero residual beam energy
+- the fixed validation macro now produces non-empty reaction-event `AtTpcPoint` output through the shared path
 
 Current blocker:
 
-- the collector-based bridge does not preserve the detector-side `AtVertexPropagator` contract
-- therefore it is not yet a true transport replacement
-
-That blocker should be addressed in code before any migration guide is written.
+- end-to-end detector contract is now working in the fixed validation case
+- the remaining follow-up is physics parity and broader comparison against the Geant validation macros

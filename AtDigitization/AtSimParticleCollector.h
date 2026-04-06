@@ -18,6 +18,7 @@ class TParticle;
  *  - momentum (px, py, pz) in GeV/c, total energy e in GeV
  */
 struct AtCollectedParticle {
+   int trackID;
    int pdgCode;
    double px, py, pz; ///< Momentum in GeV/c
    double e;          ///< Total energy in GeV

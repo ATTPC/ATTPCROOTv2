@@ -1,21 +1,28 @@
 #include "AtTestSimulation.h"
 
+#include "AtDetectorList.h"
+#include "AtMCTrack.h"
 #include "AtSimParticleCollector.h"
 #include "AtSimpleSimulation.h"
+#include "AtTpc/AtTpc.h"
+#include "AtVertexPropagator.h"
 
 #include <FairLogger.h>
 #include <FairMCEventHeader.h>
 #include <FairPrimaryGenerator.h>
+#include <FairRootManager.h>
 #include <FairTask.h> // for InitStatus, kSUCCESS
 
 #include <Math/Point3D.h>
 #include <Math/Point3Dfwd.h> // for Math, XYZPoint
 #include <Math/Vector4D.h>   // for LorentzVector
 #include <Math/Vector4Dfwd.h> // for PxPyPzEVector
+#include <TClonesArray.h>
 #include <TDatabasePDG.h>
 #include <TParticlePDG.h>
 
 #include <cmath>
+#include <string>
 #include <utility>
 using namespace ROOT::Math;
 
@@ -46,9 +53,46 @@ std::pair<int, int> GetZAFromPDG(int pdg)
 }
 } // namespace
 
+void AtTestSimulation::RegisterMCTrackBranch()
+{
+   auto *ioMan = FairRootManager::Instance();
+   if (ioMan == nullptr) {
+      LOG(fatal) << "The IO manager was not instantiated before AtTestSimulation::Init().";
+      return;
+   }
+
+   auto *existing = dynamic_cast<TClonesArray *>(ioMan->GetObject("MCTrack"));
+   if (existing != nullptr) {
+      fMCTrackArray = existing;
+      return;
+   }
+
+   if (fMCTrackArray == nullptr)
+      fMCTrackArray = new TClonesArray("AtMCTrack");
+
+   ioMan->Register("MCTrack", "Stack", fMCTrackArray, kTRUE);
+}
+
+void AtTestSimulation::FillMCTracks()
+{
+   if (fMCTrackArray == nullptr)
+      return;
+
+   fMCTrackArray->Clear("C");
+
+   for (const auto &p : fCollector.GetParticles()) {
+      new ((*fMCTrackArray)[p.trackID]) AtMCTrack(p.pdgCode, -1, p.px, p.py, p.pz, p.vx, p.vy, p.vz, 0.0, 0);
+   }
+}
+
 InitStatus AtTestSimulation::Init()
 {
-   fSimulation->RegisterBranch();
+   if (fDetector == nullptr) {
+      LOG(info) << "AtTestSimulation: using standalone AtSimpleSimulation branch writer";
+      fSimulation->RegisterBranch();
+   } else {
+      LOG(info) << "AtTestSimulation: using detector-coupled transport adapter";
+   }
 
    if (fPrimGen) {
       // FairPrimaryGenerator::GenerateEvent() requires a non-null FairMCEventHeader.
@@ -56,6 +100,8 @@ InitStatus AtTestSimulation::Init()
       fPrimGen->SetEvent(fMCHeader.get());
       fPrimGen->Init();
    }
+
+   RegisterMCTrackBranch();
 
    return kSUCCESS;
 }
@@ -67,8 +113,10 @@ void AtTestSimulation::Exec(Option_t *)
    if (!fPrimGen)
       return;
 
+   const bool isBeamEvent = AtVertexPropagator::Instance()->IsBeamEvent();
    fCollector.Clear();
    fPrimGen->GenerateEvent(&fCollector);
+   FillMCTracks();
 
    for (const auto &p : fCollector.GetParticles()) {
       auto [Z, A] = GetZAFromPDG(p.pdgCode);
@@ -81,14 +129,94 @@ void AtTestSimulation::Exec(Option_t *)
       PxPyPzEVector mom(p.px * 1000., p.py * 1000., p.pz * 1000., p.e * 1000.); // GeV → MeV
 
       try {
+         if (fDetector != nullptr && !IsSensitiveVolume(fSimulation->GetVolumeNameAt(pos)))
+            pos = FindSensitiveEntry(pos, mom);
+
          LOG(info) << "Simulating particle Z=" << Z << " A=" << A << " with initial pos=" << pos << " mm and mom=" << mom
                    << " MeV/c";
-         fSimulation->SimulateParticle(Z, A, pos, mom);
+         if (fDetector != nullptr) {
+            bool seenSensitiveVolume = false;
+            fSimulation->TransportParticle(
+               Z, A, pos, mom,
+               [this, trackID = p.trackID, isBeamEvent, seenSensitiveVolume](const AtSimpleSimulation::TransportStep &step
+                                                                             ) mutable {
+                  const bool preSensitive = seenSensitiveVolume || IsSensitiveVolume(step.preVolumeName);
+                  const bool postSensitive = IsSensitiveVolume(step.postVolumeName);
+                  const bool entering = !seenSensitiveVolume && postSensitive;
+                  const bool exiting = seenSensitiveVolume && !postSensitive;
+                  const bool beamTrack = isBeamEvent && trackID == 0;
+                  if (postSensitive)
+                     seenSensitiveVolume = true;
+                  return ProcessDetectorStep(step, trackID, beamTrack, preSensitive, postSensitive, entering, exiting);
+               });
+         } else {
+            fSimulation->SimulateParticle(Z, A, pos, mom);
+         }
       } catch (const std::invalid_argument &ex) {
-         // Particle may start outside the drift volume (e.g. beam upstream) — skip silently
+         // Legacy direct simulation only supports drift-volume starts. The detector-coupled path
+         // also rejects tracks that begin outside the imported geometry.
          LOG(debug) << "AtTestSimulation: skipping particle Z=" << Z << " A=" << A << ": " << ex.what();
       }
    }
+}
+
+bool AtTestSimulation::ProcessDetectorStep(const AtSimpleSimulation::TransportStep &step, int trackID, bool beamTrack,
+                                           bool preSensitive, bool postSensitive, bool entering, bool exiting)
+{
+   if (!preSensitive && !postSensitive)
+      return true;
+
+   AtTpc::StepState detectorStep;
+   detectorStep.trackID = trackID;
+   detectorStep.pdg = step.pdg;
+   detectorStep.volumeName = postSensitive ? step.postVolumeName.c_str() : step.preVolumeName.c_str();
+   detectorStep.volumeID = kAtTpc;
+   detectorStep.detCopyID = 0;
+   detectorStep.beamTrack = beamTrack;
+   detectorStep.entering = entering;
+   detectorStep.exiting = exiting;
+   detectorStep.stopping = postSensitive && (step.postMomentum.E() - step.postMomentum.M() <= 1e-3);
+   detectorStep.disappeared = false;
+   detectorStep.energyLoss = step.energyLoss / 1000.;
+   detectorStep.timeNs = 0.;
+   detectorStep.trackLength = step.length / 10.;
+
+   const auto &refPos = postSensitive ? step.postPosition : step.prePosition;
+   const auto &refMom = postSensitive ? step.postMomentum : step.preMomentum;
+   detectorStep.totalEnergy = refMom.E() / 1000.;
+   detectorStep.trackMass = step.trackMass / 1000.;
+   detectorStep.pos.SetXYZT(refPos.X() / 10., refPos.Y() / 10., refPos.Z() / 10., 0.);
+   detectorStep.mom.SetXYZT(refMom.Px() / 1000., refMom.Py() / 1000., refMom.Pz() / 1000., refMom.E() / 1000.);
+   detectorStep.posOut.SetXYZT(step.postPosition.X() / 10., step.postPosition.Y() / 10., step.postPosition.Z() / 10., 0.);
+   detectorStep.momOut.SetXYZT(step.postMomentum.Px() / 1000., step.postMomentum.Py() / 1000., step.postMomentum.Pz() / 1000.,
+                               step.postMomentum.E() / 1000.);
+
+   const bool stopTransport = fDetector->ProcessStep(detectorStep);
+   return !stopTransport;
+}
+
+XYZPoint AtTestSimulation::FindSensitiveEntry(const XYZPoint &pos, const PxPyPzEVector &mom) const
+{
+   const auto dir = mom.Vect().Unit();
+   if (dir.R() == 0.0)
+      throw std::invalid_argument("Particle momentum is zero; cannot search for detector entry");
+
+   constexpr double stepMm = 1.0;
+   constexpr int maxSteps = 5000;
+   auto probe = pos;
+   for (int i = 0; i < maxSteps; ++i) {
+      probe += dir * stepMm;
+      if (IsSensitiveVolume(fSimulation->GetVolumeNameAt(probe)))
+         return probe;
+   }
+
+   throw std::invalid_argument("Particle does not intersect a sensitive detector volume");
+}
+
+bool AtTestSimulation::IsSensitiveVolume(const std::string &volumeName)
+{
+   return volumeName.find("drift_volume") != std::string::npos || volumeName.find("window") != std::string::npos ||
+          volumeName.find("cell") != std::string::npos;
 }
 
 ClassImp(AtTestSimulation);

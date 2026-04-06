@@ -5,6 +5,7 @@
 #include <utility>
 #include <vector>
 
+#include <AtMCTrack.h>
 #include <FairMCPoint.h>
 #include <TCanvas.h>
 #include <TClonesArray.h>
@@ -34,13 +35,13 @@ struct TrackData {
 };
 
 struct PlotData {
-   std::vector<std::pair<double, double>> protonKinematics;
-   std::vector<std::pair<double, double>> heliumKinematics;
+   std::vector<std::pair<double, double>> recoilProtonKinematics;
+   std::vector<std::pair<double, double>> scatteredIonKinematics;
    std::vector<std::pair<double, double>> xy;
-   TProfile *protonBragg{nullptr};
-   TProfile *heliumBragg{nullptr};
-   TH1D *protonRange{nullptr};
-   TH1D *heliumRange{nullptr};
+   TProfile *recoilProtonBragg{nullptr};
+   TProfile *scatteredIonBragg{nullptr};
+   TH1D *recoilProtonRange{nullptr};
+   TH1D *scatteredIonRange{nullptr};
 };
 
 bool SortByLength(const PointSample &lhs, const PointSample &rhs) { return lhs.length < rhs.length; }
@@ -74,13 +75,18 @@ void FillBragg(TProfile *profile, const TrackData &track)
    }
 }
 
+bool IsSelectedPrimaryTrack(AtMCTrack *track, int pdgCode)
+{
+   return track != nullptr && track->GetMotherId() == -1 && track->GetPdgCode() == pdgCode;
+}
+
 PlotData LoadPlotData(const TString &fileName, const char *tag)
 {
    PlotData out;
-   out.protonBragg = new TProfile(Form("hProtonBraggK_%s", tag), ";Z [mm];dE/dx [MeV/mm]", 100, 0., 1000.);
-   out.heliumBragg = new TProfile(Form("hHeliumBraggK_%s", tag), ";Z [mm];dE/dx [MeV/mm]", 100, 0., 1000.);
-   out.protonRange = new TH1D(Form("hProtonRange_%s", tag), ";Stopping Z [mm];Tracks", 100, 0., 1000.);
-   out.heliumRange = new TH1D(Form("hHeliumRange_%s", tag), ";Stopping Z [mm];Tracks", 100, 0., 1000.);
+   out.recoilProtonBragg = new TProfile(Form("hRecoilProtonBraggK_%s", tag), ";Z [mm];dE/dx [MeV/mm]", 100, 0., 1000.);
+   out.scatteredIonBragg = new TProfile(Form("hScatteredIonBraggK_%s", tag), ";Z [mm];dE/dx [MeV/mm]", 100, 0., 1000.);
+   out.recoilProtonRange = new TH1D(Form("hRecoilProtonRange_%s", tag), ";Stopping Z [mm];Tracks", 100, 0., 1000.);
+   out.scatteredIonRange = new TH1D(Form("hScatteredIonRange_%s", tag), ";Stopping Z [mm];Tracks", 100, 0., 1000.);
 
    auto *file = TFile::Open(fileName);
    if (!file || file->IsZombie()) {
@@ -96,49 +102,50 @@ PlotData LoadPlotData(const TString &fileName, const char *tag)
    }
 
    TClonesArray *pointArray = nullptr;
+   TClonesArray *trackArray = nullptr;
    tree->SetBranchAddress("AtTpcPoint", &pointArray);
+   tree->SetBranchAddress("MCTrack", &trackArray);
 
    for (Long64_t iEvent = 0; iEvent < tree->GetEntries(); ++iEvent) {
       tree->GetEntry(iEvent);
-      if (!pointArray || pointArray->GetEntriesFast() == 0)
+      if (!pointArray || !trackArray || pointArray->GetEntriesFast() == 0)
          continue;
 
-      std::vector<int> trackIDs;
-      std::map<int, bool> seenTrack;
-      for (int i = 0; i < pointArray->GetEntriesFast(); ++i) {
-         auto *pt = dynamic_cast<FairMCPoint *>(pointArray->At(i));
-         if (!pt)
-            continue;
-         if (!seenTrack[pt->GetTrackID()]) {
-            seenTrack[pt->GetTrackID()] = true;
-            trackIDs.push_back(pt->GetTrackID());
-         }
+      int scatteredIonTrackID = -1;
+      int recoilProtonTrackID = -1;
+      for (int i = 0; i < trackArray->GetEntriesFast(); ++i) {
+         auto *track = dynamic_cast<AtMCTrack *>(trackArray->At(i));
+         if (scatteredIonTrackID < 0 && IsSelectedPrimaryTrack(track, 1000060160))
+            scatteredIonTrackID = i;
+         if (recoilProtonTrackID < 0 && IsSelectedPrimaryTrack(track, 2212))
+            recoilProtonTrackID = i;
       }
 
-      std::sort(trackIDs.begin(), trackIDs.end());
-      if (trackIDs.size() < 2)
+      if (scatteredIonTrackID < 0 || recoilProtonTrackID < 0)
          continue;
 
-      auto proton = BuildTrackData(trackIDs.front(), pointArray);
-      auto helium = BuildTrackData(trackIDs.back(), pointArray);
-      if (proton.points.empty() || helium.points.empty())
+      auto scatteredIon = BuildTrackData(scatteredIonTrackID, pointArray);
+      auto recoilProton = BuildTrackData(recoilProtonTrackID, pointArray);
+      if (scatteredIon.points.empty() || recoilProton.points.empty())
          continue;
 
-      const auto &protonFirst = proton.points.front();
-      const auto &heliumFirst = helium.points.front();
-      out.protonKinematics.emplace_back(std::sqrt(protonFirst.px * protonFirst.px + protonFirst.py * protonFirst.py),
-                                        protonFirst.pz);
-      out.heliumKinematics.emplace_back(std::sqrt(heliumFirst.px * heliumFirst.px + heliumFirst.py * heliumFirst.py),
-                                        heliumFirst.pz);
+      const auto &recoilProtonFirst = recoilProton.points.front();
+      const auto &scatteredIonFirst = scatteredIon.points.front();
+      out.recoilProtonKinematics.emplace_back(
+         std::sqrt(recoilProtonFirst.px * recoilProtonFirst.px + recoilProtonFirst.py * recoilProtonFirst.py),
+         recoilProtonFirst.pz);
+      out.scatteredIonKinematics.emplace_back(
+         std::sqrt(scatteredIonFirst.px * scatteredIonFirst.px + scatteredIonFirst.py * scatteredIonFirst.py),
+         scatteredIonFirst.pz);
 
-      out.protonRange->Fill(proton.points.back().z);
-      out.heliumRange->Fill(helium.points.back().z);
-      FillBragg(out.protonBragg, proton);
-      FillBragg(out.heliumBragg, helium);
+      out.recoilProtonRange->Fill(recoilProton.points.back().z);
+      out.scatteredIonRange->Fill(scatteredIon.points.back().z);
+      FillBragg(out.recoilProtonBragg, recoilProton);
+      FillBragg(out.scatteredIonBragg, scatteredIon);
 
-      for (const auto &point : proton.points)
+      for (const auto &point : recoilProton.points)
          out.xy.emplace_back(point.x, point.y);
-      for (const auto &point : helium.points)
+      for (const auto &point : scatteredIon.points)
          out.xy.emplace_back(point.x, point.y);
    }
 
@@ -181,19 +188,19 @@ void compareKinematic(TString geantFile = "./data/geant4_kinematic.root",
    auto geant = LoadPlotData(geantFile, "g4");
    auto simple = LoadPlotData(simpleFile, "sim");
 
-   StyleProfile(geant.protonBragg, kBlue + 1, 1);
-   StyleProfile(simple.protonBragg, kRed + 1, 2);
-   StyleProfile(geant.heliumBragg, kBlue + 1, 1);
-   StyleProfile(simple.heliumBragg, kRed + 1, 2);
-   StyleRange(geant.protonRange, kBlue + 1, 1);
-   StyleRange(simple.protonRange, kRed + 1, 2);
-   StyleRange(geant.heliumRange, kBlue + 1, 3);
-   StyleRange(simple.heliumRange, kRed + 1, 4);
+   StyleProfile(geant.recoilProtonBragg, kBlue + 1, 1);
+   StyleProfile(simple.recoilProtonBragg, kRed + 1, 2);
+   StyleProfile(geant.scatteredIonBragg, kBlue + 1, 1);
+   StyleProfile(simple.scatteredIonBragg, kRed + 1, 2);
+   StyleRange(geant.recoilProtonRange, kBlue + 1, 1);
+   StyleRange(simple.recoilProtonRange, kRed + 1, 2);
+   StyleRange(geant.scatteredIonRange, kBlue + 1, 3);
+   StyleRange(simple.scatteredIonRange, kRed + 1, 4);
 
-   auto *protonG4 = MakeGraph(geant.protonKinematics, "protonG4", kBlue + 1);
-   auto *protonSim = MakeGraph(simple.protonKinematics, "protonSim", kRed + 1);
-   auto *heliumG4 = MakeGraph(geant.heliumKinematics, "heliumG4", kBlue + 1);
-   auto *heliumSim = MakeGraph(simple.heliumKinematics, "heliumSim", kRed + 1);
+   auto *protonG4 = MakeGraph(geant.recoilProtonKinematics, "protonG4", kBlue + 1);
+   auto *protonSim = MakeGraph(simple.recoilProtonKinematics, "protonSim", kRed + 1);
+   auto *ionG4 = MakeGraph(geant.scatteredIonKinematics, "ionG4", kBlue + 1);
+   auto *ionSim = MakeGraph(simple.scatteredIonKinematics, "ionSim", kRed + 1);
    auto *xyG4 = MakeGraph(geant.xy, "xyG4K", kBlue + 1);
    auto *xySim = MakeGraph(simple.xy, "xySimK", kRed + 1);
 
@@ -212,45 +219,45 @@ void compareKinematic(TString geantFile = "./data/geant4_kinematic.root",
    protonLegend->Draw();
 
    canvas->cd(2);
-   auto *heliumMg = new TMultiGraph();
-   heliumMg->SetTitle("He-4 kinematic locus;p_{T} [MeV/c];p_{Z} [MeV/c]");
-   heliumMg->Add(heliumG4, "P");
-   heliumMg->Add(heliumSim, "P");
-   heliumMg->Draw("A");
-   auto *heliumLegend = new TLegend(0.62, 0.78, 0.9, 0.9);
-   heliumLegend->AddEntry(heliumG4, "Geant4", "p");
-   heliumLegend->AddEntry(heliumSim, "SimpleSim", "p");
-   heliumLegend->Draw();
+   auto *ionMg = new TMultiGraph();
+   ionMg->SetTitle("Scattered 16C kinematic locus;p_{T} [MeV/c];p_{Z} [MeV/c]");
+   ionMg->Add(ionG4, "P");
+   ionMg->Add(ionSim, "P");
+   ionMg->Draw("A");
+   auto *ionLegend = new TLegend(0.62, 0.78, 0.9, 0.9);
+   ionLegend->AddEntry(ionG4, "Geant4", "p");
+   ionLegend->AddEntry(ionSim, "SimpleSim", "p");
+   ionLegend->Draw();
 
    canvas->cd(3);
-   geant.protonBragg->SetTitle("Bragg curve: proton");
-   geant.protonBragg->Draw("hist");
-   simple.protonBragg->Draw("hist same");
+   geant.recoilProtonBragg->SetTitle("Bragg curve: recoil proton");
+   geant.recoilProtonBragg->Draw("hist");
+   simple.recoilProtonBragg->Draw("hist same");
    auto *braggProtonLegend = new TLegend(0.62, 0.78, 0.9, 0.9);
-   braggProtonLegend->AddEntry(geant.protonBragg, "Geant4", "l");
-   braggProtonLegend->AddEntry(simple.protonBragg, "SimpleSim", "l");
+   braggProtonLegend->AddEntry(geant.recoilProtonBragg, "Geant4", "l");
+   braggProtonLegend->AddEntry(simple.recoilProtonBragg, "SimpleSim", "l");
    braggProtonLegend->Draw();
 
    canvas->cd(4);
-   geant.heliumBragg->SetTitle("Bragg curve: He-4");
-   geant.heliumBragg->Draw("hist");
-   simple.heliumBragg->Draw("hist same");
-   auto *braggHeliumLegend = new TLegend(0.62, 0.78, 0.9, 0.9);
-   braggHeliumLegend->AddEntry(geant.heliumBragg, "Geant4", "l");
-   braggHeliumLegend->AddEntry(simple.heliumBragg, "SimpleSim", "l");
-   braggHeliumLegend->Draw();
+   geant.scatteredIonBragg->SetTitle("Bragg curve: scattered 16C");
+   geant.scatteredIonBragg->Draw("hist");
+   simple.scatteredIonBragg->Draw("hist same");
+   auto *braggIonLegend = new TLegend(0.62, 0.78, 0.9, 0.9);
+   braggIonLegend->AddEntry(geant.scatteredIonBragg, "Geant4", "l");
+   braggIonLegend->AddEntry(simple.scatteredIonBragg, "SimpleSim", "l");
+   braggIonLegend->Draw();
 
    canvas->cd(5);
-   geant.protonRange->SetTitle("Range distributions");
-   geant.protonRange->Draw("hist");
-   simple.protonRange->Draw("hist same");
-   geant.heliumRange->Draw("hist same");
-   simple.heliumRange->Draw("hist same");
+   geant.recoilProtonRange->SetTitle("Range distributions");
+   geant.recoilProtonRange->Draw("hist");
+   simple.recoilProtonRange->Draw("hist same");
+   geant.scatteredIonRange->Draw("hist same");
+   simple.scatteredIonRange->Draw("hist same");
    auto *rangeLegend = new TLegend(0.44, 0.64, 0.9, 0.9);
-   rangeLegend->AddEntry(geant.protonRange, "Geant4 proton", "l");
-   rangeLegend->AddEntry(simple.protonRange, "SimpleSim proton", "l");
-   rangeLegend->AddEntry(geant.heliumRange, "Geant4 He-4", "l");
-   rangeLegend->AddEntry(simple.heliumRange, "SimpleSim He-4", "l");
+   rangeLegend->AddEntry(geant.recoilProtonRange, "Geant4 proton", "l");
+   rangeLegend->AddEntry(simple.recoilProtonRange, "SimpleSim proton", "l");
+   rangeLegend->AddEntry(geant.scatteredIonRange, "Geant4 16C", "l");
+   rangeLegend->AddEntry(simple.scatteredIonRange, "SimpleSim 16C", "l");
    rangeLegend->Draw();
 
    canvas->cd(6);

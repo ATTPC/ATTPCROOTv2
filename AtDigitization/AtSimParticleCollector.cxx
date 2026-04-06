@@ -17,6 +17,6 @@ void AtSimParticleCollector::PushTrack(Int_t toBeDone, Int_t /*parentID*/, Int_t
 {
    ntr = static_cast<Int_t>(fParticles.size());
    if (toBeDone) {
-      fParticles.push_back({pdgCode, px, py, pz, e, vx, vy, vz});
+      fParticles.push_back({ntr, pdgCode, px, py, pz, e, vx, vy, vz});
    }
 }

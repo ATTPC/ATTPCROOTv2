@@ -138,7 +138,7 @@ TGraph *BuildTheoryGraph(Int_t trackID)
 }
 } // namespace
 
-void visualizeKinematic(TString inputFile = "./data/geant4_kinematic.root", Int_t selectedTrackID = 2, Int_t maxEvents = 8)
+void visualizeKinematic(TString inputFile = "./data/simpleSim_kinematic.root", Int_t selectedTrackID = 2, Int_t maxEvents = 8)
 {
    gStyle->SetOptStat(0);
 

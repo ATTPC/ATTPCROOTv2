@@ -27,6 +27,29 @@ class TList;
 class TMemberInspector;
 
 class AtTpc : public FairDetector {
+public:
+   struct StepState {
+      int trackID = -1;
+      int pdg = 0;
+      TString volumeName;
+      int volumeID = -1;
+      int detCopyID = -1;
+      bool beamTrack = false;
+      bool entering = false;
+      bool exiting = false;
+      bool stopping = false;
+      bool disappeared = false;
+      double energyLoss = 0.0;     // GeV
+      double timeNs = 0.0;         // ns
+      double trackLength = 0.0;    // cm
+      double totalEnergy = 0.0;    // GeV
+      double trackMass = 0.0;      // GeV/c^2
+      TLorentzVector pos;
+      TLorentzVector mom;
+      TLorentzVector posOut;
+      TLorentzVector momOut;
+   };
+
 private:
    /** Track information to be stored until the track leaves the
    active volume.
@@ -54,6 +77,7 @@ private:
    TString fVolName;
    Double32_t fELossAcc;
    TLorentzVector InPos;
+   bool fIsBeamTrack = false;
 
    /** container for data points */
 
@@ -87,17 +111,24 @@ public:
    AtMCPoint *AddHit(Int_t trackID, Int_t detID, TString VolName, Int_t detCopyID, TVector3 pos, TVector3 mom,
                      Double_t time, Double_t length, Double_t eLoss, Double_t EIni, Double_t AIni, Int_t A, Int_t Z);
 
+   /**
+    * Process a detector step from a transport-neutral snapshot.
+    * Returns true when the transport should stop at this step because the reaction fired.
+    */
+   bool ProcessStep(const StepState &step);
+
 private:
    std::pair<Int_t, Int_t> DecodePdG(Int_t PdG_Code);
 
-   void trackEnteringVolume();
-   void getTrackParametersFromMC();
-   void getTrackParametersWhileExiting();
+   void trackEnteringVolume(const StepState &step);
+   void getTrackParametersFromStep(const StepState &step);
+   void getTrackParametersWhileExiting(const StepState &step);
    void correctPosOut();
    void resetVertex();
-   void addHit();
+   void addHit(const StepState &step);
    bool reactionOccursHere();
-   void startReactionEvent();
+   void startReactionEvent(const StepState &step);
+   bool IsReactionVolume(const TString &volumeName) const;
 
    AtTpc(const AtTpc &);
    AtTpc &operator=(const AtTpc &);

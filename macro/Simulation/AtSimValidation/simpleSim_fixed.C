@@ -2,16 +2,16 @@
 namespace {
 FairPrimaryGenerator *BuildElasticGenerator(Double_t thetaMinCmsDeg, Double_t thetaMaxCmsDeg)
 {
-   constexpr Int_t z = 1;
-   constexpr Int_t a = 1;
+   constexpr Int_t z = 6;
+   constexpr Int_t a = 16;
    constexpr Int_t q = 0;
    constexpr Int_t m = 1;
    constexpr Double_t px = 0.0;
    constexpr Double_t py = 0.0;
-   constexpr Double_t pz = 0.04333;
+   constexpr Double_t pz = 2.297 / a;
    constexpr Double_t beamExcitation = 0.0;
-   constexpr Double_t beamMass = 0.938272;
-   constexpr Double_t nominalEnergy = 1.0;
+   constexpr Double_t beamMass = 16.014701;
+   constexpr Double_t nominalEnergy = 0.0;
 
    auto *primGen = new FairPrimaryGenerator();
 
@@ -21,17 +21,17 @@ FairPrimaryGenerator *BuildElasticGenerator(Double_t thetaMinCmsDeg, Double_t th
    ionGen->SetDoReaction(kTRUE);
    primGen->AddGenerator(ionGen);
 
-   std::vector<Int_t> Zp{1, 2, 1, 2};
-   std::vector<Int_t> Ap{1, 4, 1, 4};
+   std::vector<Int_t> Zp{6, 1, 6, 1};
+   std::vector<Int_t> Ap{16, 1, 16, 1};
    std::vector<Int_t> Qp{0, 0, 0, 0};
    std::vector<Double_t> Pxp{px, 0.0, 0.0, 0.0};
    std::vector<Double_t> Pyp{py, 0.0, 0.0, 0.0};
    std::vector<Double_t> Pzp{pz, 0.0, 0.0, 0.0};
-   std::vector<Double_t> Mass{1.007276, 4.00260, 1.007276, 4.00260};
+   std::vector<Double_t> Mass{16.014701, 1.0078250322, 16.014701, 1.0078250322};
    std::vector<Double_t> ExE{beamExcitation, 0.0, 0.0, 0.0};
 
    constexpr Int_t mult = 4;
-   constexpr Double_t resEnergy = 1.0;
+   constexpr Double_t resEnergy = 40.0;
    auto *twoBody = new AtTPC2Body("Elastic", &Zp, &Ap, &Qp, mult, &Pxp, &Pyp, &Pzp, &Mass, &ExE, resEnergy,
                                   thetaMinCmsDeg, thetaMaxCmsDeg);
    primGen->AddGenerator(twoBody);
@@ -46,13 +46,13 @@ std::unique_ptr<AtSimpleSimulation> BuildSimpleSimulation(const TString &geoFile
    constexpr double heDensity = 1.664e-4;
    std::vector<std::tuple<int, int, int>> material{{4, 2, 1}};
 
-   auto protonModel = std::make_shared<AtTools::AtELossCATIMA>(heDensity, material);
-   protonModel->SetProjectile(1, 1, 1.007276);
-   sim->AddModel(1, 1, protonModel, 1.007276);
+   auto carbonModel = std::make_shared<AtTools::AtELossCATIMA>(heDensity, material);
+   carbonModel->SetProjectile(16, 6, 16.014701);
+   sim->AddModel(6, 16, carbonModel, 16.014701);
 
-   auto heliumModel = std::make_shared<AtTools::AtELossCATIMA>(heDensity, material);
-   heliumModel->SetProjectile(4, 2, 4.002602);
-   sim->AddModel(2, 4, heliumModel, 4.002602);
+   auto protonModel = std::make_shared<AtTools::AtELossCATIMA>(heDensity, material);
+   protonModel->SetProjectile(1, 1, 1.0078250322);
+   sim->AddModel(1, 1, protonModel, 1.0078250322);
    sim->SetMagneticField(ROOT::Math::XYZVector(0., 0., 2.0));
    sim->SetMaxPropagationStep(1e-3);
 
@@ -99,6 +99,7 @@ void simpleSim_fixed(Double_t thetaCms = 45.0, Int_t nEvents = 100, UInt_t seed 
    auto *simPrimGen = BuildElasticGenerator(thetaCms, thetaCms);
    auto *simTask = new AtTestSimulation(BuildSimpleSimulation(dir + "/geometry/ATTPC_He1bar_geomanager.root"));
    simTask->SetPrimaryGenerator(simPrimGen);
+   simTask->SetDetector(tpc);
    run->AddTask(simTask);
 
    run->Init();

@@ -50,6 +50,15 @@ public:
    double GetdEdxStraggling(double ei, double ef) const override { return fImpl->GetdEdxStraggling(ei, ef); }
    double GetRangeVariance(double e) const override { return fImpl->GetRangeVariance(e); }
 };
+
+int GetPDGFromZA(int Z, int A)
+{
+   if (A == 1 && Z == 1)
+      return 2212;
+   if (A == 1 && Z == 0)
+      return 2112;
+   return 1000000000 + Z * 10000 + A * 10;
+}
 } // namespace
 
 AtSimpleSimulation::AtSimpleSimulation(std::string geoFile)
@@ -138,6 +147,19 @@ AtSimpleSimulation::SimulateParticle(int Z, int A, const XYZPoint &iniPos, const
 }
 
 std::pair<XYZPoint, PxPyPzEVector>
+AtSimpleSimulation::TransportParticle(int Z, int A, const XYZPoint &iniPos, const PxPyPzEVector &iniMom,
+                                      StepCallback callback)
+{
+   auto modelIt = fModels.find({A, Z});
+   if (modelIt == fModels.end())
+      throw std::invalid_argument("Missing energy loss model for Z:" + std::to_string(Z) + " A:" + std::to_string(A));
+   if (GetVolume(iniPos) == nullptr)
+      throw std::invalid_argument("Position of particle is outside the loaded geometry");
+
+   return TransportParticle(modelIt->second, GetPDGFromZA(Z, A), iniPos, iniMom, callback);
+}
+
+std::pair<XYZPoint, PxPyPzEVector>
 AtSimpleSimulation::SimulateParticle(const ParticleInfo &info, const XYZPoint &iniPos, const PxPyPzEVector &iniMom,
                                      std::function<bool(XYZPoint, PxPyPzEVector)> func)
 {
@@ -155,6 +177,7 @@ AtSimpleSimulation::SimulateParticle(const ParticleInfo &info, const XYZPoint &i
       prop.SetState(iniPos, iniMom.Vect());
 
       AtTools::AtRK4AdaptiveStepper stepper;
+      stepper.fInitialStep = fMaxPropStep;
       stepper.fMaxStep = fMaxPropStep;
       double length = 0;
 
@@ -226,6 +249,119 @@ AtSimpleSimulation::SimulateParticle(const ParticleInfo &info, const XYZPoint &i
       pos += dir * fDistStep;
       length += fDistStep;
       AddHit(eLoss, pos, mom, length);
+   }
+
+   return {pos, mom};
+}
+
+std::pair<XYZPoint, PxPyPzEVector>
+AtSimpleSimulation::TransportParticle(const ParticleInfo &info, int pdg, const XYZPoint &iniPos, const PxPyPzEVector &iniMom,
+                                      const StepCallback &callback)
+{
+   fTrackID++;
+
+   if (fEField.Mag2() != 0 || fBField.Mag2() != 0) {
+      auto wrapModel = std::make_unique<ELossModelShared>(info.model);
+      AtTools::AtPropagator prop(info.charge, info.mass, std::move(wrapModel));
+      prop.SetEField(fEField);
+      prop.SetBField(fBField);
+      prop.SetState(iniPos, iniMom.Vect());
+
+      AtTools::AtRK4AdaptiveStepper stepper;
+      stepper.fInitialStep = fMaxPropStep;
+      stepper.fMaxStep = fMaxPropStep;
+      double length = 0;
+
+      while (GetVolume(prop.GetPosition()) != nullptr) {
+         double KE = AtTools::Kinematics::KE(prop.GetMomentum(), info.mass);
+         if (KE <= 1e-3)
+            break;
+
+         auto momBefore = AtTools::Kinematics::Get4Vector(prop.GetMomentum(), info.mass);
+         auto posBefore = prop.GetPosition();
+         auto preVolumeName = GetVolumeName(posBefore);
+
+         if (isnan(posBefore.X()) || isnan(prop.GetMomentum().X())) {
+            LOG(error) << "Failed to transport a point with nan!";
+            return {{0, 0, 0}, {0, 0, 0, 0}};
+         }
+
+         prop.PropagateOneStep(stepper);
+
+         auto &state = prop.GetState();
+         if (state.status != AtTools::AtPropagator::StepStateStatus::kSuccess)
+            break;
+
+         auto posAfter = prop.GetPosition();
+         auto momAfter = AtTools::Kinematics::Get4Vector(prop.GetMomentum(), info.mass);
+         double KE_after = AtTools::Kinematics::KE(prop.GetMomentum(), info.mass);
+         double eLoss = KE - KE_after;
+         if (eLoss < 0)
+            eLoss = 0;
+
+         double stepDist = (posAfter - state.fLastPos).R();
+         length += stepDist;
+
+         if (callback) {
+            TransportStep step;
+            step.trackID = fTrackID;
+            step.pdg = pdg;
+            step.preVolumeName = preVolumeName;
+            step.postVolumeName = GetVolumeName(posAfter);
+            step.energyLoss = eLoss;
+            step.length = length;
+            step.trackMass = info.mass;
+            step.prePosition = posBefore;
+            step.postPosition = posAfter;
+            step.preMomentum = momBefore;
+            step.postMomentum = momAfter;
+            if (!callback(step))
+               break;
+         }
+      }
+
+      return {prop.GetPosition(), AtTools::Kinematics::Get4Vector(prop.GetMomentum(), info.mass)};
+   }
+
+   auto &model = info.model;
+   auto pos = iniPos;
+   auto mom = iniMom;
+   double length = 0;
+
+   while (GetVolume(pos) != nullptr && mom.E() - mom.M() > 1e-3) {
+      if (isnan(pos.X()) || isnan(mom.X())) {
+         LOG(error) << "Failed to transport a point with nan!";
+         return {{0, 0, 0}, {0, 0, 0, 0}};
+      }
+
+      auto posBefore = pos;
+      auto momBefore = mom;
+      auto preVolumeName = GetVolumeName(posBefore);
+      auto dir = mom.Vect().Unit();
+      double KE = mom.E() - mom.M();
+      double eLoss = model->GetEnergyLoss(KE, fDistStep);
+      auto E = mom.E() - eLoss;
+      double p = sqrt(E * E - mom.M2());
+      mom.SetPxPyPzE(dir.X() * p, dir.Y() * p, dir.Z() * p, E);
+      pos += dir * fDistStep;
+      length += fDistStep;
+
+      if (callback) {
+         TransportStep step;
+         step.trackID = fTrackID;
+         step.pdg = pdg;
+         step.preVolumeName = preVolumeName;
+         step.postVolumeName = GetVolumeName(pos);
+         step.energyLoss = eLoss;
+         step.length = length;
+         step.trackMass = info.mass;
+         step.prePosition = posBefore;
+         step.postPosition = pos;
+         step.preMomentum = momBefore;
+         step.postMomentum = mom;
+         if (!callback(step))
+            break;
+      }
    }
 
    return {pos, mom};

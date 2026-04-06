@@ -15,11 +15,18 @@
 
 #include "AtMCPoint.h"
 #include "AtSimpleSimulation.h"
+#define private public
+#define protected public
+#include "AtTestSimulation.h"
+#undef protected
+#undef private
 
 #include "AtELossModel.h"
+#include "AtMCTrack.h"
 
 #include <Math/Point3D.h>
 #include <Math/Vector4D.h>
+#include <TClonesArray.h>
 #include <TGeoManager.h>
 #include <TGeoMaterial.h>
 #include <TGeoMedium.h>
@@ -29,6 +36,7 @@
 
 #include <cmath>
 #include <memory>
+#include <stdexcept>
 
 // ---------------------------------------------------------------------------
 // Minimal energy-loss model with constant dEdx = fRate [MeV/mm].
@@ -208,4 +216,96 @@ TEST_F(AtSimTest, MagneticFieldLarmorRadius)
    double meanErr = sumErr / nPts;
    EXPECT_LT(meanErr, larmor_mm * 0.05)
       << "Mean Larmor radius error " << meanErr << " mm exceeds 5% of " << larmor_mm << " mm";
+}
+
+TEST_F(AtSimTest, LegacySimulateParticleStillRejectsStartsOutsideDriftVolume)
+{
+   AtSimpleSimulation sim;
+   sim.AddModel(1, 1, std::make_shared<ConstELoss>(0.1));
+
+   const double mass_p = 938.272;
+   const double E0 = mass_p + 10.0;
+   const double p0 = std::sqrt(E0 * E0 - mass_p * mass_p);
+
+   ROOT::Math::XYZPoint pos(0, 0, 600.0); // Outside drift_volume but still in cave
+   ROOT::Math::PxPyPzEVector mom(0.0, 0.0, -p0, E0);
+
+   sim.NewEvent();
+   EXPECT_THROW(sim.SimulateParticle(1, 1, pos, mom), std::invalid_argument);
+}
+
+TEST_F(AtSimTest, TransportParticleInvokesCallbackAcrossVolumeBoundary)
+{
+   AtSimpleSimulation sim;
+   sim.AddModel(1, 1, std::make_shared<ConstELoss>(0.0));
+   sim.SetDistanceStep(10.0);
+
+   const double mass_p = 938.272;
+   const double E0 = mass_p + 10.0;
+   const double p0 = std::sqrt(E0 * E0 - mass_p * mass_p);
+
+   ROOT::Math::XYZPoint pos(0, 0, -600.0); // In cave, upstream of drift_volume
+   ROOT::Math::PxPyPzEVector mom(0.0, 0.0, p0, E0);
+
+   bool sawCaveToDrift = false;
+   int callbackCount = 0;
+
+   sim.NewEvent();
+   sim.TransportParticle(1, 1, pos, mom, [&](const AtSimpleSimulation::TransportStep &step) {
+      ++callbackCount;
+      if (step.preVolumeName == "cave" && step.postVolumeName == "drift_volume")
+         sawCaveToDrift = true;
+      return callbackCount < 30;
+   });
+
+   EXPECT_GT(callbackCount, 0);
+   EXPECT_TRUE(sawCaveToDrift);
+   EXPECT_EQ(sim.GetNumPoints(), 0) << "Detector-coupled transport should not emit legacy MC points";
+}
+
+TEST_F(AtSimTest, ReactionMCTracksKeepGeneratedTrackIDs)
+{
+   auto sim = std::make_unique<AtSimpleSimulation>();
+   AtTestSimulation task(std::move(sim));
+   task.fMCTrackArray = new TClonesArray("AtMCTrack");
+
+   Int_t ntr = -1;
+   task.fCollector.PushTrack(1, -1, 2212, 0.1, 0.0, 0.2, 0.95, 0.0, 0.0, 14.0, 0.0, 0.0, 0.0, 0.0, kPPrimary, ntr,
+                             1.0, 0, -1);
+   task.fCollector.PushTrack(1, -1, 1000020040, 0.0, 0.0, 0.3, 3.8, 0.0, 0.0, 14.0, 0.0, 0.0, 0.0, 0.0, kPPrimary,
+                             ntr, 1.0, 0, -1);
+
+   task.FillMCTracks();
+
+   ASSERT_EQ(task.fMCTrackArray->GetEntriesFast(), 2);
+
+   auto *proton = dynamic_cast<AtMCTrack *>(task.fMCTrackArray->At(0));
+   auto *alpha = dynamic_cast<AtMCTrack *>(task.fMCTrackArray->At(1));
+
+   ASSERT_NE(proton, nullptr);
+   ASSERT_NE(alpha, nullptr);
+
+   EXPECT_EQ(proton->GetPdgCode(), 2212);
+   EXPECT_EQ(proton->GetMotherId(), -1);
+   EXPECT_EQ(alpha->GetPdgCode(), 1000020040);
+   EXPECT_EQ(alpha->GetMotherId(), -1);
+}
+
+TEST_F(AtSimTest, BeamMCTracksKeepBeamAtTrackZero)
+{
+   auto sim = std::make_unique<AtSimpleSimulation>();
+   AtTestSimulation task(std::move(sim));
+   task.fMCTrackArray = new TClonesArray("AtMCTrack");
+
+   Int_t ntr = -1;
+   task.fCollector.PushTrack(1, -1, 2212, 0.0, 0.0, 0.043, 0.94, 0.0, 0.0, -10.0, 0.0, 0.0, 0.0, 0.0, kPPrimary, ntr,
+                             1.0, 0, -1);
+
+   task.FillMCTracks();
+
+   ASSERT_EQ(task.fMCTrackArray->GetEntriesFast(), 1);
+   auto *beam = dynamic_cast<AtMCTrack *>(task.fMCTrackArray->At(0));
+   ASSERT_NE(beam, nullptr);
+   EXPECT_EQ(beam->GetPdgCode(), 2212);
+   EXPECT_EQ(beam->GetMotherId(), -1);
 }

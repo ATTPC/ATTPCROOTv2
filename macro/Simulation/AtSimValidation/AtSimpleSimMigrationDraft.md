@@ -32,6 +32,18 @@ At present, this is the first hook that should be used when adapting an existing
 
 This directory has now exercised that hook in the interpreted validation macros: `AtTestSimulation` can replace the macro-local transport task and still produce the standard `AtTpcPoint` branch.
 
+Current branch status:
+
+- `AtTestSimulation` now has a detector-coupled mode that feeds shared `AtTpc` step logic.
+- The fixed validation macro uses that detector-coupled mode.
+- Beam-event `AtTpcPoint` output is now produced through the detector path.
+- In the fixed validation case, detector-side reaction handoff now reaches `AtTPC2Body` with a
+  non-zero residual beam energy and produces reaction-event `AtTpcPoint` output.
+- In the kinematic validation case, the adapter now also restores the canonical `MCTrack` truth
+  branch while preserving Geant-style reaction-event IDs (`track 0` scattered ion, `track 1`
+  recoil proton), so downstream truth consumers such as `visualizeKinematic.C` can find the
+  transported reaction products without a placeholder beam slot.
+
 ## Draft Migration Recipe
 
 ### 1. Start from a working Geant macro
@@ -113,5 +125,10 @@ Current local result:
 
 - the macro-local transport task was removed,
 - `AtTestSimulation` runs successfully in the validation macros,
-- the SimpleSim output file contains the expected `AtTpcPoint` branch,
-- the next unresolved issue is physics/configuration parity with the Geant comparison macros, not the transport hook itself.
+- the detector-coupled path now produces non-empty beam-event `AtTpcPoint` output,
+- the fixed validation macro now also produces detector-triggered reaction-event output through the
+  shared path,
+- the kinematic validation macro now writes the canonical `MCTrack` branch expected by local
+  visualization tooling with Geant-style reaction-event IDs,
+- the next unresolved issue is broader physics parity against the Geant comparison macros, not the
+  detector contract itself.

@@ -12,6 +12,7 @@ Set(DEPENDENCIES
   ATTPCROOT::AtSimulationData
   ATTPCROOT::AtParameter
   ATTPCROOT::AtData
+  ATTPCROOT::AtDetectors
   ATTPCROOT::AtMap
   ATTPCROOT::AtTools
 )

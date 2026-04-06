@@ -1,4 +1,6 @@
 
+#include <AtMCTrack.h>
+
 namespace {
 struct PointSample {
    double x{};
@@ -17,8 +19,8 @@ struct TrackData {
 };
 
 struct EventTracks {
-   TrackData proton;
-   TrackData helium;
+   TrackData scatteredIon;
+   TrackData recoilProton;
 };
 
 struct PlotData {
@@ -49,13 +51,16 @@ TrackData BuildTrackData(int trackID, TClonesArray *points)
    return out;
 }
 
-bool IsReactionEvent(const std::vector<int> &trackIDs) { return trackIDs.size() >= 2; }
+bool IsSelectedPrimaryTrack(AtMCTrack *track, int pdgCode)
+{
+   return track != nullptr && track->GetMotherId() == -1 && track->GetPdgCode() == pdgCode;
+}
 
 PlotData LoadPlotData(const TString &fileName, const char *tag)
 {
    PlotData out;
-   out.protonBragg = new TProfile(Form("hProtonBragg_%s", tag), ";Z [mm];dE/dx [MeV/mm]", 100, 0., 1000.);
-   out.heliumBragg = new TProfile(Form("hHeliumBragg_%s", tag), ";Z [mm];dE/dx [MeV/mm]", 100, 0., 1000.);
+   out.protonBragg = new TProfile(Form("hRecoilProtonBragg_%s", tag), ";Z [mm];dE/dx [MeV/mm]", 100, 0., 1000.);
+   out.heliumBragg = new TProfile(Form("hScatteredIonBragg_%s", tag), ";Z [mm];dE/dx [MeV/mm]", 100, 0., 1000.);
    out.trackLength = new TH1D(Form("hTrackLength_%s", tag), ";Track length [mm];Tracks", 120, 0., 500.);
 
    auto *file = TFile::Open(fileName);
@@ -72,35 +77,34 @@ PlotData LoadPlotData(const TString &fileName, const char *tag)
    }
 
    TClonesArray *pointArray = nullptr;
+   TClonesArray *trackArray = nullptr;
    tree->SetBranchAddress("AtTpcPoint", &pointArray);
+   tree->SetBranchAddress("MCTrack", &trackArray);
 
    for (Long64_t iEvent = 0; iEvent < tree->GetEntries(); ++iEvent) {
       tree->GetEntry(iEvent);
-      if (!pointArray || pointArray->GetEntriesFast() == 0)
+      if (!pointArray || !trackArray || pointArray->GetEntriesFast() == 0)
          continue;
 
-      std::vector<int> trackIDs;
-      std::map<int, bool> seenTrack;
-      for (int i = 0; i < pointArray->GetEntriesFast(); ++i) {
-         auto *pt = dynamic_cast<FairMCPoint *>(pointArray->At(i));
-         if (!pt)
-            continue;
-         if (!seenTrack[pt->GetTrackID()]) {
-            seenTrack[pt->GetTrackID()] = true;
-            trackIDs.push_back(pt->GetTrackID());
-         }
+      int scatteredIonTrackID = -1;
+      int recoilProtonTrackID = -1;
+      for (int i = 0; i < trackArray->GetEntriesFast(); ++i) {
+         auto *track = dynamic_cast<AtMCTrack *>(trackArray->At(i));
+         if (scatteredIonTrackID < 0 && IsSelectedPrimaryTrack(track, 1000060160))
+            scatteredIonTrackID = i;
+         if (recoilProtonTrackID < 0 && IsSelectedPrimaryTrack(track, 2212))
+            recoilProtonTrackID = i;
       }
 
-      std::sort(trackIDs.begin(), trackIDs.end());
-      if (!IsReactionEvent(trackIDs))
+      if (scatteredIonTrackID < 0 || recoilProtonTrackID < 0)
          continue;
 
       EventTracks event;
-      event.proton = BuildTrackData(trackIDs.front(), pointArray);
-      event.helium = BuildTrackData(trackIDs.back(), pointArray);
+      event.scatteredIon = BuildTrackData(scatteredIonTrackID, pointArray);
+      event.recoilProton = BuildTrackData(recoilProtonTrackID, pointArray);
       out.events.push_back(event);
 
-      for (const auto *track : {&event.proton, &event.helium}) {
+      for (const auto *track : {&event.scatteredIon, &event.recoilProton}) {
          if (track->points.empty())
             continue;
 
@@ -110,7 +114,7 @@ PlotData LoadPlotData(const TString &fileName, const char *tag)
             out.xz.emplace_back(point.z, point.x);
          }
 
-         auto *profile = (track == &event.proton) ? out.protonBragg : out.heliumBragg;
+         auto *profile = (track == &event.recoilProton) ? out.protonBragg : out.heliumBragg;
          for (size_t i = 1; i < track->points.size(); ++i) {
             const auto &prev = track->points[i - 1];
             const auto &curr = track->points[i];
@@ -159,7 +163,7 @@ void DrawTrackOverlay(const PlotData &data, bool drawProton, Color_t color)
 {
    int count = 0;
    for (const auto &event : data.events) {
-      const auto &track = drawProton ? event.proton : event.helium;
+      const auto &track = drawProton ? event.recoilProton : event.scatteredIon;
       if (track.points.empty())
          continue;
       auto *line = new TPolyLine3D(track.points.size());
@@ -206,7 +210,7 @@ void compareFixed(TString geantFile = "./data/geant4_fixed.root", TString simple
    DrawTrackOverlay(simple, true, kRed + 1);
    {
       auto *legend = new TLegend(0.62, 0.78, 0.9, 0.9);
-      legend->AddEntry((TObject *)nullptr, "Proton 3D overlay", "");
+      legend->AddEntry((TObject *)nullptr, "Recoil proton 3D overlay", "");
       legend->AddEntry((TObject *)nullptr, "Blue: Geant4", "");
       legend->AddEntry((TObject *)nullptr, "Red: SimpleSim", "");
       legend->Draw();
@@ -219,7 +223,7 @@ void compareFixed(TString geantFile = "./data/geant4_fixed.root", TString simple
    DrawTrackOverlay(simple, false, kRed + 1);
    {
       auto *legend = new TLegend(0.62, 0.78, 0.9, 0.9);
-      legend->AddEntry((TObject *)nullptr, "He-4 3D overlay", "");
+      legend->AddEntry((TObject *)nullptr, "Scattered 16C 3D overlay", "");
       legend->AddEntry((TObject *)nullptr, "Blue: Geant4", "");
       legend->AddEntry((TObject *)nullptr, "Red: SimpleSim", "");
       legend->Draw();
@@ -257,7 +261,7 @@ void compareFixed(TString geantFile = "./data/geant4_fixed.root", TString simple
    protonLegend->Draw();
 
    canvas->cd(6);
-   geant.heliumBragg->SetTitle("Bragg curve: He-4");
+   geant.heliumBragg->SetTitle("Bragg curve: scattered 16C");
    geant.heliumBragg->Draw("hist");
    simple.heliumBragg->Draw("hist same");
    auto *heliumLegend = new TLegend(0.6, 0.78, 0.9, 0.9);

@@ -24,18 +24,25 @@ This document is the working plan for that effort. It records the current code s
   - registers the `AtTpcPoint` branch.
 - `AtDigitization/AtSimTest.cxx`
   compiled unit coverage for `AtSimpleSimulation` transport behavior.
+- `AtDetectors/AtTpc/AtTpc.{h,cxx}`
+  now has a transport-neutral step-processing entrypoint so detector-owned reaction logic can be
+  exercised outside VMC.
 
 ### Validation work that already exists in this directory
 
 - Geant macros run in `macro/Simulation/AtSimValidation/`.
 - Visualization and comparison macros exist.
 - SimpleSim validation macros now run through `AtTestSimulation` and write `AtTpcPoint` output.
+- The fixed SimpleSim validation macro now uses the detector-coupled adapter path instead of the
+  collector-only branch writer.
 
 ### What is still wrong with the current attempt
 
 - The SimpleSim validation macros originally introduced their own macro-local `SimpleSimTask` class instead of using `AtTestSimulation`.
 - That duplication has now been removed in this directory, but the migration still has to be validated against real physics parity with the Geant side.
 - The local plan document had drifted into a mix of intended architecture, stale assumptions, and partially outdated physics description.
+- The fixed validation macro now reaches the detector-side reaction trigger and produces both
+  beam-event and reaction-event `AtTpcPoint` output through the shared detector path.
 
 ### Physics/configuration inconsistency to resolve during validation
 
@@ -96,11 +103,10 @@ If the migration is still awkward after using `AtTestSimulation`, record the mis
 
 ## Immediate Work Items
 
-1. Rewrite the local docs so they match the actual code in the branch.
-2. Re-run the local validation workflow and inspect output structure and physics behavior.
-3. Align the Geant and SimpleSim macros to the same reaction definition before trusting comparison plots.
-4. Update the migration draft with what worked and what did not.
-5. Only after the migration path is stable should any framework-wide documentation be proposed.
+1. Re-run the local validation workflow and inspect output structure and physics behavior.
+2. Align the Geant and SimpleSim macros to the same reaction definition before trusting comparison plots.
+3. Update the migration draft with what worked and what did not.
+4. Only after the migration path is stable should any framework-wide documentation be proposed.
 
 ## Acceptance Criteria for a Viable Migration Strategy
 
@@ -113,3 +119,28 @@ A migration strategy is viable only if all of the following are true:
 - the required edits are small and stable enough to document as a repeatable procedure.
 
 Until those conditions are met, this work remains a local validation and design iteration effort.
+
+## Current Verified Result
+
+- `AtTpc` now owns a shared step-processing path used by both VMC and the SimpleSim adapter.
+- Focused unit coverage now exists for:
+  - detector reaction triggering,
+  - detector-side `AtVertexPropagator` writes and resets,
+  - non-beam metadata lookup,
+  - SimpleSim callback transport outside the legacy direct-hit path.
+- `simpleSim_fixed.C` now produces non-empty beam-event `AtTpcPoint` output through the shared
+  detector path.
+- `simpleSim_fixed.C` now triggers detector-side `AtVertexPropagator` handoff and produces
+  non-empty reaction-event `AtTpcPoint` output in the fixed validation case.
+- `simpleSim_kinematic.C` now preserves the canonical track-ID contract:
+  - beam remains `trackID == 0`,
+  - the reaction-event scattered ion remains `trackID == 0`,
+  - the recoil proton is written as `trackID == 1`,
+  - the standard `MCTrack` branch is populated without duplicate `MCTrack_*` aliases.
+- The detector-side beam-only semantics are now driven by an explicit beam-phase flag carried in
+  the shared `AtTpc` step payload. That avoids the earlier adapter bug where reaction-event
+  `trackID == 0` was mistaken for the beam after `AtReactionGenerator` had already toggled
+  `AtVertexPropagator` to the next event phase.
+- `visualizeKinematic.C("./data/simpleSim_kinematic.root", 2, 4)` now finds the recoil-proton
+  truth track. For the current 2-event spot check it reports `Drew 1 trajectories and 1 event
+  points`; for the earlier 10-event run it reported `Drew 4 trajectories and 5 event points`.

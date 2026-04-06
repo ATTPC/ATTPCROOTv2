@@ -2,9 +2,11 @@
 #define AtTestSimulation_h
 
 #include "AtSimParticleCollector.h"
+#include "AtMCTrack.h"
 #include "AtSimpleSimulation.h" // for AtSimpleSimulation
 
 #include <Rtypes.h> // for THashConsistencyHolder, ClassDefOver...
+#include <TClonesArray.h>
 
 #include "FairTask.h"
 
@@ -12,6 +14,7 @@
 #include <utility> // for move
 #include <FairMCEventHeader.h>
 
+class AtTpc;
 class FairPrimaryGenerator;
 class TBuffer;
 class TClass;
@@ -30,7 +33,9 @@ class AtTestSimulation : public FairTask {
 protected:
    std::unique_ptr<AtSimpleSimulation> fSimulation{nullptr}; //!
    FairPrimaryGenerator *fPrimGen{nullptr};                  //!
+   AtTpc *fDetector{nullptr};                                //!
    AtSimParticleCollector fCollector;                        //!
+   TClonesArray *fMCTrackArray{nullptr};                     //!
 
    // Owned MCEventHeader required by FairPrimaryGenerator::GenerateEvent()
    std::unique_ptr<FairMCEventHeader> fMCHeader; //!
@@ -46,13 +51,22 @@ public:
     * It must remain valid for the lifetime of the task.
     */
    void SetPrimaryGenerator(FairPrimaryGenerator *primGen) { fPrimGen = primGen; }
+   void SetDetector(AtTpc *detector) { fDetector = detector; }
 
    virtual InitStatus Init() override;
    virtual void Exec(Option_t *option) override;
    virtual void Finish() override {}
    AtSimpleSimulation *GetSimulation() { return fSimulation.get(); }
 
-   ClassDefOverride(AtTestSimulation, 1);
+private:
+   void RegisterMCTrackBranch();
+   void FillMCTracks();
+   bool ProcessDetectorStep(const AtSimpleSimulation::TransportStep &step, int trackID, bool beamTrack, bool preSensitive,
+                            bool postSensitive, bool entering, bool exiting);
+   ROOT::Math::XYZPoint FindSensitiveEntry(const ROOT::Math::XYZPoint &pos, const ROOT::Math::PxPyPzEVector &mom) const;
+   static bool IsSensitiveVolume(const std::string &volumeName);
+
+   ClassDefOverride(AtTestSimulation, 2);
 };
 
 #endif /* AtTestSimulation_h */

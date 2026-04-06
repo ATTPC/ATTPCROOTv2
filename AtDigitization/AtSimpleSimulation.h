@@ -67,6 +67,22 @@ protected:
    static thread_local TClonesArray fMCPoints;
 
 public:
+   struct TransportStep {
+      int trackID = -1;
+      int pdg = 0;
+      std::string preVolumeName;
+      std::string postVolumeName;
+      double energyLoss = 0.0;  // MeV
+      double length = 0.0;      // mm
+      double trackMass = 0.0;   // MeV/c^2
+      XYZPoint prePosition;
+      XYZPoint postPosition;
+      PxPyPzEVector preMomentum;
+      PxPyPzEVector postMomentum;
+   };
+
+   using StepCallback = std::function<bool(const TransportStep &)>;
+
    /**
     * Assumes that the IO manager has been initialized (it will attempt to construct the branch needed here).
     */
@@ -107,10 +123,20 @@ public:
       int Z, int A, const XYZPoint &iniPos, const PxPyPzEVector &iniMom,
       std::function<bool(XYZPoint, PxPyPzEVector)> func = [](XYZPoint pos, PxPyPzEVector mom) { return true; });
 
+   /**
+    * Transport a particle through the loaded geometry without writing detector hits.
+    * This is intended for detector-coupled adapters that want transport state but keep hit
+    * semantics in the detector code.
+    */
+   std::pair<XYZPoint, PxPyPzEVector> TransportParticle(int Z, int A, const XYZPoint &iniPos, const PxPyPzEVector &iniMom,
+                                                        StepCallback callback);
+
    AtMCPoint &GetMcPoint(int i) { return dynamic_cast<AtMCPoint &>(*fMCPoints.At(i)); }
    int GetNumPoints() { return fMCPoints.GetEntries(); }
    TClonesArray &GetPointsArray() { return fMCPoints; }
    SpaceChargeModel GetSpaceChargeModel() { return fSCModel; }
+   bool IsInsideGeometry(const XYZPoint &point) { return GetVolume(point) != nullptr; }
+   std::string GetVolumeNameAt(const XYZPoint &point) { return GetVolumeName(point); }
 
 protected:
    bool IsInVolume(const std::string &volName, const XYZPoint &point);
@@ -122,6 +148,9 @@ protected:
    std::pair<XYZPoint, PxPyPzEVector> SimulateParticle(
       const ParticleInfo &info, const XYZPoint &iniPos, const PxPyPzEVector &iniMom,
       std::function<bool(XYZPoint, PxPyPzEVector)> func = [](XYZPoint pos, PxPyPzEVector mom) { return true; });
+
+   std::pair<XYZPoint, PxPyPzEVector> TransportParticle(const ParticleInfo &info, int pdg, const XYZPoint &iniPos,
+                                                        const PxPyPzEVector &iniMom, const StepCallback &callback);
 
    void AddHit(double ELoss, const XYZPoint &pos, const PxPyPzEVector &mom, double length);
    TGeoVolume *GetVolume(const XYZPoint &pos);
