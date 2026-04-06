@@ -10,7 +10,7 @@ The macros live in `macro/Simulation/protonBragg/` (to be **renamed** to `macro/
 `AtTPCIonGenerator` alone produces identical-momentum particles every event with no vertex variation — no statistical content. The simulation pipeline alternates beam events (even) and reaction events (odd). On beam events `AtTPCIonGenerator` fires; on reaction events `AtTPC2Body` fires. Without a reaction generator registered, reaction-phase events corrupt `AtVertexPropagator` state and can crash VMC initialisation.
 
 **Why two macros per scenario:**
-Geant4 uses `FairRunSim`; `AtSimpleSimulation` uses `FairRunAna` + `AtTestSimulation`. They cannot share a run. Each scenario therefore has a Geant4 macro and a mirrored SimpleSim macro that uses identical generator parameters and the same `gRandom` seed, so both process the same sequence of random CMS angles and beam-depth variations.
+Geant4 transport and `AtSimpleSimulation` validation remain separate macros, but each macro must use a single FairRoot run type from start to finish. The revised contract is: both the Geant4 and SimpleSim validation macros are `FairRunSim` macros. The Geant4 macros use the normal FairRoot transport generator. The SimpleSim macros attach `AtTestSimulation` as a simulation task and use a no-op primary generator only to drive the FairRoot event loop; the actual elastic-scatter event generation for `AtSimpleSimulation` is owned by `AtTestSimulation` through its own `FairPrimaryGenerator`. This avoids mixing `FairRunAna` and `FairRunSim` in one macro and preserves FairRoot singleton contracts.
 
 ---
 
@@ -71,10 +71,10 @@ ResEner = 1.0   // MeV, nominal beam energy
 
 `AtTPCIonGenerator` fires on beam events and uses `AtVertexPropagator` to record the beam stopping depth (the reaction vertex). `AtTPC2Body` fires on reaction events, reads the vertex and residual beam momentum, and adds the two products.
 
-For SimpleSim, `AtTestSimulation::Exec()` calls `fPrimGen->GenerateEvent(&fCollector)` every event. The same even/odd alternation applies because `AtVertexPropagator` is a singleton: beam events deposit the beam track into the collector and update the vertex; reaction events deposit the two reaction products. `AtSimpleSimulation` propagates whichever particles appear in the collector each event.
+For SimpleSim, `AtTestSimulation::Exec()` calls its private `FairPrimaryGenerator` every event. The same even/odd alternation applies because `AtVertexPropagator` is a singleton shared by the beam and reaction generators: beam events deposit the beam track into the collector and update the vertex; reaction events deposit the two reaction products. `AtSimpleSimulation` propagates whichever particles appear in the collector each event.
 
 **Same ground truth / seed:**  
-Both the Geant4 macro and the mirrored SimpleSim macro call `gRandom->SetSeed(42)` before `run->Init()`. This produces the same sequence of:
+Both the Geant4 macro and the mirrored SimpleSim macro call `gRandom->SetSeed(42)` before `run->Init()`. In the SimpleSim macros the run-level primary generator is intentionally a no-op, so the random sequence is consumed only by the mirrored elastic-scatter generator attached to `AtTestSimulation`. This preserves the same sequence of:
 - random CMS angles (from AtTPC2Body's uniform cos-theta sampling)
 - `fRndELoss` values that determine beam stopping depth (from AtTPCIonGenerator)
 
@@ -95,6 +95,11 @@ Double_t ThetaMaxCMS = thetaCms;   // fixed angle: min == max
 **B-field (Geant4):** `AtConstField` with (0, 0, 20) kG (= 2 T); region covers full detector.
 
 **B-field (SimpleSim):** `sim->SetMagneticField(ROOT::Math::XYZVector(0., 0., 2.0))`
+
+**Run contract (SimpleSim):**
+- `FairRunSim` only
+- `run->SetGenerator(noOpPrimGen)` to satisfy the simulation event loop without Geant transport tracks
+- `run->AddTask(simTask)` where `simTask` owns the mirrored elastic-scatter `FairPrimaryGenerator`
 
 **Output:** `./data/geant4_fixed.root` / `./data/simpleSim_fixed.root`
 
@@ -184,7 +189,7 @@ The crash from the previous `runGeant4_proton.C` was caused by calling `AtVertex
 ## Verification
 
 1. **Rename folder**, remove old files, create new ones
-2. Build: no code changes — all classes already compiled
+2. Build if framework code changed; macro-only edits can be run directly after sourcing `build/config.sh`
 3. **Run fixed-angle pair:**
    ```bash
    cd macro/Simulation/AtSimValidation
