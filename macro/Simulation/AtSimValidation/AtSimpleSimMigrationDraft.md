@@ -1,201 +1,272 @@
-# Transitioning a Geant Simulation Macro to AtSimpleSim
+# User Guide: Migrating a Simulation Macro from Geant to SimpleSim
 
-## Status
+## Purpose
 
-This is local documentation for the `AtSimValidation` campaign. It records the migration path that is currently validated in this directory for swapping Geant/VMC transport with `AtSimpleSimulation` while preserving the ATTPC generator and detector contract.
+This guide is for users who already have a working simulation macro and want to swap the transport from Geant/VMC to SimpleSim without changing the physics setup.
 
-## Migration Goal
+The goal is simple:
 
-The target transition is:
+- keep the same macro structure
+- keep the same generator setup
+- keep the same detector setup
+- replace only the transport hookup
 
-- preserve the existing ATTPC generator physics,
-- preserve the detector geometry and field setup,
-- preserve the output and runtime-db structure as much as possible,
-- replace Geant/VMC transport with `AtSimpleSimulation`.
+## What You Usually Start With
 
-The migration should be about swapping the transport layer, not rewriting the reaction setup.
+A typical user macro already has:
 
-## Validated Hook
+- a `FairRunSim`
+- detector modules such as `AtCave` and `AtTpc`
+- an inline `FairPrimaryGenerator` setup
+- a line like `run->SetGenerator(primGen)`
+- `run->Init()` and `run->Run(nEvents)`
 
-The framework adapter is `AtDigitization/AtTestSimulation`.
+That is enough. You do not need to restructure the macro into helper functions to use SimpleSim.
 
-Its role is:
+## What Stays the Same
 
-- own an `AtSimpleSimulation` instance,
-- drive a `FairPrimaryGenerator` each event,
-- collect generated primaries through `AtSimParticleCollector`,
-- convert FairRoot units to `AtSimpleSimulation` units,
-- forward the particles into `AtSimpleSimulation`,
-- write `AtTpcPoint` output through the normal branch contract.
+Keep these parts unchanged unless you have a physics reason to change them:
 
-This is the hook that should be used when adapting an existing Geant-style macro in this repository.
+- the beam definition
+- the reaction-generator configuration
+- the detector modules
+- the run geometry
+- the magnetic field
+- the random seed handling
+- the output file and parameter-file setup
 
-This directory has now exercised that hook in the interpreted validation macros: `AtTestSimulation` can replace the macro-local transport task and still produce the standard `AtTpcPoint` branch.
+If the Geant macro already produces the right physics input, preserve that input.
 
-Current validated behavior:
+## What Actually Changes
 
-- `AtTestSimulation` now has a detector-coupled mode that feeds shared `AtTpc` step logic.
-- The fixed validation macro uses that detector-coupled mode.
-- Beam-event `AtTpcPoint` output is now produced through the detector path.
-- In the fixed validation case, detector-side reaction handoff now reaches `AtTPC2Body` with a
-  non-zero residual beam energy and produces reaction-event `AtTpcPoint` output.
-- In the kinematic validation case, the adapter now also restores the canonical `MCTrack` truth
-  branch while preserving Geant-style reaction-event IDs (`track 0` scattered ion, `track 1`
-  recoil proton), so downstream truth consumers such as `visualizeKinematic.C` can find the
-  transported reaction products without a placeholder beam slot.
-- The detector now stops transport when a particle exits the active reaction volume. In this
-  validation geometry that is the physically correct approximation because the active gas is bounded
-  by chamber walls. The Geant path and the SimpleSim path now use the same stop rule.
+You replace the transport hookup.
 
-## Migration Recipe
+In a Geant macro, the physics generator is usually connected directly to the run:
 
-### 1. Start from a working Geant macro
+```cpp
+run->SetGenerator(primGen);
+```
 
-Keep these pieces unchanged unless the migration experiment proves otherwise:
-
-- detector modules such as `AtCave` and `AtTpc`,
-- geometry file selection,
-- magnetic-field setup,
-- random seed policy,
-- runtime-db output handling,
-- output file naming pattern,
-- generator construction function such as `BuildElasticGenerator(...)`.
-
-### 2. Preserve the generator block
-
-Build the same `FairPrimaryGenerator` and ATTPC generator chain used by the Geant macro. The same beam and reaction generators should define the physics input on both sides.
-
-### 3. Replace Geant transport with AtTestSimulation
-
-For the SimpleSim version:
-
-- keep `FairRunSim`,
-- keep the detector geometry and field configuration,
-- do not hand the physics generator to Geant transport with `run->SetGenerator(physicsGenerator)`,
-- instead, give the run a minimal driver generator and attach an `AtTestSimulation` task configured with:
-  - a new `AtSimpleSimulation`,
-  - the required energy-loss models for every transported species,
-  - the physics generator that was preserved from the Geant macro.
-
-This is the validated transport substitution mechanism in this directory.
-
-Minimal pattern:
+In a SimpleSim macro, the run gets a dummy event-loop generator, and the real physics generator is passed to `AtTestSimulation`:
 
 ```cpp
 run->SetGenerator(new FairPrimaryGenerator());
 
-auto *simPrimGen = BuildElasticGenerator(...);
-auto *simTask = new AtTestSimulation(BuildSimpleSimulation(dir + "/geometry/ATTPC_He1bar_geomanager.root"));
-simTask->SetPrimaryGenerator(simPrimGen);
+auto *simTask = new AtTestSimulation(BuildSimpleSimulation(simpleSimGeoFile));
+simTask->SetPrimaryGenerator(primGen);
 simTask->SetDetector(tpc);
 run->AddTask(simTask);
 ```
 
-### 4. Configure AtSimpleSimulation explicitly
+That is the main migration step.
 
-The migration must define:
+## Minimal Migration Procedure
 
-- all species that need `AtTools::AtELossModel` entries,
-- the geometry assumption for the active volume,
-- field configuration if curved transport is required,
-- propagation step settings if they matter for the validation case.
+### 1. Copy the working Geant macro
 
-If any transported species lack a model, the migration is incomplete.
+Start from the macro that already works for your case.
 
-Minimal pattern:
+Do not refactor the macro at the same time. First make the transport swap only.
+
+### 2. Keep the generator block as it is
+
+If your macro builds the generator inline, keep it inline.
+
+For example, if you already have:
+
+```cpp
+auto *primGen = new FairPrimaryGenerator();
+
+auto *ionGen = new AtTPCIonGenerator(...);
+primGen->AddGenerator(ionGen);
+
+auto *twoBody = new AtTPC2Body(...);
+primGen->AddGenerator(twoBody);
+```
+
+leave that section alone.
+
+The migration should not require users to move their generator code into helper functions.
+
+### 3. Add a SimpleSim configuration block
+
+You need one place where `AtSimpleSimulation` is configured.
+
+This can be:
+
+- a helper function such as `BuildSimpleSimulation(...)`
+- or inline setup code if you prefer
+
+What matters is that you configure:
+
+- the geometry file for SimpleSim
+- the transported species
+- the energy-loss models
+- the field, if needed
+- the step settings, if needed
+
+Minimal example:
 
 ```cpp
 std::unique_ptr<AtSimpleSimulation> BuildSimpleSimulation(const TString &geoFile)
 {
    auto sim = std::make_unique<AtSimpleSimulation>(geoFile.Data());
 
-   constexpr double heDensity = 1.664e-4;
+   constexpr double gasDensity = 1.664e-4;
    std::vector<std::tuple<int, int, int>> material{{4, 2, 1}};
 
-   auto carbonModel = std::make_shared<AtTools::AtELossCATIMA>(heDensity, material);
-   carbonModel->SetProjectile(16, 6, 16.014701);
-   sim->AddModel(6, 16, carbonModel, 16.014701);
+   auto ionModel = std::make_shared<AtTools::AtELossCATIMA>(gasDensity, material);
+   ionModel->SetProjectile(16, 6, 16.014701);
+   sim->AddModel(6, 16, ionModel, 16.014701);
 
-   auto protonModel = std::make_shared<AtTools::AtELossCATIMA>(heDensity, material);
+   auto protonModel = std::make_shared<AtTools::AtELossCATIMA>(gasDensity, material);
    protonModel->SetProjectile(1, 1, 1.0078250322);
    sim->AddModel(1, 1, protonModel, 1.0078250322);
+
    sim->SetMagneticField(ROOT::Math::XYZVector(0., 0., 2.0));
    sim->SetMaxPropagationStep(1e-3);
-
    return sim;
 }
 ```
 
-### 5. Keep the detector in the loop
+You must add a model for every species that will be transported.
 
-The migration is not just a branch writer swap. `AtTpc` must still own:
+### 4. Replace the Geant transport hookup
 
-- reaction triggering,
-- `AtVertexPropagator` updates,
-- detector-side hit semantics,
-- stopping transport at the active-volume boundary.
+Leave the run setup mostly alone and replace only the generator hookup.
 
-This is why the migration uses `AtTestSimulation` in detector-coupled mode instead of a macro-local
-task that writes `AtTpcPoint` objects directly.
+Typical Geant-style pattern:
 
-### 6. Validate with truth-matched comparisons
+```cpp
+run->SetGenerator(primGen);
+```
 
-When comparing Geant and SimpleSim outputs:
+SimpleSim pattern:
 
-- match reaction events by `reactionIndex`,
-- do not drop an event from the truth bookkeeping just because one side produced zero points,
-- report `generator-only` and `incomplete` events separately from usable matched pairs.
+```cpp
+run->SetGenerator(new FairPrimaryGenerator());
 
-This matters because the earlier local comparison macros hid zero-point events before matching and
-made the transport disagreement look worse than it was.
+auto *simTask = new AtTestSimulation(BuildSimpleSimulation(simpleSimGeoFile));
+simTask->SetPrimaryGenerator(primGen);
+simTask->SetDetector(tpc);
+run->AddTask(simTask);
+```
 
-## Current Known Constraints
+Important:
 
-- `AtTestSimulation` skips particles that start outside `drift_volume`.
-- `AtSimpleSimulation` requires explicit energy-loss models for each `(Z, A)` species.
-- The detector geometry file used by `AtTpc` is not necessarily the file that should be passed to `AtSimpleSimulation`. In this validation area the run uses `ATTPC_He1bar.root`, while `AtSimpleSimulation` needs the importable `ATTPC_He1bar_geomanager.root`.
-- FairRoot generator output uses cm and GeV; `AtSimpleSimulation` uses mm and MeV.
-- Interpreted ROOT macros are sensitive to explicit header inclusion. In this directory the stable pattern is to keep the macro header surface minimal and rely on the loaded dictionaries for FairRoot and ATTPC classes where possible.
-- A migration is not considered successful just because the macro runs. The resulting tracks must also look physically credible.
-- For this geometry, a particle leaving the active reaction volume should be treated as stopped by the
-  wall boundary condition. Allowing Geant to continue transport past active-volume exit produces
-  unphysical ranges for this validation problem.
+- `FairRunSim` still needs a generator object for the event loop
+- the real physics generator is now passed into `AtTestSimulation`
 
-## What Must Be Checked During Each Migration Attempt
+### 5. Use the right geometry file for SimpleSim
 
-### Structural checks
+This is one of the easiest mistakes to make.
 
-- Does the macro still have the same generator construction logic as the Geant source?
-- Does the SimpleSim path write the expected `AtTpcPoint` branch?
-- Can downstream comparison or digitization scripts read the result without special handling?
+For the detector module:
+
+- keep the usual detector geometry file, for example `ATTPC_He1bar.root`
+
+For `AtSimpleSimulation`:
+
+- use the importable geometry-manager file, for example `ATTPC_He1bar_geomanager.root`
+
+Typical pattern:
+
+```cpp
+tpc->SetGeometryFileName((dir + "/geometry/ATTPC_He1bar.root").Data());
+
+TString simpleSimGeoFile = dir + "/geometry/ATTPC_He1bar_geomanager.root";
+auto *simTask = new AtTestSimulation(BuildSimpleSimulation(simpleSimGeoFile));
+```
+
+### 6. Keep the detector coupled
+
+Always connect the detector:
+
+```cpp
+simTask->SetDetector(tpc);
+```
+
+That keeps detector-side behavior such as:
+
+- reaction handling
+- `AtVertexPropagator` updates
+- `AtTpcPoint` production
+- active-volume stopping behavior
+
+## Copy-and-Edit Checklist
+
+For most user macros, the migration is:
+
+1. Copy the Geant macro to a new SimpleSim macro.
+2. Leave the generator block unchanged.
+3. Add SimpleSim configuration.
+4. Replace `run->SetGenerator(primGen)` with:
+   - `run->SetGenerator(new FairPrimaryGenerator())`
+   - `AtTestSimulation`
+   - `simTask->SetPrimaryGenerator(primGen)`
+   - `simTask->SetDetector(tpc)`
+   - `run->AddTask(simTask)`
+5. Use the `*_geomanager.root` geometry for SimpleSim.
+6. Add energy-loss models for all transported species.
+7. Run a small sample first.
+8. Verify the output before scaling up.
+
+## What to Verify After Migration
+
+### Output checks
+
+- The output ROOT file is produced.
+- The `cbmsim` tree contains `AtTpcPoint`.
+- The truth branches expected by your downstream macros are present.
+- Downstream analysis macros can open the file without special-case handling.
 
 ### Physics checks
 
-- Are both sides running the same reaction setup?
-- Are the geometry and magnetic field the same?
-- Do the track shapes look qualitatively correct?
-- Is the stopping behavior reasonable for the configured energy-loss model?
+- The beam and reaction setup are unchanged from the Geant macro.
+- The geometry and field are unchanged.
+- Track shapes look reasonable.
+- Path lengths are physically credible.
+- Stopping behavior looks right for your detector geometry.
 
-### Cleanliness checks
+For the local validation geometry in this directory, particles are expected to stop when they leave the active reaction volume because that boundary corresponds to chamber material, not open vacuum.
 
-- Was `AtTestSimulation` sufficient, or did the macro need custom task code?
-- Are the remaining edits small enough to describe as a checklist?
-- Is there repeated boilerplate that points to missing framework support?
+## How to Compare Against Geant
 
-## Current Verified Result
+Do not rely on file order alone when comparing outputs.
 
-The migration path is viable in this directory.
+Use truth-matched comparisons and keep these categories separate:
 
-Verified local result:
+- usable matched events
+- generator-only events
+- incomplete events
 
-- the macro-local transport task was removed,
-- `AtTestSimulation` runs successfully in the validation macros,
-- the detector-coupled path produces both beam-event and reaction-event `AtTpcPoint` output,
-- the detector and SimpleSim path preserve the canonical truth contract used by local visualization,
-- the Geant detector path now stops transport at active-volume exit just as the SimpleSim path does,
-- the fixed comparison now gives `50` usable truth-matched proton pairs with `0/0` generator-only
-  and `0/0` incomplete events,
-- a reduced kinematic comparison now gives `100` usable truth-matched proton pairs with `0/0`
-  generator-only and `0/0` incomplete events,
-- the earlier catastrophic Geant path-length excess is gone once the active-volume stop rule is
-  enforced.
+Local comparison macros in this directory already do that:
+
+- [compareFixed.C](/home/adam/ATTPCROOTv2-Sim/macro/Simulation/AtSimValidation/compareFixed.C)
+- [compareKinematic.C](/home/adam/ATTPCROOTv2-Sim/macro/Simulation/AtSimValidation/compareKinematic.C)
+
+## Practical Notes
+
+- `AtSimpleSimulation` needs explicit energy-loss models.
+- `AtTestSimulation` skips particles that start outside `drift_volume`.
+- `AtSimpleSimulation` uses mm and MeV internally.
+- The generator side still comes from the normal FairRoot macro world, which uses cm and GeV.
+- When editing ROOT macros, prefer adapting an existing working macro instead of inventing a new structure.
+
+## Suggested Workflow
+
+1. Start from your existing Geant macro.
+2. Change only the transport hookup.
+3. Run a very small sample.
+4. Check that `AtTpcPoint` and truth output look sane.
+5. Compare against the Geant output.
+6. Only then scale up to larger production runs.
+
+## Optional Local References
+
+If you want concrete examples of this migration pattern, see:
+
+- [geant4_fixed.C](/home/adam/ATTPCROOTv2-Sim/macro/Simulation/AtSimValidation/geant4_fixed.C)
+- [simpleSim_fixed.C](/home/adam/ATTPCROOTv2-Sim/macro/Simulation/AtSimValidation/simpleSim_fixed.C)
+- [geant4_kinematic.C](/home/adam/ATTPCROOTv2-Sim/macro/Simulation/AtSimValidation/geant4_kinematic.C)
+- [simpleSim_kinematic.C](/home/adam/ATTPCROOTv2-Sim/macro/Simulation/AtSimValidation/simpleSim_kinematic.C)
