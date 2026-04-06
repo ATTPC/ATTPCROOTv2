@@ -40,6 +40,7 @@ set(SRCS
   DataCleaning/AtkNN.cxx
 
   AtELossBetheBloch.cxx
+  AtPropagator.cxx
   )
 
 Set(DEPENDENCIES
@@ -80,6 +81,7 @@ set(TEST_SRCS
   DataCleaning/AtkNNTest.cxx
   AtELossTableTest.cxx
   AtELossBetheBlochTest.cxx
+  AtPropagatorTest.cxx
 )
 if(CATIMA_FOUND)
   set(TEST_SRCS ${TEST_SRCS}

@@ -2,7 +2,9 @@
 #include "AtSimpleSimulation.h"
 
 #include "AtELossModel.h"
+#include "AtKinematics.h"
 #include "AtMCPoint.h"
+#include "AtPropagator.h"
 #include "AtSpaceChargeModel.h" // for AtSpaceChargeModel
 
 #include <FairLogger.h>
@@ -26,6 +28,29 @@ using ModelPtr = std::shared_ptr<AtTools::AtELossModel>;
 using XYZPoint = ROOT::Math::XYZPoint;
 using XYZVector = ROOT::Math::XYZVector;
 using PxPyPzEVector = ROOT::Math::PxPyPzEVector;
+
+// ---------------------------------------------------------------------------
+// Thin wrapper so a shared_ptr<AtELossModel> can be passed to AtPropagator
+// (which requires a unique_ptr<AtELossModel>).
+// ---------------------------------------------------------------------------
+namespace {
+class ELossModelShared : public AtTools::AtELossModel {
+   std::shared_ptr<AtTools::AtELossModel> fImpl;
+
+public:
+   explicit ELossModelShared(std::shared_ptr<AtTools::AtELossModel> impl)
+      : AtTools::AtELossModel(0), fImpl(std::move(impl))
+   {
+   }
+   double GetdEdx(double e) const override { return fImpl->GetdEdx(e); }
+   double GetRange(double ei, double ef = 0) const override { return fImpl->GetRange(ei, ef); }
+   double GetEnergyLoss(double ei, double d) const override { return fImpl->GetEnergyLoss(ei, d); }
+   double GetEnergy(double ei, double d) const override { return fImpl->GetEnergy(ei, d); }
+   double GetElossStraggling(double ei, double ef) const override { return fImpl->GetElossStraggling(ei, ef); }
+   double GetdEdxStraggling(double ei, double ef) const override { return fImpl->GetdEdxStraggling(ei, ef); }
+   double GetRangeVariance(double e) const override { return fImpl->GetRangeVariance(e); }
+};
+} // namespace
 
 AtSimpleSimulation::AtSimpleSimulation(std::string geoFile)
 {
@@ -87,12 +112,16 @@ std::string AtSimpleSimulation::GetVolumeName(const XYZPoint &point)
 
 void AtSimpleSimulation::AddModel(int Z, int A, ModelPtr model)
 {
-   ParticleID id = {
-      .A = A,
-      .Z = Z,
-   };
+   AddModel(Z, A, model, static_cast<double>(A));
+}
 
-   fModels[id] = model;
+void AtSimpleSimulation::AddModel(int Z, int A, ModelPtr model, double massAmu)
+{
+   static constexpr double kEperAMU = 931.494; // MeV/c² per amu
+   static constexpr double kEcharge = 1.602176634e-19; // Coulombs
+
+   ParticleID id = {.A = A, .Z = Z};
+   fModels[id] = {model, Z * kEcharge, massAmu * kEperAMU};
 }
 
 std::pair<XYZPoint, PxPyPzEVector>
@@ -109,12 +138,64 @@ AtSimpleSimulation::SimulateParticle(int Z, int A, const XYZPoint &iniPos, const
 }
 
 std::pair<XYZPoint, PxPyPzEVector>
-AtSimpleSimulation::SimulateParticle(ModelPtr model, const XYZPoint &iniPos, const PxPyPzEVector &iniMom,
+AtSimpleSimulation::SimulateParticle(const ParticleInfo &info, const XYZPoint &iniPos, const PxPyPzEVector &iniMom,
                                      std::function<bool(XYZPoint, PxPyPzEVector)> func)
 {
    // This is a new track
    fTrackID++;
 
+   // -----------------------------------------------------------------------
+   // Curved-track path: use AtPropagator when E/B fields are non-zero
+   // -----------------------------------------------------------------------
+   if (fEField.Mag2() != 0 || fBField.Mag2() != 0) {
+      auto wrapModel = std::make_unique<ELossModelShared>(info.model);
+      AtTools::AtPropagator prop(info.charge, info.mass, std::move(wrapModel));
+      prop.SetEField(fEField);
+      prop.SetBField(fBField);
+      prop.SetState(iniPos, iniMom.Vect());
+
+      AtTools::AtRK4AdaptiveStepper stepper;
+      double length = 0;
+
+      while (IsInVolume("drift_volume", prop.GetPosition())) {
+         double KE = AtTools::Kinematics::KE(prop.GetMomentum(), info.mass);
+         if (KE <= 1e-3)
+            break;
+
+         auto mom4 = AtTools::Kinematics::Get4Vector(prop.GetMomentum(), info.mass);
+         if (isnan(prop.GetPosition().X()) || isnan(prop.GetMomentum().X())) {
+            LOG(error) << "Failed to simulate a point with nan!";
+            return {{0, 0, 0}, {0, 0, 0, 0}};
+         }
+         if (!func(prop.GetPosition(), mom4))
+            break;
+
+         double KE_before = KE;
+         prop.PropagateOneStep(stepper);
+
+         auto &state = prop.GetState();
+         if (state.status != AtTools::AtPropagator::StepStateStatus::kSuccess)
+            break;
+
+         double KE_after = AtTools::Kinematics::KE(prop.GetMomentum(), info.mass);
+         double eLoss = KE_before - KE_after;
+         if (eLoss < 0)
+            eLoss = 0; // magnetic field does no work
+
+         double stepDist = (prop.GetPosition() - state.fLastPos).R(); // mm
+         length += stepDist;
+
+         auto newMom4 = AtTools::Kinematics::Get4Vector(prop.GetMomentum(), info.mass);
+         AddHit(eLoss, prop.GetPosition(), newMom4, length);
+      }
+
+      return {prop.GetPosition(), AtTools::Kinematics::Get4Vector(prop.GetMomentum(), info.mass)};
+   }
+
+   // -----------------------------------------------------------------------
+   // Straight-line fast path (zero field)
+   // -----------------------------------------------------------------------
+   auto &model = info.model;
    auto pos = iniPos;
    auto mom = iniMom;
    double length = 0;
@@ -135,7 +216,6 @@ AtSimpleSimulation::SimulateParticle(ModelPtr model, const XYZPoint &iniPos, con
 
       // Update the momentum from the energy loss model. Assume the energy loss does not change
       // the direction of the particle.
-      // newMom (x/y/z) =
       auto E = mom.E() - eLoss;
       double p = sqrt(E * E - mom.M2());
       mom.SetPxPyPzE(dir.X() * p, dir.Y() * p, dir.Z() * p, E);

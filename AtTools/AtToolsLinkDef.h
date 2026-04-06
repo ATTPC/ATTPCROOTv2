@@ -58,6 +58,14 @@
 
 #pragma link C++ class AtFindVertex - !;
 
+#pragma link C++ class AtTools::AtPropagator - !;
+#pragma link C++ class AtTools::AtStepper - !;
+#pragma link C++ class AtTools::AtRK4Stepper - !;
+#pragma link C++ class AtTools::AtRK4AdaptiveStepper - !;
+#pragma link C++ class AtTools::AtMeasurementSurface - !;
+#pragma link C++ class AtTools::AtMeasurementPoint - !;
+#pragma link C++ class AtTools::AtMeasurementPlane - !;
+
 #pragma link C++ function AtTools::GetHitFunctionTB;
 #pragma link C++ function AtTools::GetHitFunction;
 #pragma link C++ function AtTools::GetTB;

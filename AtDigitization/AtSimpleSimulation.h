@@ -20,13 +20,17 @@
 #include <utility> // for pair
 namespace AtTools {
 class AtELossModel;
-}
+} // namespace AtTools
 class TGeoVolume;
 class AtSpaceChargeModel;
 
 /**
  * Class for simulating simple events using AtELossModels.
  * Units in this class are MeV (energy), mm (distance) MeV/c (momentum).
+ *
+ * When E/B fields are set (non-zero), the simulation uses AtPropagator (Lorentz force + RK4
+ * adaptive stepping) to produce curved tracks. When both fields are zero the existing
+ * straight-line fast path is used.
  */
 class AtSimpleSimulation {
 protected:
@@ -36,16 +40,26 @@ protected:
 
       bool operator<(const ParticleID &other) const;
    };
+
+   struct ParticleInfo {
+      std::shared_ptr<AtTools::AtELossModel> model;
+      double charge; ///< Particle charge in Coulombs
+      double mass;   ///< Particle mass in MeV/c²
+   };
+
    using SpaceChargeModel = std::shared_ptr<AtSpaceChargeModel>;
    using ModelPtr = std::shared_ptr<AtTools::AtELossModel>;
    using XYZPoint = ROOT::Math::XYZPoint;
    using XYZVector = ROOT::Math::XYZVector;
    using PxPyPzEVector = ROOT::Math::PxPyPzEVector;
 
-   std::map<ParticleID, ModelPtr> fModels;
+   std::map<ParticleID, ParticleInfo> fModels;
    SpaceChargeModel fSCModel{nullptr};
-   double fDistStep{1.}; // Distance step in mm for particles
+   double fDistStep{1.}; // Distance step in mm for straight-line propagation
    std::mutex fGeoMutex;
+
+   XYZVector fEField{0, 0, 0}; ///< Electric field in V/m (used by AtPropagator)
+   XYZVector fBField{0, 0, 0}; ///< Magnetic field in T (used by AtPropagator)
 
    // Variables to across an entire event
    static thread_local int fTrackID;
@@ -57,20 +71,34 @@ public:
     */
    AtSimpleSimulation(std::string geoFile);
    AtSimpleSimulation();
-   AtSimpleSimulation(const AtSimpleSimulation &other) = delete; // Implicity deleted because of std::mutex
+   AtSimpleSimulation(const AtSimpleSimulation &other) = delete; // Implicitly deleted because of std::mutex
    ~AtSimpleSimulation() = default;
 
    void RegisterBranch(std::string branchName = "AtTpcPoint", bool pers = true);
+
+   /**
+    * Register an energy loss model for a particle species. Charge is derived as Z*e and
+    * mass as A * 931.494 MeV/c². Use the overload with massAmu for higher accuracy.
+    */
    void AddModel(int Z, int A, ModelPtr model);
+
+   /**
+    * Register an energy loss model with an explicit nuclear mass (in amu).
+    */
+   void AddModel(int Z, int A, ModelPtr model, double massAmu);
+
    void SetSpaceChargeModel(SpaceChargeModel model) { fSCModel = model; }
-   void SetDistanceStep(double step) { fDistStep = step; } //<In mm
+   void SetDistanceStep(double step) { fDistStep = step; } ///< Step size in mm (straight-line path)
+
+   void SetElectricField(XYZVector eField) { fEField = eField; } ///< Electric field in V/m
+   void SetMagneticField(XYZVector bField) { fBField = bField; } ///< Magnetic field in T
 
    void NewEvent();
 
    /**
-    * Simulates a particle over a given distance and returns the position and momentum of the particle at the stoping
-    * point. Uses Z and A to provide a model to the protected version of SimulateParticle (see below for more
-    * information on the simulation).
+    * Simulates a particle over a given distance and returns the position and momentum of the particle at the stopping
+    * point. Uses Z and A to provide a model to the protected version of SimulateParticle.
+    * When E/B fields are non-zero, AtPropagator is used for curved-track propagation.
     */
    std::pair<XYZPoint, PxPyPzEVector> SimulateParticle(
       int Z, int A, const XYZPoint &iniPos, const PxPyPzEVector &iniMom,
@@ -86,14 +114,12 @@ protected:
    std::string GetVolumeName(const XYZPoint &point);
 
    /**
-    * Simulates a particle over a given distance and returns the position and momentum of the particle at the stoping
-    * point. By default the particle will stop when it reaches the end of the TPC. A user defined function can test the
-    * position and momentum of the particle for each time step and stop it when a given condition is met (such as a
-    * depth in the TPC or an energy to stop at).
+    * Core simulation loop. Selects straight-line or curved-track path based on field settings.
     */
    std::pair<XYZPoint, PxPyPzEVector> SimulateParticle(
-      ModelPtr model, const XYZPoint &iniPos, const PxPyPzEVector &iniMom,
+      const ParticleInfo &info, const XYZPoint &iniPos, const PxPyPzEVector &iniMom,
       std::function<bool(XYZPoint, PxPyPzEVector)> func = [](XYZPoint pos, PxPyPzEVector mom) { return true; });
+
    void AddHit(double ELoss, const XYZPoint &pos, const PxPyPzEVector &mom, double length);
    TGeoVolume *GetVolume(const XYZPoint &pos);
 };

@@ -303,5 +303,25 @@ double EtoA(double mass)
 {
    return mass / 931.5;
 }
+double GetSpeed(double p, double mass)
+{
+   return GetBeta(p, mass) * fC;
+}
+double GetRelMomFromKE(double KE, double mass)
+{
+   return std::sqrt((KE + mass) * (KE + mass) - mass * mass);
+}
+double KE(ROOT::Math::XYZVector mom, double mass)
+{
+   return std::sqrt(mom.Mag2() + mass * mass) - mass;
+}
+double KE(double mom, double mass)
+{
+   return std::sqrt(mom * mom + mass * mass) - mass;
+}
+ROOT::Math::XYZVector GetVel(ROOT::Math::XYZVector mom, double mass)
+{
+   return mom / Get4Vector(mom, mass).E() * fC;
+}
 
 } // namespace AtTools::Kinematics
