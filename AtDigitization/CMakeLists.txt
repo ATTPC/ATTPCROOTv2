@@ -37,6 +37,9 @@ AtTriggerTask.cxx
 AtVectorResponse.cxx
 
 AtSimpleSimulation.cxx
+AtSimpleSimulationTask.cxx
+AtSimpleSimulationGeneratorTask.cxx
+AtSimpleSimulationReplayTask.cxx
 AtTestSimulation.cxx
 AtSimParticleCollector.cxx
 )

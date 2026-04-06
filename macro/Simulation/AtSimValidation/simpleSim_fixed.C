@@ -97,7 +97,7 @@ void simpleSim_fixed(Double_t thetaCms = 45.0, Int_t nEvents = 100, UInt_t seed 
    auto *eventLoopDriver = new FairPrimaryGenerator();
    run->SetGenerator(eventLoopDriver);
 
-   auto *simTask = new AtTestSimulation(BuildSimpleSimulation(dir + "/geometry/ATTPC_He1bar_geomanager.root"));
+   auto *simTask = new AtSimpleSimulationReplayTask(BuildSimpleSimulation(dir + "/geometry/ATTPC_He1bar_geomanager.root"));
    simTask->SetPrimaryTrackSource(geantTruthFile.Data());
    simTask->SetDetector(tpc);
    run->AddTask(simTask);

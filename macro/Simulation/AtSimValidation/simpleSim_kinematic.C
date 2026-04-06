@@ -98,7 +98,8 @@ void simpleSim_kinematic(Int_t nEvents = 1000, UInt_t seed = 42,
 
    run->SetGenerator(new FairPrimaryGenerator());
 
-   auto *simTask = new AtTestSimulation(BuildSimpleSimulation(dir + "/geometry/ATTPC_He1bar_geomanager.root"));
+   auto *simTask =
+      new AtSimpleSimulationReplayTask(BuildSimpleSimulation(dir + "/geometry/ATTPC_He1bar_geomanager.root"));
    simTask->SetPrimaryTrackSource(geantTruthFile.Data());
    simTask->SetDetector(tpc);
    run->AddTask(simTask);
