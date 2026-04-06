@@ -19,7 +19,9 @@
 #include <Math/Vector4Dfwd.h> // for PxPyPzEVector
 #include <TClonesArray.h>
 #include <TDatabasePDG.h>
+#include <TFile.h>
 #include <TParticlePDG.h>
+#include <TTree.h>
 
 #include <cmath>
 #include <string>
@@ -101,22 +103,75 @@ InitStatus AtTestSimulation::Init()
       fPrimGen->Init();
    }
 
+   if (!fPrimaryTrackSourceFile.empty()) {
+      fPrimaryTrackFile = TFile::Open(fPrimaryTrackSourceFile.c_str(), "READ");
+      if (fPrimaryTrackFile == nullptr || fPrimaryTrackFile->IsZombie()) {
+         LOG(fatal) << "AtTestSimulation: cannot open primary track source " << fPrimaryTrackSourceFile;
+         return kFATAL;
+      }
+
+      fPrimaryTrackTree = dynamic_cast<TTree *>(fPrimaryTrackFile->Get("cbmsim"));
+      if (fPrimaryTrackTree == nullptr) {
+         LOG(fatal) << "AtTestSimulation: missing cbmsim tree in primary track source " << fPrimaryTrackSourceFile;
+         return kFATAL;
+      }
+
+      fPrimaryTrackTree->SetBranchAddress("MCTrack", &fPrimaryTrackInput);
+      LOG(info) << "AtTestSimulation: replaying primary MC tracks from " << fPrimaryTrackSourceFile;
+   }
+
    RegisterMCTrackBranch();
 
    return kSUCCESS;
 }
 
+bool AtTestSimulation::LoadPrimaryTracksFromSource()
+{
+   if (fPrimaryTrackTree == nullptr || fSourceEventIndex >= fPrimaryTrackTree->GetEntries())
+      return false;
+
+   fCollector.Clear();
+   fPrimaryTrackTree->GetEntry(fSourceEventIndex++);
+   if (fPrimaryTrackInput == nullptr)
+      return true;
+
+   for (int i = 0; i < fPrimaryTrackInput->GetEntriesFast(); ++i) {
+      auto *track = dynamic_cast<AtMCTrack *>(fPrimaryTrackInput->At(i));
+      if (track == nullptr || track->GetMotherId() != -1)
+         continue;
+
+      Int_t ntr = 0;
+      fCollector.PushTrack(1, -1, track->GetPdgCode(), track->GetPx(), track->GetPy(), track->GetPz(), track->GetEnergy(),
+                           track->GetStartX(), track->GetStartY(), track->GetStartZ(), track->GetStartT(), 0., 0., 0.,
+                           kPPrimary, ntr, 0., 0, -1);
+   }
+
+   return true;
+}
+
 void AtTestSimulation::Exec(Option_t *)
 {
    fSimulation->NewEvent();
+   bool loadedEvent = false;
+   bool isBeamEvent = AtVertexPropagator::Instance()->IsBeamEvent();
 
-   if (!fPrimGen)
+   if (fPrimaryTrackTree != nullptr) {
+      isBeamEvent = (fSourceEventIndex % 2) == 0;
+      AtVertexPropagator::Instance()->SetIsBeamEvent(isBeamEvent);
+      loadedEvent = LoadPrimaryTracksFromSource();
+   } else if (fPrimGen != nullptr) {
+      fCollector.Clear();
+      fPrimGen->GenerateEvent(&fCollector);
+      loadedEvent = true;
+   }
+
+   if (!loadedEvent)
       return;
 
-   const bool isBeamEvent = AtVertexPropagator::Instance()->IsBeamEvent();
-   fCollector.Clear();
-   fPrimGen->GenerateEvent(&fCollector);
    FillMCTracks();
+
+   if (fPrimaryTrackTree != nullptr && isBeamEvent)
+      return;
 
    for (const auto &p : fCollector.GetParticles()) {
       auto [Z, A] = GetZAFromPDG(p.pdgCode);
@@ -251,6 +306,17 @@ bool AtTestSimulation::IsSensitiveVolume(const std::string &volumeName)
 {
    return volumeName.find("drift_volume") != std::string::npos || volumeName.find("window") != std::string::npos ||
           volumeName.find("cell") != std::string::npos;
+}
+
+void AtTestSimulation::Finish()
+{
+   if (fPrimaryTrackFile != nullptr) {
+      fPrimaryTrackFile->Close();
+      delete fPrimaryTrackFile;
+      fPrimaryTrackFile = nullptr;
+      fPrimaryTrackTree = nullptr;
+      fPrimaryTrackInput = nullptr;
+   }
 }
 
 ClassImp(AtTestSimulation);

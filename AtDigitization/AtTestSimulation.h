@@ -11,6 +11,7 @@
 #include "FairTask.h"
 
 #include <memory>  // for unique_ptr
+#include <string>
 #include <utility> // for move
 #include <FairMCEventHeader.h>
 
@@ -19,6 +20,8 @@ class FairPrimaryGenerator;
 class TBuffer;
 class TClass;
 class TMemberInspector;
+class TFile;
+class TTree;
 
 /**
  * @brief FairTask wrapper for AtSimpleSimulation.
@@ -36,6 +39,11 @@ protected:
    AtTpc *fDetector{nullptr};                                //!
    AtSimParticleCollector fCollector;                        //!
    TClonesArray *fMCTrackArray{nullptr};                     //!
+   std::string fPrimaryTrackSourceFile;                      //!
+   TFile *fPrimaryTrackFile{nullptr};                        //!
+   TTree *fPrimaryTrackTree{nullptr};                        //!
+   TClonesArray *fPrimaryTrackInput{nullptr};                //!
+   Long64_t fSourceEventIndex{0};                            //!
 
    // Owned MCEventHeader required by FairPrimaryGenerator::GenerateEvent()
    std::unique_ptr<FairMCEventHeader> fMCHeader; //!
@@ -51,16 +59,18 @@ public:
     * It must remain valid for the lifetime of the task.
     */
    void SetPrimaryGenerator(FairPrimaryGenerator *primGen) { fPrimGen = primGen; }
+   void SetPrimaryTrackSource(const std::string &fileName) { fPrimaryTrackSourceFile = fileName; }
    void SetDetector(AtTpc *detector) { fDetector = detector; }
 
    virtual InitStatus Init() override;
    virtual void Exec(Option_t *option) override;
-   virtual void Finish() override {}
+   virtual void Finish() override;
    AtSimpleSimulation *GetSimulation() { return fSimulation.get(); }
 
 private:
    void RegisterMCTrackBranch();
    void FillMCTracks();
+   bool LoadPrimaryTracksFromSource();
    bool SubmitInitialSensitivePoint(int trackID, int pdg, bool beamTrack, const ROOT::Math::XYZPoint &pos,
                                     const ROOT::Math::PxPyPzEVector &mom);
    bool ProcessDetectorStep(const AtSimpleSimulation::TransportStep &step, int trackID, bool beamTrack, bool preSensitive,

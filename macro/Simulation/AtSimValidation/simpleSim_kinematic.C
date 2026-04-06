@@ -64,7 +64,8 @@ std::unique_ptr<AtSimpleSimulation> BuildSimpleSimulation(const TString &geoFile
 }
 } // namespace
 
-void simpleSim_kinematic(Int_t nEvents = 1000, UInt_t seed = 42)
+void simpleSim_kinematic(Int_t nEvents = 1000, UInt_t seed = 42,
+                         TString geantTruthFile = "./data/geant4_kinematic.root")
 {
    TString dir = gSystem->Getenv("VMCWORKDIR");
    if (dir.IsNull()) {
@@ -97,9 +98,8 @@ void simpleSim_kinematic(Int_t nEvents = 1000, UInt_t seed = 42)
 
    run->SetGenerator(new FairPrimaryGenerator());
 
-   auto *simPrimGen = BuildElasticGenerator(0.0, 180.0);
    auto *simTask = new AtTestSimulation(BuildSimpleSimulation(dir + "/geometry/ATTPC_He1bar_geomanager.root"));
-   simTask->SetPrimaryGenerator(simPrimGen);
+   simTask->SetPrimaryTrackSource(geantTruthFile.Data());
    simTask->SetDetector(tpc);
    run->AddTask(simTask);
 
