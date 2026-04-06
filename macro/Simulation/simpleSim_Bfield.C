@@ -2,13 +2,18 @@
  * simpleSim_Bfield.C
  *
  * Standalone AT-TPC simulation using AtTestSimulation (no Geant4).
- * Fires 50 MeV protons into a 2 T solenoid field along Z.
+ * Fires 1 MeV protons into a 2 T solenoid field along Z.
  *
  * Expected physics:
- *   Proton with p_z ≈ 310.5 MeV/c in B = 2 T along Z will travel in a straight line
- *   because p⊥ = 0 (momentum parallel to B).  To see Larmor curvature, use a reaction
- *   generator that produces particles with transverse momentum, or set a non-zero
- *   theta in FairBoxGenerator.
+ *   A 1 MeV proton (range ~200 mm in H gas at the table density) stops within the
+ *   drift volume, producing a visible Bragg peak.  p⊥ = 0 (parallel to B) so the
+ *   track is straight.  To see Larmor curvature set a non-zero theta or use a
+ *   reaction generator.
+ *
+ * Energy loss table: HinH.txt (H in H gas, SRIM format with density header).
+ *   proton_He_700torr.txt is available but lacks the SRIM density/conversion
+ *   header required by AtELossTable; use HinH.txt as stand-in until a
+ *   properly-formatted He table is generated.
  *
  * Output: ./data/simpleSim_Bfield.root
  *   Tree "cbmsim", branch "AtTpcPoint" (TClonesArray of AtMCPoint).
@@ -54,13 +59,15 @@ void simpleSim_Bfield(Int_t nEvents = 100)
    // ---- FairTask wrapper ------------------------------------------------
    auto *simTask = new AtTestSimulation(std::move(sim));
 
-   // ---- Generator: 50 MeV proton along Z --------------------------------
+   // ---- Generator: 1 MeV proton along Z ------------------------------------
    // FairBoxGenerator works with FairRunAna (no Geant4/FairRunSim required).
    // PDG 2212 = proton.  Momentum is given in GeV/c.
-   //   KE = 50 MeV proton:  E = m + KE = 988.272 MeV,  p ≈ 310.5 MeV/c = 0.3105 GeV/c
+   //   KE = 1 MeV proton: E = 938.272 + 1 = 939.272 MeV
+   //                       p = sqrt(939.272² - 938.272²) ≈ 43.33 MeV/c = 0.04333 GeV/c
+   // Range ≈ 203 mm (from HinH.txt) — stops well within the 1000 mm drift volume.
    auto *primGen = new FairPrimaryGenerator();
    auto *boxGen = new FairBoxGenerator(2212 /*proton PDG*/, 1 /*multiplicity*/);
-   boxGen->SetPRange(0.3105, 0.3105);    // fixed |p| in GeV/c
+   boxGen->SetPRange(0.04333, 0.04333);  // fixed |p| in GeV/c
    boxGen->SetPhiRange(0., 0.);          // phi = 0  → momentum in XZ plane
    boxGen->SetThetaRange(0., 0.);        // theta = 0 → along +Z
    // drift_volume is a tube at (0, 6.079, 50) cm with r=25 cm, half-length=50 cm → z: 0–100 cm

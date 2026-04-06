@@ -3,66 +3,67 @@
  *
  * Overlay AtTestSimulation (SimpleSim) and Geant4 simulation output on the
  * same plots for visual comparison.  Both produce "AtTpcPoint" branches
- * (TClonesArray of AtMCPoint / AtTpcPoint) in a "cbmsim" TTree.
+ * (TClonesArray of AtMCPoint / FairMCPoint subclass) in a "cbmsim" TTree.
  *
  * Comparison plots produced (saved to ./data/compareSimVsGeant.pdf):
- *   1. Bragg curve: mean dE/dx [MeV/mm] vs Z position [mm] — per-event tracks
- *      averaged across all events.
+ *   1. Bragg curve: mean dE/dx [MeV/mm] vs Z position [mm].
  *   2. Track-length distribution [mm].
  *   3. Total energy loss per track [MeV].
- *   4. XY hit projection (shows Larmor spirals when B ≠ 0).
+ *   4. XY hit projection.
  *   5. Z-position distribution of all hits.
+ *
+ * dE/dx is computed as eLoss_step / step_length, where step_length is the
+ * 3-D distance between consecutive hits on the same track.  This avoids the
+ * bias that arises when using GetLength() (cumulative from track origin),
+ * which for Geant4 includes path outside the active volume.
  *
  * Usage:
  *   source build/config.sh
- *   root -l -q 'macro/Simulation/compareSimVsGeant.C("geant_output.root","simpleSim_output.root")'
+ *   root -l -q 'macro/Simulation/compareSimVsGeant.C("geant.root","simple.root")'
  *
  * Arguments:
- *   geantFile    — output ROOT file from a standard FairRunSim Geant4 macro
- *   simpleFile   — output ROOT file from simpleSim_Bfield.C (or similar AtTestSimulation macro)
- *   branchName   — MCPoint branch name (default "AtTpcPoint"; Geant4 may use "AtTpcPoint")
- *   nEventsMax   — maximum events to read from each file (0 = all)
+ *   geantFile   — output ROOT file from a FairRunSim Geant4 macro
+ *   simpleFile  — output ROOT file from simpleSim_Bfield.C
+ *   branchName  — MCPoint branch name (default "AtTpcPoint")
+ *   nEventsMax  — max events to read per file (0 = all)
  */
 
 #include <algorithm>
+#include <cmath>
 #include <iostream>
 #include <map>
 #include <string>
 
 // ---------------------------------------------------------------------------
-// Helper: fill histograms from one file
-// ---------------------------------------------------------------------------
 struct SimData {
-   TH1D *hTrackLength;  // track length [mm]
-   TH1D *hTotalELoss;   // total energy loss per track [MeV]
-   TH1D *hHitZ;         // Z position of all hits [mm]
-   TH2D *hXY;           // XY projection of all hits [mm]
-   TProfile *hBragg;    // mean dE/dx [MeV/mm] vs Z [mm]
-   int nEvents;
-   int nHits;
+   TH1D *hTrackLength;
+   TH1D *hTotalELoss;
+   TH1D *hHitZ;
+   TH2D *hXY;
+   TProfile *hBragg;
+   int nEvents{0};
+   int nHits{0};
 };
 
 SimData FillHistograms(const TString &fileName, const TString &branchName, int nEventsMax,
                        const TString &suffix)
 {
    SimData d;
-   d.hTrackLength = new TH1D("hLen_" + suffix, ";Track length [mm];Events", 200, 0, 600);
-   d.hTotalELoss = new TH1D("hELoss_" + suffix, ";Total #DeltaE [MeV];Events", 200, 0, 100);
-   d.hHitZ = new TH1D("hZ_" + suffix, ";Z [mm];Hits", 200, -100, 1100);
-   d.hXY = new TH2D("hXY_" + suffix, ";X [mm];Y [mm]", 200, -300, 300, 200, -300, 300);
-   d.hBragg = new TProfile("hBragg_" + suffix, ";Z [mm];#LTdE/dx#GT [MeV/mm]", 200, -100, 1100);
-   d.nEvents = 0;
-   d.nHits = 0;
+   d.hTrackLength = new TH1D("hLen_" + suffix, ";Track length [mm];Entries", 150, 0, 1100);
+   d.hTotalELoss  = new TH1D("hELoss_" + suffix, ";Total #DeltaE [MeV];Entries", 150, 0, 15);
+   d.hHitZ        = new TH1D("hZ_" + suffix, ";Z [mm];Hits", 100, 0, 1100);
+   d.hXY          = new TH2D("hXY_" + suffix, ";X [mm];Y [mm]", 100, -300, 300, 100, -300, 300);
+   d.hBragg       = new TProfile("hBragg_" + suffix, ";Z [mm];dE/dx [MeV/mm]", 100, 0, 1100);
 
    TFile *f = TFile::Open(fileName);
    if (!f || f->IsZombie()) {
-      std::cerr << "ERROR: cannot open " << fileName << "\n";
+      std::cerr << "WARNING: cannot open " << fileName << " — skipping.\n";
       return d;
    }
 
    TTree *tree = dynamic_cast<TTree *>(f->Get("cbmsim"));
    if (!tree) {
-      std::cerr << "ERROR: no 'cbmsim' tree in " << fileName << "\n";
+      std::cerr << "WARNING: no 'cbmsim' tree in " << fileName << " — skipping.\n";
       f->Close();
       return d;
    }
@@ -70,17 +71,21 @@ SimData FillHistograms(const TString &fileName, const TString &branchName, int n
    TClonesArray *pointArray = nullptr;
    tree->SetBranchAddress(branchName, &pointArray);
 
-   int nEvents = (nEventsMax > 0) ? std::min((int)tree->GetEntriesFast(), nEventsMax)
-                                  : (int)tree->GetEntriesFast();
+   int nEvents = (nEventsMax > 0 && nEventsMax < (int)tree->GetEntriesFast())
+                    ? nEventsMax
+                    : (int)tree->GetEntriesFast();
 
    for (int iEv = 0; iEv < nEvents; ++iEv) {
       tree->GetEntry(iEv);
-      if (!pointArray)
+      if (!pointArray || pointArray->GetEntriesFast() == 0)
          continue;
 
-      // Group points by track ID, accumulate per-track quantities
+      // Per-track accumulators (reset each event)
       std::map<int, double> trackELoss;
-      std::map<int, double> trackLength;
+      std::map<int, double> trackLastLen;
+
+      // Previous hit position per track (for step-length calculation)
+      std::map<int, double> prevX, prevY, prevZ;
 
       int nPts = pointArray->GetEntriesFast();
       for (int i = 0; i < nPts; ++i) {
@@ -88,158 +93,160 @@ SimData FillHistograms(const TString &fileName, const TString &branchName, int n
          if (!pt)
             continue;
 
-         double x_mm = pt->GetX() * 10.;
-         double y_mm = pt->GetY() * 10.;
-         double z_mm = pt->GetZ() * 10.;
-         double eLoss_MeV = pt->GetEnergyLoss() * 1000.; // GeV → MeV
-         double len_mm = pt->GetLength() * 10.;           // cm → mm
+         double x_mm    = pt->GetX() * 10.;              // cm → mm
+         double y_mm    = pt->GetY() * 10.;
+         double z_mm    = pt->GetZ() * 10.;
+         double eLoss   = pt->GetEnergyLoss() * 1000.;   // GeV → MeV
+         double len_mm  = pt->GetLength() * 10.;          // cm → mm
+         int tid        = pt->GetTrackID();
 
          d.hHitZ->Fill(z_mm);
          d.hXY->Fill(x_mm, y_mm);
 
-         // dE/dx = energy loss / step length.  Use difference between consecutive
-         // lengths on the same track as the step size.
-         int tid = pt->GetTrackID();
-         double prevLen = trackLength.count(tid) ? trackLength[tid] : 0;
-         double stepLen = len_mm - prevLen;
-         if (stepLen > 0)
-            d.hBragg->Fill(z_mm, eLoss_MeV / stepLen);
+         // --- Bragg curve: dE/dx from 3-D step between consecutive hits ----
+         // Using position differences avoids the bias from GetLength() which
+         // counts path outside the active volume for Geant4 tracks.
+         if (prevZ.count(tid)) {
+            double dx   = x_mm - prevX[tid];
+            double dy   = y_mm - prevY[tid];
+            double dz   = z_mm - prevZ[tid];
+            double step = std::sqrt(dx * dx + dy * dy + dz * dz);
+            if (step > 0.01 && eLoss > 0)   // guard: skip zero-length or zero-loss steps
+               d.hBragg->Fill(z_mm, eLoss / step);
+         }
+         prevX[tid] = x_mm;
+         prevY[tid] = y_mm;
+         prevZ[tid] = z_mm;
 
-         trackELoss[tid] += eLoss_MeV;
-         trackLength[tid] = len_mm;
+         trackELoss[tid]   += eLoss;
+         trackLastLen[tid]  = len_mm;
          d.nHits++;
       }
 
+      // Per-track summary histograms
       for (auto &[tid, eLoss] : trackELoss) {
          d.hTotalELoss->Fill(eLoss);
-         d.hTrackLength->Fill(trackLength[tid]);
+         d.hTrackLength->Fill(trackLastLen[tid]);
       }
       d.nEvents++;
    }
 
    f->Close();
-   std::cout << suffix << ": read " << d.nEvents << " events, " << d.nHits << " hits\n";
+   std::cout << suffix << ": " << d.nEvents << " events, " << d.nHits << " hits\n";
    return d;
 }
 
 // ---------------------------------------------------------------------------
-// Main macro
-// ---------------------------------------------------------------------------
-void compareSimVsGeant(TString geantFile = "./data/geant_output.root",
+void compareSimVsGeant(TString geantFile  = "./data/geant_output.root",
                        TString simpleFile = "./data/simpleSim_Bfield.root",
-                       TString branchName = "AtTpcPoint", int nEventsMax = 0)
+                       TString branchName = "AtTpcPoint",
+                       int     nEventsMax = 0)
 {
    gStyle->SetOptStat(0);
-   gStyle->SetOptTitle(0);
+   gStyle->SetOptTitle(1);
 
-   SimData geant = FillHistograms(geantFile, branchName, nEventsMax, "G4");
+   SimData geant  = FillHistograms(geantFile,  branchName, nEventsMax, "G4");
    SimData simple = FillHistograms(simpleFile, branchName, nEventsMax, "Sim");
 
    if (geant.nHits == 0 && simple.nHits == 0) {
-      std::cerr << "ERROR: no hits in either file. Check file paths and branch name.\n";
+      std::cerr << "ERROR: no hits in either file. Check paths and branch name.\n";
       return;
    }
 
    // ---- Style -----------------------------------------------------------
-   auto styleG4 = [](TH1 *h) {
+   auto styleG4 = [](TH1 *h, bool fill = false) {
       h->SetLineColor(kBlue + 1);
       h->SetLineWidth(2);
+      if (fill) { h->SetFillColorAlpha(kBlue + 1, 0.2); h->SetFillStyle(1001); }
    };
-   auto styleSim = [](TH1 *h) {
+   auto styleSim = [](TH1 *h, bool fill = false) {
       h->SetLineColor(kRed + 1);
       h->SetLineWidth(2);
       h->SetLineStyle(2);
+      if (fill) { h->SetFillColorAlpha(kRed + 1, 0.2); h->SetFillStyle(1001); }
    };
 
-   styleG4(geant.hTrackLength);
-   styleG4(geant.hTotalELoss);
-   styleG4(geant.hHitZ);
-   styleG4(geant.hBragg);
-   styleSim(simple.hTrackLength);
-   styleSim(simple.hTotalELoss);
-   styleSim(simple.hHitZ);
-   styleSim(simple.hBragg);
+   styleG4(geant.hTrackLength);   styleG4(geant.hTotalELoss);
+   styleG4(geant.hHitZ);          styleG4(geant.hBragg);
+   styleSim(simple.hTrackLength); styleSim(simple.hTotalELoss);
+   styleSim(simple.hHitZ);        styleSim(simple.hBragg);
 
-   // Normalize to events so shapes compare regardless of statistics
-   auto normalize = [](TH1 *h, double n) {
-      if (n > 0 && h->Integral() > 0)
-         h->Scale(1.0 / h->Integral());
+   // Normalize 1-D histograms to unit area so shapes compare
+   // regardless of event count.  Skip empty histograms.
+   auto normalize = [](TH1 *h) {
+      if (h->Integral() > 0) h->Scale(1.0 / h->Integral());
    };
-   normalize(geant.hTrackLength, geant.nEvents);
-   normalize(geant.hTotalELoss, geant.nEvents);
-   normalize(geant.hHitZ, geant.nHits);
-   normalize(simple.hTrackLength, simple.nEvents);
-   normalize(simple.hTotalELoss, simple.nEvents);
-   normalize(simple.hHitZ, simple.nHits);
+   if (geant.nEvents  > 0) { normalize(geant.hTrackLength);  normalize(geant.hTotalELoss);  normalize(geant.hHitZ); }
+   if (simple.nEvents > 0) { normalize(simple.hTrackLength); normalize(simple.hTotalELoss); normalize(simple.hHitZ); }
 
-   // ---- Canvas layout ---------------------------------------------------
-   TCanvas *c = new TCanvas("cCompare", "Geant4 vs SimpleSim comparison", 1400, 900);
+   // ---- Canvas ----------------------------------------------------------
+   TCanvas *c = new TCanvas("cCompare", "Geant4 vs SimpleSim", 1400, 900);
    c->Divide(3, 2);
 
-   auto makeLegend = [&](TVirtualPad *pad) {
+   auto addLegend = [&](TVirtualPad *pad) {
       pad->cd();
       auto *leg = new TLegend(0.55, 0.72, 0.92, 0.88);
       leg->SetBorderSize(0);
-      leg->AddEntry(geant.hBragg, "Geant4", "l");
-      leg->AddEntry(simple.hBragg, "SimpleSim", "l");
+      if (geant.nHits  > 0) leg->AddEntry(geant.hBragg,  "Geant4",   "l");
+      if (simple.nHits > 0) leg->AddEntry(simple.hBragg, "SimpleSim","l");
       leg->Draw();
    };
 
+   auto drawPair = [](TVirtualPad *p, TH1 *hG4, TH1 *hSim, bool profile = false) {
+      p->cd(); p->SetLeftMargin(0.15);
+      bool haveG4  = hG4  && hG4->GetEntries()  > 0;
+      bool haveSim = hSim && hSim->GetEntries() > 0;
+      double ymax  = 0;
+      if (haveG4)  ymax = std::max(ymax, hG4->GetMaximum());
+      if (haveSim) ymax = std::max(ymax, hSim->GetMaximum());
+      if (ymax == 0) ymax = 1;
+      TH1 *first = haveG4 ? hG4 : hSim;
+      if (!first) return;
+      first->SetMaximum(ymax * 1.25);
+      first->Draw(profile ? "hist" : "hist");
+      if (haveG4  && hG4  != first) hG4->Draw("hist same");
+      if (haveSim && hSim != first) hSim->Draw("hist same");
+   };
+
    // 1 — Bragg curve
-   c->cd(1);
-   gPad->SetLeftMargin(0.15);
-   auto *braggTitle = new TH1D("braggFrame", ";Z [mm];#LTdE/dx#GT [MeV/mm]", 1, -100, 1100);
-   braggTitle->SetMaximum(std::max(geant.hBragg->GetMaximum(), simple.hBragg->GetMaximum()) * 1.2);
-   braggTitle->Draw();
-   geant.hBragg->Draw("same");
-   simple.hBragg->Draw("same");
-   makeLegend(gPad);
+   c->cd(1); gPad->SetLeftMargin(0.15);
+   {
+      bool haveG4  = geant.hBragg->GetEntries()  > 0;
+      bool haveSim = simple.hBragg->GetEntries() > 0;
+      double ymax = std::max(haveG4  ? geant.hBragg->GetMaximum()  : 0.,
+                             haveSim ? simple.hBragg->GetMaximum() : 0.);
+      if (ymax == 0) ymax = 1;
+      TH1 *first = haveG4 ? (TH1*)geant.hBragg : (TH1*)simple.hBragg;
+      first->SetMaximum(ymax * 1.25);
+      first->Draw();
+      if (haveG4  && (TH1*)geant.hBragg  != first) geant.hBragg->Draw("same");
+      if (haveSim && (TH1*)simple.hBragg != first) simple.hBragg->Draw("same");
+      addLegend(gPad);
+   }
 
    // 2 — Track length
-   c->cd(2);
-   gPad->SetLeftMargin(0.15);
-   geant.hTrackLength->GetYaxis()->SetTitle("Normalised entries");
-   geant.hTrackLength->SetMaximum(
-      std::max(geant.hTrackLength->GetMaximum(), simple.hTrackLength->GetMaximum()) * 1.3);
-   geant.hTrackLength->Draw("hist");
-   simple.hTrackLength->Draw("hist same");
-   makeLegend(gPad);
+   drawPair(c->cd(2), geant.hTrackLength, simple.hTrackLength);
+   addLegend(c->cd(2));
 
    // 3 — Total energy loss
-   c->cd(3);
-   gPad->SetLeftMargin(0.15);
-   geant.hTotalELoss->GetYaxis()->SetTitle("Normalised entries");
-   geant.hTotalELoss->SetMaximum(
-      std::max(geant.hTotalELoss->GetMaximum(), simple.hTotalELoss->GetMaximum()) * 1.3);
-   geant.hTotalELoss->Draw("hist");
-   simple.hTotalELoss->Draw("hist same");
-   makeLegend(gPad);
+   drawPair(c->cd(3), geant.hTotalELoss, simple.hTotalELoss);
+   addLegend(c->cd(3));
 
-   // 4 — XY projection (Geant4)
-   c->cd(4);
-   gPad->SetLeftMargin(0.15);
-   geant.hXY->GetZaxis()->SetTitle("Hits");
-   geant.hXY->SetTitle("Geant4 XY hits");
-   geant.hXY->Draw("colz");
+   // 4 — XY (Geant4 or SimpleSim if no Geant4)
+   c->cd(4); gPad->SetLeftMargin(0.15);
+   (geant.nHits > 0 ? geant.hXY : simple.hXY)->Draw("colz");
+   if (geant.nHits > 0) geant.hXY->SetTitle("Geant4 XY hits");
+   else                  simple.hXY->SetTitle("SimpleSim XY hits");
 
-   // 5 — XY projection (SimpleSim)
-   c->cd(5);
-   gPad->SetLeftMargin(0.15);
-   simple.hXY->GetZaxis()->SetTitle("Hits");
+   // 5 — XY (SimpleSim)
+   c->cd(5); gPad->SetLeftMargin(0.15);
    simple.hXY->SetTitle("SimpleSim XY hits");
    simple.hXY->Draw("colz");
 
    // 6 — Z hit distribution
-   c->cd(6);
-   gPad->SetLeftMargin(0.15);
-   geant.hHitZ->GetYaxis()->SetTitle("Normalised entries");
-   geant.hHitZ->SetMaximum(
-      std::max(geant.hHitZ->GetMaximum(), simple.hHitZ->GetMaximum()) * 1.3);
-   geant.hHitZ->Draw("hist");
-   simple.hHitZ->Draw("hist same");
-   makeLegend(gPad);
+   drawPair(c->cd(6), geant.hHitZ, simple.hHitZ);
+   addLegend(c->cd(6));
 
-   // ---- Save ------------------------------------------------------------
    c->SaveAs("./data/compareSimVsGeant.pdf");
-   std::cout << "Comparison plot saved to ./data/compareSimVsGeant.pdf\n";
+   std::cout << "Saved ./data/compareSimVsGeant.pdf\n";
 }
