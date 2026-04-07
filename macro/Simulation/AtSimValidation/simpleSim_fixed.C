@@ -93,7 +93,7 @@ void simpleSim_fixed(Double_t thetaCms = 45.0, Int_t nEvents = 100, UInt_t seed 
    run->AddModule(tpc);
 
    // FairRunSim still needs a generator object to drive the event loop, but the
-   // actual physics generator for the SimpleSim path is owned by AtTestSimulation.
+   // actual physics generator for the SimpleSim path is owned by the SimpleSim task.
    auto *eventLoopDriver = new FairPrimaryGenerator();
    run->SetGenerator(eventLoopDriver);
 

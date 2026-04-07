@@ -230,9 +230,9 @@ bool AtTpc::ProcessStep(const StepState &step)
       return true;
    }
 
-   // For this detector geometry, leaving the active gas means hitting the surrounding wall.
-   // The validation transport should terminate at the first exit from the reaction volume.
-   if (step.exiting && IsReactionVolume(fVolName))
+   // For SimpleSim transport, leaving the active gas means transport should stop.
+   // Guarded by flag to preserve Geant4 behavior where products may continue into boundary volumes.
+   if (fStopOnReactionVolumeExit && step.exiting && IsReactionVolume(fVolName))
       return true;
 
    return false;
@@ -329,12 +329,16 @@ void AtTpc::ConstructGeometry()
    }
 }
 
+bool AtTpc::IsSensitiveVolume(const std::string &name)
+{
+   return name.find("drift_volume") != std::string::npos || name.find("window") != std::string::npos ||
+          name.find("cell") != std::string::npos;
+}
+
 Bool_t AtTpc::CheckIfSensitive(std::string name)
 {
-
-   TString tsname = name;
-   if (tsname.Contains("drift_volume") || tsname.Contains("window") || tsname.Contains("cell")) {
-      LOG(info) << " AtTPC geometry: Sensitive volume found: " << tsname;
+   if (IsSensitiveVolume(name)) {
+      LOG(info) << " AtTPC geometry: Sensitive volume found: " << name;
       return kTRUE;
    }
    return kFALSE;

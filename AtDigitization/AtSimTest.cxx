@@ -15,11 +15,7 @@
 
 #include "AtMCPoint.h"
 #include "AtSimpleSimulation.h"
-#define private public
-#define protected public
-#include "AtTestSimulation.h"
-#undef protected
-#undef private
+#include "AtSimpleSimulationGeneratorTask.h"
 
 #include "AtELossModel.h"
 #include "AtMCTrack.h"
@@ -82,6 +78,20 @@ protected:
       top->AddNode(drift, 1);
       gGeoManager->CloseGeometry();
    }
+};
+
+// ---------------------------------------------------------------------------
+// Test helper: exposes protected members for testing without #define hacks.
+// ---------------------------------------------------------------------------
+class TestableSimTask : public AtSimpleSimulationGeneratorTask {
+public:
+   using AtSimpleSimulationGeneratorTask::AtSimpleSimulationGeneratorTask;
+   using AtSimpleSimulationTask::fCollector;
+   using AtSimpleSimulationTask::fDetector;
+   using AtSimpleSimulationTask::fMCTrackArray;
+   using AtSimpleSimulationTask::FillMCTracks;
+   using AtSimpleSimulationTask::SubmitInitialSensitivePoint;
+   EventState LoadEvent() override { return {}; }
 };
 
 // ---------------------------------------------------------------------------
@@ -268,7 +278,7 @@ TEST_F(AtSimTest, TransportParticleInvokesCallbackAcrossVolumeBoundary)
 TEST_F(AtSimTest, ReactionMCTracksKeepGeneratedTrackIDs)
 {
    auto sim = std::make_unique<AtSimpleSimulation>();
-   AtTestSimulation task(std::move(sim));
+   TestableSimTask task(std::move(sim));
    task.fMCTrackArray = new TClonesArray("AtMCTrack");
 
    Int_t ntr = -1;
@@ -296,7 +306,7 @@ TEST_F(AtSimTest, ReactionMCTracksKeepGeneratedTrackIDs)
 TEST_F(AtSimTest, BeamMCTracksKeepBeamAtTrackZero)
 {
    auto sim = std::make_unique<AtSimpleSimulation>();
-   AtTestSimulation task(std::move(sim));
+   TestableSimTask task(std::move(sim));
    task.fMCTrackArray = new TClonesArray("AtMCTrack");
 
    Int_t ntr = -1;
@@ -315,7 +325,7 @@ TEST_F(AtSimTest, BeamMCTracksKeepBeamAtTrackZero)
 TEST_F(AtSimTest, InitialSensitivePointUsesTrackStartState)
 {
    auto sim = std::make_unique<AtSimpleSimulation>();
-   AtTestSimulation task(std::move(sim));
+   TestableSimTask task(std::move(sim));
    AtTpc detector;
    task.fDetector = &detector;
 

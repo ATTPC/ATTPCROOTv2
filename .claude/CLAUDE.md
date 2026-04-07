@@ -22,6 +22,7 @@ Quick topic links:
 | Data model | [reference/data-model.md](../docs/reference/data-model.md) |
 | Branch I/O contracts | [reference/branch-io-contracts.md](../docs/reference/branch-io-contracts.md) |
 | Simulation pipeline | [subsystems/simulation-pipeline.md](../docs/subsystems/simulation-pipeline.md) |
+| SimpleSim migration | [subsystems/simplesim-migration.md](../docs/subsystems/simplesim-migration.md) |
 | Reconstruction pipeline | [subsystems/reconstruction-pipeline.md](../docs/subsystems/reconstruction-pipeline.md) |
 | Event generators | [subsystems/generators.md](../docs/subsystems/generators.md) |
 | Pulse shape analysis | [subsystems/psa.md](../docs/subsystems/psa.md) |

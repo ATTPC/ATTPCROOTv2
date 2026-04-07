@@ -24,6 +24,12 @@
 using namespace ROOT::Math;
 
 namespace {
+// SimpleSim uses mm/MeV; FairRoot/AtTpc uses cm/GeV.
+constexpr double kCmToMm = 10.;
+constexpr double kMmToCm = 0.1;
+constexpr double kGeVToMeV = 1000.;
+constexpr double kMeVToGeV = 0.001;
+
 std::pair<int, int> GetZAFromPDG(int pdg)
 {
    if (pdg > 1000000000) {
@@ -52,6 +58,7 @@ InitStatus AtSimpleSimulationTask::Init()
       fSimulation->RegisterBranch();
    } else {
       LOG(info) << "AtSimpleSimulationTask: using detector-coupled transport adapter";
+      fDetector->SetStopOnReactionVolumeExit(true);
    }
 
    auto sourceStatus = InitEventSource();
@@ -127,8 +134,9 @@ void AtSimpleSimulationTask::TransportParticle(const AtCollectedParticle &partic
    if (Z == 0 && A == 0)
       return;
 
-   XYZPoint pos(particle.vx * 10., particle.vy * 10., particle.vz * 10.);
-   PxPyPzEVector mom(particle.px * 1000., particle.py * 1000., particle.pz * 1000., particle.e * 1000.);
+   XYZPoint pos(particle.vx * kCmToMm, particle.vy * kCmToMm, particle.vz * kCmToMm);
+   PxPyPzEVector mom(particle.px * kGeVToMeV, particle.py * kGeVToMeV, particle.pz * kGeVToMeV,
+                     particle.e * kGeVToMeV);
 
    try {
       if (fDetector != nullptr && !IsSensitiveVolume(fSimulation->GetVolumeNameAt(pos)))
@@ -161,7 +169,7 @@ void AtSimpleSimulationTask::TransportParticle(const AtCollectedParticle &partic
             return keepTransporting;
          });
    } catch (const std::invalid_argument &ex) {
-      LOG(debug) << "AtSimpleSimulationTask: skipping particle Z=" << Z << " A=" << A << ": " << ex.what();
+      LOG(fatal) << "AtSimpleSimulationTask: skipping particle Z=" << Z << " A=" << A << ": " << ex.what();
    }
 }
 
@@ -185,10 +193,10 @@ bool AtSimpleSimulationTask::SubmitInitialSensitivePoint(int trackID, int pdg, b
    detectorStep.energyLoss = 0.0;
    detectorStep.timeNs = 0.0;
    detectorStep.trackLength = 0.0;
-   detectorStep.totalEnergy = mom.E() / 1000.;
-   detectorStep.trackMass = mom.M() / 1000.;
-   detectorStep.pos.SetXYZT(pos.X() / 10., pos.Y() / 10., pos.Z() / 10., 0.0);
-   detectorStep.mom.SetXYZT(mom.Px() / 1000., mom.Py() / 1000., mom.Pz() / 1000., mom.E() / 1000.);
+   detectorStep.totalEnergy = mom.E() * kMeVToGeV;
+   detectorStep.trackMass = mom.M() * kMeVToGeV;
+   detectorStep.pos.SetXYZT(pos.X() * kMmToCm, pos.Y() * kMmToCm, pos.Z() * kMmToCm, 0.0);
+   detectorStep.mom.SetXYZT(mom.Px() * kMeVToGeV, mom.Py() * kMeVToGeV, mom.Pz() * kMeVToGeV, mom.E() * kMeVToGeV);
    detectorStep.posOut = detectorStep.pos;
    detectorStep.momOut = detectorStep.mom;
 
@@ -212,19 +220,21 @@ bool AtSimpleSimulationTask::ProcessDetectorStep(const AtSimpleSimulation::Trans
    detectorStep.exiting = exiting;
    detectorStep.stopping = postSensitive && (step.postMomentum.E() - step.postMomentum.M() <= 1e-3);
    detectorStep.disappeared = false;
-   detectorStep.energyLoss = step.energyLoss / 1000.;
+   detectorStep.energyLoss = step.energyLoss * kMeVToGeV;
    detectorStep.timeNs = 0.;
-   detectorStep.trackLength = step.length / 10.;
+   detectorStep.trackLength = step.length * kMmToCm;
 
    const auto &refPos = postSensitive ? step.postPosition : step.prePosition;
    const auto &refMom = postSensitive ? step.postMomentum : step.preMomentum;
-   detectorStep.totalEnergy = refMom.E() / 1000.;
-   detectorStep.trackMass = step.trackMass / 1000.;
-   detectorStep.pos.SetXYZT(refPos.X() / 10., refPos.Y() / 10., refPos.Z() / 10., 0.);
-   detectorStep.mom.SetXYZT(refMom.Px() / 1000., refMom.Py() / 1000., refMom.Pz() / 1000., refMom.E() / 1000.);
-   detectorStep.posOut.SetXYZT(step.postPosition.X() / 10., step.postPosition.Y() / 10., step.postPosition.Z() / 10., 0.);
-   detectorStep.momOut.SetXYZT(step.postMomentum.Px() / 1000., step.postMomentum.Py() / 1000.,
-                               step.postMomentum.Pz() / 1000., step.postMomentum.E() / 1000.);
+   detectorStep.totalEnergy = refMom.E() * kMeVToGeV;
+   detectorStep.trackMass = step.trackMass * kMeVToGeV;
+   detectorStep.pos.SetXYZT(refPos.X() * kMmToCm, refPos.Y() * kMmToCm, refPos.Z() * kMmToCm, 0.);
+   detectorStep.mom.SetXYZT(refMom.Px() * kMeVToGeV, refMom.Py() * kMeVToGeV, refMom.Pz() * kMeVToGeV,
+                            refMom.E() * kMeVToGeV);
+   detectorStep.posOut.SetXYZT(step.postPosition.X() * kMmToCm, step.postPosition.Y() * kMmToCm,
+                               step.postPosition.Z() * kMmToCm, 0.);
+   detectorStep.momOut.SetXYZT(step.postMomentum.Px() * kMeVToGeV, step.postMomentum.Py() * kMeVToGeV,
+                               step.postMomentum.Pz() * kMeVToGeV, step.postMomentum.E() * kMeVToGeV);
 
    const bool stopTransport = fDetector->ProcessStep(detectorStep);
    return !stopTransport;
@@ -250,8 +260,7 @@ XYZPoint AtSimpleSimulationTask::FindSensitiveEntry(const XYZPoint &pos, const P
 
 bool AtSimpleSimulationTask::IsSensitiveVolume(const std::string &volumeName)
 {
-   return volumeName.find("drift_volume") != std::string::npos || volumeName.find("window") != std::string::npos ||
-          volumeName.find("cell") != std::string::npos;
+   return AtTpc::IsSensitiveVolume(volumeName);
 }
 
 ClassImp(AtSimpleSimulationTask);

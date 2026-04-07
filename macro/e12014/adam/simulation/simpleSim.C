@@ -40,7 +40,7 @@ void simpleSim()
    eloss->LoadSrimTable("./../PbinHeFull.txt");
    sim->AddModel(82, 208, eloss);
 
-   AtTestSimulation *simTask = new AtTestSimulation(std::move(sim));
+   auto *simTask = new AtSimpleSimulationGeneratorTask(std::move(sim));
 
    AtClusterizeLineTask *clusterizer = new AtClusterizeLineTask();
    clusterizer->SetPersistence(kFALSE);

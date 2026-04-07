@@ -78,6 +78,7 @@ private:
    Double32_t fELossAcc;
    TLorentzVector InPos;
    bool fIsBeamTrack = false;
+   bool fStopOnReactionVolumeExit{false};
 
    /** container for data points */
 
@@ -116,6 +117,13 @@ public:
     * Returns true when the transport should stop at this step because the reaction fired.
     */
    bool ProcessStep(const StepState &step);
+
+   /// When true, ProcessStep returns true (stop transport) when any particle exits a reaction volume.
+   /// Used by SimpleSim; defaults to false to preserve Geant4 behavior.
+   void SetStopOnReactionVolumeExit(bool val) { fStopOnReactionVolumeExit = val; }
+
+   /// Canonical check for whether a volume name is a sensitive detector volume.
+   static bool IsSensitiveVolume(const std::string &name);
 
 private:
    std::pair<Int_t, Int_t> DecodePdG(Int_t PdG_Code);

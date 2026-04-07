@@ -80,10 +80,10 @@ AtSimpleSimulation::AtSimpleSimulation(std::string geoFile)
 }
 AtSimpleSimulation::AtSimpleSimulation()
 {
-   if (gGeoManager == nullptr)
-      LOG(fatal) << "No geometry file loaded!";
-
-   fGeoManager = gGeoManager;
+   // Defer geometry check until first use. FairRunSim::Init() sets up
+   // gGeoManager, which may not have happened yet at construction time.
+   // GetVolume() re-syncs with gGeoManager on each call.
+   fGeoManager = nullptr;
    fNavigator = nullptr;
 }
 

@@ -47,12 +47,12 @@ In a Geant macro, the physics generator is usually connected directly to the run
 run->SetGenerator(primGen);
 ```
 
-In a SimpleSim macro, the run gets a dummy event-loop generator, and the real physics generator is passed to `AtTestSimulation`:
+In a SimpleSim macro, the run gets a dummy event-loop generator, and the real physics generator is passed to `AtSimpleSimulationGeneratorTask`:
 
 ```cpp
 run->SetGenerator(new FairPrimaryGenerator());
 
-auto *simTask = new AtTestSimulation(BuildSimpleSimulation(simpleSimGeoFile));
+auto *simTask = new AtSimpleSimulationGeneratorTask(BuildSimpleSimulation());
 simTask->SetPrimaryGenerator(primGen);
 simTask->SetDetector(tpc);
 run->AddTask(simTask);
@@ -108,9 +108,9 @@ What matters is that you configure:
 Minimal example:
 
 ```cpp
-std::unique_ptr<AtSimpleSimulation> BuildSimpleSimulation(const TString &geoFile)
+std::unique_ptr<AtSimpleSimulation> BuildSimpleSimulation()
 {
-   auto sim = std::make_unique<AtSimpleSimulation>(geoFile.Data());
+   auto sim = std::make_unique<AtSimpleSimulation>(); // uses FairRunSim geometry
 
    constexpr double gasDensity = 1.664e-4;
    std::vector<std::tuple<int, int, int>> material{{4, 2, 1}};
@@ -146,7 +146,7 @@ SimpleSim pattern:
 ```cpp
 run->SetGenerator(new FairPrimaryGenerator());
 
-auto *simTask = new AtTestSimulation(BuildSimpleSimulation(simpleSimGeoFile));
+auto *simTask = new AtSimpleSimulationGeneratorTask(BuildSimpleSimulation());
 simTask->SetPrimaryGenerator(primGen);
 simTask->SetDetector(tpc);
 run->AddTask(simTask);
@@ -155,30 +155,10 @@ run->AddTask(simTask);
 Important:
 
 - `FairRunSim` still needs a generator object for the event loop
-- the real physics generator is now passed into `AtTestSimulation`
+- the real physics generator is now passed into the SimpleSim task
+- `AtSimpleSimulation()` (default constructor) automatically uses the geometry loaded by `FairRunSim` -- no separate geometry file needed
 
-### 5. Use the right geometry file for SimpleSim
-
-This is one of the easiest mistakes to make.
-
-For the detector module:
-
-- keep the usual detector geometry file, for example `ATTPC_He1bar.root`
-
-For `AtSimpleSimulation`:
-
-- use the importable geometry-manager file, for example `ATTPC_He1bar_geomanager.root`
-
-Typical pattern:
-
-```cpp
-tpc->SetGeometryFileName((dir + "/geometry/ATTPC_He1bar.root").Data());
-
-TString simpleSimGeoFile = dir + "/geometry/ATTPC_He1bar_geomanager.root";
-auto *simTask = new AtTestSimulation(BuildSimpleSimulation(simpleSimGeoFile));
-```
-
-### 6. Keep the detector coupled
+### 5. Keep the detector coupled
 
 Always connect the detector:
 
@@ -202,12 +182,11 @@ For most user macros, the migration is:
 3. Add SimpleSim configuration.
 4. Replace `run->SetGenerator(primGen)` with:
    - `run->SetGenerator(new FairPrimaryGenerator())`
-   - `AtTestSimulation`
+   - `AtSimpleSimulationGeneratorTask`
    - `simTask->SetPrimaryGenerator(primGen)`
    - `simTask->SetDetector(tpc)`
    - `run->AddTask(simTask)`
-5. Use the `*_geomanager.root` geometry for SimpleSim.
-6. Add energy-loss models for all transported species.
+5. Add energy-loss models for all transported species.
 7. Run a small sample first.
 8. Verify the output before scaling up.
 
@@ -248,7 +227,7 @@ Local comparison macros in this directory already do that:
 ## Practical Notes
 
 - `AtSimpleSimulation` needs explicit energy-loss models.
-- `AtTestSimulation` skips particles that start outside `drift_volume`.
+- The SimpleSim task skips particles that start outside `drift_volume`.
 - `AtSimpleSimulation` uses mm and MeV internally.
 - The generator side still comes from the normal FairRoot macro world, which uses cm and GeV.
 - When editing ROOT macros, prefer adapting an existing working macro instead of inventing a new structure.
