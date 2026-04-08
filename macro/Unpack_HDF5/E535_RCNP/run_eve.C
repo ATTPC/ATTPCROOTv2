@@ -1,6 +1,6 @@
 void run_eve(int runNum = 3001, TString OutputDataFile = "./run_3001_display.root")
 {
-  TString InputDataFile = TString::Format("/data/ATTPCROOTv2_results/E535/UnpackerOutput/run_%04d.root", runNum);
+  TString InputDataFile = TString::Format("/home/astinson/e535rawdata/UnpackerOutput/run_%04d.root", runNum);
   std::cout << "Opening: " << InputDataFile << std::endl;
 
    TString dir = getenv("VMCWORKDIR");

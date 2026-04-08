@@ -35,6 +35,12 @@ AtGRAWUnpacker::AtGRAWUnpacker(mapPtr map, Int_t numGrawFiles)
       fPedestal.push_back(std::make_unique<AtPedestal>());
    }
 }
+
+
+//seems like these should have proper implementation somewhere?
+void AtGRAWUnpacker::ProcessBasicFrame(GETBasicFrame *basicFrame) {}
+void AtGRAWUnpacker::ProcessLayeredFrame(GETLayeredFrame *layeredFrame) {}
+
 void AtGRAWUnpacker::Init()
 {
    // Verify input file is there and matches constructor
@@ -145,14 +151,14 @@ void AtGRAWUnpacker::FillRawEvent(AtRawEvent &event)
          GETLayeredFrame *layeredFrame = fDecoder[0]->GetLayeredFrame(fDataEventID);
          if (layeredFrame == nullptr)
             event.SetIsGood(false);
-         else
-            ProcessLayeredFrame(layeredFrame);
+         else  
+           ProcessLayeredFrame(layeredFrame);
 
       } else if (dynamic_cast<AtTpcProtoMap *>(fMap.get()) != nullptr) {
          GETBasicFrame *frame = fDecoder[0]->GetBasicFrame(fDataEventID);
          if (frame == nullptr)
             event.SetIsGood(false);
-         else
+         else  
             ProcessBasicFrame(frame);
 
       } else {

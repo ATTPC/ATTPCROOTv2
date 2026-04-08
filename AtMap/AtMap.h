@@ -86,7 +86,7 @@ public:
 
    Bool_t ParseXMLMap(Char_t const *xmlfile);
    void ParseMapList(TXMLNode *node);
-   void ParseAtTPCMap(TXMLNode *node);
+   virtual void ParseAtTPCMap(TXMLNode *node);
    Bool_t DumpAtTPCMap();
    AtPadReference GetPadRef(int padNum) const;
    bool AddAuxPad(const AtPadReference &ref, std::string auxName);

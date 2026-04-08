@@ -15,6 +15,7 @@ set(SRCS
 #Put here your sourcefiles
 AtMap.cxx
 AtTpcMap.cxx
+AtSiMap.cxx
 AtTpcProtoMap.cxx
 AtGadgetIIMap.cxx
 AtSpecMATMap.cxx

@@ -3,13 +3,14 @@
 #define cNORMAL "\033[0m"
 #define cGREEN "\033[1;32m"
 
+
 bool reduceFunc(AtRawEvent *evt){
   return (evt->GetNumPads() > 0) && evt->IsGood();
 }
 
 void unpack_rcnp(int run_num = 2011){
   // Load the library for unpacking and reconstruction
-  gSystem->Load("libAtRecoMediumnstruction.so");
+  gSystem->Load("/home/astinson/attpc/install/lib/libAtReconstruction.so");
 
   TStopwatch timer;
   timer.Start();
@@ -17,15 +18,22 @@ void unpack_rcnp(int run_num = 2011){
   TString fileName = TString::Format("run_%04d", run_num);
   TString parameterFile = "RCNP/ATTPC.E535.par";
   TString mappath = "";
-  TString filepath = "/data/tempMergedData/E535/";
+  TString filepath = "/home/astinson/e535rawdata/h5/";
+  if (run_num > 5000) {
+   filepath = "/home/astinson/e535rawdata/h5Cal/";
+  }
   TString fileExt = ".h5";
-  TString outputpath = "/data/ATTPCROOTv2_results/E535/UnpackerOutput/";
+  TString outputpath = "/home/astinson/e535rawdata/UnpackerTestOutput/";
 
   TString inputFile = filepath + fileName + fileExt;
   TString scriptfile = "rcnp_map_size.xml";
+  TString siMapFile = "rcnp_si_map.xml";
+  TString beamPadsFile = "BeamPads_RCNP.csv";
   TString dir = getenv("VMCWORKDIR");
   TString mapDir = dir + "/scripts/" + scriptfile;
   TString scriptdir = dir + "/scripts/" + scriptfile;
+  TString simapdir = dir + "/scripts/" + siMapFile;
+  TString beamPadsDir = dir + "/scripts/" + beamPadsFile;
   TString dataDir = dir + "/macro/data/";
   TString geomDir = dir + "/geometry/";
   gSystem->Setenv("GEOMPATH", geomDir.Data());
@@ -57,6 +65,10 @@ void unpack_rcnp(int run_num = 2011){
   auto fAtMapPtr = std::make_shared<AtTpcMap>();
   fAtMapPtr->ParseXMLMap(mapDir.Data());
   fAtMapPtr->GeneratePadPlane();
+  fAtMapPtr->InhibitBeamPads(beamPadsDir); //pad veto update
+
+  auto fAtSiPtr = std::make_unique<AtSiMap>();
+  fAtSiPtr->ParseXMLMap(simapdir.Data());
 
   //auto unpacker = std::make_unique<AtHDFUnpacker>(fAtMapPtr);
   //auto unpacker = std::make_unique<AtFRIBLinkedHDFUnpacker>(fAtMapPtr);
@@ -72,7 +84,7 @@ void unpack_rcnp(int run_num = 2011){
   auto psaSi = std::make_unique<AtPSASi>();
   psaSi->SetThreshold(thresholdSi);
 
-  AtSiTask *siTask = new AtSiTask(std::move(psaSi));
+  AtSiTask *siTask = new AtSiTask(std::move(psaSi), std::move(fAtSiPtr));
   siTask->SetPersistence(kTRUE);
 
   auto thresholdGagg = 10;

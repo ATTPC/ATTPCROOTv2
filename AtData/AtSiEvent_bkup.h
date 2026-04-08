@@ -35,15 +35,6 @@ private:
    Int_t fMultiplicityFront2 = 0;
    Int_t fMultiplicityBack2 = 0;
 
-   Int_t fXStrip1 = -1; //positioning of strips class
-   Int_t fXStrip2 = -1;
-   Int_t fYStrip1 = -1;
-   Int_t fYStrip2 = -1;
-   Double_t fEnergyFront1 = -1; //storing energy of strips
-   Double_t fEnergyFront2 = -1;
-   Double_t fEnergyBack1 = -1;
-   Double_t fEnergyBack2 = -1;
-
 public:
    AtSiEvent();
    AtSiEvent(const AtSiEvent &copy);
@@ -118,18 +109,6 @@ public:
    Int_t GetMultiplicityBack1() { return fMultiplicityBack1; }
    Int_t GetMultiplicityFront2() { return fMultiplicityFront2; }
    Int_t GetMultiplicityBack2() { return fMultiplicityBack2; }
-
-   Int_t GetXStrip1() { return fXStrip1; }
-   Int_t GetXStrip2() { return fXStrip2; }
-   Int_t GetYStrip1() { return fYStrip1; }
-   Int_t GetYStrip2() { return fYStrip2; }
-
-   Double_t GetEnergyFront1() { return fEnergyFront1; }
-   Double_t GetEnergyFront2() { return fEnergyFront2; }
-   Double_t GetEnergyBack1() { return fEnergyBack1; }
-   Double_t GetEnergyBack2() { return fEnergyBack2; }
-
-   void BuildHits();
 
    ClassDefOverride(AtSiEvent, 1);
 };

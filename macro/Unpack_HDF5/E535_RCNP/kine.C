@@ -5,8 +5,39 @@ std::tuple<double, double> kine_2b(Double_t m1, Double_t m2, Double_t m3, Double
 void kine()
 {
    FairRunAna *run = new FairRunAna(); // Forcing a dummy run
-   //   TString outfname="./canvas_kine.root";
-   //   TFile *outfile=new TFile(outfname,"recreate");
+   //Bypassing cutfiles edit It just creates a giant cut that allows everything through
+   auto makeOpenCut = []() {
+      auto *c = new TCutG();
+      c->SetVarX("x"); 
+      c->SetVarY("y");
+      c->SetPoint(0, -1e9, -1e9);
+      c->SetPoint(1,  1e9, -1e9);
+      c->SetPoint(2,  1e9,  1e9);
+      c->SetPoint(3, -1e9,  1e9);
+      c->SetPoint(4, -1e9, -1e9);
+      return c;
+   };
+   //   FILE NAME
+   int runStart, runEnd;
+   std::cout << "Run Start: ";
+   std::cin >> runStart;
+   std::cout << "Run End: ";
+   std::cin >> runEnd;
+
+
+   // File input. There has to be a more compressed way to do this. As in, specify 3000 and then number of files
+   // TO DO: 
+   // create loop that makes an array the size of the start and end points then fills with iterative numbers to loop over. That way you don't 
+   // have to keep changing this line
+   //std::vector runNums = {3001, 3002, 3003, 3004, 3005, 3006, 3007, 3008, 3009, 3010, 3011};
+   //std::vector runNums = {5159};
+   std::vector<int> runNums;
+   for (int i=runStart; i<= runEnd; ++i) {
+	   runNums.push_back(i); 
+   }
+
+   TString outfname= Form("kineC_hists_%dto%d_stripsTest.root", runStart, runEnd); 
+   TFile *outfile=new TFile(outfname,"recreate");
 
    // AtMap to check if a hit belong to a big pad or small pad.
    TString scriptfile = "rcnp_map_size.xml";
@@ -46,8 +77,8 @@ void kine()
    /*TFile *cutKineFile = new TFile("./cutFiles/cutKine.root", "READ");
    TCutG *cutKineBProton = (TCutG *)cutKineFile->Get("cutKineBProton");
    cutKineFile->Close();*/
-
-   TFile *cutPIDFilep = new TFile("./cutFiles/PID_proton.root", "READ"); 
+   //Here Amber	
+   /*TFile *cutPIDFilep = new TFile("./cutFiles/PID_proton.root", "READ"); 
    TCutG *cutPIDproton = (TCutG *)cutPIDFilep->Get("cutPIDproton");
    cutPIDFilep->Close();
 
@@ -58,13 +89,14 @@ void kine()
    TFile *cutPIDFile2 = new TFile("./cutFiles/PID_3He.root", "READ"); 
    TCutG *cutPID3He = (TCutG *)cutPIDFile2->Get("cutPID3He");
    cutPIDFile2->Close();
-   
+   // Original cut files 
    TFile *cutSiPIDFile = new TFile("./cutFiles/SiPID.root", "READ");
    TCutG *cutSiB = (TCutG *)cutSiPIDFile->Get("cutSiPIDB");
    TCutG *cutSiC = (TCutG *)cutSiPIDFile->Get("cutSiPIDC");
    TCutG *cutSi13B = (TCutG *)cutSiPIDFile->Get("cutSiPID13B");
    TCutG *cutSiBe = (TCutG *)cutSiPIDFile->Get("cutSiPIDBe");
    cutSiPIDFile->Close();
+   */
 
    TFile *cutGaggPIDFile = new TFile("./cutFiles/GAGGPID.root", "READ");
    TCutG *cutGaggB = (TCutG *)cutGaggPIDFile->Get("cutGAGGPIDB");
@@ -72,6 +104,37 @@ void kine()
    TCutG *cutGaggLi = (TCutG *)cutGaggPIDFile->Get("cutGAGGPIDLi");
    TCutG *cutGaggHe = (TCutG *)cutGaggPIDFile->Get("cutGAGGPIDHe");
    cutGaggPIDFile->Close();
+
+   TFile *cutSi13BPIDFile = new TFile("./cutFiles/cutFile_B13Testv2.root", "READ");
+   TCutG *cutSi13B = (TCutG *)cutSi13BPIDFile->Get("B13_Test");
+   cutSi13BPIDFile->Close();
+
+   TFile *cutSiBPIDFile = new TFile("./cutFiles/cutFile_BTestv2.root", "READ");
+   TCutG *cutSiB = (TCutG *)cutSiBPIDFile->Get("BTest");
+   cutSiBPIDFile->Close();
+
+   TFile *cutSiBePIDFile = new TFile("./cutFiles/cutFile_BeTestv2.root", "READ");
+   TCutG *cutSiBe = (TCutG *)cutSiBePIDFile->Get("BeTest");
+   cutSiBePIDFile->Close();
+
+   TFile *cutSiCPIDFile = new TFile("./cutFiles/cutFile_CTestv2.root", "READ");
+   TCutG *cutSiC = (TCutG *)cutSiCPIDFile->Get("CTest");
+   cutSiCPIDFile->Close();
+
+   //Bypass cut files edit
+   TCutG *cutPIDproton  = makeOpenCut();
+   TCutG *cutPIDdeuteron = makeOpenCut();
+   TCutG *cutPID3He     = makeOpenCut();
+
+   //TCutG *cutSiB   = makeOpenCut();
+   //TCutG *cutSiC   = makeOpenCut();
+   //TCutG *cutSi13B = makeOpenCut();
+   //TCutG *cutSiBe  = makeOpenCut();
+
+   /*TCutG *cutGaggB  = makeOpenCut();
+   TCutG *cutGaggBe = makeOpenCut();
+   TCutG *cutGaggLi = makeOpenCut();
+   TCutG *cutGaggHe = makeOpenCut();*/
 
    
    // Kinematic curve
@@ -85,6 +148,8 @@ void kine()
    legend->AddEntry(kinecurve_3HeGS,"3He G.S.","l");
    legend->AddEntry(ang_lab_cm_3HeGS,"5 deg pitch in #theta_{cm}","p");
    legend->SetFillColor(0);
+
+   outfile->cd();
    
    // Histogram definitions.
    TH2F *histRangeVThetaLAB = new TH2F("histRangeVThetaLAB", "histRangeVThetaLAB", 180, 0, 180, 1030, 0, 1030);
@@ -119,8 +184,18 @@ void kine()
    TH2F *histSiPIDADCMax1H = new TH2F("histSiPIDADCMax1H", "histSiPIDADCMax1H", 1000, 0, 4000, 1000, 0, 4000);
    TH2F *histSiPIDADCMaxGaggBe = new TH2F("histSiPIDADCMaxGaggBe", "histSiPIDADCMaxGaggBe", 1000, 0, 4000, 1000, 0, 4000);
    TH2F *histSiPIDADCMaxGaggLi = new TH2F("histSiPIDADCMaxGaggLi", "histSiPIDADCMaxGaggLi", 1000, 0, 4000, 1000, 0, 4000);
-   TH1F *histSiMultiplicityFront1 = new TH1F("histSiMultiplicityFront1", "histSiMultiplicityFront1", 5, 0, 5);
-   TH1F *histSiMultiplicityFront2 = new TH1F("histSiMultiplicityFront2", "histSiMultiplicityFront2", 5, 0, 5);
+
+   TH1F *histSi1FrontE = new TH1F("histSi1FrontE", "histSi1Front;E1_Front;Counts", 5000, 0, 50000);
+   TH1F *histSi1BackE = new TH1F("histSi1BackE", "histSi1Back;E1_Back;Counts", 5000, 0, 25000);
+   TH1F *histSi2FrontE = new TH1F("histSi2FrontE", "histSi2FrontE;E2_Front;Counts", 5000, 0, 50000);
+   TH1F *histSi2BackE = new TH1F("histSi2BackE", "histSi2BackE;E2_Back;Counts", 5000, 0, 25000);
+   TH2F *histSi1V2FrontE = new TH2F("histSi1V2FrontE", "histSi1V2FrontE;E1_Front;E2_Front", 5000, 0, 25000, 5000, 0, 25000);
+
+   TH1F *histSiMultiplicityFront1 = new TH1F("histSiMultiplicityFront1", "histSiMultiplicityFront1", 10, 0, 10);
+   TH1F *histSiMultiplicityFront2 = new TH1F("histSiMultiplicityFront2", "histSiMultiplicityFront2", 10, 0, 10);
+
+   TH1F *histSiMultiplicityBack1 = new TH1F("histSiMultiplicityBack1", "histSiMultiplicityBack1", 10, 0, 10);
+   TH1F *histSiMultiplicityBack2 = new TH1F("histSiMultiplicityBack2", "histSiMultiplicityBack2", 10, 0, 10);
 
    TH1F *histGaggMultiplicity1 = new TH1F("histGaggMultiplicity1", "histGaggMultiplicity1", 25, 0, 25);
    TH1F *histGaggMultiplicity2 = new TH1F("histGaggMultiplicity2", "histGaggMultiplicity2", 16, 0, 16);
@@ -128,23 +203,29 @@ void kine()
    TH2F *histGaggPIDADCMax3HeSiB = new TH2F("histGaggPIDADCMax3HeSiB", "histGaggPIDADCMax3HeSiB", 5000, 0, 10000, 4000, 0, 4000);
    TH2F *histGaggPIDADCMaxSiB = new TH2F("histGaggPIDADCMaxSiB", "histGaggPIDADCMaxSiB", 5000, 0, 10000, 4000, 0, 4000);
 
+   TH1F *histSiStrip = new TH1F("histSiStrip", "histSiStrip;Strip;Counts", 550, 0, 550);
+   TH2F *histSiStripvE = new TH2F("histSiStripvE", "histSiStripvE;Strip;E", 550, 0, 550, 5000, 0, 5000);
+   TH2F *histSiStripvMaxADC = new TH2F("histSiStripvMaxADC", "histSiStripvMaxADC;Strip;ADC", 550, 0, 550, 5000, 0, 5000);
+   TH2F *Si1Position = new TH2F("Si1Position", "Si1Position; X (strip); Y (strip)", 128, 0, 128, 128, 0, 128);
+
    // All events.
 
-  /* std::vector runNums = {3001,3002,3003,3004,3005,3006,3007,3008,3009,3010,3011,3012,3013,3014,3015,
+    /*std::vector runNums = {3001,3002,3003,3004,3005,3006,3007,3008,3009,3010,3011,3012,3013,3014,3015,
 			  3016,3017,3018,3019,3020,3021,3022,3023,3024,3025,3026,3027,3028,3029,3030,
 			  3031,3032,3033,3034,3035,3036,3037,3038,3039,3040,3041,3042,3043,3044,3045,
 			  3046,3047,3048,3049,3050,3051,3052,3053,3054,3055,3056,3057,3058,3059,3060,
-			  3061,3062,3063,3064,3065,3066,3067,3068,3069,3070,3071,3072,3073,3074,3075,
-			  3076,3077,3078,3079,3080,3081,3082,3083,3084,3085,3086,3087,3088,3089,3090,
-			  3091,3092,3093,3094
-   };
+			  3061,3062,3063,3064};
 */
-   // Macro test
-    std::vector runNums = {3109, 3110, 3111, 3112};
+    //Turning on Calibration Mode
+    bool calibrationMode = false;
+    if (runNums[0] > 5000) {
+	    calibrationMode = true;
+	    std::cout << "CALIBRATION MODE ON" << std::endl;
+    }
 
    for (int runNum: runNums) {
       // Open the digitalization file and get the TTree.
-      TString unpackFileName = TString::Format("/data/ATTPCROOTv2_results/E535/UnpackerOutput/run_%04d.root", runNum);
+      TString unpackFileName = TString::Format("/home/astinson/e535rawdata/UnpackerTestOutput/run_%04d.root", runNum);
       TFile *unpackFile = new TFile(unpackFileName, "READ");
       TTree *unpackTree = (TTree *)unpackFile->Get("cbmsim");
       int nUnpackEvents = unpackTree->GetEntries();
@@ -186,19 +267,74 @@ void kine()
          Int_t multiplicityFront1 = siEvent->GetMultiplicityFront1();
          Int_t multiplicityFront2 = siEvent->GetMultiplicityFront2();
 
+         Int_t multiplicityBack1 = siEvent->GetMultiplicityBack1();
+         Int_t multiplicityBack2 = siEvent->GetMultiplicityBack2();
+
          histSiMultiplicityFront1->Fill(multiplicityFront1);
          histSiMultiplicityFront2->Fill(multiplicityFront2);
 
-         if (multiplicityFront1 != 1 || multiplicityFront2 != 1) continue;
+         histSiMultiplicityBack1->Fill(multiplicityBack1);
+         histSiMultiplicityBack2->Fill(multiplicityBack2);
+	 
+	 Int_t strip1X = siEvent->GetXStrip1();
+	 Int_t strip1Y = siEvent->GetYStrip1();
+	 Float_t front1E = siEvent->GetEnergyFront1();
+	 Float_t back1E = siEvent->GetEnergyBack1();
 
-         Double_t maxADCFront1 = siEvent->GetADCMaxFront1(0);
-         Double_t maxADCFront2 = siEvent->GetADCMaxFront2(0);
+	 if (front1E > 20 && back1E > 20) {
+		 Si1Position->Fill(strip1X, strip1Y);
+	 }
+	 if (calibrationMode) { //To-Do: likely will need to change this depending on the calibration file being used.
+		 if (multiplicityFront1 != 1 || multiplicityBack1 != 1) continue;
+	 }
+	 else {
+		 if ((multiplicityFront1 != 1 && multiplicityBack1 != 1) || (multiplicityFront2 != 1 && multiplicityBack2 != 1)) continue;
+	 }
 
-         Double_t EFront1 = siEvent->GetEFront1(0);
-         Double_t EFront2 = siEvent->GetEFront2(0);
+	 for (int j=0; j<4; ++j) {
+	 	Int_t strip = siEvent->GetStripFront1(j);
+	 	if (strip < 0) { continue; }
+		Double_t maxADCFront1 = siEvent->GetADCMaxFront1(j);
+         	Double_t EFront1 = siEvent->GetEFront1(j);
+	 	histSi1FrontE->Fill(EFront1);
+		histSiStrip->Fill(strip);
+		histSiStripvE->Fill(strip, EFront1);
+		histSiStripvMaxADC->Fill(strip, maxADCFront1);
+	 }
 
-         histSiPIDTraceIntegral->Fill(EFront2, EFront1);
-         histSiPIDADCMax->Fill(maxADCFront2, maxADCFront1);
+	 for (int j=0; j<4; ++j) {
+	 	Int_t strip = siEvent->GetStripFront2(j);
+	 	if (strip < 0) { continue; }
+		Double_t maxADCFront2 = siEvent->GetADCMaxFront2(j);
+		Double_t EFront2 = siEvent->GetEFront2(j);
+		histSi2FrontE->Fill(EFront2);
+		histSiStrip->Fill(strip);
+		histSiStripvE->Fill(strip, EFront2);
+		histSiStripvMaxADC->Fill(strip, maxADCFront2);
+	 }
+
+	 for (int j=0; j<4; ++j) {
+	 	Int_t strip = siEvent->GetStripBack1(j);
+	 	if (strip < 0) { continue; }
+		Double_t maxADCBack1 = siEvent->GetADCMaxBack1(j);
+		Double_t EBack1 = siEvent->GetEBack1(j);
+		histSi1BackE->Fill(EBack1);
+		histSiStrip->Fill(strip);
+		histSiStripvE->Fill(strip, EBack1);
+		histSiStripvMaxADC->Fill(strip, maxADCBack1);
+	 }
+
+	 for (int j=0; j<4; ++j) {
+	 	Int_t strip = siEvent->GetStripBack2(j);
+	 	if (strip < 0) { continue; }
+		Double_t maxADCBack2 = siEvent->GetADCMaxBack2(j);
+		Double_t EBack2 = siEvent->GetEBack2(j);
+		histSi2BackE->Fill(EBack2);
+		histSiStrip->Fill(strip);
+		histSiStripvE->Fill(strip, EBack2);
+		histSiStripvMaxADC->Fill(strip, maxADCBack2);
+	 }
+
 
          //if (!cutSiN->IsInside(maxADCFront2, maxADCFront1)) continue;
          //if (!cutSiC->IsInside(maxADCFront2, maxADCFront1)) continue;
@@ -254,7 +390,7 @@ void kine()
          if (gaggADC2 != -1)
             totalMaxADCGagg += gaggADC2;*/
 
-	 histGaggPIDADCMax->Fill(totalMaxADCGagg, maxADCFront2);
+	 //histGaggPIDADCMax->Fill(totalMaxADCGagg, maxADCFront2);
 
 
          // First, we obtain some rough kinematics just by using the AtPatternEvent.
@@ -332,15 +468,15 @@ void kine()
 
             if (cutPID3He->IsInside(roughRangeEstimation, dEdx))
                histTrackThetaLABRange3He->Fill(roughRangeEstimation, trackThetaLAB);
-
+/*
             if ((cutPID3He->IsInside(roughRangeEstimation, dEdx))
 		&& cutGaggBe->IsInside(totalMaxADCGagg, maxADCFront2)
 		&& cutSiBe->IsInside(maxADCFront2, maxADCFront1)){
 	      histTrackThetaLABRange3HeSiGaggBe->Fill(roughRangeEstimation, trackThetaLAB);};
-
+*/
             if (cutPID3He->IsInside(roughRangeEstimation, dEdx))
                histEstimatedKinEVThetaLAB3He->Fill(trackThetaLAB, estimatedKinE);
-
+/*
             if (cutPID3He->IsInside(roughRangeEstimation, dEdx)
 		&& cutSiBe->IsInside(maxADCFront2, maxADCFront1)){
 	      histEstimatedKinEVThetaLAB3HeSiBe->Fill(trackThetaLAB, estimatedKinE);};
@@ -363,13 +499,13 @@ void kine()
             if (cutSiBe->IsInside(maxADCFront2, maxADCFront1)
 		&& cutGaggBe->IsInside(totalMaxADCGagg, maxADCFront2)){
 	      histEstimatedKinEVThetaLABSiGaggBe->Fill(trackThetaLAB, estimatedKinE);};
-
+*/
             if (cutPIDdeuteron->IsInside(roughRangeEstimation, dEdx))
                histEstimatedKinEVThetaLAB2H->Fill(trackThetaLAB, estimatedKinE);
 
             if (cutPIDproton->IsInside(roughRangeEstimation, dEdx))
                histEstimatedKinEVThetaLAB1H->Fill(trackThetaLAB, estimatedKinE);
-	    
+/*	    
 	    if (cutSiB->IsInside(maxADCFront2, maxADCFront1))
 	      histEstimatedKinEVThetaLABSiB->Fill(trackThetaLAB, estimatedKinE);
 
@@ -404,7 +540,7 @@ void kine()
 
 	    if (cutSiB->IsInside(maxADCFront2, maxADCFront1))
 	      histGaggPIDADCMaxSiB->Fill(totalMaxADCGagg, maxADCFront2);
-
+*/
             if (!reachedBigPads)
                histESmallVTotalRange->Fill(roughRangeEstimation, smallPadCharge);
             else
@@ -431,9 +567,9 @@ void kine()
 	       histEstimatedKinEVThetaLABkinett->Fill(thetaLABArray[1],estimatedKineEArray[1]);
 	     }
 	   }
-	   bool passSiBe = cutSiBe->IsInside(maxADCFront2, maxADCFront1);
-	   bool passGaggBe = cutGaggBe->IsInside(totalMaxADCGagg, maxADCFront2);
-	   if(passSiBe && passGaggBe){
+	   //bool passSiBe = cutSiBe->IsInside(maxADCFront2, maxADCFront1);
+	   //bool passGaggBe = cutGaggBe->IsInside(totalMaxADCGagg, maxADCFront2);
+	   /*if(passSiBe && passGaggBe){
 	     if(isHe3Array[0] && !isHe3Array[1]){
                histThetaLABThetaLAB3HeSiGaggBe->Fill(thetaLABArray[0], thetaLABArray[1]);
 	       nEventsWith3He++ ;
@@ -442,7 +578,7 @@ void kine()
                histThetaLABThetaLAB3HeSiGaggBe->Fill(thetaLABArray[1], thetaLABArray[0]);
 	       nEventsWith3He++;
 	     }
-	   }
+	   }*/
          }
       }
       //      std::cout << "Number of 2 tracks events in run" << runNum << ":" << nEventsWith2Tracks << std::endl;
@@ -452,6 +588,8 @@ void kine()
       //gaggFile->Close();
    }
 
+   outfile->Write();
+
    // Kinematic lines.
    TGraph *kine_dd = ReadKinematics("./kineFiles/17N_dd_gs.txt");
    TGraph *kine_d3He = ReadKinematics("./kineFiles/13B_d3He_gs.txt");
@@ -460,17 +598,18 @@ void kine()
    TGraph *kine_d3He_tt = ReadKinematics("./kineFiles/13B_d3He_tt.txt");
    TGraph *kine_12C12C = ReadKinematics("./kineFiles/17N_12C12C_gs.txt");
 
+   /*
    // Draw histograms in TCanvas.
    TCanvas *c = new TCanvas();
    histRangeVThetaLAB->Draw("zcol");
    histRangeVThetaLAB->GetXaxis()->SetTitle("#theta_{LAB} [deg]");
    histRangeVThetaLAB->GetYaxis()->SetTitle("roughRange [mm]");
-   /*
+   
    TCanvas *c1_3He = new TCanvas();
    histTrackThetaLABRange3He->Draw("zcol");
    histTrackThetaLABRange3He->GetXaxis()->SetTitle("roughRange [mm]");
    histTrackThetaLABRange3He->GetYaxis()->SetTitle("#theta_{LAB} [deg]");
-   */
+   
    TCanvas *c1_3HeSiGaggBe = new TCanvas();
    histTrackThetaLABRange3HeSiGaggBe->Draw("zcol");
    histTrackThetaLABRange3HeSiGaggBe->GetXaxis()->SetTitle("roughRange [mm]");
@@ -483,7 +622,7 @@ void kine()
    kine_d3HeEx2_7->Draw("same");
    histEstimatedKinEVThetaLABTotal->GetXaxis()->SetTitle("#theta_{LAB} [deg]");
    histEstimatedKinEVThetaLABTotal->GetYaxis()->SetTitle("roughKinE [MeV]");
-   /*
+   
    TCanvas *c3 = new TCanvas();
    histEstimatedKinEVThetaLAB3He->Draw("zcol");
    kine_d3He->Draw("same");
@@ -505,7 +644,7 @@ void kine()
    //   legend->Draw();
    histEstimatedKinEVThetaLAB3HeSiBe->GetXaxis()->SetTitle("#theta_{LAB} [deg]");
    histEstimatedKinEVThetaLAB3HeSiBe->GetYaxis()->SetTitle("roughKinE [MeV]");
-   */
+   
    TCanvas *c3_3HeSiGaggBe = new TCanvas();
    histEstimatedKinEVThetaLAB3HeSiGaggBe->Draw("zcol");
    kine_d3He->Draw("same");
@@ -563,7 +702,7 @@ void kine()
    histThetaLABThetaLAB3HeSiGaggBe->Draw("zcol");
    histThetaLABThetaLAB3HeSiGaggBe->GetXaxis()->SetTitle("track1_#theta_{LAB} [deg]");
    histThetaLABThetaLAB3HeSiGaggBe->GetYaxis()->SetTitle("track2_#theta_{LAB} [deg]");
-   /*
+   
    TCanvas *c3_2H = new TCanvas();
    histEstimatedKinEVThetaLAB2H->Draw("zcol");
    kine_d3He->Draw("same");
@@ -619,7 +758,7 @@ void kine()
    kine_d3HeEx2_7->Draw("same");
    histEstimatedKinEVThetaLABSiGaggBe->GetXaxis()->SetTitle("#theta_{LAB} [deg]");
    histEstimatedKinEVThetaLABSiGaggBe->GetYaxis()->SetTitle("roughKinE [MeV]");
-   */
+   
    TCanvas *c4 = new TCanvas();
    histdEdxVTotalRange->Draw("zcol");
    cutPID3He->Draw("same");
@@ -627,7 +766,8 @@ void kine()
    cutPIDdeuteron->Draw("same");
    histdEdxVTotalRange->GetXaxis()->SetTitle("roughRange [mm]");
    histdEdxVTotalRange->GetYaxis()->SetTitle("#frac{dE}{dx} [ADC/mm]");
-   /*
+   
+   
    TCanvas *c5 = new TCanvas();
    histESmallVTotalRange->Draw("zcol");
    histESmallVTotalRange->GetXaxis()->SetTitle("smallRange [mm]");
@@ -642,7 +782,7 @@ void kine()
    histSiPIDTraceIntegral->Draw("zcol");
    histSiPIDTraceIntegral->GetXaxis()->SetTitle("E2 [ADC]");
    histSiPIDTraceIntegral->GetYaxis()->SetTitle("E1 [ADC]");
-   */
+   
    TCanvas *c8 = new TCanvas();
    histSiPIDADCMax->Draw("zcol");
    cutSiB->Draw("same");
@@ -651,22 +791,23 @@ void kine()
    cutSiBe->Draw("same");
    histSiPIDADCMax->GetXaxis()->SetTitle("ADC^{max}_{2} [ADC]");
    histSiPIDADCMax->GetYaxis()->SetTitle("ADC^{max}_{1} [ADC]");
-   /*
+   
+   
    TCanvas *c8_3He = new TCanvas();
    histSiPIDADCMax3He->Draw("zcol");
    histSiPIDADCMax3He->GetXaxis()->SetTitle("ADC^{max}_{2} [ADC]");
    histSiPIDADCMax3He->GetYaxis()->SetTitle("ADC^{max}_{1} [ADC]");
-   */
+   
    TCanvas *c8_3HeGaggBe = new TCanvas();
    histSiPIDADCMax3HeGaggBe->Draw("zcol");
    histSiPIDADCMax3HeGaggBe->GetXaxis()->SetTitle("ADC^{max}_{2} [ADC]");
    histSiPIDADCMax3HeGaggBe->GetYaxis()->SetTitle("ADC^{max}_{1} [ADC]");
-   /*
+   
    TCanvas *c8_GaggBe = new TCanvas();
    histSiPIDADCMaxGaggBe->Draw("zcol");
    histSiPIDADCMaxGaggBe->GetXaxis()->SetTitle("ADC^{max}_{2} [ADC]");
    histSiPIDADCMaxGaggBe->GetYaxis()->SetTitle("ADC^{max}_{1} [ADC]");
-
+   
    TCanvas *c8_GaggLi = new TCanvas();
    histSiPIDADCMaxGaggLi->Draw("zcol");
    histSiPIDADCMaxGaggLi->GetXaxis()->SetTitle("ADC^{max}_{2} [ADC]");
@@ -688,6 +829,7 @@ void kine()
    TCanvas *c10 = new TCanvas();
    histSiMultiplicityFront2->Draw();
    */
+/*
    TCanvas *c11 = new TCanvas();
    histGaggPIDADCMax->Draw("colz");
    cutGaggB->Draw("same");
@@ -696,6 +838,8 @@ void kine()
    cutGaggHe->Draw("same");
    histGaggPIDADCMax->GetXaxis()->SetTitle("#Sigma ADC^{max}_{Gagg} [ADC]");
    histGaggPIDADCMax->GetYaxis()->SetTitle("ADC^{max}_{2} [ADC]");
+   */
+   
    /*
    TCanvas *c11_3HeSiB = new TCanvas();
    histGaggPIDADCMax3HeSiB->Draw("colz");
@@ -726,6 +870,7 @@ void kine()
    }
    outfile->Close();
    */
+   outfile->Close();
 }
 
 TGraph* ReadKinematics(TString kineFile)

@@ -9,6 +9,7 @@ ${CMAKE_SOURCE_DIR}/AtEventDisplay/Deprecated
 ${CMAKE_SOURCE_DIR}/AtEventDisplay/AtTabs
 ${CMAKE_SOURCE_DIR}/AtEventDisplay/AtSidebar
 ${CMAKE_SOURCE_DIR}/AtEventDisplay/AtSidebar/PSA
+${CMAKE_SOURCE_DIR}/AtData
 )
 
 set(SRCS

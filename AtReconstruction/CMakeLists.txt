@@ -20,6 +20,7 @@ ${CMAKE_SOURCE_DIR}/AtReconstruction/AtPatternRecognition/triplclust/src/hclust
 ${CMAKE_SOURCE_DIR}/AtReconstruction/AtPatternRecognition/triplclust/src/kdtree
 
 ${CMAKE_SOURCE_DIR}/AtReconstruction/AtPatternModification
+${CMAKE_SOURCE_DIR}/AtMap
 )
 
 Set(DEPENDENCIES
