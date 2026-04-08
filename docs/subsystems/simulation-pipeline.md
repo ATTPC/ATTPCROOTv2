@@ -90,9 +90,9 @@ For the **Geant4/VMC** path, a simulation run needs:
 For the **SimpleSim** path, the run additionally needs:
 
 - an `AtSimpleSimulation` instance (uses the FairRunSim geometry automatically)
-- an `AtELossModel` configured for each particle species to be transported
+- energy loss models for each particle species, either registered manually via `AddModel()` or auto-created via `SetModelFactory()`
 - the detector set via `SetDetector(tpc)` on the SimpleSim task
 
-Energy loss models must be registered for every (Z, A) pair that will be transported. If a particle has no model, the simulation will terminate with a fatal error.
+Energy loss models must be available for every (Z, A) pair that will be transported. Models can be registered manually via `AddModel()`, or a factory can be set via `SetModelFactory()` to auto-create models from geometry materials on demand. If a particle has no model and no factory is set, the simulation will terminate with a fatal error.
 
 See [generators.md](generators.md) for generator behavior, [energy-loss.md](energy-loss.md) for the model layer, and [simplesim-migration.md](simplesim-migration.md) for the migration guide.

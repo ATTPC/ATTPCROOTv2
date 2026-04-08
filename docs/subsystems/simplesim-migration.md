@@ -53,11 +53,29 @@ run->AddTask(simTask);
 
 ### Energy-loss models
 
-Every particle species that will be transported must have a registered energy-loss model. Call `sim->AddModel(Z, A, model)` for each species. If a particle has no model, the simulation terminates with a fatal error.
+Every particle species that will be transported needs an energy-loss model. There are two approaches:
 
-Available model types:
-- `AtTools::AtELossCATIMA` -- CATIMA-based energy loss (recommended)
-- `AtTools::AtELossTable` -- SRIM table lookup
+#### Factory-based registration (recommended)
+
+Set a model factory and let SimpleSim auto-create models from the geometry materials:
+
+```cpp
+auto sim = std::make_unique<AtSimpleSimulation>();
+sim->SetModelFactory(std::make_shared<AtTools::AtELossFactoryCATIMA>());
+```
+
+This is the simplest approach -- no per-species configuration needed. Models are created on demand when new particle species are encountered during transport.
+
+#### Manual registration
+
+For full control, register models explicitly with `sim->AddModel(Z, A, model)` for each species. If a particle has no model and no factory is set, the simulation terminates with a fatal error. Manually registered models take precedence over the factory.
+
+#### Available model types
+
+- `AtTools::AtELossFactoryCATIMA` -- CATIMA factory, auto-creates from geometry (recommended)
+- `AtTools::AtELossFactoryBetheBloch` -- Bethe-Bloch factory, lighter analytic alternative
+- `AtTools::AtELossCATIMA` -- CATIMA model for manual registration
+- `AtTools::AtELossTable` -- SRIM table lookup for manual registration
 
 See [energy-loss.md](energy-loss.md) for details.
 
@@ -100,6 +118,8 @@ The source file must contain a `cbmsim` TTree with an `MCTrack` branch from a pr
 
 Working examples are in `macro/Simulation/AtSimValidation/`:
 
-- `simpleSim_fixed.C` / `geant4_fixed.C` -- fixed-angle comparison
-- `simpleSim_kinematic.C` / `geant4_kinematic.C` -- full kinematic sweep
-- `compareFixed.C`, `compareKinematic.C` -- automated comparison plots
+- `simpleSim_fixed.C` / `geant4_fixed.C` -- fixed-angle comparison (manual model registration)
+- `simpleSim_kinematic.C` / `geant4_kinematic.C` -- full kinematic sweep (manual model registration)
+- `simpleSim_fixed_factory.C` / `simpleSim_kinematic_factory.C` -- factory CATIMA drop-in variants
+- `simpleSim_fixed_bethebloch.C` -- factory Bethe-Bloch variant
+- `compareFixed.C`, `compareKinematic.C` -- automated comparison plots (accept configurable file paths)
