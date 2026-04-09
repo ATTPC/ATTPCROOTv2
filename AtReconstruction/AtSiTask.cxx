@@ -21,6 +21,15 @@ constexpr auto cYELLOW = "\033[1;33m";
 constexpr auto cNORMAL = "\033[0m";
 constexpr auto cGREEN = "\033[1;32m";
 
+AtSiTask::AtSiTask(std::unique_ptr<AtPSASi> psa)
+   : fInputBranchName("AtRawEvent"), fOutputBranchName("AtSiEvent"), fSiEventArray(TClonesArray("AtSiEvent", 1)),
+     fPSA(std::move(psa)), fIsPersistence(kFALSE)
+{
+   fSiMap = std::make_unique<AtSiMap>();
+   TString dir = getenv("VMCWORKDIR");
+   fSiMap->ParseXMLMap(dir + "scripts/rcnp_si_map.xml");
+}
+
 AtSiTask::AtSiTask(std::unique_ptr<AtPSASi> psa, std::unique_ptr<AtSiMap> simap)
    : fInputBranchName("AtRawEvent"), fOutputBranchName("AtSiEvent"), fSiEventArray(TClonesArray("AtSiEvent", 1)),
      fPSA(std::move(psa)), fSiMap(std::move(simap)), fIsPersistence(kFALSE)

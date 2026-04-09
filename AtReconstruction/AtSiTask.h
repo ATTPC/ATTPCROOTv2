@@ -30,6 +30,7 @@ private:
    Bool_t fIsPersistence{false};
 
 public:
+   AtSiTask(std::unique_ptr<AtPSASi> psaMethod);
    AtSiTask(std::unique_ptr<AtPSASi> psaMethod, std::unique_ptr<AtSiMap>);
    ~AtSiTask() = default;
 
