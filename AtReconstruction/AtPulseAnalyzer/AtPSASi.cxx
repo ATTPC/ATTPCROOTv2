@@ -54,14 +54,14 @@ AtPSASi::HitVector AtPSASi::AnalyzePad(AtPad *pad)
       count += 1;
    }
    baseline /= count;
-   std::cout << "Baseline calculated: " << baseline << std::endl;
+   LOG(debug) << "Baseline calculated: " << baseline;
    charge = *maxAdcIt - baseline;
 
    if (!shouldSaveHit(charge, fThreshold, maxAdcIdx))
       return {};
 
-   std::cout << "========== float ADC array max value ========== " << *maxAdcIt << std::endl;
-   std::cout << "========== float ADC array max index: " << maxAdcIdx << " ==========" << std::endl;
+   LOG(debug) << "========== float ADC array max value ========== " << *maxAdcIt;
+   LOG(debug) << "========== float ADC array max index: " << maxAdcIdx << " ==========";
 
    // Calculation of the mean value of the peak time by interpolating the pulse
    int energy_integral[2] = {-10, 15}; // integral window around maximum
@@ -87,7 +87,7 @@ AtPSASi::HitVector AtPSASi::AnalyzePad(AtPad *pad)
 bool AtPSASi::shouldSaveHit(double charge, double threshold, int tb)
 {
    bool ret = true;
-   std::cout << charge << "   " << threshold << "  " << tb << std::endl;
+   LOG(debug) << charge << "   " << threshold << "  " << tb;
    if (threshold > 0 && charge < threshold) {
       ret = false;
       LOG(debug) << "Invalid threshold with charge: " << charge << " and threshold: " << threshold;
@@ -123,8 +123,8 @@ AtPSASi::HitVector AtPSASi::AnalyzeGenTrace(AtGenericTrace *genTrace)
    std::array<Double_t, 256> floatADC;
    std::vector<Double_t> floatADCVector = genTrace->GetADC();
    // FOR GAGG
-   // for (int i = 0; i < 256; i++)
-   //  floatADC[i] = floatADCVector[i];
+   for (int i = 0; i < 256; i++)
+      floatADC[i] = floatADCVector[i];
    // std::cout << "GAGG ADC entries: " << floatADCVector.size() <<  std::endl;
    /*if (floatADCVector.size() >= 256) {
       for (int i = 0; i < 256; i++)
