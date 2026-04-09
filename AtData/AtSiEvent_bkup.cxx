@@ -1,6 +1,5 @@
-#include "AtSiEvent.h"
-
 #include "AtContainerManip.h"
+#include "AtSiEvent.h"
 
 #include <Rtypes.h>
 
@@ -11,9 +10,9 @@ ClassImp(AtSiEvent);
 
 AtSiEvent::AtSiEvent() : AtBaseEvent("AtSiEvent") {}
 
-AtSiEvent::AtSiEvent(const AtSiEvent &copy) : AtBaseEvent(copy),
-                                              fMultiplicityFront1(copy.fMultiplicityFront1), fMultiplicityBack1(copy.fMultiplicityBack1),
-                                              fMultiplicityFront2(copy.fMultiplicityFront2), fMultiplicityBack2(copy.fMultiplicityBack2)
+AtSiEvent::AtSiEvent(const AtSiEvent &copy)
+   : AtBaseEvent(copy), fMultiplicityFront1(copy.fMultiplicityFront1), fMultiplicityBack1(copy.fMultiplicityBack1),
+     fMultiplicityFront2(copy.fMultiplicityFront2), fMultiplicityBack2(copy.fMultiplicityBack2)
 {
    for (int i = 0; i < 4; i++) {
       fEFront1[i] = copy.fEFront1[i];

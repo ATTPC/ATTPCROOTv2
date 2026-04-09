@@ -40,21 +40,22 @@ AtPSASi::HitVector AtPSASi::AnalyzePad(AtPad *pad)
       (*maxAdcIt) = -(*maxAdcIt);
    }
 
-   int low_bl_gate[2] = {-50,-30};
-   int hi_bl_gate[2] = {80,100};
+   int low_bl_gate[2] = {-50, -30};
+   int hi_bl_gate[2] = {80, 100};
    float count = 0;
-   for (int i = std::max(20,maxAdcIdx+low_bl_gate[0]); i < std::min(maxAdcIdx+low_bl_gate[1],500); i++) { //more baseline added
-      baseline += floatADC[i]; 
-      count+=1;
+   for (int i = std::max(20, maxAdcIdx + low_bl_gate[0]); i < std::min(maxAdcIdx + low_bl_gate[1], 500);
+        i++) { // more baseline added
+      baseline += floatADC[i];
+      count += 1;
    }
-   for (int i = std::max(20,maxAdcIdx+hi_bl_gate[0]); i < std::min(maxAdcIdx+hi_bl_gate[1],500); i++) { //more baseline added
-      baseline += floatADC[i]; 
-      count+=1;
+   for (int i = std::max(20, maxAdcIdx + hi_bl_gate[0]); i < std::min(maxAdcIdx + hi_bl_gate[1], 500);
+        i++) { // more baseline added
+      baseline += floatADC[i];
+      count += 1;
    }
    baseline /= count;
    std::cout << "Baseline calculated: " << baseline << std::endl;
    charge = *maxAdcIt - baseline;
-
 
    if (!shouldSaveHit(charge, fThreshold, maxAdcIdx))
       return {};
@@ -63,12 +64,14 @@ AtPSASi::HitVector AtPSASi::AnalyzePad(AtPad *pad)
    std::cout << "========== float ADC array max index: " << maxAdcIdx << " ==========" << std::endl;
 
    // Calculation of the mean value of the peak time by interpolating the pulse
-   int energy_integral[2] = {-10,15}; //integral window around maximum
+   int energy_integral[2] = {-10, 15}; // integral window around maximum
    Double_t timemax = 0.5 * (floatADC[maxAdcIdx - 1] - floatADC[maxAdcIdx + 1]) /
                       (floatADC[maxAdcIdx - 1] + floatADC[maxAdcIdx + 1] - 2 * floatADC[maxAdcIdx]);
    Double_t TBCorr = getTBCorr(floatADC, maxAdcIdx);
-   Double_t QHitTot = std::abs(std::accumulate(floatADC.begin() + maxAdcIdx+energy_integral[0],
-			   floatADC.begin() + maxAdcIdx+energy_integral[1], 0)/(energy_integral[1]-energy_integral[0]) - baseline);
+   Double_t QHitTot = std::abs(std::accumulate(floatADC.begin() + maxAdcIdx + energy_integral[0],
+                                               floatADC.begin() + maxAdcIdx + energy_integral[1], 0) /
+                                  (energy_integral[1] - energy_integral[0]) -
+                               baseline);
 
    auto hit = std::make_unique<AtHit>(0, pos, charge);
 
@@ -119,10 +122,10 @@ AtPSASi::HitVector AtPSASi::AnalyzeGenTrace(AtGenericTrace *genTrace)
 
    std::array<Double_t, 256> floatADC;
    std::vector<Double_t> floatADCVector = genTrace->GetADC();
-   //FOR GAGG
-   //for (int i = 0; i < 256; i++)
-   // floatADC[i] = floatADCVector[i];
-   //std::cout << "GAGG ADC entries: " << floatADCVector.size() <<  std::endl;
+   // FOR GAGG
+   // for (int i = 0; i < 256; i++)
+   //  floatADC[i] = floatADCVector[i];
+   // std::cout << "GAGG ADC entries: " << floatADCVector.size() <<  std::endl;
    /*if (floatADCVector.size() >= 256) {
       for (int i = 0; i < 256; i++)
          floatADC[i] = floatADCVector[i];
@@ -147,7 +150,9 @@ AtPSASi::HitVector AtPSASi::AnalyzeGenTrace(AtGenericTrace *genTrace)
       maxAdcIt = std::min_element(floatADC.begin() + 20, floatADC.end() - 12);
       charge = -(*maxAdcIt - baseline);
    }
-   Int_t maxAdcIdx = std::distance(floatADC.begin(), maxAdcIt); //To-Do: might need to utilize similar trace intergal calculation as used in Si. Unsure yet. 
+   Int_t maxAdcIdx = std::distance(
+      floatADC.begin(),
+      maxAdcIt); // To-Do: might need to utilize similar trace intergal calculation as used in Si. Unsure yet.
    // std::cout << " Max ADC = " << *maxAdcIt << std::endl;
 
    // std::cout << " Diff ADC = " << *maxAdcIt - baseline << std::endl;

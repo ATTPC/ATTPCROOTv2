@@ -36,8 +36,7 @@ AtGRAWUnpacker::AtGRAWUnpacker(mapPtr map, Int_t numGrawFiles)
    }
 }
 
-
-//seems like these should have proper implementation somewhere?
+// seems like these should have proper implementation somewhere?
 void AtGRAWUnpacker::ProcessBasicFrame(GETBasicFrame *basicFrame) {}
 void AtGRAWUnpacker::ProcessLayeredFrame(GETLayeredFrame *layeredFrame) {}
 
@@ -151,14 +150,14 @@ void AtGRAWUnpacker::FillRawEvent(AtRawEvent &event)
          GETLayeredFrame *layeredFrame = fDecoder[0]->GetLayeredFrame(fDataEventID);
          if (layeredFrame == nullptr)
             event.SetIsGood(false);
-         else  
-           ProcessLayeredFrame(layeredFrame);
+         else
+            ProcessLayeredFrame(layeredFrame);
 
       } else if (dynamic_cast<AtTpcProtoMap *>(fMap.get()) != nullptr) {
          GETBasicFrame *frame = fDecoder[0]->GetBasicFrame(fDataEventID);
          if (frame == nullptr)
             event.SetIsGood(false);
-         else  
+         else
             ProcessBasicFrame(frame);
 
       } else {

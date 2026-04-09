@@ -35,11 +35,11 @@ private:
    Int_t fMultiplicityFront2 = 0;
    Int_t fMultiplicityBack2 = 0;
 
-   Int_t fXStrip1 = -1; //positioning of strips class
+   Int_t fXStrip1 = -1; // positioning of strips class
    Int_t fXStrip2 = -1;
    Int_t fYStrip1 = -1;
    Int_t fYStrip2 = -1;
-   Double_t fEnergyFront1 = -1; //storing energy of strips
+   Double_t fEnergyFront1 = -1; // storing energy of strips
    Double_t fEnergyFront2 = -1;
    Double_t fEnergyBack1 = -1;
    Double_t fEnergyBack2 = -1;

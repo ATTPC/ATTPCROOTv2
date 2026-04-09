@@ -12,7 +12,7 @@
 #include <Math/Point2Dfwd.h>
 #include <Rtypes.h>
 #include <TXMLDocument.h>
-#include <TXMLNode.h> 
+#include <TXMLNode.h>
 
 class TBuffer;
 class TClass;

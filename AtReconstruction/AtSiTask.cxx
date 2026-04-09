@@ -1,10 +1,10 @@
 #include "AtSiTask.h"
 
-#include "AtPadReference.h"
-#include "AtSiEvent.h"
-#include "AtRawEvent.h"
-#include "AtPad.h"
 #include "AtAuxPad.h"
+#include "AtPad.h"
+#include "AtPadReference.h"
+#include "AtRawEvent.h"
+#include "AtSiEvent.h"
 
 #include <FairLogger.h>
 #include <FairRootManager.h> // for FairRootManager
@@ -12,9 +12,9 @@
 #include <TClonesArray.h>
 #include <TObject.h> // for TObject
 
-#include <utility> // for move
-#include <string>
 #include <map>
+#include <string>
+#include <utility> // for move
 
 constexpr auto cRED = "\033[1;31m";
 constexpr auto cYELLOW = "\033[1;33m";
@@ -22,7 +22,8 @@ constexpr auto cNORMAL = "\033[0m";
 constexpr auto cGREEN = "\033[1;32m";
 
 AtSiTask::AtSiTask(std::unique_ptr<AtPSASi> psa, std::unique_ptr<AtSiMap> simap)
-   : fInputBranchName("AtRawEvent"), fOutputBranchName("AtSiEvent"), fSiEventArray(TClonesArray("AtSiEvent", 1)), fPSA(std::move(psa)), fSiMap(std::move(simap)), fIsPersistence(kFALSE)
+   : fInputBranchName("AtRawEvent"), fOutputBranchName("AtSiEvent"), fSiEventArray(TClonesArray("AtSiEvent", 1)),
+     fPSA(std::move(psa)), fSiMap(std::move(simap)), fIsPersistence(kFALSE)
 {
 }
 
@@ -91,7 +92,7 @@ void AtSiTask::Exec(Option_t *opt)
    int idx4{};
 
    std::cout << "======== Si event ======" << std::endl;
-   for (auto &auxPadMapEntry: auxPadsMap) {
+   for (auto &auxPadMapEntry : auxPadsMap) {
       auto auxPadName = auxPadMapEntry.first;
       auto auxPad = auxPadMapEntry.second;
 
@@ -100,17 +101,17 @@ void AtSiTask::Exec(Option_t *opt)
       int aget = std::stoi(auxPadName.substr(8, 1));
       int channel = std::stoi(auxPadName.substr(10, 2));
 
-      AtPadReference padRef = {cobo,asad,aget,channel};
+      AtPadReference padRef = {cobo, asad, aget, channel};
 
       int StripNum = fSiMap->GetPadNum(padRef);
-      int SiFace = (StripNum/128)%2;
-      int DetNum = (StripNum/256) + 1;
+      int SiFace = (StripNum / 128) % 2;
+      int DetNum = (StripNum / 256) + 1;
 
-      if (asad == 1) { //positive trace
-	 fPSA->SetPositivePolarity(true);
+      if (asad == 1) { // positive trace
+         fPSA->SetPositivePolarity(true);
       }
-      if (asad == 0) { //negative trace
-	 fPSA->SetPositivePolarity(false);
+      if (asad == 0) { // negative trace
+         fPSA->SetPositivePolarity(false);
       }
 
       auto pseudoHits = fPSA->AnalyzePad(&auxPad);
@@ -119,40 +120,35 @@ void AtSiTask::Exec(Option_t *opt)
       if (pseudoHits.size()) {
          traceCharge = pseudoHits[0]->GetTraceIntegral();
          maxADC = pseudoHits[0]->GetCharge();
-      }
-      else {
+      } else {
          continue;
       }
 
-      if (DetNum==1) {
-	      if (SiFace==0) {
-	      	siEvent->SetEFront1(idx1, traceCharge);
-            	siEvent->SetADCMaxFront1(idx1, maxADC);
-      		siEvent->SetStripFront1(idx1, StripNum);
-      		idx1++;
-	      }
-	      else if (SiFace==1) {
-	      	siEvent->SetEBack1(idx2, traceCharge);
-            	siEvent->SetADCMaxBack1(idx2, maxADC);
-      		siEvent->SetStripBack1(idx2, StripNum);
-      		idx2++;
-	      }
+      if (DetNum == 1) {
+         if (SiFace == 0) {
+            siEvent->SetEFront1(idx1, traceCharge);
+            siEvent->SetADCMaxFront1(idx1, maxADC);
+            siEvent->SetStripFront1(idx1, StripNum);
+            idx1++;
+         } else if (SiFace == 1) {
+            siEvent->SetEBack1(idx2, traceCharge);
+            siEvent->SetADCMaxBack1(idx2, maxADC);
+            siEvent->SetStripBack1(idx2, StripNum);
+            idx2++;
+         }
+      } else if (DetNum == 2) {
+         if (SiFace == 0) {
+            siEvent->SetEFront2(idx3, traceCharge);
+            siEvent->SetADCMaxFront2(idx3, maxADC);
+            siEvent->SetStripFront2(idx3, StripNum);
+            idx3++;
+         } else if (SiFace == 1) {
+            siEvent->SetEBack2(idx4, traceCharge);
+            siEvent->SetADCMaxBack2(idx4, maxADC);
+            siEvent->SetStripBack2(idx4, StripNum);
+            idx4++;
+         }
       }
-      else if (DetNum==2) {
-	      if (SiFace==0) {
-	      	siEvent->SetEFront2(idx3, traceCharge);
-            	siEvent->SetADCMaxFront2(idx3, maxADC);
-      		siEvent->SetStripFront2(idx3, StripNum);
-		idx3++;
-	      }
-	      else if (SiFace==1) {
-	      	siEvent->SetEBack2(idx4, traceCharge);
-            	siEvent->SetADCMaxBack2(idx4, maxADC);
-      		siEvent->SetStripBack2(idx4, StripNum);
-		idx4++;
-	      }
-      }
-
 
       if ((idx1 >= 4) || (idx2 >= 4) || (idx3 >= 4) || (idx4 >= 4))
          break;

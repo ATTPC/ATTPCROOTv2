@@ -1,6 +1,5 @@
-#include "AtPSASi.h"
-
 #include "AtHit.h"
+#include "AtPSASi.h"
 #include "AtPad.h"
 
 #include <FairLogger.h>
@@ -25,12 +24,12 @@ AtPSASi::HitVector AtPSASi::AnalyzePad(AtPad *pad)
    XYZPoint pos(0, 0, 0);
 
    std::array<Double_t, 512> floatADC = pad->GetADC();
-    
+
    // Get baseline value.
    double baseline{};
    std::cout << "========== float ADC array min values ==========" << std::endl;
    for (int i = 10; i < 20; i++) {
-      baseline += floatADC[i]; 
+      baseline += floatADC[i];
       std::cout << floatADC[i] << std::endl;
    }
    baseline /= 10;
@@ -53,8 +52,8 @@ AtPSASi::HitVector AtPSASi::AnalyzePad(AtPad *pad)
    std::cout << "========== float ADC array max value ========== " << *maxAdcIt << std::endl;
    std::cout << "========== float ADC array max index: " << maxAdcIdx << " ==========" << std::endl;
 
-   //for (int j = 0; j < maxAdcIdx; j++)
-      //std::cout << floatADC[j] << std::endl;
+   // for (int j = 0; j < maxAdcIdx; j++)
+   // std::cout << floatADC[j] << std::endl;
 
    // Calculation of the mean value of the peak time by interpolating the pulse
    Double_t timemax = 0.5 * (floatADC[maxAdcIdx - 1] - floatADC[maxAdcIdx + 1]) /
@@ -111,7 +110,7 @@ AtPSASi::HitVector AtPSASi::AnalyzeGenTrace(AtGenericTrace *genTrace)
 
    std::array<Double_t, 256> floatADC;
    std::vector<Double_t> floatADCVector = genTrace->GetADC();
-   //std::cout << "GAGG ADC entries: " << floatADCVector.size() <<  std::endl;
+   // std::cout << "GAGG ADC entries: " << floatADCVector.size() <<  std::endl;
    /*if (floatADCVector.size() >= 256) {
       for (int i = 0; i < 256; i++)
          floatADC[i] = floatADCVector[i];

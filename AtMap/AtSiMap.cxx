@@ -15,7 +15,7 @@
 #include <TMath.h>
 #include <TMathBase.h>
 #include <TXMLDocument.h>
-#include <TXMLNode.h> 
+#include <TXMLNode.h>
 
 #include <boost/multi_array/base.hpp>
 #include <boost/multi_array/extent_gen.hpp>
@@ -45,32 +45,28 @@ AtSiMap::AtSiMap() : AtMap()
    std::fill(AtPadCoord.data(), AtPadCoord.data() + AtPadCoord.num_elements(), 0);
    std::cout << " ATSI Map initialized " << std::endl;
    std::cout << " ATSI Pad Coordinates container initialized " << std::endl;
-   fNumberPads = 128*4;
+   fNumberPads = 128 * 4;
 }
 
 AtSiMap::~AtSiMap() = default;
 
-void AtSiMap::Dump()
-{
-}
+void AtSiMap::Dump() {}
 
-void AtSiMap::GeneratePadPlane()
-{
-}
+void AtSiMap::GeneratePadPlane() {}
 
 Int_t AtSiMap::fill_coord(int pindex, float padxoff, float padyoff, float triside, float fort)
 {
-	return 0;
+   return 0;
 }
 
 XYPoint AtSiMap::CalcPadCenter(Int_t PadRef)
 {
-   return {0,0};
+   return {0, 0};
 }
 
 Int_t AtSiMap::InhibitStrips(TString stripsFilePath)
 {
-	return 0;
+   return 0;
 }
 
 void AtSiMap::ParseAtTPCMap(TXMLNode *node)
@@ -100,11 +96,12 @@ void AtSiMap::ParseAtTPCMap(TXMLNode *node)
       }
    }
    if (fFaceID < 0 || fFaceID > 3) {
-	LOG(error) << "Warning! Silicon face " << fFaceID << " outside expected values or not found!" << std::endl;
+      LOG(error) << "Warning! Silicon face " << fFaceID << " outside expected values or not found!" << std::endl;
    }
-   fPadID = fPadID + 128*fFaceID;
+   fPadID = fPadID + 128 * fFaceID;
    AtPadReference ref = {fCoboID, fAsadID, fAgetID, fChannelID};
-   std::cout << "loading SiMap XML: " << fCoboID << "." << fAsadID << "." << fAgetID << "." << fChannelID << ": " << fPadID << std::endl;
+   std::cout << "loading SiMap XML: " << fCoboID << "." << fAsadID << "." << fAgetID << "." << fChannelID << ": "
+             << fPadID << std::endl;
    fPadMap.insert(std::pair<AtPadReference, int>(ref, fPadID));
 
    fPadMapInverse.insert(std::pair<int, AtPadReference>(fPadID, ref));
