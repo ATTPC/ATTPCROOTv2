@@ -1,6 +1,6 @@
 bool reduceFunc(AtRawEvent *evt);
 
-void digi_Be13_p(int nEvent = 10000, int subnum = 0, int angle_cm = 180)
+void digi_Be13_p(int nEvent = 10000, int subnum = 0, int angle_cm = 50)
 {
    const char *filename = "13Be_p";
    double minangle, maxangle;
@@ -49,7 +49,7 @@ void digi_Be13_p(int nEvent = 10000, int subnum = 0, int angle_cm = 180)
    pulse->SetPersistence(kTRUE);
 
    auto psa = std::make_unique<AtPSAMax>();
-   // psa->SetThreshold(5);
+   psa->SetThreshold(5);
 
    // Create PSA task
    AtPSAtask *psaTask = new AtPSAtask(std::move(psa));

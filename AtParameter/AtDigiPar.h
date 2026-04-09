@@ -21,6 +21,7 @@ private:
    // Detector geometry
    Int_t fTBEntrance{};
    Double_t fZPadPlane{};
+   Int_t fIsTPCInverted{}; //< Whether or not the TPC drift is inverted [0/1]
 
    // Gas properties
    Double_t fEIonize{};       //< effective ionization energy [eV]
@@ -48,6 +49,7 @@ public:
 
    Int_t GetTBEntrance() const { return fTBEntrance; }
    Double_t GetZPadPlane() const { return fZPadPlane; }
+   Int_t GetIsTPCInverted() const { return fIsTPCInverted; }
 
    Double_t GetEIonize() const { return fEIonize; }
    Double_t GetFano() const { return fFano; }
@@ -67,7 +69,7 @@ public:
    virtual Bool_t getParams(FairParamList *paramList) override;
    // Main methods
 
-   ClassDefOverride(AtDigiPar, 4);
+   ClassDefOverride(AtDigiPar, 5);
 };
 
 #endif

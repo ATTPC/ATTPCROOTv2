@@ -29,12 +29,15 @@ void AtClusterize::GetParameters(const AtDigiPar *fPar)
 
    fDetPadPlane = fPar->GetZPadPlane(); //[mm]
 
+   fIsTPCInverted = fPar->GetIsTPCInverted(); //[0/1]
+
    LOG(info) << "  Ionization energy of gas: " << fEIonize << " MeV";
    LOG(info) << "  Fano factor of gas: " << fFano;
    LOG(info) << "  Drift velocity: " << fVelDrift;
    LOG(info) << "  Longitudal coefficient of diffusion: " << fCoefL;
    LOG(info) << "  Transverse coefficient of diffusion: " << fCoefT;
    LOG(info) << "  Position of the pad plane (Z): " << fDetPadPlane;
+   LOG(info) << "  Is TPC inverted? " << fIsTPCInverted << " (0 = false; 1 = true)";
 }
 
 void AtClusterize::FillTClonesArray(TClonesArray &array, std::vector<SimPointPtr> &vec)
@@ -122,6 +125,9 @@ uint64_t AtClusterize::getNumberOfElectronsGenerated(const AtMCPoint &mcPoint)
 AtClusterize::XYZPoint AtClusterize::getCurrentPointLocation(const AtMCPoint &mcPoint)
 {
    auto zInCm = fDetPadPlane / 10. - mcPoint.GetZ();
+   if (fIsTPCInverted)
+      zInCm = mcPoint.GetZ();
+
    auto driftTime = TMath::Abs(zInCm) / fVelDrift; // us
 
    return {mcPoint.GetX() * 10., mcPoint.GetY() * 10., driftTime};
