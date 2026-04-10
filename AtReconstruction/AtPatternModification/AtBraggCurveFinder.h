@@ -18,8 +18,9 @@ public:
    using XYZPoint = ROOT::Math::XYZPoint;
 
 protected:
-   // Line distance threshold to be used by the AtFindVertex.
-   Double_t fLineDistThreshold{30};
+   // Parameters to be used by the AtFindVertex.
+   double fLineDistThreshold{30};
+   int fNumTracksPerVtx{1};
 
    // Pointer to AtPSAHitPerTB and parameters related to it.
    std::unique_ptr<AtPSAHitPerTB> fPSA{nullptr};
@@ -45,7 +46,8 @@ public:
    virtual void
    ModifyPatternEvent(AtPatternEvent *patternEvent, AtRawEvent *rawEvent = nullptr, AtEvent *event = nullptr) override;
 
-   void SetLineDistThreshold(Double_t lineDistThreshold) { fLineDistThreshold = lineDistThreshold; }
+   void SetLineDistThreshold(double lineDistThreshold) { fLineDistThreshold = lineDistThreshold; }
+   void SetNumTracksPerVtx(int numTracksPerVtx) { fNumTracksPerVtx = numTracksPerVtx; }
    void SetTSSemiWidth(int value) { fTSSemiWidth = value; }
    void SetNeedPSA(bool value) { fNeedPSA = value; }
 
@@ -55,8 +57,9 @@ public:
    void SetNumSmoothingSteps(int value) { fNumSmoothingSteps = value; }
 
 protected:
-   virtual AtTrack
-   GetModifiedTrack(const AtTrack &track, AtRawEvent *rawEvent = nullptr, AtEvent *event = nullptr) override;
+   virtual AtTrack GetModifiedTrack(const AtTrack &track, AtPatternEvent *patternEvent, AtRawEvent *rawEvent = nullptr,
+                                    AtEvent *event = nullptr) override;
+   XYZPoint FindVertex(const AtTrack &modifiedTrack, AtPatternEvent *patternEvent, bool &foundVertex);
    void ProcessHit(XYZPoint vertex, AtHit hit, AtTrack &modifiedTrack, AtRawEvent *rawEvent);
    void ProcessHit(XYZPoint vertex, AtHit hit, AtTrack &modifiedTrack);
 

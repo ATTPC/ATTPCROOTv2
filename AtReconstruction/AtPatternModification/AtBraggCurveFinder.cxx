@@ -31,7 +31,8 @@ void AtBraggCurveFinder::ModifyPatternEvent(AtPatternEvent *patternEvent, AtRawE
    AtPatternModification::ModifyPatternEvent(patternEvent, rawEvent, event);
 }
 
-AtTrack AtBraggCurveFinder::GetModifiedTrack(const AtTrack &track, AtRawEvent *rawEvent, AtEvent *event)
+AtTrack AtBraggCurveFinder::GetModifiedTrack(const AtTrack &track, AtPatternEvent *patternEvent, AtRawEvent *rawEvent,
+                                             AtEvent *event)
 {
    // Create a copy of the AtTrack as an AtTrackBragg (not yet, still AtTrack for now).
    AtTrack modifiedTrack(track);
@@ -40,17 +41,15 @@ AtTrack AtBraggCurveFinder::GetModifiedTrack(const AtTrack &track, AtRawEvent *r
    auto *pattern = modifiedTrack.GetPattern();
 
    // Find the vertex of this track.
-   std::vector<AtTrack> trackToFindVtx;
-   trackToFindVtx.push_back(modifiedTrack);
-   AtFindVertex findVtx(fLineDistThreshold);
-   findVtx.FindVertex(trackToFindVtx, 1);
-   std::vector<tracksFromVertex> tv = findVtx.GetTracksVertex();
-   if (tv.size() != 1) {
-      LOG(warning) << "Found " << tv.size()
-                   << " vertex. We need to have 1 and only 1 to find the Bragg curve! Skipping this track!";
+   bool foundVertex{false};
+   XYZPoint vertex = FindVertex(modifiedTrack, patternEvent, foundVertex);
+
+   if (!foundVertex) {
+      LOG(warning) << "Could not find the vertex for the track with ID " << modifiedTrack.GetTrackID()
+                   << "! Maybe you need to change the distance threshold or the number of tracks per vertex. Skipping "
+                      "this track!";
       return modifiedTrack;
    }
-   XYZPoint vertex = (XYZPoint)tv.at(0).vertex;
 
    // Extract the AtHits.
    std::vector<AtHit> hitArray = modifiedTrack.GetHitArrayObject();
@@ -63,6 +62,30 @@ AtTrack AtBraggCurveFinder::GetModifiedTrack(const AtTrack &track, AtRawEvent *r
 
    // Return the modified track.
    return modifiedTrack;
+}
+
+AtBraggCurveFinder::XYZPoint
+AtBraggCurveFinder::FindVertex(const AtTrack &modifiedTrack, AtPatternEvent *patternEvent, bool &foundVertex)
+{
+   std::vector<AtTrack> trackToFindVtx = patternEvent->GetTrackCand();
+   AtFindVertex findVtx(fLineDistThreshold);
+   findVtx.FindVertex(trackToFindVtx, fNumTracksPerVtx);
+   std::vector<tracksFromVertex> tv = findVtx.GetTracksVertex();
+
+   XYZPoint vertex;
+   for (auto trackVertex : tv) {
+      for (auto track : trackVertex.tracks) {
+         if (track.GetTrackID() == modifiedTrack.GetTrackID()) {
+            vertex = trackVertex.vertex;
+            foundVertex = true;
+            break;
+         }
+      }
+      if (foundVertex)
+         break;
+   }
+
+   return vertex;
 }
 
 void AtBraggCurveFinder::ProcessHit(XYZPoint vertex, AtHit hit, AtTrack &modifiedTrack, AtRawEvent *rawEvent)
