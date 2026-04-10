@@ -7,8 +7,12 @@ namespace MCFitter {
 void AtMCResult::Print() const
 
 {
-   std::cout << "Objective: " << fObjective << " Iteration: " << fIterNum << std::endl;
+   AtFitTrackMetadata::Print();
+   std::cout << " MC fit specifics: " << std::endl;
+
+   std::cout << "   Iteration = " << fIterNum << std::endl;
+   std::cout << "   Parameters:" << std::endl;
    for (auto &[name, val] : fParameters)
-      std::cout << name << ": " << val << std::endl;
+      std::cout << "      " << name << " = " << val << std::endl;
 }
 } // namespace MCFitter

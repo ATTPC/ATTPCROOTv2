@@ -73,6 +73,7 @@ double GetBeta(double p, double mass);
 double GetRelMom(double gamma, double mass);
 double AtoE(double Amu);
 double EtoA(double mass);
+std::tuple<double, double> GetMomFromBrho(double mass, int Z, double brho);
 
 template <class Vector>
 ROOT::Math::PxPyPzEVector Get4Vector(Vector mom, double m)

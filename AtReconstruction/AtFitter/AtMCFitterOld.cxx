@@ -1,10 +1,10 @@
-#include "AtMCFitter.h"
+#include "AtMCFitterOld.h"
 // IWYU pragma: no_include <ext/alloc_traits.h>
 
 #include "AtClusterize.h" // for AtClusterize
 #include "AtDigiPar.h"    // for AtDigiPar
 #include "AtEvent.h"      // for AtEvent
-#include "AtMCResult.h"
+#include "AtMCResultOld.h"
 #include "AtPSA.h" // for AtPSA
 #include "AtParameterDistribution.h"
 #include "AtPatternEvent.h"     // for AtPatternEvent
@@ -28,13 +28,13 @@
 using std::move;
 namespace MCFitter {
 
-AtMCFitter::AtMCFitter(SimPtr sim, ClusterPtr cluster, PulsePtr pulse)
+AtMCFitterOld::AtMCFitterOld(SimPtr sim, ClusterPtr cluster, PulsePtr pulse)
    : fMap(pulse->GetMap()), fSim(move(sim)), fClusterize(move(cluster)), fPulse(move(pulse)),
-     fResults([](const AtMCResult &a, const AtMCResult &b) { return a.GetChi2() < b.GetChi2(); })
+     fResults([](const AtMCResultOld &a, const AtMCResultOld &b) { return a.fObjective < b.fObjective; })
 {
 }
 
-AtMCFitter::ParamPtr AtMCFitter::GetParameter(const std::string &name) const
+AtMCFitterOld::ParamPtr AtMCFitterOld::GetParameter(const std::string &name) const
 {
    if (fParameters.find(name) != fParameters.end()) {
       return fParameters.at(name);
@@ -42,14 +42,14 @@ AtMCFitter::ParamPtr AtMCFitter::GetParameter(const std::string &name) const
    return nullptr;
 }
 
-void AtMCFitter::SetNumThreads(int num)
+void AtMCFitterOld::SetNumThreads(int num)
 {
    if (num > 1)
       ROOT::EnableThreadSafety();
    fNumThreads = num;
 }
 
-void AtMCFitter::Init()
+void AtMCFitterOld::Init()
 {
    CreateParamDistros();
 
@@ -69,7 +69,7 @@ void AtMCFitter::Init()
       fThPulse[i] = fPulse->Clone();
 }
 
-void AtMCFitter::RunIterRange(int startIter, int numIter, AtPulse *pulse)
+void AtMCFitterOld::RunIterRange(int startIter, int numIter, AtPulse *pulse)
 {
    // Here we should copy each thread their own version of the clusterize, pulse, and simulation
    // objects (only if the number of threads is greater than 1). Needs to be deep copies
@@ -84,7 +84,7 @@ void AtMCFitter::RunIterRange(int startIter, int numIter, AtPulse *pulse)
       double obj = ObjectiveFunction(*fCurrentEvent, idx, result);
 
       result.fIterNum = idx;
-      result.SetChi2(obj);
+      result.fObjective = obj;
       // result.Print();
       {
          std::lock_guard<std::mutex> lk(fResultMutex);
@@ -94,7 +94,7 @@ void AtMCFitter::RunIterRange(int startIter, int numIter, AtPulse *pulse)
    LOG(debug) << "Done with run iter range";
 }
 
-void AtMCFitter::Exec(const AtPatternEvent &event)
+void AtMCFitterOld::Exec(const AtPatternEvent &event)
 {
    fRawEventArray.clear();
    fEventArray.clear();
@@ -114,7 +114,7 @@ void AtMCFitter::Exec(const AtPatternEvent &event)
       RecenterParamDistributions();
    }
 }
-void AtMCFitter::RunRound()
+void AtMCFitterOld::RunRound()
 {
    // Begining of round
    auto start = std::chrono::high_resolution_clock::now();
@@ -155,7 +155,7 @@ void AtMCFitter::RunRound()
                 << std::chrono::duration_cast<std::chrono::milliseconds>(stop - start).count() << " ms.";
 }
 
-int AtMCFitter::DigitizeEvent(const TClonesArray &points, int idx, AtPulse *pulse)
+int AtMCFitterOld::DigitizeEvent(const TClonesArray &points, int idx, AtPulse *pulse)
 {
    // Event has been simulated and is sitting in the fSim
    auto vec = fClusterize->ProcessEvent(points);
@@ -174,7 +174,7 @@ int AtMCFitter::DigitizeEvent(const TClonesArray &points, int idx, AtPulse *puls
 /**
  * Fill the TClonesArray in order of smallest to largest chi2.
  */
-void AtMCFitter::FillResultArrays(TClonesArray &resultArray, TClonesArray &simEvent, TClonesArray &simRawEvent)
+void AtMCFitterOld::FillResultArrays(TClonesArray &resultArray, TClonesArray &simEvent, TClonesArray &simRawEvent)
 {
    resultArray.Delete();
    simEvent.Delete();
@@ -186,7 +186,7 @@ void AtMCFitter::FillResultArrays(TClonesArray &resultArray, TClonesArray &simEv
       int eventIdx = res.fIterNum;
       LOG(debug) << "Filling iteration " << eventIdx << " at index " << resultArray.GetEntries();
 
-      new (resultArray[clonesIdx]) AtMCResult(std::move(res));
+      new (resultArray[clonesIdx]) AtMCResultOld(std::move(res));
       if (clonesIdx < fNumEventsToSave) {
          new (simEvent[clonesIdx]) AtEvent(std::move(fEventArray[eventIdx]));
          new (simRawEvent[clonesIdx]) AtRawEvent(std::move(fRawEventArray[eventIdx]));
@@ -197,17 +197,17 @@ void AtMCFitter::FillResultArrays(TClonesArray &resultArray, TClonesArray &simEv
    fRawEventArray.clear();
 }
 
-AtMCResult AtMCFitter::DefineEvent()
+AtMCResultOld AtMCFitterOld::DefineEvent()
 {
-   AtMCResult result;
+   AtMCResultOld result;
    for (auto &[name, distro] : fParameters)
       result.fParameters[name] = distro->Sample();
    return result;
 }
-void AtMCFitter::RecenterParamDistributions()
+void AtMCFitterOld::RecenterParamDistributions()
 {
    for (auto &[name, distro] : fParameters) {
-      AtMCResult result = *fResults.begin();
+      AtMCResultOld result = *fResults.begin();
       distro->SetMean(result.fParameters[name]);
       distro->TruncateSpace();
    }

@@ -43,5 +43,12 @@
 #pragma link C++ enum AtPatterns::PatternType;
 #pragma link C++ function AtPatterns::CreatePattern;
 
+#pragma link C++ class AtFitMetadata + ;
+#pragma link C++ class AtFitTrackMetadata + ;
 #pragma link C++ class MCFitter::AtMCResult + ;
+
+#pragma link C++ class AtTrackingEventOld + ;
+#pragma link C++ class AtFittedTrackOld + ;
+#pragma link C++ class MCFitter::AtMCResultOld + ;
+
 #endif

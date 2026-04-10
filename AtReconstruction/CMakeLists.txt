@@ -111,9 +111,16 @@ set(SRCS
   AtFitter/ParameterDistributions/AtUniformDistribution.cxx
   AtFitter/ParameterDistributions/AtStudentDistribution.cxx
 
+  AtFitter/AtFitter.cxx
   AtFitter/AtMCFitter.cxx
   AtFitter/AtMCFitterTask.cxx
   AtFitter/AtMCFission.cxx
+  AtFitterTask.cxx
+
+  # Deprecated...
+  AtFitter/AtMCFitterOld.cxx
+  AtFitter/AtMCFitterTaskOld.cxx
+
   )
 
 
@@ -153,10 +160,12 @@ endif()
 
 if(GENFIT2_FOUND)
   set(SRCS ${SRCS}
-    AtFitter/AtFitter.cxx
     AtFitter/AtGenfit.cxx
     AtFitter/AtSpacePointMeasurement.cxx
-    AtFitterTask.cxx
+
+    # Deprecated, to be removed:
+    AtFitter/AtFitterOld.cxx
+    AtFitter/AtFitterTaskOld.cxx
     )
   set(DEPENDENCIES ${DEPENDENCIES}
     GENFIT2::genfit2
