@@ -1,10 +1,9 @@
 // SimpleSim drop-in replacement for geant4_kinematic.C using factory-based energy loss.
 // Compare the diff between this file and geant4_kinematic.C to see what changes.
 
+#include <AtELossFactoryCATIMA.h>
 #include <AtSimpleSimulation.h>
 #include <AtSimpleSimulationTask.h>
-
-#include <AtELossFactoryCATIMA.h>
 
 namespace {
 FairPrimaryGenerator *BuildElasticGenerator(Double_t thetaMinCmsDeg, Double_t thetaMaxCmsDeg)
@@ -22,8 +21,7 @@ FairPrimaryGenerator *BuildElasticGenerator(Double_t thetaMinCmsDeg, Double_t th
 
    auto *primGen = new FairPrimaryGenerator();
 
-   auto *ionGen =
-      new AtTPCIonGenerator("Ion", z, a, q, m, px, py, pz, beamExcitation, beamMass, nominalEnergy);
+   auto *ionGen = new AtTPCIonGenerator("Ion", z, a, q, m, px, py, pz, beamExcitation, beamMass, nominalEnergy);
    ionGen->SetSpotRadius(0, -100, 0);
    ionGen->SetDoReaction(kTRUE);
    primGen->AddGenerator(ionGen);
@@ -93,7 +91,8 @@ void simpleSim_kinematic_factory(Int_t nEvents = 1000, UInt_t seed = 42)
    sim->SetModelFactory(std::make_shared<AtTools::AtELossFactoryCATIMA>());
 
    auto *simTask = new AtSimpleSimulationGeneratorTask(std::move(sim));
-   simTask->SetPrimaryGenerator(BuildElasticGenerator(0.0, 180.0));
+   auto *primGen = BuildElasticGenerator(0.0, 180.0);
+   simTask->SetPrimaryGenerator(primGen);
    simTask->SetDetector(tpc);
    run->AddTask(simTask);
 

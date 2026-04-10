@@ -21,6 +21,9 @@
 #pragma link C++ class AtTools::AtELossTable - !;
 #pragma link C++ class AtTools::AtELossCATIMA - !;
 #pragma link C++ class AtTools::AtELossBetheBloch - !;
+#pragma link C++ class AtTools::AtELossModelFactory - !;
+#pragma link C++ class AtTools::AtELossFactoryBetheBloch - !;
+#pragma link C++ class AtTools::AtELossFactoryCATIMA - !;
 
 #pragma link C++ class AtSpaceChargeModel - !;
 #pragma link C++ class AtLineChargeModel - !;

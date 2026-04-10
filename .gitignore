@@ -17,6 +17,7 @@ data
 event.dat
 pulser-files.txt
 .codex
+.cache/*
 
 # Executables
 *.exe

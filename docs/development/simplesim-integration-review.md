@@ -6,157 +6,128 @@ Scope: integration layer design only. The physics of `AtSimpleSimulation` itself
 
 ## 1. Architectural Overview
 
-The integration layer runs `AtSimpleSimulation` (an RK4/straight-line particle propagator with energy loss) inside FairRoot's event loop, so that its output feeds the same downstream digitization chain (`AtClusterizeTask` -> `AtPulseTask`) as Geant4 transport.
+The integration replaces Geant4 transport with AtSimpleSimulation's RK4 propagator while reusing the rest of the FairRoot simulation pipeline (geometry, generators, detector hit recording, digitization).
 
-### Abstractions introduced
+Three key abstractions bridge the gap:
 
-- **`AtTpc::StepState` + `ProcessStep()`** -- The central architectural move. `AtTpc::ProcessHits()` was refactored to extract all VMC/`gMC` queries into a plain data struct (`StepState`), then delegate to a new `ProcessStep(const StepState&)` method. This decouples the detector's hit-recording and reaction-trigger logic from the VMC transport engine. SimpleSim can call `ProcessStep()` directly without a running VMC.
+1. **`AtSimParticleCollector`** -- a `FairGenericStack` stub that intercepts `PushTrack()` calls from `FairPrimaryGenerator::GenerateEvent()`. Generators run unchanged; their output lands in a vector instead of going to Geant4.
 
-- **`AtSimParticleCollector`** -- A minimal `FairGenericStack` stub that captures `PushTrack()` calls. This lets existing `FairPrimaryGenerator` + `AtReactionGenerator` chains run unchanged: the generators push particles to what they think is the VMC stack, but the particles land in a simple vector instead.
+2. **`AtSimpleSimulationTask`** (abstract base) -- a `FairTask` that orchestrates event flow: load particles from a source, transport them through AtSimpleSimulation, and feed each step to `AtTpc::ProcessStep()` for hit recording.
 
-- **`AtSimpleSimulationTask` (abstract base)** -- Template Method pattern: `Init()` -> `InitEventSource()`, `Exec()` -> `LoadEvent()` -> `TransportCurrentEvent()`, `Finish()` -> `FinishEventSource()`. Owns the simulation, the particle collector, the MCTrack branch, and the detector-stepping logic.
+3. **`AtTpc::StepState` + `ProcessStep()`** -- the detector was refactored to extract a transport-neutral step contract. Both Geant4 (`ProcessHits`) and SimpleSim feed the same internal logic via this struct.
 
-- **`AtSimpleSimulationGeneratorTask`** -- Generates events live via a `FairPrimaryGenerator`.
+The design solves: letting physics users swap Geant4 for a fast, controllable transport without changing their generators, geometry, or downstream analysis.
 
-- **`AtSimpleSimulationReplayTask`** -- Reads primary MCTracks from a prior Geant4 run and re-transports them through SimpleSim, enabling direct A/B comparison.
-
-### What it leaves to the user
-
-FairRunSim boilerplate (cave, geometry, materials, dummy generator, parameter I/O), energy loss model configuration per particle species, and magnetic/electric field setup.
+Left to the user: choosing a generator, providing an energy loss model (or factory), and wiring the macro. The physics configuration (E/B fields, step sizes) is auto-extracted from FairRun where possible.
 
 ## 2. API Design Assessment
 
 ### Discoverability
 
-The user cannot configure and run this without reading source code or the validation macros. There is no documentation of `AtSimpleSimulationGeneratorTask` or `AtSimpleSimulationReplayTask` in the docs directory -- the simulation pipeline doc (`subsystems/simulation-pipeline.md`) still describes SimpleSim as a standalone path, not as a FairTask. The macros in `macro/Simulation/AtSimValidation/` are the de facto documentation.
+Good, with one gap. The generator and replay tasks have clean, small interfaces. A user who has seen a Geant4 macro can follow the pattern: create simulation, create task, set detector, set generator, run. The model factory auto-creates energy loss models from geometry materials, which is the right default -- users shouldn't need to manually register models per species.
 
-A user encountering this for the first time must discover:
-- That they need `FairRunSim` with a dummy `FairPrimaryGenerator`
-- That `SetDetector(tpc)` is required for detector-coupled output
-- That the replay task needs a Geant4 truth file with MCTrack branch on a "cbmsim" tree
-- That they must configure energy loss models for every particle species they want transported
-
-None of this is documented outside the macros.
+However, the `SetSensitiveDetector(AtTpc*)` requirement is non-obvious. A user who forgets it gets a fatal at `Init()` -- which is correct -- but the error message is the only documentation of this requirement. The alias `SetDetector()` helps.
 
 ### Error surface
 
-- **Forgetting `SetDetector()`:** The task falls through to legacy `SimulateParticle()` mode, which hardcodes "drift_volume" containment and writes its own `AtTpcPoint` branch directly. The user gets output that looks correct but bypasses the detector contract entirely. This should probably be an error or at minimum a warning -- the two paths produce structurally different output.
+Mostly narrow, one silent footgun.
 
-- **Missing energy loss model:** Throws `std::invalid_argument`, which is caught and logged at `debug` level in `TransportParticle()`. The particle is silently skipped. A user might not notice reaction products disappearing.
-
-- **Geometry mismatch:** The simulation loads its own geometry file (e.g. `ATTPC_He1bar_geomanager.root`) while `FairRunSim` loads geometry for the detector module. If these don't match, volume lookups in SimpleSim and hit positions in `AtTpc` will silently disagree.
-
-- **Replay mode with wrong event count:** If the user requests more events than exist in the source file, `LoadPrimaryTracksFromSource()` returns `false`, `LoadEvent()` returns `hasEvent=false`, and `Exec()` silently returns. FairRoot happily runs empty events.
+- Missing energy loss model: clear `invalid_argument` exception.
+- Particle outside geometry: clear exception.
+- Missing detector: fatal at Init with descriptive message.
+- **Footgun:** `AtSimpleSimulationReplayTask::LoadEvent()` hardcodes `beamEvent = (eventIndex % 2 == 0)`. This is a fragile heuristic that silently produces wrong beam/reaction event pairing if the source file doesn't alternate. A physics user replaying their own Geant4 output would not expect this behavior and would get silently wrong results.
 
 ### Consistency
 
-Mostly consistent. The pattern of `FairTask` subclass + `Init()`/`Exec()` is standard. Using `FairPrimaryGenerator` with a custom stack is clever and preserves the generator API. The `SetDetector()`/`SetSensitiveDetector()` naming follows FairRoot conventions.
-
-However, requiring `FairRunSim` with `run->SetName("TGeant3")` and a dummy generator to use a non-Geant transport is dissonant. The user is setting up Geant3 to not use Geant3.
+Strong. Follows the `FairTask` pattern exactly: `Init()` -> `Exec()` -> `Finish()`. Uses `FairPrimaryGenerator` and `FairRootManager` the same way Geant4 simulations do. The generator task is particularly clean -- a user familiar with FairRoot would recognize the pattern immediately.
 
 ### Completeness
 
-- No way to set the B-field from a `FairField` object -- the user must manually translate `AtConstField` parameters to `sim->SetMagneticField(XYZVector(...))`. In the Geant4 path, `run->SetField()` handles this.
-- No integration with `FairRunSim::SetStoreTraj()`.
-- No event header population (event number, vertex, etc.).
-- The generator task has no way to set a seed or control reproducibility independently of `gRandom`.
+Two gaps:
+
+1. No electric field auto-configuration (only magnetic field is extracted from FairRun). The `ConfigureFieldFromFairRun` method samples B but not E, though `SetElectricField()` exists. This is probably fine for now (E-field is a drift field, not a transport field), but worth noting.
+2. No way to set per-particle energy loss models from the task level without reaching through `GetSimulation()`. The factory pattern mostly eliminates this need, but direct model registration requires breaking the abstraction: `task->GetSimulation()->AddModel(...)`.
 
 ## 3. Separation of Concerns
 
-**Class responsibilities are well-defined.** The base task handles transport mechanics and detector stepping. Subclasses handle only event sourcing. `AtSimParticleCollector` handles only particle capture. This is clean.
+The split between GeneratorTask and ReplayTask is well-motivated. They share the core transport loop (base class) but differ only in how particles are sourced. This is the right seam.
 
-**The generator/replay split is well-motivated.** The replay task enables controlled validation against Geant4 with identical kinematics. This is a legitimate use case that would be awkward to express as a mode flag on a single class.
+AtSimParticleCollector is clean. It implements just enough of `FairGenericStack` to capture generator output. The pure-virtual stubs are no-ops with appropriate comments. It avoids pulling in VMC/Geant4 dependencies.
 
-**FairRoot logic is mostly separated from physics logic.** The physics lives in `AtSimpleSimulation`; the FairRoot adaptation lives in the task hierarchy. The boundary is at `TransportParticle()` with its `StepCallback`.
+FairRoot-specific logic is well-separated from physics logic. `AtSimpleSimulation` knows nothing about `FairTask`, `FairRun`, or `AtTpc`. It deals in mm/MeV coordinates and callbacks. The unit conversion (mm<->cm, MeV<->GeV) lives entirely in `AtSimpleSimulationTask`, which is the right place.
 
-### Entanglement issues
-
-1. **Unit conversion is scattered across the boundary.** `AtSimpleSimulationTask::TransportParticle()` converts cm->mm and GeV->MeV with raw `* 10.` and `* 1000.` factors. `ProcessDetectorStep()` converts back with `/ 10.` and `/ 1000.`. `SubmitInitialSensitivePoint()` does the same. These magic numbers appear in ~15 places across the file. A single wrong factor produces wrong physics with no error.
-
-2. **Sensitive volume identification is duplicated.** `AtSimpleSimulationTask::IsSensitiveVolume()` is a static method with hardcoded volume name checks (`"drift_volume"`, `"window"`, `"cell"`) that duplicates `AtTpc::CheckIfSensitive()`. If the detector geometry adds a new sensitive volume, both must be updated independently.
-
-3. **`AtTpc::ProcessStep()` now embeds transport-termination logic** (stop on exiting reaction volume) that was not in the original Geant4 path. This is a behavioral change visible to all callers of `ProcessStep()`, including `ProcessHits()`, meaning the Geant4 path's behavior was changed too.
+One entanglement: `AtSimpleSimulation` still depends on `FairRootManager` in `RegisterBranch()` -- this is the legacy standalone API and doesn't affect the new integration path, but it means the physics class isn't fully decoupled from FairRoot.
 
 ## 4. Framework Integration Quality
 
-**The `StepState` refactoring of `AtTpc` is the strongest part of this branch.** It correctly preserves all the fields that `ProcessHits()` used to extract from `gMC`, and the Geant4 path still works through `ProcessHits()` -> populate `StepState` -> `ProcessStep()`. The test coverage of the detector contract (`AtTpcTest.cxx`) is solid.
+The detector step contract is the strongest part of this design. By extracting `AtTpc::ProcessStep(StepState)` and routing both Geant4 and SimpleSim through it, the integration ensures hit recording logic stays in one place. This is exactly the right pattern -- the detector doesn't care who drives transport.
 
-**Composition with upstream:** The generator task correctly reuses `FairPrimaryGenerator` with `AtSimParticleCollector` as the stack. The beam/reaction alternation via `AtVertexPropagator` is preserved.
-
-**Composition with downstream:** The task writes `AtTpcPoint` and `MCTrack` branches in the same format as the Geant4 path, so `AtClusterizeTask` and `AtPulseTask` should work unchanged.
+Pipeline composition is correct. The task reads nothing from upstream `FairRootManager` branches; it writes `MCTrack` and feeds `AtTpc` directly. Downstream digitization tasks (`AtClusterizeTask`, etc.) consume `AtTpcPoint` from the detector's collection, which is populated identically regardless of transport engine.
 
 ### Implicit assumptions that could break
 
-- **`correctPosOut()` is only applied in the Geant4 path.** When `ProcessHits()` calls `ProcessStep()`, exit positions have been corrected. When SimpleSim calls `ProcessStep()` directly, they haven't. This means the two paths produce slightly different hit positions near volume boundaries.
-
-- **The replay task hardcodes `fSourceEventIndex % 2 == 0` for beam event detection** (`AtSimpleSimulationReplayTask.cxx:45`). This assumes the source file always uses strict even/odd alternation. If the source was generated with a non-alternating generator, this will misidentify beam events.
-
-- **`RegisterMCTrackBranch()` reuses an existing "MCTrack" branch if one exists** (`AtSimpleSimulationTask.cxx:94-98`). In the replay scenario, the source file has an MCTrack branch, and FairRoot may expose it through `FairRootManager`. The task would then write into someone else's array.
-
-- **LinkDef streamer suffixes are wrong.** The task classes use `+;` (full streamer, for disk-persisted objects) but tasks should use `-!;` per project conventions.
+- `ConfigureFieldFromFairRun()` calls `gGeoManager->FindVolumeFast("drift_volume")` -- hardcoded volume name. If the geometry uses a different naming convention, the field auto-config silently falls back to sampling at (0,0,0), which may be wrong.
+- `fDetector->SetStopOnReactionVolumeExit(true)` is called unconditionally in `Init()`. This changes AtTpc behavior globally. If another task also uses the detector (unlikely but possible), this side effect is invisible.
+- `IsSensitiveVolume` is a static method checking for hardcoded volume name substrings ("drift_volume", "window", "cell"). This is a framework-wide convention, not something introduced here, but the integration depends on it critically for stepping logic.
 
 ## 5. Tradeoffs and Direction
 
-### Tradeoffs made
+### Key tradeoffs made
 
-1. **Reuse FairRunSim infrastructure vs. standalone run.** The design chose to embed SimpleSim inside `FairRunSim` as a `FairTask`. This provides access to geometry, I/O, and the event loop -- but forces users to set up a dummy VMC engine they're explicitly trying to avoid. A standalone `FairRunAna`-based path would have been cleaner for the user but would have required reimplementing geometry loading.
+| Decision | In favor of | At the cost of |
+|---|---|---|
+| Uniform field assumption | Simplicity, speed | Cannot handle field maps |
+| Single-point field sampling | Drop-in behavior | Wrong if field varies spatially |
+| Factory auto-creates models | User doesn't register per species | Factory must handle all materials correctly |
+| Callback-based stepping | Clean separation from detector | Slightly more complex internal flow |
+| `ELossModelShared` wrapper | Shared ownership in SimpleSim, unique in Propagator | Extra indirection, wrapper class |
 
-2. **Detector coupling vs. standalone MCPoint writing.** The task supports both: with `SetDetector()`, it feeds steps through `AtTpc::ProcessStep()`; without, it uses the legacy `SimulateParticle()` path that writes MCPoints directly. This provides flexibility but creates two output formats with subtly different semantics (the detector path accumulates energy loss per track, applies reaction triggers, etc.).
+These are appropriate. The uniform field assumption is reasonable for AT-TPC (the solenoidal field is approximately uniform in the drift volume). The factory pattern is the right answer for a multi-species simulation. The callback design is the right structural choice for keeping transport and detection separate.
 
-3. **FairPrimaryGenerator reuse via fake stack.** This is the right call. It preserves the full generator ecosystem without modification. The tradeoff is that `AtSimParticleCollector` must implement a large interface of stubs, but the stubs are trivial.
-
-### Assessment
-
-For validation purposes (comparing SimpleSim to Geant4), these tradeoffs are reasonable. For production use by physics users, the FairRunSim boilerplate burden is too high -- but production use isn't the stated goal yet.
-
-This is moving toward a genuine pipeline replacement pattern, not a workaround. The `StepState` abstraction is the right seam. The design would need one more iteration -- extracting the sensitive-volume contract and making the FairRunSim dependency optional -- to be a clean, general-purpose alternative transport.
+This is a clean pipeline replacement pattern, not a workaround. The detector step contract means future transport engines could be plugged in the same way. The design is coherent and sustainable.
 
 ## 6. Weak Points / Design Smells
 
-In order of severity:
+In order of importance:
 
-1. **Behavioral change to the Geant4 path.** `AtTpc::ProcessStep()` adds `if (step.exiting && IsReactionVolume(fVolName)) return true;` -- this stops the track when exiting the reaction volume. Previously in `ProcessHits()`, the track was not stopped on exit; only `resetVertex()` was called. Now `ProcessHits()` calls `gMC->StopTrack()` whenever `ProcessStep()` returns true. This changes Geant4 simulation behavior and needs careful validation or should be behind a flag.
+1. **Replay task beam-event heuristic.** `beamEvent = (eventIndex % 2 == 0)` in `AtSimpleSimulationReplayTask::LoadEvent()` is an implicit contract that will silently produce wrong physics. The source file may not follow this convention. This should either be read from the source file metadata or made configurable.
 
-2. **Silent fallback to legacy mode.** When `fDetector` is null, the task silently switches to `SimulateParticle()` which writes MCPoints directly with different semantics (no reaction trigger, no beam/reaction alternation, hardcoded "drift_volume" containment). This is a footgun for users who forget `SetDetector()`.
+2. **`ELossModelShared` wrapper class.** AtPropagator requires `unique_ptr<AtELossModel>` but AtSimpleSimulation holds `shared_ptr`. The wrapper is a workaround for a design mismatch. The real fix is to have AtPropagator accept a non-owning reference or `shared_ptr` -- the current pattern creates a fake `unique_ptr` that secretly shares ownership, which violates the semantic contract of `unique_ptr`.
 
-3. **Unit conversion by magic number.** The mm<->cm and MeV<->GeV conversions are scattered across 15+ call sites as raw `* 10.`, `/ 10.`, `* 1000.`, `/ 1000.`. A single wrong factor is a silent physics error. These should be named constants or conversion functions.
+3. **Field auto-config hardcodes "drift_volume".** The volume name is also hardcoded in `fStandaloneVolumeName`. These should be the same string by construction, but they're set independently and could diverge.
 
-4. **Duplicated sensitive volume logic.** `IsSensitiveVolume()` in the task and `CheckIfSensitive()` / `IsReactionVolume()` in the detector are independent implementations of the same concept. They also differ: `IsReactionVolume` checks `drift_volume` and `cell`; `IsSensitiveVolume` also checks `window`. This means the task considers windows sensitive but the detector's reaction logic doesn't -- by design or by accident?
+4. **`RegisterBranch()` on the physics class.** FairRootManager coupling in AtSimpleSimulation is vestigial. The integration path doesn't use it, but a user might call it accidentally, creating confusion about which path records hits.
 
-5. **`AtTestSimulation` is now vestigial.** After the refactoring, it's an empty class that inherits `AtSimpleSimulationGeneratorTask` with no additions. The test file accesses its internals via `#define private public`. This class should either be removed (tests use the generator task directly) or given a clear purpose.
+5. **Thread-local `fMCPoints` and `fTrackID`.** These exist for the standalone API but have no role in the detector-coupled path. They add cognitive load and a footgun -- if someone calls `SimulateParticle()` and `TransportParticle()` in the same event, track IDs will collide.
 
 ## 7. Missed Opportunities
 
-1. **The `StepState` contract could have been an interface.** Instead of a struct on `AtTpc`, `StepState` could live in a shared header and define the transport-neutral contract between any transport engine and any sensitive detector. This would make the pattern reusable beyond `AtTpc`.
+1. **The `AtELossModelFactory` could have been an argument to the `AtSimpleSimulationTask` constructor** rather than a `SetModelFactory()` call. Since it's always needed (or the user must register models manually), making it a constructor parameter would make the requirement explicit and eliminate a misconfiguration path.
 
-2. **`FindSensitiveEntry()` could use the geometry.** The brute-force 1mm linear scan up to 5m is slow and fragile. `TGeoManager::FindNextBoundary()` would find the volume crossing analytically.
+2. **`FindSensitiveEntry()` walks in 1mm steps up to 5m.** A TGeo ray-trace (`FindNextBoundary`) would be exact, faster, and wouldn't miss thin volumes. The linear scan is the obvious implementation but the geometry manager already solves this problem.
 
-3. **A builder or factory for SimpleSim runs** would eliminate the FairRunSim boilerplate. A function like `AtSimpleSimRun::Create(geoFile, generators, elossModels)` that internally sets up FairRunSim with the right dummy objects would make the user-facing API dramatically simpler.
-
-   **Update:** Energy loss model configuration has been addressed. `AtELossModelFactory` (with `AtELossFactoryCATIMA` and `AtELossFactoryBetheBloch` implementations) provides automatic model creation from geometry materials via `AtSimpleSimulation::SetModelFactory()`. See [energy-loss.md](../subsystems/energy-loss.md#model-factories). The FairRunSim boilerplate reduction (builder pattern) remains an open opportunity.
-
-4. **The detector-coupled and standalone modes should be separate paths, not a runtime branch in `Init()`.** The current `if (fDetector != nullptr)` split in `TransportParticle()` combines two fundamentally different output contracts in one method.
+3. **The `TransportStep` struct duplicates `AtTpc::StepState`** with different units and types (`std::string` vs `TString`, mm/MeV vs cm/GeV). A shared step type with unit-tagged fields, or a conversion constructor, would make the mapping less error-prone and reduce the 30-line `ProcessDetectorStep` method to a few lines.
 
 ## 8. Overall Judgment
 
-**This is a good integration design with one excellent core idea and several execution issues.**
+This is a good integration design. The core architectural decisions -- intercepting the generator stack, routing transport through a callback, unifying detector logic through `ProcessStep` -- are sound. The separation between physics (AtSimpleSimulation), pipeline orchestration (AtSimpleSimulationTask), and event sourcing (Generator/Replay subclasses) is clean and well-motivated.
 
 ### Where it succeeds
 
-The `StepState` / `ProcessStep()` refactoring of `AtTpc` is the key insight. By extracting all VMC queries into a plain data struct and making the detector's step-processing logic transport-agnostic, this branch creates a clean, testable seam that any future transport engine can target. The `AtSimParticleCollector` adapter is similarly well-conceived -- it lets the full generator ecosystem work unchanged without any modifications to existing generators.
-
-The test coverage is notably good: the detector contract, the task internals, the MCTrack fill logic, and the physics (straight-line and Larmor radius) all have meaningful tests.
+- The detector step contract is the design's best contribution. It makes the transport engine pluggable without the detector caring.
+- AtSimParticleCollector is an elegant solution for bypassing VMC without rewriting generators.
+- The factory pattern for energy loss models is the right abstraction for multi-species physics.
+- Unit conversion is concentrated in one place (the task), not scattered.
 
 ### Where it falls short
 
-- The behavioral change to the Geant4 path (stopping on reaction volume exit) is the most consequential issue. It needs to be validated or guarded.
-- The user experience is still FairRoot-heavy: users set up a Geant3 run to not use Geant3. A thin convenience layer would make a large difference.
-- Unit conversion by magic number across 15+ call sites is a maintenance and correctness risk.
-- The dual standalone/detector-coupled modes create an implicit contract that will confuse users.
+- The replay task's beam-event heuristic is a latent correctness bug.
+- The `ELossModelShared` wrapper papers over an ownership design mismatch rather than fixing it.
+- There are two parallel hit-recording paths (standalone `AddHit` vs detector-coupled `ProcessStep`) sharing a class, which muddies the API boundary.
 
 ### Is this sustainable?
 
-Yes, with one more iteration. The `StepState` contract is the right foundation. The task hierarchy is extensible. The main work remaining is: (a) fix the Geant4 behavioral regression, (b) unify or document the sensitive volume logic, (c) centralize unit conversions, and (d) consider a convenience API that hides FairRunSim setup from physics users.
+Yes. The `StepState` contract is the right foundation. The task hierarchy is extensible. The weak points are real but fixable without structural changes. The biggest risk for users is the replay beam-event logic; the biggest risk for maintainers is the dual standalone/detector-coupled API living on the same class.
 
 The direction is coherent and this is not a workaround -- it is a genuine architectural step toward transport-engine independence.
 
@@ -164,220 +135,241 @@ The direction is coherent and this is not a workaround -- it is a genuine archit
 
 # SimpleSim Integration Correctness Review
 
-Scope: whether the integration correctly fulfills FairRoot contracts and produces output that downstream tasks can consume without modification. Does not revisit API design or architecture (covered above).
+Review of the `SimpleSimAddition` branch, focused on whether the integration correctly fulfills FairRoot framework contracts and produces output that downstream tasks can consume without modification.
 
-## 1. Framework Contract Compliance
+Scope: correctness of the integration layer. The physics of `AtSimpleSimulation` and the design quality are reviewed separately above.
 
-### 1a. Beam/reaction event flag inversion in generator task (CRITICAL)
+## 1. Integration Summary
 
-In `AtSimpleSimulationGeneratorTask::LoadEvent()` (line 33):
+### Geant4 path (framework level)
 
-```cpp
-fPrimGen->GenerateEvent(&fCollector);
-state.beamEvent = AtVertexPropagator::Instance()->IsBeamEvent();
-```
+`FairPrimaryGenerator` pushes particles onto `AtStack`. Geant4 transports them step-by-step through the ROOT geometry. At each step inside a sensitive volume, `AtTpc::ProcessHits()` extracts VMC state into a `StepState`, delegates to `ProcessStep()`, and records `AtMCPoint` entries into a `TClonesArray` registered as the `AtTpcPoint` branch. The `MCTrack` branch is filled by `AtStack`. Beam/reaction alternation is controlled by `AtVertexPropagator` -- the beam event accumulates energy loss until a reaction threshold (`RndELoss`) is reached, at which point `startReactionEvent()` populates the vertex state for the subsequent reaction event.
 
-Inside `GenerateEvent`, `AtReactionGenerator::ReadEvent()` reads the flag, then calls `EndEvent()` which **toggles it** before returning. By the time `LoadEvent` reads the flag, it has been inverted. The result:
+### SimpleSim path
 
-- **Event 0 (beam)**: `state.beamEvent = false` (wrong)
-- **Event 1 (reaction)**: `state.beamEvent = true` (wrong)
+`AtSimpleSimulationTask` (a `FairTask`) runs inside the same `FairRunSim` event loop, after a no-op Geant4 transport (dummy generator produces zero primaries). On each `Exec()`:
 
-This propagates through the full chain:
+1. `LoadEvent()` runs generators through the same `FairPrimaryGenerator::GenerateEvent()` machinery, capturing particles into an `AtSimParticleCollector`.
+2. Particles are transported through the geometry via `AtSimpleSimulation::TransportParticle()`, with each step delivered to `AtTpc::ProcessStep()` through the same `StepState` struct used by the Geant4 path.
+3. `MCTrack` is filled by the task itself from the collector.
 
-```
-LoadEvent().beamEvent
-  -> TransportCurrentEvent(beamEvent)
-    -> TransportParticle(particle, beamEvent)
-      -> beamTrack = beamEvent && particle.trackID == 0
-        -> StepState.beamTrack
-          -> AtTpc::ProcessStep -> fIsBeamTrack
-```
+### Integration layer responsibilities
 
-`fIsBeamTrack` controls:
-- `trackEnteringVolume`: whether `InPos` (beam entry position) is recorded
-- `getTrackParametersWhileExiting`: whether `resetVertex()` is called on beam exit
-- `reactionOccursHere()`: `isPrimaryBeam = fIsBeamTrack` -- gates the reaction trigger entirely
+- Unit conversion between SimpleSim internals (mm/MeV) and FairRoot conventions (cm/GeV)
+- Mapping transport steps to the `AtTpc::StepState` struct
+- Driving generators and capturing primaries without a real VMC stack
+- Determining entering/exiting/stopping flags from volume boundary crossings
+- Identifying beam vs. reaction tracks
 
-With the flag inverted:
-- **Event 0 (beam)**: `fIsBeamTrack=false` -> reaction never fires -> vertex never set
-- **Event 1 (reaction)**: `fIsBeamTrack=true` for trackID=0 -> reaction fires for FairBoxGenerator's beam particle -> calls `ResetVertex()` then `SetVertex()` at the wrong position
+## 2. Framework Contract Compliance
 
-The vertex propagation chain breaks. `AtTPC2Body::GenerateReaction` on Event 1 reads the vertex from `AtVertexPropagator` -- which was never properly set by Event 0. Products start from wrong positions.
+**FairTask lifecycle -- correct.** `Init()` configures the detector, auto-extracts the B-field from FairRun, initializes the event source, and registers the MCTrack branch. `Exec()` runs per event. `Finish()` cleans up. No issues.
 
-**Fix**: Capture the flag before calling `GenerateEvent()`:
+**Branch naming and types -- correct.** `AtTpcPoint` is registered by `AtTpc::Register()` (called by FairRunSim detector initialization). `MCTrack` is registered by the task (`AtSimpleSimulationTask.cxx:208`). Both match the Geant4 path naming.
 
-```cpp
-bool wasBeamEvent = AtVertexPropagator::Instance()->IsBeamEvent();
-fPrimGen->GenerateEvent(&fCollector);
-state.beamEvent = wasBeamEvent;
-```
+**AtTpcPoint production -- correct with one caveat.** The detector-coupled path feeds steps through `AtTpc::ProcessStep()`, which calls `addHit()` exactly as in the Geant4 path. All fields (position, momentum, energy loss, A, Z, EIni, AIni) are populated by the same detector code. The one issue is the `entering` flag (see Finding 1 below).
 
-**Note**: The validation macros use `AtSimpleSimulationReplayTask`, which sets the flag explicitly and avoids this bug. The generator task is not exercised by any macro on this branch.
+**AtVertexPropagator state -- correct for the primary use case.** `AtTPCIonGenerator` only adds beam on beam events when `fDoReact=true` (`AtTPCIonGenerator.cxx:157-170`). The reaction trigger fires correctly during beam transport: `ProcessStep` -> `reactionOccursHere()` -> `startReactionEvent()` -> `SetVertex()`. The subsequent reaction event reads vertex/momentum from the propagator through the same generator chain.
 
-### 1b. ProcessStep exit-stop changes Geant4 behavior
+**Detector hook management -- correct but AtTpc-specific.** `SetDetector(tpc)` is required and validated in `Init()`. `ProcessStep()` is called on the same `AtTpc` instance. `SetStopOnReactionVolumeExit(true)` is set to prevent transport beyond the active volume. `IsSensitiveVolume` is hardcoded to `AtTpc::IsSensitiveVolume`, so the task is AtTpc-specific. Other detectors would need to implement the same `ProcessStep(StepState)` interface.
 
-`AtTpc::ProcessStep()` (line 235-236) adds:
+## 3. Integration Correctness
+
+### Finding 1 (HIGH): `entering` flag misses inter-sensitive-volume boundaries
+
+**Location:** `AtSimpleSimulationTask.cxx:255`
 
 ```cpp
-if (step.exiting && IsReactionVolume(fVolName))
-   return true;
+const bool entering = !preSensitive && postSensitive;
+const bool exiting = preSensitive && !postSensitive;
 ```
 
-This stops **all** particles on exit from drift_volume/cell, not just the beam. In the old code, only `startReactionEvent()` called `gMC->StopTrack()` (beam-only). Now in the Geant4 path, reaction products exiting the active gas are also stopped. While `AtClusterize` only processes drift_volume hits (so this is benign for standard digitization), it changes Geant4 behavior for any analysis reading raw `AtTpcPoint` data that expects window-region hits from exiting products.
+This only detects transitions from non-sensitive to sensitive. When a particle crosses between two *different* sensitive volumes (e.g. window -> drift_volume), both are sensitive, so `entering = false`.
 
-### 1c. MCTrack branch registration
+In Geant4, `gMC->IsTrackEntering()` is true at every volume boundary, including sensitive-to-sensitive transitions. `AtTpc::trackEnteringVolume()` (`AtTpc.cxx:63`) fires on each entering, resetting `fELossAcc` and capturing `InPos` for beam tracks.
 
-`AtSimpleSimulationTask::RegisterMCTrackBranch()` checks for an existing `MCTrack` branch and reuses it, or creates one. In the FairRunSim setup, `AtStack` also registers `MCTrack`. The task handles this correctly (line 94-98), reusing the existing branch if present.
+**Consequences:**
 
-## 2. Integration Correctness
+1. **`fELossAcc` not reset at drift_volume entry** -- energy loss accumulated in the window is carried into the drift_volume's reaction threshold check. For typical AT-TPC windows (5-50 um Mylar), this is ~0.01-0.1 MeV, negligible vs. the ~10+ MeV reaction threshold. **Low practical impact.**
+2. **`InPos` never set for beam tracks** -- `trackEnteringVolume` sets `InPos` only when `fIsBeamTrack && IsReactionVolume(fVolName)` (line 75). Since `trackEnteringVolume` never fires at the drift_volume entry, `InPos` stays at its default `(0,0,0,0)`. This propagates into `SetVertex()` as the input vertex `(invx, invy, invz)`. However, `GetInVx/GetInVy/GetInVz` are only used in *commented-out* code in `AtTPC2Body.cxx` (lines 327-335). **No active downstream consumer, but a latent correctness issue.**
 
-### 2a. Unit conversions -- correct
+**Suggested fix:**
 
-All conversion points were traced:
-
-| Direction | Quantity | Conversion | Location |
-|-----------|----------|------------|----------|
-| Collector -> SimpleSim | position | cm x 10 -> mm | `TransportParticle` L130 |
-| Collector -> SimpleSim | momentum | GeV x 1000 -> MeV | `TransportParticle` L131 |
-| SimpleSim -> StepState | energyLoss | MeV / 1000 -> GeV | `ProcessDetectorStep` L215 |
-| SimpleSim -> StepState | trackLength | mm / 10 -> cm | `ProcessDetectorStep` L216 |
-| SimpleSim -> StepState | position | mm / 10 -> cm | `ProcessDetectorStep` L223 |
-| SimpleSim -> StepState | momentum | MeV / 1000 -> GeV | `ProcessDetectorStep` L224 |
-| SimpleSim -> StepState | totalEnergy | MeV / 1000 -> GeV | `ProcessDetectorStep` L221 |
-
-All conversions are consistent and correct. The `StepState` unit annotations (`// GeV`, `// cm`, etc.) match the values produced.
-
-### 2b. Generator invocation
-
-`AtSimParticleCollector` inherits `FairGenericStack` and intercepts `PushTrack()`. This captures all the particles that generators would normally push onto the VMC stack, preserving their cm/GeV units. The 18-param and 19-param `PushTrack` overloads are both handled.
-
-`AtSimParticleCollector` does not support `PopNextTrack` / `PopPrimaryForTracking` (return nullptr) or `GetCurrentTrack` (returns nullptr). These are acceptable since no VMC transport runs, but could break generators that call `GetStack()->GetCurrentTrack()` during `ReadEvent`.
-
-### 2c. Edge cases
-
-**Particles starting outside the active volume**: `FindSensitiveEntry()` probes forward in 1 mm steps along the momentum direction, up to 5 m. This is reasonable but imprecise -- the entry point could miss by up to 1 mm, and energy loss in non-sensitive material between the actual start and the probe hit is not accounted for (SimpleSim applies the same dE/dx model everywhere).
-
-**Missing energy-loss model**: `TransportParticle` catches `std::invalid_argument` and logs at `debug` level. The particle is silently skipped. A user might not notice reaction products disappearing.
-
-**Particles that never stop**: The curved-track path has a `kMaxCurvedTransportSteps = 200000` guard. The straight-line path stops when exiting the geometry or KE < 1 keV. Both are adequate.
-
-**Zero-length tracks**: `SubmitInitialSensitivePoint` creates a hit with `energyLoss=0` and `trackLength=0`. `AtClusterize` skips zero-loss hits, so this contributes no electrons. It correctly sets up entering-volume state in `AtTpc` without producing a physics contribution.
-
-### 2d. `correctPosOut()` not applied in SimpleSim path
-
-In the Geant4 `ProcessHits`, exit positions are refined using `TGeoManager` boundary correction (`correctPosOut()`). In the SimpleSim path, exit positions come directly from the propagator's last step with no boundary refinement. This causes minor position imprecision at volume boundaries (up to one step size, typically ~1 mm).
-
-### 2e. Time field is always zero
-
-`ProcessDetectorStep` sets `detectorStep.timeNs = 0.` for all steps. `AtClusterize` does not use the time field, so this doesn't affect current downstream processing. Any analysis reading `AtMCPoint::GetTime()` would see zero.
-
-### 2f. Replay task doesn't set AtVertexPropagator track metadata
-
-In the Geant4 path, `AtTPC2Body` populates `SetTrackEnergy(trackID, ...)` and `SetTrackAngle(trackID, ...)`. The replay task reads raw MCTracks and pushes them directly to the collector without running any generator, so these are never set. `AtTpc::addHit()` reads them for `EIni` / `AIni` fields in `AtMCPoint` -- they'll be 0.0 for all points. `AtClusterize` doesn't use them, but any analysis reading these fields sees wrong values.
-
-## 3. Pipeline Trace
-
-Tracing a single primary proton through the SimpleSim **generator** path (illustrating the flag bug from 1a):
-
-1. **FairPrimaryGenerator::GenerateEvent** runs generators. `FairBoxGenerator` pushes the beam particle (trackID=0). `AtTPC2Body::GenerateReaction` reads vertex from `AtVertexPropagator`, computes kinematics, pushes products (trackID=1,2). `AtReactionGenerator::EndEvent` toggles the flag.
-
-2. **LoadEvent** reads the inverted flag. On Event 0 (beam): `beamEvent=false`.
-
-3. **TransportCurrentEvent(false)**: For the beam (trackID=0): `beamTrack = false && (0==0) = false`.
-
-4. **FindSensitiveEntry**: If the beam starts outside the drift volume (typical -- generated at z=-100 cm), probes forward to find the entry.
-
-5. **SubmitInitialSensitivePoint**: Creates an entering `StepState` with `beamTrack=false`. `AtTpc::ProcessStep` sets `fIsBeamTrack=false`, calls `trackEnteringVolume` (but `InPos` is NOT set because `fIsBeamTrack` is false).
-
-6. **TransportParticle callback**: For each RK4 step inside the drift volume, `ProcessDetectorStep` builds a `StepState` (units converted correctly) and calls `ProcessStep`. Energy loss accumulates in `fELossAcc`.
-
-7. **reactionOccursHere**: `isPrimaryBeam = fIsBeamTrack = false` -> **never fires**. The beam particle traverses the entire volume or stops without setting the vertex.
-
-8. **Exit**: When the proton exits the drift volume, `step.exiting && IsReactionVolume` -> `ProcessStep` returns true -> transport stops.
-
-9. **Vertex**: `AtVertexPropagator::SetVertex()` is never called. The vertex remains at default (0,0,0).
-
-10. **Event 1 (reaction)**: `AtTPC2Body::GenerateReaction` reads vertex -> (0,0,0) -> products start from wrong position.
-
-For the **replay** path, this trace does not apply -- the replay task sets the beam flag explicitly and reads particle kinematics from the Geant4 truth file, bypassing the vertex propagation chain entirely.
-
-## 4. Failure Mode Assessment
-
-### Flag inversion (generator task only)
-
-**What breaks**: The reaction vertex is never set on beam events and incorrectly triggered on reaction events. Products start from wrong positions.
-
-**Sensitivity**: Every downstream observable that depends on vertex position -- track angles, reaction kinematics, Q-value reconstruction.
-
-**Visibility**: **Silently wrong**. The simulation runs to completion and produces output with correct-looking structure but wrong physics. A comparison with Geant4 truth would reveal it immediately (vertex z mismatch), but a standalone run would not obviously fail.
-
-**Mitigation on this branch**: Both validation macros use the `ReplayTask` (which avoids the bug), so the current validation pipeline does not exercise this failure.
-
-### ProcessStep exit-stop in Geant4 path
-
-**What breaks**: Reaction products stopped at the drift volume boundary. Secondaries from stopped products are lost.
-
-**Sensitivity**: Low for standard digitization (only drift_volume hits used). Could matter for efficiency studies or background estimates.
-
-**Visibility**: Visible as fewer hits in boundary volumes (`window`) when comparing old vs. new Geant4 output.
-
-## 5. High-Risk Findings
-
-### 1. Beam/reaction event flag inversion in generator task
-
-- **What**: `LoadEvent` reads `IsBeamEvent()` after `EndEvent()` has toggled it inside `GenerateEvent()`, yielding the inverted value.
-- **Why**: `AtReactionGenerator::ReadEvent()` calls `EndEvent()` before returning to `GenerateEvent()`, but `LoadEvent` reads the flag after `GenerateEvent()` returns.
-- **Impact**: Vertex never set, reaction products at wrong positions, silently wrong physics.
-- **Confidence**: Very high -- mechanically verified from the call sequence.
-- **File**: `AtSimpleSimulationGeneratorTask.cxx:33`
-
-### 2. ProcessStep stops all particles exiting reaction volumes (Geant4 side-effect)
-
-- **What**: The `step.exiting && IsReactionVolume(fVolName)` return in `ProcessStep` applies to both SimpleSim and Geant4 paths.
-- **Why**: `ProcessStep` is shared code, but this exit-stop was added for SimpleSim transport semantics.
-- **Impact**: Non-beam Geant4 tracks stopped at drift volume boundary; minor data loss for boundary analyses.
-- **Confidence**: High -- visible in the diff and `ProcessHits` calls `ProcessStep`.
-- **File**: `AtTpc.cxx:235-236`
-
-### 3. Replay task doesn't populate AtVertexPropagator track energy/angle
-
-- **What**: `SetTrackEnergy` / `SetTrackAngle` are never called in the replay path.
-- **Why**: No generator runs; particles are read from file.
-- **Impact**: `EIni` / `AIni` fields in `AtMCPoint` are 0.0. Not used by digitization, but wrong for direct analysis which is not an issue for this use case.
-- **Confidence**: High.
-- **File**: `AtSimpleSimulationReplayTask.cxx:40-55`, `AtTpc.cxx:261-280`
-- **Do not patch - not an issue**
-
-### 4. Sensitive volume identification is duplicated and divergent
-
-- **What**: `AtSimpleSimulationTask::IsSensitiveVolume()` checks `"drift_volume"`, `"window"`, `"cell"`. `AtTpc::IsReactionVolume()` checks only `"drift_volume"` and `"cell"`. `AtTpc::CheckIfSensitive()` checks all three.
-- **Why**: Three independent implementations of the same concept.
-- **Impact**: If detector geometry adds a new sensitive volume, all three must be updated independently.
-- **Confidence**: Medium -- the current set of volumes is consistent, but the maintenance risk is real.
-
-## 6. Suggested Validation Tests
-
-### For Finding #1 (flag inversion)
-
-**Unit test**: Create an `AtSimpleSimulationGeneratorTask` with a generator that calls `EndEvent()`. Verify that `LoadEvent().beamEvent` matches the pre-toggle flag value:
-
-```
-Event 0: expect beamEvent == true  (currently returns false)
-Event 1: expect beamEvent == false (currently returns true)
+```cpp
+const bool volumeChanged = step.preVolumeName != step.postVolumeName;
+const bool entering = (!preSensitive && postSensitive) || (volumeChanged && postSensitive);
+const bool exiting = (preSensitive && !postSensitive) || (volumeChanged && preSensitive);
 ```
 
-**Integration test**: Run the generator task with `AtTPC2Body` and verify that `AtVertexPropagator::GetVz()` is non-zero after the beam event's transport completes.
+**Confidence: High** -- the mechanism is clear from code inspection.
 
-### For Finding #2 (exit-stop behavior)
+### Finding 2 (MEDIUM): `timeNs` always zero
 
-**A/B comparison**: Run the Geant4 path before and after this branch. Count `AtTpcPoint` entries with `GetVolName() == "window"` from non-beam tracks. The new code should produce fewer (or zero) such hits.
+**Location:** `AtSimpleSimulationTask.cxx:284,314`
 
-### For Finding #3 (missing metadata)
+Both `SubmitInitialSensitivePoint` and `ProcessDetectorStep` set `detectorStep.timeNs = 0.0`. In Geant4, this is `gMC->TrackTime() * 1e9` (nanoseconds). `AtMCPoint` stores this as the time field. Any downstream code that uses the time field from MC points (e.g. timing resolution studies) will silently get zeros.
 
-**Comparison test**: Compare `AtMCPoint::GetEIni()` and `GetAIni()` between Geant4 output and replay-task output for the same events. Geant4 should have non-zero values; replay should have all zeros.
+`AtClusterizeTask` and `AtPulseTask` compute drift time from position, so the main digitization chain is unaffected.
 
-### For general output correctness
+**Confidence: High.**
 
-**Bragg curve comparison**: For a fixed-angle single event, compare the dE/dx vs. range profile between Geant4 and SimpleSim outputs. This catches unit errors, energy loss model discrepancies, and step-size artifacts simultaneously. The existing `compareFixed.C` and `compareKinematic.C` macros appear designed for this.
+### Finding 3 (LOW): Mass inconsistency between generator and transport in straight-line path
 
-**Vertex position match**: For the generator task (once the flag bug is fixed), verify that the vertex Z from `AtVertexPropagator::GetVz()` matches between Geant4 and SimpleSim to within the step-size uncertainty (~1 mm).
+**Location:** `AtSimpleSimulation.cxx:312,323-326`
+
+In the straight-line propagation path:
+
+```cpp
+double KE = mom.E() - mom.M();           // mom.M() = PDG mass (from generator's E^2 - p^2)
+double eLoss = model->GetEnergyLoss(KE, fDistStep);  // model expects KE relative to model mass
+auto E = mom.E() - eLoss;
+double p = sqrt(E * E - mom.M2());       // uses PDG mass again
+```
+
+The 4-vector's invariant mass comes from the generator (PDG mass), while `info.mass` in `ParticleInfo` comes from `AddModel(Z, A, model, massAmu)` using `massAmu * 931.494 MeV/c^2`. For protons: PDG mass = 938.272 MeV/c^2 vs. 1.0078 amu x 931.494 = 938.783 MeV/c^2. The ~0.5 MeV difference produces ~0.05% KE offset.
+
+The curved path correctly uses `info.mass` throughout via `AtTools::Kinematics::KE(momentum, info.mass)`.
+
+**Confidence: Medium** -- the mass difference is real but the practical impact is small.
+
+### Finding 4 (LOW): MCTrack metadata sparse
+
+**Location:** `AtSimpleSimulationTask.cxx:218`
+
+```cpp
+new ((*fMCTrackArray)[particle.trackID]) AtMCTrack(particle.pdgCode, -1,
+    particle.px, particle.py, particle.pz,
+    particle.vx, particle.vy, particle.vz, 0.0, 0);
+```
+
+`parentID = -1`, `time = 0`, `nPoints = 0` for all tracks. In the Geant4 path, `AtStack` fills these with correct values. Code that distinguishes primary from secondary via `parentID == -1` works (both paths use -1 for primaries), but code checking `nPoints` or birth time would get wrong values.
+
+**Confidence: High.**
+
+### Finding 5 (LOW): No `correctPosOut()` equivalent
+
+**Location:** `AtTpc.cxx:131-158` vs `AtSimpleSimulationTask.cxx:296-331`
+
+In the Geant4 path, `ProcessHits` calls `correctPosOut()` to adjust exit positions to the precise volume boundary using the geometry navigator's safety distance. SimpleSim's exit position is wherever the last step landed, which may overshoot by up to one step size (~1 mm). This affects the last MC point of each track.
+
+**Confidence: Medium.**
+
+### Unit conversions -- correct throughout
+
+The cm<->mm and GeV<->MeV conversions in `TransportParticle` (lines 235-237) and `ProcessDetectorStep` (lines 313-327) are applied consistently. `step.trackMass` is correctly converted from MeV/c^2 to GeV/c^2. Each field in `StepState` was verified against the Geant4 `ProcessHits` path.
+
+### Generator invocation -- correct
+
+`FairPrimaryGenerator::GenerateEvent(&fCollector)` correctly drives the same generator chain. The collector captures the same particles that would land on the VMC stack. `AtReactionGenerator::ReadEvent` handles alternation as usual. The `wasBeamEvent` capture before `GenerateEvent` (`AtSimpleSimulationGeneratorTask.cxx:32`) correctly identifies the event type before the internal `EndEvent()` toggle.
+
+## 4. Pipeline Trace
+
+**Single primary particle: proton from AtTPC2Body reaction**
+
+1. **Generator invocation** (reaction event): `LoadEvent()` calls `fPrimGen->GenerateEvent(&fCollector)`. `AtTPC2Body::GenerateReaction()` reads vertex/momentum from `AtVertexPropagator` (set during the prior beam event), computes 2-body kinematics, calls `primGen->AddTrack()`. The collector's `PushTrack` stores `{trackID=0, pdg, px, py, pz, e, vx, vy, vz}` in GeV/cm.
+
+2. **Unit conversion**: `TransportParticle` converts to mm/MeV: `pos = vertex * 10`, `mom = (p*1000, E*1000)`.
+
+3. **Sensitive entry**: Vertex is inside drift_volume (that's where the reaction happened). `IsSensitiveVolume` returns true, no `FindSensitiveEntry` needed.
+
+4. **Initial point**: `SubmitInitialSensitivePoint` sends an entering `StepState` to `AtTpc::ProcessStep`. `trackEnteringVolume` resets `fELossAcc`, captures position/momentum. Since `beamTrack=false`, `InPos` is not updated (correct -- products don't need it). `addHit` records the initial MC point.
+
+5. **Transport loop**: `AtSimpleSimulation::TransportParticle` drives the RK4 propagator (if B != 0) or straight-line stepper. Each step: compute energy loss from `AtELossModel`, advance position/momentum, invoke callback.
+
+6. **Step processing**: Callback calls `ProcessDetectorStep` -> `AtTpc::ProcessStep`. `getTrackParametersFromStep` accumulates `fELossAcc`. `addHit` writes an `AtMCPoint` to the detector's `fAtTpcPointCollection` with position (cm), momentum (GeV/c), energy loss (GeV), track length (cm), A, Z, EIni, AIni.
+
+7. **Exit**: When the proton exits drift_volume to non-sensitive material: `exiting = true`, callback returns `false`, transport stops.
+
+8. **Tree fill**: After `Exec()` returns, `FairMCApplication::FinishEvent()` calls `FairRootManager::Fill()`, writing the `AtTpcPoint` and `MCTrack` branches. Then `AtTpc::EndOfEvent()` clears the collection.
+
+**Where output could differ from Geant4:**
+
+- **Energy loss**: SimpleSim uses a single `AtELossModel` per species; Geant4 models discrete interactions, delta rays, straggling. The overall dE/dx curve should match for CATIMA models but individual point-by-point energy deposits will differ.
+- **Step granularity**: SimpleSim's step size is controlled by `fDistStep` (straight line) or `fMaxPropStep` (RK4). Geant4 has its own stepping. Different step counts means different numbers of MC points.
+- **No secondary particles**: SimpleSim doesn't produce delta rays, photons, or nuclear fragments.
+- **No multiple scattering**: SimpleSim follows the energy-loss direction only. No lateral straggling.
+- **Time field is always 0** (Finding 2).
+
+## 5. Failure Mode Assessment
+
+| Failure | Downstream impact | Visibility |
+|---------|------------------|------------|
+| Missing `entering` at drift_volume (Finding 1) | Reaction vertex slightly early due to window energy in fELossAcc. InPos stale. | **Silent** -- shifts are tiny, InPos unused in active code |
+| Zero time in MCPoints (Finding 2) | Any timing analysis on MC truth gives 0 | **Visible** if time is plotted, **silent** otherwise |
+| Mass mismatch in straight-line path (Finding 3) | ~0.05% KE bias on initial energy, propagates through stopping range | **Silent** -- within model uncertainty |
+| MCTrack metadata sparse (Finding 4) | nPoints and birth time wrong | **Silent** unless explicitly checked |
+| No correctPosOut (Finding 5) | Last MC point per track overshoots boundary by up to 1 step | **Silent** -- small positional error |
+
+**Most sensitive downstream stages:**
+
+- **AtClusterizeTask** output depends on the spatial distribution of energy deposits. Missing delta rays and different step sizes produce quantitatively different cluster distributions.
+- **AtPulseTask** produces traces from clusters. Differences propagate to simulated pad responses but the overall pattern (track shape, energy scale) is preserved.
+- **Reconstruction** should work correctly -- the track topology is preserved.
+
+## 6. High-Risk Findings (Top 5)
+
+1. **`entering` flag misses sensitive-to-sensitive volume boundaries** -- `fELossAcc` includes pre-drift-volume energy, `InPos` is stale. Low practical impact today (window energy negligible, InPos unused), but a latent contract violation that would break if geometry changes or InPos is activated. **Confidence: High.**
+
+2. **`timeNs` always zero** -- All MC points lack transport time. Silently wrong for any code checking time. **Confidence: High.**
+
+3. **Mass inconsistency in straight-line path** -- KE computed from PDG mass but fed to model configured with amu-derived mass. ~0.5 MeV offset for protons. Curved path is correct. **Confidence: Medium.**
+
+4. **MCTrack metadata sparse** -- `parentID = -1`, `time = 0`, `nPoints = 0` for all tracks. Code that checks nPoints or birth time gets wrong values. **Confidence: High.**
+
+5. **No `correctPosOut()` equivalent** -- Exit positions overshoot the volume boundary by up to one step size (~1 mm). **Confidence: Medium.**
+
+## 7. Suggested Validation Tests
+
+**Contract test: entering fires at every volume boundary**
+
+```
+Setup: geometry with window + drift_volume. Inject a beam starting in the cave.
+Assert: trackEnteringVolume is called at least twice (window entry, drift_volume entry).
+Assert: fELossAcc is 0 at the first drift_volume step.
+Assert: InPos is set to the beam's drift_volume entry position (not (0,0,0)).
+```
+
+**A/B output comparison (existing macros extend well):**
+
+- Run `geant4_fixed.C` and `simpleSim_fixed.C` with identical kinematics.
+- Compare per-event total energy loss (sum of MCPoint eLoss), number of MC points, and reaction vertex z-coordinate.
+- Expected: total energy agrees within CATIMA model accuracy; point count differs; vertex z agrees to within window energy (~0.1 MeV).
+
+**Invariance check: round-trip energy**
+
+```
+For each particle: sum(MCPoint.eLoss) + final KE ~= initial KE.
+Tolerance: ~1% for step discretization.
+This catches unit conversion errors and mass mismatches.
+```
+
+**Edge case: particle starts outside geometry**
+
+```
+Inject a particle at (0, 0, -500) mm (outside any volume).
+Assert: TransportParticle throws std::invalid_argument.
+```
+
+**Edge case: missing energy-loss model**
+
+```
+Transport a particle species (Z, A) without registering a model or factory.
+Assert: throws std::invalid_argument with descriptive message.
+```
+
+**Edge case: zero-momentum particle**
+
+```
+Inject a particle at the drift_volume entrance with p = (0,0,0).
+Assert: FindSensitiveEntry throws (momentum is zero).
+Or: if already in sensitive volume, SubmitInitialSensitivePoint handles stopping = true.
+```
+
+**Replay fidelity test:**
+
+```
+Run Geant4, then AtSimpleSimulationReplayTask with the output.
+Assert: reaction product MC points appear on odd events only.
+Assert: beam events (even) produce no MC points (transportPrimaries=false).
+Assert: reaction vertex matches the Geant4 vertex from the source file.
+```

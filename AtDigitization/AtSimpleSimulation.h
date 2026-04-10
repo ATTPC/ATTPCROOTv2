@@ -20,6 +20,7 @@
 #include <utility> // for pair
 namespace AtTools {
 class AtELossModel;
+class AtELossModelFactory;
 } // namespace AtTools
 class TGeoVolume;
 class TGeoManager;
@@ -56,6 +57,7 @@ protected:
    using PxPyPzEVector = ROOT::Math::PxPyPzEVector;
 
    std::map<ParticleID, ParticleInfo> fModels;
+   std::shared_ptr<AtTools::AtELossModelFactory> fModelFactory{nullptr};
    SpaceChargeModel fSCModel{nullptr};
    double fDistStep{1.}; // Distance step in mm for straight-line propagation
    std::mutex fGeoMutex;
@@ -66,6 +68,7 @@ protected:
    XYZVector fBField{0, 0, 0}; ///< Magnetic field in T (used by AtPropagator)
    double fMaxPropStep{1e-3};  ///< Max step size in m for the adaptive stepper (default 1 mm)
    double fCurvedStopTol{0.1}; ///< Curved-track stop tolerance in MeV; avoids pathological late stopping tails
+   std::string fStandaloneVolumeName{"drift_volume"}; ///< Volume name for standalone SimulateParticle hit recording
 
    // Variables to across an entire event
    static thread_local int fTrackID;
@@ -88,6 +91,8 @@ public:
 
    using StepCallback = std::function<bool(const TransportStep &)>;
 
+   // ---- Construction ----
+
    /**
     * Assumes that the IO manager has been initialized (it will attempt to construct the branch needed here).
     */
@@ -96,7 +101,14 @@ public:
    AtSimpleSimulation(const AtSimpleSimulation &other) = delete; // Implicitly deleted because of std::mutex
    ~AtSimpleSimulation() = default;
 
+   // ---- Standalone hit-writing API ----
+   // Used by AtMCFission and direct callers. These methods manage a thread-local
+   // TClonesArray of AtMCPoints and write hits directly during transport.
+
    void RegisterBranch(std::string branchName = "AtTpcPoint", bool pers = true);
+
+   // ---- Transport API ----
+   // Shared by both standalone and detector-coupled paths.
 
    /**
     * Register an energy loss model for a particle species. Charge is derived as Z*e and
@@ -109,6 +121,13 @@ public:
     */
    void AddModel(int Z, int A, ModelPtr model, double massAmu);
 
+   /**
+    * Set a model factory for automatic energy loss model creation.
+    * When set, if a particle species (Z, A) is encountered without a registered model,
+    * the factory will be used to create one from the geometry material at the particle's position.
+    */
+   void SetModelFactory(std::shared_ptr<AtTools::AtELossModelFactory> factory) { fModelFactory = std::move(factory); }
+
    void SetSpaceChargeModel(SpaceChargeModel model) { fSCModel = model; }
    void SetDistanceStep(double step) { fDistStep = step; } ///< Step size in mm (straight-line path)
 
@@ -117,6 +136,7 @@ public:
    /// Maximum step size (m) for the RK4 adaptive stepper in curved-track mode (default: 1e-3 m = 1 mm).
    void SetMaxPropagationStep(double stepM) { fMaxPropStep = stepM; }
    void SetCurvedStopTolerance(double stopTolMeV) { fCurvedStopTol = stopTolMeV; }
+   void SetStandaloneVolumeName(const std::string &name) { fStandaloneVolumeName = name; }
 
    void NewEvent();
 
@@ -128,6 +148,10 @@ public:
    std::pair<XYZPoint, PxPyPzEVector> SimulateParticle(
       int Z, int A, const XYZPoint &iniPos, const PxPyPzEVector &iniMom,
       std::function<bool(XYZPoint, PxPyPzEVector)> func = [](XYZPoint pos, PxPyPzEVector mom) { return true; });
+
+   // ---- Detector-coupled transport API ----
+   // Used by AtSimpleSimulationTask for Geant4 drop-in replacement. Transport steps are
+   // delivered via callback; hit recording is handled by the detector (AtTpc).
 
    /**
     * Transport a particle through the loaded geometry without writing detector hits.
@@ -149,17 +173,19 @@ protected:
    std::string GetVolumeName(const XYZPoint &point);
 
    /**
-    * Core simulation loop. Selects straight-line or curved-track path based on field settings.
+    * Core transport loop. Propagates a particle through the geometry, invoking callback at each step.
+    * Continues while the particle is inside the geometry (GetVolume != nullptr) and KE > threshold.
+    * The callback controls early stopping by returning false.
+    * Selects curved-track (RK4) or straight-line path based on field settings.
     */
-   std::pair<XYZPoint, PxPyPzEVector> SimulateParticle(
-      const ParticleInfo &info, const XYZPoint &iniPos, const PxPyPzEVector &iniMom,
-      std::function<bool(XYZPoint, PxPyPzEVector)> func = [](XYZPoint pos, PxPyPzEVector mom) { return true; });
-
-   std::pair<XYZPoint, PxPyPzEVector> TransportParticle(const ParticleInfo &info, int pdg, const XYZPoint &iniPos,
+   std::pair<XYZPoint, PxPyPzEVector> PropagateParticle(const ParticleInfo &info, int pdg, const XYZPoint &iniPos,
                                                         const PxPyPzEVector &iniMom, const StepCallback &callback);
 
    void AddHit(double ELoss, const XYZPoint &pos, const PxPyPzEVector &mom, double length);
    TGeoVolume *GetVolume(const XYZPoint &pos);
+
+   /// Attempt to auto-create an energy loss model using fModelFactory and the geometry material at pos.
+   void TryAutoCreateModel(int Z, int A, const XYZPoint &pos);
 };
 
 #endif // AT_SIMPLE_SIMULATION_H

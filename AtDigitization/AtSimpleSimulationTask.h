@@ -11,6 +11,10 @@
 #include <memory>
 #include <string>
 
+namespace AtTools {
+class AtELossModelFactory;
+} // namespace AtTools
+
 class AtTpc;
 class TBuffer;
 class TClass;
@@ -31,21 +35,32 @@ public:
    void SetSensitiveDetector(AtTpc *detector) { fDetector = detector; }
    void SetDetector(AtTpc *detector) { SetSensitiveDetector(detector); }
 
+   /// Set a model factory for automatic energy loss model creation. See AtSimpleSimulation::SetModelFactory.
+   void SetModelFactory(std::shared_ptr<AtTools::AtELossModelFactory> factory)
+   {
+      fSimulation->SetModelFactory(std::move(factory));
+   }
+
    InitStatus Init() override;
    void Exec(Option_t *option) override;
    void Finish() override;
+
+   /// Enable/disable automatic field extraction from FairRun. On by default for drop-in behavior.
+   void SetAutoConfigureField(bool enable) { fAutoConfigureField = enable; }
 
    AtSimpleSimulation *GetSimulation() { return fSimulation.get(); }
 
 protected:
    std::unique_ptr<AtSimpleSimulation> fSimulation{nullptr}; //!
    AtTpc *fDetector{nullptr};                                //!
+   bool fAutoConfigureField{true};                           //!
    AtSimParticleCollector fCollector;                        //!
    TClonesArray *fMCTrackArray{nullptr};                     //!
 
    virtual InitStatus InitEventSource();
    virtual EventState LoadEvent() = 0;
    virtual void FinishEventSource();
+   void ConfigureFieldFromFairRun();
 
    void RegisterMCTrackBranch();
    void FillMCTracks();

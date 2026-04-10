@@ -5,15 +5,21 @@
 #include "AtSimpleSimulation.h"
 #include "AtTpc/AtTpc.h"
 
+#include <FairField.h>
 #include <FairLogger.h>
 #include <FairRootManager.h>
+#include <FairRun.h>
 
 #include <Math/Point3D.h>
 #include <Math/Point3Dfwd.h>
+#include <Math/Vector3D.h>
 #include <Math/Vector4D.h>
 #include <Math/Vector4Dfwd.h>
 #include <TClonesArray.h>
 #include <TDatabasePDG.h>
+#include <TGeoBBox.h>
+#include <TGeoManager.h>
+#include <TGeoVolume.h>
 #include <TParticlePDG.h>
 
 #include <cmath>
@@ -54,12 +60,16 @@ AtSimpleSimulationTask::AtSimpleSimulationTask(std::unique_ptr<AtSimpleSimulatio
 InitStatus AtSimpleSimulationTask::Init()
 {
    if (fDetector == nullptr) {
-      LOG(info) << "AtSimpleSimulationTask: using standalone AtMCPoint writer";
-      fSimulation->RegisterBranch();
-   } else {
-      LOG(info) << "AtSimpleSimulationTask: using detector-coupled transport adapter";
-      fDetector->SetStopOnReactionVolumeExit(true);
+      LOG(fatal) << "AtSimpleSimulationTask requires a sensitive detector. "
+                 << "Call SetDetector(tpc) before Init(). "
+                 << "For standalone simulation, use AtSimpleSimulation::SimulateParticle() directly.";
+      return kFATAL;
    }
+   LOG(info) << "AtSimpleSimulationTask: using detector-coupled transport adapter";
+   fDetector->SetStopOnReactionVolumeExit(true);
+
+   if (fAutoConfigureField)
+      ConfigureFieldFromFairRun();
 
    auto sourceStatus = InitEventSource();
    if (sourceStatus != kSUCCESS)
@@ -89,6 +99,94 @@ void AtSimpleSimulationTask::Finish() { FinishEventSource(); }
 InitStatus AtSimpleSimulationTask::InitEventSource() { return kSUCCESS; }
 
 void AtSimpleSimulationTask::FinishEventSource() {}
+
+void AtSimpleSimulationTask::ConfigureFieldFromFairRun()
+{
+   using XYZVector = ROOT::Math::XYZVector;
+   constexpr double kKGtoTesla = 0.1;
+
+   // Skip if the simulation already has a manually configured non-zero field
+   // (check by seeing if B is non-zero -- user set it before Init)
+   // We can't access the private fBField directly, so we rely on the convention
+   // that auto-config runs first and manual overrides come before Init().
+
+   auto *run = FairRun::Instance();
+   if (run == nullptr) {
+      LOG(info) << "AtSimpleSimulationTask: no FairRun instance; skipping field auto-config";
+      return;
+   }
+
+   auto *field = run->GetField();
+   if (field == nullptr) {
+      LOG(info) << "AtSimpleSimulationTask: no field set on FairRun; SimpleSim fields remain at zero";
+      return;
+   }
+
+   // Find drift volume center for field sampling
+   double cx = 0, cy = 0, cz = 0;
+   TGeoVolume *driftVol = nullptr;
+   if (gGeoManager != nullptr)
+      driftVol = gGeoManager->FindVolumeFast("drift_volume");
+
+   if (driftVol != nullptr) {
+      auto *shape = dynamic_cast<TGeoBBox *>(driftVol->GetShape());
+      if (shape != nullptr) {
+         const double *origin = shape->GetOrigin();
+         cx = origin[0];
+         cy = origin[1];
+         cz = origin[2];
+      }
+   }
+
+   // Sample field at drift volume center (FairField returns kG, position in cm)
+   double bx_kG = field->GetBx(cx, cy, cz);
+   double by_kG = field->GetBy(cx, cy, cz);
+   double bz_kG = field->GetBz(cx, cy, cz);
+
+   double bx_T = bx_kG * kKGtoTesla;
+   double by_T = by_kG * kKGtoTesla;
+   double bz_T = bz_kG * kKGtoTesla;
+
+   fSimulation->SetMagneticField(XYZVector(bx_T, by_T, bz_T));
+   LOG(info) << "AtSimpleSimulationTask: auto-configured B field from FairRun: (" << bx_T << ", " << by_T << ", " << bz_T
+             << ") T (sampled at drift volume center)";
+
+   // Warn if field is not constant (SimpleSim assumes uniform)
+   if (field->GetType() != 0)
+      LOG(warning) << "AtSimpleSimulationTask: SimpleSim assumes uniform fields, but the FairRun field type is "
+                   << field->GetType() << " (non-constant). Using field value sampled at drift volume center.";
+
+   // For constant fields, check if drift volume extends beyond field region
+   if (field->GetType() == 0 && driftVol != nullptr) {
+      auto *shape = dynamic_cast<TGeoBBox *>(driftVol->GetShape());
+      if (shape != nullptr) {
+         const double *origin = shape->GetOrigin();
+         double dx = shape->GetDX();
+         double dy = shape->GetDY();
+         double dz = shape->GetDZ();
+
+         // Check corners of drift volume bounding box
+         double corners[8][3] = {{origin[0] - dx, origin[1] - dy, origin[2] - dz},
+                                 {origin[0] + dx, origin[1] - dy, origin[2] - dz},
+                                 {origin[0] - dx, origin[1] + dy, origin[2] - dz},
+                                 {origin[0] + dx, origin[1] + dy, origin[2] - dz},
+                                 {origin[0] - dx, origin[1] - dy, origin[2] + dz},
+                                 {origin[0] + dx, origin[1] - dy, origin[2] + dz},
+                                 {origin[0] - dx, origin[1] + dy, origin[2] + dz},
+                                 {origin[0] + dx, origin[1] + dy, origin[2] + dz}};
+
+         for (const auto &corner : corners) {
+            double bz_corner = field->GetBz(corner[0], corner[1], corner[2]);
+            if (std::abs(bz_corner - bz_kG) > 1e-6) {
+               LOG(warning) << "AtSimpleSimulationTask: drift volume extends beyond the constant field region. "
+                            << "Field at corner (" << corner[0] << ", " << corner[1] << ", " << corner[2]
+                            << ") cm differs from center value.";
+               break;
+            }
+         }
+      }
+   }
+}
 
 void AtSimpleSimulationTask::RegisterMCTrackBranch()
 {
@@ -139,16 +237,11 @@ void AtSimpleSimulationTask::TransportParticle(const AtCollectedParticle &partic
                      particle.e * kGeVToMeV);
 
    try {
-      if (fDetector != nullptr && !IsSensitiveVolume(fSimulation->GetVolumeNameAt(pos)))
+      if (!IsSensitiveVolume(fSimulation->GetVolumeNameAt(pos)))
          pos = FindSensitiveEntry(pos, mom);
 
       LOG(info) << "Simulating particle Z=" << Z << " A=" << A << " with initial pos=" << pos << " mm and mom=" << mom
                 << " MeV/c";
-
-      if (fDetector == nullptr) {
-         fSimulation->SimulateParticle(Z, A, pos, mom);
-         return;
-      }
 
       const bool beamTrack = beamEvent && particle.trackID == 0;
       if (IsSensitiveVolume(fSimulation->GetVolumeNameAt(pos)) &&
@@ -176,9 +269,6 @@ void AtSimpleSimulationTask::TransportParticle(const AtCollectedParticle &partic
 bool AtSimpleSimulationTask::SubmitInitialSensitivePoint(int trackID, int pdg, bool beamTrack, const XYZPoint &pos,
                                                          const PxPyPzEVector &mom)
 {
-   if (fDetector == nullptr)
-      return true;
-
    AtTpc::StepState detectorStep;
    detectorStep.trackID = trackID;
    detectorStep.pdg = pdg;
