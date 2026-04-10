@@ -1,7 +1,6 @@
 #include "AtSimpleSimulationReplayTask.h"
 
 #include "AtMCTrack.h"
-#include "AtVertexPropagator.h"
 
 #include <FairLogger.h>
 #include <FairTask.h>
@@ -42,15 +41,16 @@ AtSimpleSimulationTask::EventState AtSimpleSimulationReplayTask::LoadEvent()
    if (fPrimaryTrackTree == nullptr)
       return {};
 
-   const bool beamEvent = (fSourceEventIndex % 2) == 0;
-   AtVertexPropagator::Instance()->SetIsBeamEvent(beamEvent);
    if (!LoadPrimaryTracksFromSource())
       return {};
 
+   // The replay task transports all primaries from every source event. There is no
+   // beam/reaction state machine because the source file already contains the correct
+   // primaries — no generators are running and AtVertexPropagator state is not needed.
    EventState state;
    state.hasEvent = true;
-   state.beamEvent = beamEvent;
-   state.transportPrimaries = !beamEvent;
+   state.beamEvent = false;
+   state.transportPrimaries = true;
    return state;
 }
 

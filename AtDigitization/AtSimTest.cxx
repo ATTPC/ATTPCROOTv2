@@ -16,6 +16,7 @@
 #include "AtMCPoint.h"
 #include "AtSimpleSimulation.h"
 #include "AtSimpleSimulationGeneratorTask.h"
+#include "AtStandaloneSimulation.h"
 
 #include "AtELossModel.h"
 #include "AtMCTrack.h"
@@ -90,7 +91,7 @@ public:
    using AtSimpleSimulationTask::fDetector;
    using AtSimpleSimulationTask::fMCTrackArray;
    using AtSimpleSimulationTask::FillMCTracks;
-   using AtSimpleSimulationTask::SubmitInitialSensitivePoint;
+   using AtSimpleSimulationTask::SubmitDetectorStep;
    EventState LoadEvent() override { return {}; }
 };
 
@@ -102,11 +103,12 @@ public:
 // ---------------------------------------------------------------------------
 TEST_F(AtSimTest, ZeroFieldStraightLine)
 {
-   AtSimpleSimulation sim;
-   sim.AddModel(1, 1, std::make_shared<ConstELoss>(1.0 /*MeV/mm*/));
+   auto engine = std::make_unique<AtSimpleSimulation>();
+   engine->AddModel(1, 1, std::make_shared<ConstELoss>(1.0 /*MeV/mm*/), 1.007276); // proton mass in amu
+   AtStandaloneSimulation sim(std::move(engine));
 
    // Proton: KE = 50 MeV → p_z ≈ 310.5 MeV/c, E ≈ 988.3 MeV
-   const double mass_p = 938.272; // MeV/c²
+   const double mass_p = 1.007276 * 931.494; // MeV/c² (matching model mass)
    const double KE0 = 50.0;      // MeV
    const double E0 = mass_p + KE0;
    const double p0 = std::sqrt(E0 * E0 - mass_p * mass_p);
@@ -162,12 +164,13 @@ TEST_F(AtSimTest, ZeroFieldStraightLine)
 // ---------------------------------------------------------------------------
 TEST_F(AtSimTest, MagneticFieldLarmorRadius)
 {
-   AtSimpleSimulation sim;
+   auto engine = std::make_unique<AtSimpleSimulation>();
    // Tiny energy-loss rate keeps KE almost constant (avoids infinite loop in
    // straight-line path, irrelevant here since B≠0 uses AtPropagator).
-   sim.AddModel(1, 1, std::make_shared<ConstELoss>(0.0 /*MeV/mm — no drag*/));
+   engine->AddModel(1, 1, std::make_shared<ConstELoss>(0.0 /*MeV/mm — no drag*/));
    // Use explicit XYZVector construction to ensure the B field is recognised as non-zero.
-   sim.SetMagneticField(ROOT::Math::XYZVector(0., 0., 2.0)); // 2 T along Z
+   engine->SetMagneticField(ROOT::Math::XYZVector(0., 0., 2.0)); // 2 T along Z
+   AtStandaloneSimulation sim(std::move(engine));
 
    const double mass_p = 938.272;       // MeV/c²
    const double px0 = 100.0;           // MeV/c (purely transverse)
@@ -232,8 +235,9 @@ TEST_F(AtSimTest, MagneticFieldLarmorRadius)
 
 TEST_F(AtSimTest, LegacySimulateParticleStillRejectsStartsOutsideDriftVolume)
 {
-   AtSimpleSimulation sim;
-   sim.AddModel(1, 1, std::make_shared<ConstELoss>(0.1));
+   auto engine = std::make_unique<AtSimpleSimulation>();
+   engine->AddModel(1, 1, std::make_shared<ConstELoss>(0.1));
+   AtStandaloneSimulation sim(std::move(engine));
 
    const double mass_p = 938.272;
    const double E0 = mass_p + 10.0;
@@ -262,7 +266,6 @@ TEST_F(AtSimTest, TransportParticleInvokesCallbackAcrossVolumeBoundary)
    bool sawCaveToDrift = false;
    int callbackCount = 0;
 
-   sim.NewEvent();
    sim.TransportParticle(1, 1, pos, mom, [&](const AtSimpleSimulation::TransportStep &step) {
       ++callbackCount;
       if (step.preVolumeName == "cave" && step.postVolumeName == "drift_volume")
@@ -272,7 +275,6 @@ TEST_F(AtSimTest, TransportParticleInvokesCallbackAcrossVolumeBoundary)
 
    EXPECT_GT(callbackCount, 0);
    EXPECT_TRUE(sawCaveToDrift);
-   EXPECT_EQ(sim.GetNumPoints(), 0) << "Detector-coupled transport should not emit legacy MC points";
 }
 
 TEST_F(AtSimTest, ReactionMCTracksKeepGeneratedTrackIDs)
@@ -337,7 +339,15 @@ TEST_F(AtSimTest, InitialSensitivePointUsesTrackStartState)
    ROOT::Math::XYZPoint pos(0.0, 0.0, 1.0);
    ROOT::Math::PxPyPzEVector mom(0.0, 0.0, 2297.0, std::sqrt(2297.0 * 2297.0 + mass * mass));
 
-   const bool keepTransporting = task.SubmitInitialSensitivePoint(0, 1000060160, true, pos, mom);
+   // Build a synthetic initial step (zero energy loss, entering)
+   AtSimpleSimulation::TransportStep initialStep;
+   initialStep.pdg = 1000060160;
+   initialStep.trackMass = mom.M();
+   initialStep.prePosition = pos;
+   initialStep.postPosition = pos;
+   initialStep.preMomentum = mom;
+   initialStep.postMomentum = mom;
+   const bool keepTransporting = task.SubmitDetectorStep(initialStep, 0, true, true, false);
 
    EXPECT_TRUE(keepTransporting);
    auto *points = detector.GetCollection(0);

@@ -37,6 +37,7 @@ AtTriggerTask.cxx
 AtVectorResponse.cxx
 
 AtSimpleSimulation.cxx
+AtStandaloneSimulation.cxx
 AtSimpleSimulationTask.cxx
 AtSimpleSimulationGeneratorTask.cxx
 AtSimpleSimulationReplayTask.cxx

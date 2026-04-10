@@ -4,14 +4,10 @@
 #include "AtELossModel.h"
 #include "AtELossModelFactory.h"
 #include "AtKinematics.h"
-#include "AtMCPoint.h"
 #include "AtPropagator.h"
-#include "AtSpaceChargeModel.h" // for AtSpaceChargeModel
 
 #include <FairLogger.h>
-#include <FairRootManager.h>
 
-#include <TClonesArray.h> // for TClonesArray
 #include <TDatabasePDG.h>
 #include <TGeoManager.h>
 #include <TGeoMaterial.h>
@@ -19,49 +15,20 @@
 #include <TGeoNavigator.h>
 #include <TGeoNode.h>
 #include <TGeoVolume.h>
-#include <TObject.h> // for TObject
 #include <TParticlePDG.h>
 
 #include <cmath>     // for sqrt
 #include <stdexcept> // for invalid_argument
 #include <utility>   // for pair
 
-thread_local TClonesArray AtSimpleSimulation::fMCPoints("AtMCPoint");
-thread_local int AtSimpleSimulation::fTrackID = 0;
-
-using SpaceChargeModel = std::shared_ptr<AtSpaceChargeModel>;
 using ModelPtr = std::shared_ptr<AtTools::AtELossModel>;
 using XYZPoint = ROOT::Math::XYZPoint;
 using XYZVector = ROOT::Math::XYZVector;
 using PxPyPzEVector = ROOT::Math::PxPyPzEVector;
 
 namespace {
-constexpr int kMaxCurvedTransportSteps = 200000;
 constexpr int kMaxMinStepCurvedSteps = 4096;
 constexpr double kMinStepGuardScale = 1.01;
-}
-
-// ---------------------------------------------------------------------------
-// Thin wrapper so a shared_ptr<AtELossModel> can be passed to AtPropagator
-// (which requires a unique_ptr<AtELossModel>).
-// ---------------------------------------------------------------------------
-namespace {
-class ELossModelShared : public AtTools::AtELossModel {
-   std::shared_ptr<AtTools::AtELossModel> fImpl;
-
-public:
-   explicit ELossModelShared(std::shared_ptr<AtTools::AtELossModel> impl)
-      : AtTools::AtELossModel(0), fImpl(std::move(impl))
-   {
-   }
-   double GetdEdx(double e) const override { return fImpl->GetdEdx(e); }
-   double GetRange(double ei, double ef = 0) const override { return fImpl->GetRange(ei, ef); }
-   double GetEnergyLoss(double ei, double d) const override { return fImpl->GetEnergyLoss(ei, d); }
-   double GetEnergy(double ei, double d) const override { return fImpl->GetEnergy(ei, d); }
-   double GetElossStraggling(double ei, double ef) const override { return fImpl->GetElossStraggling(ei, ef); }
-   double GetdEdxStraggling(double ei, double ef) const override { return fImpl->GetdEdxStraggling(ei, ef); }
-   double GetRangeVariance(double e) const override { return fImpl->GetRangeVariance(e); }
-};
 
 int GetPDGFromZA(int Z, int A)
 {
@@ -83,6 +50,7 @@ AtSimpleSimulation::AtSimpleSimulation(std::string geoFile)
    fGeoManager = gGeoManager;
    fNavigator = nullptr;
 }
+
 AtSimpleSimulation::AtSimpleSimulation()
 {
    // Defer geometry check until first use. FairRunSim::Init() sets up
@@ -92,47 +60,59 @@ AtSimpleSimulation::AtSimpleSimulation()
    fNavigator = nullptr;
 }
 
+AtSimpleSimulation::AtSimpleSimulation(std::shared_ptr<AtTools::AtELossModelFactory> factory) : AtSimpleSimulation()
+{
+   fModelFactory = std::move(factory);
+}
+
+AtSimpleSimulation::AtSimpleSimulation(std::string geoFile, std::shared_ptr<AtTools::AtELossModelFactory> factory)
+   : AtSimpleSimulation(std::move(geoFile))
+{
+   fModelFactory = std::move(factory);
+}
+
 bool AtSimpleSimulation::ParticleID::operator<(const ParticleID &other) const
 {
    if (A < other.A) {
       return true;
    } else if (A > other.A) {
       return false;
-   } else {
-      return Z < other.Z;
    }
+   return Z < other.Z;
 }
 
-/// Takes position in mm
-TGeoVolume *AtSimpleSimulation::GetVolume(const XYZPoint &point)
+TGeoVolume *AtSimpleSimulation::GetVolume(const XYZPoint &pos)
 {
-   auto pointCm = point / 10.;
-   {
-      std::lock_guard<std::mutex> lock(fGeoMutex);
-      if (gGeoManager == nullptr)
-         return nullptr;
+   auto pointCm = pos / 10.; // Convert from mm to cm
 
-      if (fGeoManager != gGeoManager || fNavigator == nullptr) {
-         fGeoManager = gGeoManager;
-         fNavigator = fGeoManager->AddNavigator();
-      }
+   std::lock_guard<std::mutex> lock(fGeoMutex);
 
-      TGeoNode *node = fNavigator->FindNode(pointCm.X(), pointCm.Y(), pointCm.Z());
-      if (node == nullptr) {
-         return nullptr;
-      }
-      return node->GetVolume();
+   if (gGeoManager == nullptr) {
+      return nullptr;
    }
+
+   // Re-sync with gGeoManager if it changed (e.g. FairRunSim::Init loaded geometry).
+   if (fGeoManager != gGeoManager || fNavigator == nullptr) {
+      // The old navigator (if any) belongs to the old TGeoManager, which owns and
+      // will delete it when the manager is destroyed. We abandon it intentionally.
+      fNavigator = nullptr;
+      fGeoManager = gGeoManager;
+      fNavigator = fGeoManager->AddNavigator();
+   }
+
+   TGeoNode *node = fNavigator->FindNode(pointCm.X(), pointCm.Y(), pointCm.Z());
+   if (node == nullptr) {
+      return nullptr;
+   }
+   return node->GetVolume();
 }
 
 bool AtSimpleSimulation::IsInVolume(const std::string &volName, const XYZPoint &point)
 {
-
    TGeoVolume *volume = GetVolume(point);
    if (volume == nullptr || volName != std::string(volume->GetName())) {
       return false;
    }
-
    return true;
 }
 
@@ -152,45 +132,11 @@ void AtSimpleSimulation::AddModel(int Z, int A, ModelPtr model)
 
 void AtSimpleSimulation::AddModel(int Z, int A, ModelPtr model, double massAmu)
 {
-   static constexpr double kEperAMU = 931.494; // MeV/c² per amu
-   static constexpr double kEcharge = 1.602176634e-19; // Coulombs
+   static constexpr double kEperAMU = 931.494;            // MeV/c² per amu
+   static constexpr double kEcharge = 1.602176634e-19;    // Coulombs
 
    ParticleID id = {.A = A, .Z = Z};
    fModels[id] = {model, Z * kEcharge, massAmu * kEperAMU};
-}
-
-std::pair<XYZPoint, PxPyPzEVector>
-AtSimpleSimulation::SimulateParticle(int Z, int A, const XYZPoint &iniPos, const PxPyPzEVector &iniMom,
-                                     std::function<bool(XYZPoint, PxPyPzEVector)> func)
-{
-   auto modelIt = fModels.find({A, Z});
-   if (modelIt == fModels.end() && fModelFactory) {
-      TryAutoCreateModel(Z, A, iniPos);
-      modelIt = fModels.find({A, Z});
-   }
-   if (modelIt == fModels.end())
-      throw std::invalid_argument("Missing energy loss model for Z:" + std::to_string(Z) + " A:" + std::to_string(A));
-   if (!IsInVolume(fStandaloneVolumeName, iniPos))
-      throw std::invalid_argument("Position of particle is not in active volume but is in " + GetVolumeName(iniPos));
-
-   const auto &volName = fStandaloneVolumeName;
-
-   return PropagateParticle(
-      modelIt->second, GetPDGFromZA(Z, A), iniPos, iniMom, [this, &func, &volName](const TransportStep &step) {
-         // Record hits only when inside the configured standalone volume
-         if (IsInVolume(volName, step.postPosition))
-            AddHit(step.energyLoss, step.postPosition, step.postMomentum, step.length);
-
-         // Call user's callback
-         if (!func(step.postPosition, step.postMomentum))
-            return false;
-
-         // Stop transport if the particle has exited the configured volume
-         if (!IsInVolume(volName, step.postPosition))
-            return false;
-
-         return true;
-      });
 }
 
 std::pair<XYZPoint, PxPyPzEVector>
@@ -210,20 +156,29 @@ AtSimpleSimulation::TransportParticle(int Z, int A, const XYZPoint &iniPos, cons
    return PropagateParticle(modelIt->second, GetPDGFromZA(Z, A), iniPos, iniMom, callback);
 }
 
+// ParticleInfo is taken by value (not const ref) so the transport loop owns its copy of the
+// model shared_ptr and mass, independent of any external map modifications during transport.
 std::pair<XYZPoint, PxPyPzEVector>
-AtSimpleSimulation::PropagateParticle(const ParticleInfo &info, int pdg, const XYZPoint &iniPos,
-                                      const PxPyPzEVector &iniMom, const StepCallback &callback)
+AtSimpleSimulation::PropagateParticle(ParticleInfo info, int pdg, const XYZPoint &iniPos, const PxPyPzEVector &iniMom,
+                                      const StepCallback &callback)
 {
-   fTrackID++;
+   // -----------------------------------------------------------------------
+   // Curved-track path: use AtPropagator when B field is non-zero or a
+   // field function is provided. E-field alone does not trigger RK4 because
+   // it is negligible for MeV-scale ion transport.
+   // -----------------------------------------------------------------------
+   if (fBField.Mag2() != 0 || fFieldFunc != nullptr) {
+      AtTools::AtPropagator prop(info.charge, info.mass, info.model.get());
 
-   // -----------------------------------------------------------------------
-   // Curved-track path: use AtPropagator when E/B fields are non-zero
-   // -----------------------------------------------------------------------
-   if (fEField.Mag2() != 0 || fBField.Mag2() != 0) {
-      auto wrapModel = std::make_unique<ELossModelShared>(info.model);
-      AtTools::AtPropagator prop(info.charge, info.mass, std::move(wrapModel));
-      prop.SetEField(fEField);
-      prop.SetBField(fBField);
+      // Initialize propagator fields
+      if (fFieldFunc) {
+         auto [eField, bField] = fFieldFunc(iniPos);
+         prop.SetEField(eField);
+         prop.SetBField(bField);
+      } else {
+         prop.SetEField(fEField);
+         prop.SetBField(fBField);
+      }
       prop.SetState(iniPos, iniMom.Vect());
 
       AtTools::AtRK4AdaptiveStepper stepper;
@@ -234,22 +189,31 @@ AtSimpleSimulation::PropagateParticle(const ParticleInfo &info, int pdg, const X
       int numSteps = 0;
       int minStepSteps = 0;
 
-      while (GetVolume(prop.GetPosition()) != nullptr) {
-         if (++numSteps > kMaxCurvedTransportSteps) {
+      TGeoVolume *curVol = nullptr;
+      while ((curVol = GetVolume(prop.GetPosition())) != nullptr) {
+         if (++numSteps > fMaxTransportSteps) {
             LOG(warning) << "Aborting curved SimpleSim track after " << numSteps
                          << " steps without leaving the geometry";
             break;
          }
 
          double KE = AtTools::Kinematics::KE(prop.GetMomentum(), info.mass);
-         if (KE <= fCurvedStopTol)
+         if (KE <= fStopTol)
             break;
+
+         // For non-uniform fields, re-query the field at the current position before each RK4 step.
+         // Within a single step, the field is treated as uniform (piecewise-constant approximation).
+         if (fFieldFunc) {
+            auto [eField, bField] = fFieldFunc(prop.GetPosition());
+            prop.SetEField(eField);
+            prop.SetBField(bField);
+         }
 
          auto momBefore = AtTools::Kinematics::Get4Vector(prop.GetMomentum(), info.mass);
          auto posBefore = prop.GetPosition();
-         auto preVolumeName = GetVolumeName(posBefore);
+         std::string preVolumeName = curVol->GetName();
 
-         if (isnan(posBefore.X()) || isnan(prop.GetMomentum().X())) {
+         if (std::isnan(posBefore.X()) || std::isnan(prop.GetMomentum().X())) {
             LOG(error) << "Failed to propagate a point with nan!";
             return {{0, 0, 0}, {0, 0, 0, 0}};
          }
@@ -272,7 +236,7 @@ AtSimpleSimulation::PropagateParticle(const ParticleInfo &info, int pdg, const X
             if (++minStepSteps > kMaxMinStepCurvedSteps) {
                LOG(warning) << "Aborting curved SimpleSim track after " << minStepSteps
                             << " minimum-size steps at position " << posAfter << " with KE " << KE_after
-                            << " MeV for PDG " << pdg << " track " << fTrackID;
+                            << " MeV for PDG " << pdg;
                break;
             }
          } else {
@@ -282,7 +246,6 @@ AtSimpleSimulation::PropagateParticle(const ParticleInfo &info, int pdg, const X
 
          if (callback) {
             TransportStep step;
-            step.trackID = fTrackID;
             step.pdg = pdg;
             step.preVolumeName = preVolumeName;
             step.postVolumeName = GetVolumeName(posAfter);
@@ -303,33 +266,48 @@ AtSimpleSimulation::PropagateParticle(const ParticleInfo &info, int pdg, const X
 
    // -----------------------------------------------------------------------
    // Straight-line fast path (zero field)
+   // KE and momentum are computed using info.mass throughout (not the 4-vector's invariant
+   // mass) to stay consistent with the curved path and the energy loss model's mass.
    // -----------------------------------------------------------------------
    auto &model = info.model;
    auto pos = iniPos;
    auto mom = iniMom;
    double length = 0;
+   int numSteps = 0;
 
-   while (GetVolume(pos) != nullptr && mom.E() - mom.M() > 1e-3) {
-      if (isnan(pos.X()) || isnan(mom.X())) {
+   TGeoVolume *curVol = nullptr;
+   while ((curVol = GetVolume(pos)) != nullptr) {
+      if (++numSteps > fMaxTransportSteps) {
+         LOG(warning) << "Aborting straight-line SimpleSim track after " << numSteps
+                      << " steps without leaving the geometry";
+         break;
+      }
+
+      double KE = AtTools::Kinematics::KE(mom.Vect(), info.mass);
+      if (KE <= fStopTol)
+         break;
+
+      if (std::isnan(pos.X()) || std::isnan(mom.X())) {
          LOG(error) << "Failed to propagate a point with nan!";
          return {{0, 0, 0}, {0, 0, 0, 0}};
       }
 
       auto posBefore = pos;
       auto momBefore = mom;
-      auto preVolumeName = GetVolumeName(posBefore);
+      std::string preVolumeName = curVol->GetName();
       auto dir = mom.Vect().Unit();
-      double KE = mom.E() - mom.M();
       double eLoss = model->GetEnergyLoss(KE, fDistStep);
-      auto E = mom.E() - eLoss;
-      double p = sqrt(E * E - mom.M2());
+      double newKE = KE - eLoss;
+      if (newKE <= 0)
+         break;
+      double E = newKE + info.mass;
+      double p = sqrt(E * E - info.mass * info.mass);
       mom.SetPxPyPzE(dir.X() * p, dir.Y() * p, dir.Z() * p, E);
       pos += dir * fDistStep;
       length += fDistStep;
 
       if (callback) {
          TransportStep step;
-         step.trackID = fTrackID;
          step.pdg = pdg;
          step.preVolumeName = preVolumeName;
          step.postVolumeName = GetVolumeName(pos);
@@ -346,40 +324,6 @@ AtSimpleSimulation::PropagateParticle(const ParticleInfo &info, int pdg, const X
    }
 
    return {pos, mom};
-}
-
-void AtSimpleSimulation::NewEvent()
-{
-   fMCPoints.Clear();
-   fTrackID = 0;
-}
-
-/**
- * Units are mm, Mev, and Mev/c.
- */
-void AtSimpleSimulation::AddHit(double ELoss, const XYZPoint &pos, const PxPyPzEVector &mom, double length)
-{
-   LOG(debug) << "Adding a hit at element " << fMCPoints.GetEntriesFast() << " in TClonesArray.";
-
-   auto *mcPoint = dynamic_cast<AtMCPoint *>(fMCPoints.ConstructedAt(fMCPoints.GetEntriesFast(), "C"));
-
-   mcPoint->SetTrackID(fTrackID);
-   mcPoint->SetLength(length / 10.);      // Convert to cm
-   mcPoint->SetEnergyLoss(ELoss / 1000.); // Convert to GeV
-   mcPoint->SetVolName(fStandaloneVolumeName.c_str());
-
-   if (fSCModel) {
-      // In the simulation z = 0 is the window and z=1000 is the pad plane.
-      // In the data analysis that is flipped, so we must adjust the z value, apply SC and move back
-      auto posExpCoord = pos;
-      posExpCoord.SetZ(1000 - pos.Z());
-      auto corrExpCoord = fSCModel->ApplySpaceCharge(posExpCoord);
-      corrExpCoord.SetZ(1000 + corrExpCoord.Z());
-      mcPoint->SetPosition(corrExpCoord / 10.);
-   } else
-      mcPoint->SetPosition(pos / 10.);       // Convert to cm
-   mcPoint->SetMomentum(mom.Vect() / 1000.); // Convert to GeV/c
-   // mcPoint->Print(nullptr);
 }
 
 void AtSimpleSimulation::TryAutoCreateModel(int Z, int A, const XYZPoint &pos)
@@ -407,8 +351,8 @@ void AtSimpleSimulation::TryAutoCreateModel(int Z, int A, const XYZPoint &pos)
 
    // Look up mass in amu from PDG database for precision; fall back to A
    double massAmu = static_cast<double>(A);
-   int pdg = GetPDGFromZA(Z, A);
-   TParticlePDG *particle = TDatabasePDG::Instance()->GetParticle(pdg);
+   int pdgCode = GetPDGFromZA(Z, A);
+   TParticlePDG *particle = TDatabasePDG::Instance()->GetParticle(pdgCode);
    if (particle != nullptr)
       massAmu = particle->Mass() / 0.931494; // GeV/c² -> amu
 
@@ -420,15 +364,4 @@ void AtSimpleSimulation::TryAutoCreateModel(int Z, int A, const XYZPoint &pos)
       LOG(warning) << "Factory failed to create energy loss model for Z=" << Z << " A=" << A << " in "
                    << material->GetName();
    }
-}
-
-void AtSimpleSimulation::RegisterBranch(std::string branchName, bool perc)
-{
-   auto ioMan = FairRootManager::Instance();
-   if (ioMan == nullptr) {
-      LOG(fatal) << "The IO manager was not instatiated before attempting to simulate an event.";
-      return;
-   }
-
-   ioMan->Register(branchName.c_str(), "AtTPC", &fMCPoints, perc);
 }

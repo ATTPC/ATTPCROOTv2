@@ -54,7 +54,7 @@ protected:
    // Variables used for the force
    XYZVector fEField{0, 0, 0};                // Electric field vector
    XYZVector fBField{0, 0, 0};                // Magnetic field vector
-   std::unique_ptr<AtELossModel> fELossModel; // Energy loss model
+   const AtELossModel *fELossModel; // Energy loss model (non-owning; caller ensures lifetime)
 
    // Internal state variables for the propagator
    StepState fState; /// Current state of the particle
@@ -75,8 +75,8 @@ public:
     * @param mass Mass of the particle in MeV/c^2.
     * @param elossModel Energy loss model to use for the particle.
     */
-   AtPropagator(double charge, double mass, std::unique_ptr<AtELossModel> elossModel)
-      : fELossModel(std::move(elossModel))
+   AtPropagator(double charge, double mass, const AtELossModel *elossModel)
+      : fELossModel(elossModel)
    {
       fState.fMass = mass;
       fState.fQ = charge;
@@ -106,7 +106,7 @@ public:
       fState.fMom = mom;
    }
    const StepState &GetState() const { return fState; }
-   const AtELossModel *GetELossModel() const { return fELossModel.get(); }
+   const AtELossModel *GetELossModel() const { return fELossModel; }
 
    XYZPoint GetPosition() const { return fState.fPos; }
    XYZVector GetMomentum() const { return fState.fMom; }

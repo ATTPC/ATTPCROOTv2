@@ -21,7 +21,7 @@ class AtClusterize;       // lines 15-15
 class AtMap;              // lines 18-18
 class AtPatternEvent;     // lines 12-12
 class AtPulse;            // lines 16-16
-class AtSimpleSimulation; // lines 14-14
+class AtStandaloneSimulation;
 class AtDigiPar;
 class AtPSA;
 
@@ -31,7 +31,7 @@ class AtParameterDistribution;
 class AtMCFitter {
 protected:
    using ParamPtr = std::shared_ptr<AtParameterDistribution>;
-   using SimPtr = std::shared_ptr<AtSimpleSimulation>;
+   using SimPtr = std::shared_ptr<AtStandaloneSimulation>;
 
    using ClusterPtr = std::shared_ptr<AtClusterize>;
    using PulsePtr = std::shared_ptr<AtPulse>;

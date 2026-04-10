@@ -25,4 +25,5 @@
 #pragma link C++ class AtSimpleSimulationGeneratorTask +;
 #pragma link C++ class AtSimpleSimulationReplayTask +;
 #pragma link C++ class AtSimpleSimulation -!;
+#pragma link C++ class AtStandaloneSimulation -!;
 #endif

@@ -10,7 +10,7 @@
 #include "AtPatternEvent.h"     // for AtPatternEvent
 #include "AtPulse.h"            // for AtPulse
 #include "AtRawEvent.h"         // for AtRawEvent
-#include "AtSimpleSimulation.h" // for AtSimpleSimulation
+#include "AtStandaloneSimulation.h"
 #include "AtSimulatedPoint.h"   // IWYU pragma: keep
 #include "AtSpaceChargeModel.h"
 

@@ -9,6 +9,7 @@
 #include <FairLogger.h>
 #include <FairRootManager.h>
 #include <FairRun.h>
+#include <FairRunSim.h>
 
 #include <Math/Point3D.h>
 #include <Math/Point3Dfwd.h>
@@ -19,6 +20,7 @@
 #include <TDatabasePDG.h>
 #include <TGeoBBox.h>
 #include <TGeoManager.h>
+#include <TObjArray.h>
 #include <TGeoVolume.h>
 #include <TParticlePDG.h>
 
@@ -59,10 +61,27 @@ AtSimpleSimulationTask::AtSimpleSimulationTask(std::unique_ptr<AtSimpleSimulatio
 
 InitStatus AtSimpleSimulationTask::Init()
 {
+   // Auto-discover detector from FairRunSim if not set manually
+   if (fDetector == nullptr) {
+      auto *runSim = FairRunSim::Instance();
+      if (runSim != nullptr) {
+         auto *modules = runSim->GetListOfModules();
+         if (modules != nullptr) {
+            for (int i = 0; i < modules->GetEntries(); ++i) {
+               auto *det = dynamic_cast<AtTpc *>(modules->At(i));
+               if (det != nullptr) {
+                  fDetector = det;
+                  LOG(info) << "AtSimpleSimulationTask: auto-discovered AtTpc detector '" << det->GetName()
+                            << "' from FairRunSim";
+                  break;
+               }
+            }
+         }
+      }
+   }
    if (fDetector == nullptr) {
       LOG(fatal) << "AtSimpleSimulationTask requires a sensitive detector. "
-                 << "Call SetDetector(tpc) before Init(). "
-                 << "For standalone simulation, use AtSimpleSimulation::SimulateParticle() directly.";
+                 << "Call SetDetector(tpc) before Init(), or register an AtTpc with FairRunSim.";
       return kFATAL;
    }
    LOG(info) << "AtSimpleSimulationTask: using detector-coupled transport adapter";
@@ -81,8 +100,6 @@ InitStatus AtSimpleSimulationTask::Init()
 
 void AtSimpleSimulationTask::Exec(Option_t *)
 {
-   fSimulation->NewEvent();
-
    auto eventState = LoadEvent();
    if (!eventState.hasEvent)
       return;
@@ -151,10 +168,25 @@ void AtSimpleSimulationTask::ConfigureFieldFromFairRun()
    LOG(info) << "AtSimpleSimulationTask: auto-configured B field from FairRun: (" << bx_T << ", " << by_T << ", " << bz_T
              << ") T (sampled at drift volume center)";
 
-   // Warn if field is not constant (SimpleSim assumes uniform)
-   if (field->GetType() != 0)
-      LOG(warning) << "AtSimpleSimulationTask: SimpleSim assumes uniform fields, but the FairRun field type is "
-                   << field->GetType() << " (non-constant). Using field value sampled at drift volume center.";
+   // FairField::GetType() == 0 means constant field. For non-constant fields (maps, etc.),
+   // set up a per-step field query so the propagator sees the correct field at each position.
+   // The lambda captures the FairField pointer (owned by FairRun, outlives the simulation).
+   if (field->GetType() != 0) {
+      LOG(info) << "AtSimpleSimulationTask: non-constant field (type " << field->GetType()
+                << "); enabling per-step field queries";
+      fSimulation->SetFieldFunction(
+         [field](const ROOT::Math::XYZPoint &pos_mm) -> std::pair<ROOT::Math::XYZVector, ROOT::Math::XYZVector> {
+            constexpr double kMmToCm = 0.1;
+            constexpr double kKGtoT = 0.1;
+            double x_cm = pos_mm.X() * kMmToCm;
+            double y_cm = pos_mm.Y() * kMmToCm;
+            double z_cm = pos_mm.Z() * kMmToCm;
+            ROOT::Math::XYZVector B(field->GetBx(x_cm, y_cm, z_cm) * kKGtoT,
+                                    field->GetBy(x_cm, y_cm, z_cm) * kKGtoT,
+                                    field->GetBz(x_cm, y_cm, z_cm) * kKGtoT);
+            return {ROOT::Math::XYZVector(0, 0, 0), B};
+         });
+   }
 
    // For constant fields, check if drift volume extends beyond field region
    if (field->GetType() == 0 && driftVol != nullptr) {
@@ -243,20 +275,52 @@ void AtSimpleSimulationTask::TransportParticle(const AtCollectedParticle &partic
       LOG(info) << "Simulating particle Z=" << Z << " A=" << A << " with initial pos=" << pos << " mm and mom=" << mom
                 << " MeV/c";
 
+      // In the generator pipeline, trackID 0 is always the beam particle. Only mark it as a
+      // beam track during beam events so the detector can accumulate energy toward a reaction threshold.
       const bool beamTrack = beamEvent && particle.trackID == 0;
-      if (IsSensitiveVolume(fSimulation->GetVolumeNameAt(pos)) &&
-          !SubmitInitialSensitivePoint(particle.trackID, particle.pdgCode, beamTrack, pos, mom))
-         return;
+
+      // Submit an initial entering step if starting inside a sensitive volume.
+      // Build a synthetic TransportStep with zero energy loss at the start position.
+      auto startVolName = fSimulation->GetVolumeNameAt(pos);
+      if (IsSensitiveVolume(startVolName)) {
+         AtSimpleSimulation::TransportStep initialStep;
+         initialStep.pdg = particle.pdgCode;
+         initialStep.preVolumeName = startVolName;
+         initialStep.postVolumeName = startVolName;
+         initialStep.trackMass = mom.M(); // MeV/c^2
+         initialStep.prePosition = pos;
+         initialStep.postPosition = pos;
+         initialStep.preMomentum = mom;
+         initialStep.postMomentum = mom;
+         if (!SubmitDetectorStep(initialStep, particle.trackID, beamTrack, true, false))
+            return;
+      }
 
       fSimulation->TransportParticle(
          Z, A, pos, mom, [this, trackID = particle.trackID, beamEvent](const AtSimpleSimulation::TransportStep &step) {
             const bool preSensitive = IsSensitiveVolume(step.preVolumeName);
             const bool postSensitive = IsSensitiveVolume(step.postVolumeName);
-            const bool entering = !preSensitive && postSensitive;
-            const bool exiting = preSensitive && !postSensitive;
+
+            if (!preSensitive && !postSensitive)
+               return true; // skip non-sensitive regions
+
+            // Detect volume boundary crossings, not just sensitive/non-sensitive transitions.
+            // In Geant4, IsTrackEntering() fires at every volume boundary. We replicate this
+            // by also detecting sensitive-to-sensitive transitions (e.g., window -> drift_volume).
+            const bool volumeChanged = step.preVolumeName != step.postVolumeName;
+            const bool entering = postSensitive && (!preSensitive || volumeChanged);
+            const bool exiting = preSensitive && (!postSensitive || volumeChanged);
             const bool currentBeamTrack = beamEvent && trackID == 0;
-            const bool keepTransporting =
-               ProcessDetectorStep(step, trackID, currentBeamTrack, preSensitive, postSensitive, entering, exiting);
+
+            // When crossing between two sensitive volumes, split into exit + entry so the
+            // detector resets per-volume state (e.g., fELossAcc) at boundaries.
+            if (exiting && entering) {
+               SubmitDetectorStep(step, trackID, currentBeamTrack, false, true);
+               SubmitDetectorStep(step, trackID, currentBeamTrack, true, false);
+               return true;
+            }
+
+            const bool keepTransporting = SubmitDetectorStep(step, trackID, currentBeamTrack, entering, exiting);
             if (exiting && !postSensitive)
                return false;
             return keepTransporting;
@@ -266,56 +330,29 @@ void AtSimpleSimulationTask::TransportParticle(const AtCollectedParticle &partic
    }
 }
 
-bool AtSimpleSimulationTask::SubmitInitialSensitivePoint(int trackID, int pdg, bool beamTrack, const XYZPoint &pos,
-                                                         const PxPyPzEVector &mom)
+bool AtSimpleSimulationTask::SubmitDetectorStep(const AtSimpleSimulation::TransportStep &step, int trackID,
+                                                bool beamTrack, bool entering, bool exiting)
 {
-   AtTpc::StepState detectorStep;
-   detectorStep.trackID = trackID;
-   detectorStep.pdg = pdg;
-   detectorStep.volumeName = fSimulation->GetVolumeNameAt(pos).c_str();
-   detectorStep.volumeID = kAtTpc;
-   detectorStep.detCopyID = 0;
-   detectorStep.beamTrack = beamTrack;
-   detectorStep.entering = true;
-   detectorStep.exiting = false;
-   detectorStep.stopping = (mom.E() - mom.M() <= 1e-3);
-   detectorStep.disappeared = false;
-   detectorStep.energyLoss = 0.0;
-   detectorStep.timeNs = 0.0;
-   detectorStep.trackLength = 0.0;
-   detectorStep.totalEnergy = mom.E() * kMeVToGeV;
-   detectorStep.trackMass = mom.M() * kMeVToGeV;
-   detectorStep.pos.SetXYZT(pos.X() * kMmToCm, pos.Y() * kMmToCm, pos.Z() * kMmToCm, 0.0);
-   detectorStep.mom.SetXYZT(mom.Px() * kMeVToGeV, mom.Py() * kMeVToGeV, mom.Pz() * kMeVToGeV, mom.E() * kMeVToGeV);
-   detectorStep.posOut = detectorStep.pos;
-   detectorStep.momOut = detectorStep.mom;
-
-   return !fDetector->ProcessStep(detectorStep);
-}
-
-bool AtSimpleSimulationTask::ProcessDetectorStep(const AtSimpleSimulation::TransportStep &step, int trackID, bool beamTrack,
-                                                 bool preSensitive, bool postSensitive, bool entering, bool exiting)
-{
-   if (!preSensitive && !postSensitive)
-      return true;
+   // When exiting, reference the pre-step state (where the particle was in the volume).
+   // Otherwise (entering or inside), reference the post-step state.
+   const auto &refPos = exiting ? step.prePosition : step.postPosition;
+   const auto &refMom = exiting ? step.preMomentum : step.postMomentum;
+   const auto &refVol = exiting ? step.preVolumeName : step.postVolumeName;
 
    AtTpc::StepState detectorStep;
    detectorStep.trackID = trackID;
    detectorStep.pdg = step.pdg;
-   detectorStep.volumeName = postSensitive ? step.postVolumeName.c_str() : step.preVolumeName.c_str();
+   detectorStep.volumeName = refVol.c_str();
    detectorStep.volumeID = kAtTpc;
    detectorStep.detCopyID = 0;
    detectorStep.beamTrack = beamTrack;
    detectorStep.entering = entering;
    detectorStep.exiting = exiting;
-   detectorStep.stopping = postSensitive && (step.postMomentum.E() - step.postMomentum.M() <= 1e-3);
+   detectorStep.stopping = !exiting && (step.postMomentum.E() - step.trackMass <= 1e-3);
    detectorStep.disappeared = false;
    detectorStep.energyLoss = step.energyLoss * kMeVToGeV;
    detectorStep.timeNs = 0.;
    detectorStep.trackLength = step.length * kMmToCm;
-
-   const auto &refPos = postSensitive ? step.postPosition : step.prePosition;
-   const auto &refMom = postSensitive ? step.postMomentum : step.preMomentum;
    detectorStep.totalEnergy = refMom.E() * kMeVToGeV;
    detectorStep.trackMass = step.trackMass * kMeVToGeV;
    detectorStep.pos.SetXYZT(refPos.X() * kMmToCm, refPos.Y() * kMmToCm, refPos.Z() * kMmToCm, 0.);
@@ -336,13 +373,26 @@ XYZPoint AtSimpleSimulationTask::FindSensitiveEntry(const XYZPoint &pos, const P
    if (dir.R() == 0.0)
       throw std::invalid_argument("Particle momentum is zero; cannot search for detector entry");
 
-   constexpr double stepMm = 1.0;
-   constexpr int maxSteps = 5000;
-   auto probe = pos;
-   for (int i = 0; i < maxSteps; ++i) {
-      probe += dir * stepMm;
-      if (IsSensitiveVolume(fSimulation->GetVolumeNameAt(probe)))
-         return probe;
+   if (gGeoManager == nullptr)
+      throw std::invalid_argument("No TGeoManager available for ray-trace");
+
+   // TGeoManager works in cm; SimpleSim uses mm
+   double point_cm[3] = {pos.X() * kMmToCm, pos.Y() * kMmToCm, pos.Z() * kMmToCm};
+   double dir_unit[3] = {dir.X(), dir.Y(), dir.Z()};
+
+   // Use TGeo ray-tracing to find the exact boundary crossing into the first sensitive volume.
+   // This is faster and more precise than stepping in fixed increments.
+   gGeoManager->InitTrack(point_cm, dir_unit);
+   constexpr int maxBoundaries = 100;
+   for (int i = 0; i < maxBoundaries; ++i) {
+      auto *node = gGeoManager->FindNextBoundaryAndStep();
+      if (node == nullptr)
+         break;
+      auto *vol = node->GetVolume();
+      if (vol != nullptr && IsSensitiveVolume(vol->GetName())) {
+         const double *current = gGeoManager->GetCurrentPoint();
+         return XYZPoint(current[0] * kCmToMm, current[1] * kCmToMm, current[2] * kCmToMm);
+      }
    }
 
    throw std::invalid_argument("Particle does not intersect a sensitive detector volume");

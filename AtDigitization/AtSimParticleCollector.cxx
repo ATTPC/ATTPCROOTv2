@@ -1,11 +1,23 @@
 #include "AtSimParticleCollector.h"
 
+#include <FairLogger.h>
+
 TParticle *AtSimParticleCollector::PopNextTrack(Int_t & /*itrack*/)
 {
+   LOG(fatal) << "AtSimParticleCollector::PopNextTrack() is not implemented. "
+              << "This stub stack only supports PushTrack().";
    return nullptr;
 }
 TParticle *AtSimParticleCollector::PopPrimaryForTracking(Int_t /*iPrim*/)
 {
+   LOG(fatal) << "AtSimParticleCollector::PopPrimaryForTracking() is not implemented. "
+              << "This stub stack only supports PushTrack().";
+   return nullptr;
+}
+TParticle *AtSimParticleCollector::GetCurrentTrack() const
+{
+   LOG(fatal) << "AtSimParticleCollector::GetCurrentTrack() is not implemented. "
+              << "This stub stack only supports PushTrack().";
    return nullptr;
 }
 

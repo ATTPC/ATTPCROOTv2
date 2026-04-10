@@ -114,7 +114,18 @@ public:
 
    /**
     * Process a detector step from a transport-neutral snapshot.
-    * Returns true when the transport should stop at this step because the reaction fired.
+    *
+    * Expected call sequence per volume traversal:
+    *  1. One step with entering=true — resets fELossAcc to 0 and captures entry position/momentum.
+    *  2. Zero or more steps with entering=false, exiting=false — accumulate energy loss in fELossAcc.
+    *  3. One step with exiting=true (or stopping/disappeared) — captures exit position/momentum
+    *     and may trigger resetVertex() for beam tracks leaving a reaction volume.
+    *
+    * Two entering=true steps without an intervening exiting=true step will silently reset
+    * the accumulated energy loss, discarding data from the first volume traversal.
+    *
+    * Returns true when the transport should stop at this step (reaction fired or beam exited
+    * a reaction volume with fStopOnReactionVolumeExit enabled).
     */
    bool ProcessStep(const StepState &step);
 

@@ -33,6 +33,11 @@ struct AtCollectedParticle {
  * energy calculation) runs unchanged; the resulting particles land here rather than in Geant4.
  *
  * Only primary particles to be tracked (toBeDone == 1) are stored.
+ *
+ * @note GetCurrentTrack(), PopNextTrack(), and PopPrimaryForTracking() are not implemented
+ * and will LOG(fatal) if called. Generators that only call PushTrack() work correctly. If a
+ * generator needs to inspect the stack, these stubs must be extended to return synthesized
+ * TParticle objects.
  */
 class AtSimParticleCollector : public FairGenericStack {
    std::vector<AtCollectedParticle> fParticles;
@@ -61,13 +66,14 @@ public:
                 is, -1);
    }
 
-   // ---- TVirtualMCStack pure-virtual stubs (never called outside VMC context) ----
+   // ---- TVirtualMCStack pure-virtual stubs ----
+   // These are not implemented and will LOG(fatal) if called. See class-level @note.
    virtual TParticle *PopNextTrack(Int_t &itrack);
    virtual TParticle *PopPrimaryForTracking(Int_t i);
+   virtual TParticle *GetCurrentTrack() const;
    virtual void SetCurrentTrack(Int_t itrack) { fCurrentTrack = itrack; }
    virtual Int_t GetNtrack() const { return static_cast<Int_t>(fParticles.size()); }
    virtual Int_t GetNprimary() const { return static_cast<Int_t>(fParticles.size()); }
-   virtual TParticle *GetCurrentTrack() const { return nullptr; }
    virtual Int_t GetCurrentTrackNumber() const { return fCurrentTrack; }
    virtual Int_t GetCurrentParentTrackNumber() const { return -1; }
 

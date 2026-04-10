@@ -52,7 +52,7 @@ TEST(AtPropagatorTest, ForceNoField)
 
    // Create a dummy energy loss model
    auto elossModel = std::make_unique<DummyELossModel>();
-   AtPropagator propagator(charge, mass, std::move(elossModel));
+   AtPropagator propagator(charge, mass, elossModel.get());
    propagator.SetEField({0, 0, 0});
    propagator.SetBField({0, 0, 0});
 
@@ -79,7 +79,7 @@ TEST(AtPropagatorTest, ForceEField)
    // Create a dummy energy loss model
    auto elossModel = std::make_unique<DummyELossModel>();
    elossModel->eLoss = 0; // No energy loss for this test
-   AtPropagator propagator(charge, mass, std::move(elossModel));
+   AtPropagator propagator(charge, mass, elossModel.get());
    propagator.SetEField({0, 0, 70000});
    propagator.SetBField({0, 0, 0});
 
@@ -100,7 +100,7 @@ TEST(AtPropagatorTest, ForceBField)
    // Create a dummy energy loss model
    auto elossModel = std::make_unique<DummyELossModel>();
    elossModel->eLoss = 0; // No energy loss for this test
-   AtPropagator propagator(charge, mass, std::move(elossModel));
+   AtPropagator propagator(charge, mass, elossModel.get());
    propagator.SetEField({0, 0, 0});
    propagator.SetBField({0, 0, 1});
 
@@ -117,7 +117,7 @@ TEST(AtPropagatorTest, PropagateToPoint_StoppingNoField)
    double mass = mass_p;     // Mass in MeV/c^2
    auto elossModel = std::make_unique<AtTools::AtELossTable>(0);
    elossModel->LoadSrimTable(getEnergyPath()); // Use the function to get the path
-   AtPropagator propagator(charge, mass, std::move(elossModel));
+   AtPropagator propagator(charge, mass, elossModel.get());
    AtRK4Stepper stepper;
    AtMeasurementPoint measurementPoint({1e3, 0, 0});
 
@@ -160,7 +160,7 @@ TEST(AtPropagatorTest, PropagateToPoint_NoField)
    double mass = mass_p;     // Mass in MeV/c^2
    auto elossModel = std::make_unique<AtTools::AtELossTable>(0);
    elossModel->LoadSrimTable(getEnergyPath()); // Use the function to get the path
-   AtPropagator propagator(charge, mass, std::move(elossModel));
+   AtPropagator propagator(charge, mass, elossModel.get());
    AtRK4Stepper stepper;
    AtMeasurementPoint measurementPoint({10, 0, 0});
 
@@ -195,7 +195,7 @@ TEST(AtPropagatorTest, PropagateToPlane_NoField)
    double mass = mass_p;     // Mass in MeV/c^2
    auto elossModel = std::make_unique<AtTools::AtELossTable>(0);
    elossModel->LoadSrimTable(getEnergyPath()); // Use the function to get the path
-   AtPropagator propagator(charge, mass, std::move(elossModel));
+   AtPropagator propagator(charge, mass, elossModel.get());
    AtRK4Stepper stepper;
 
    double KE = 1; // Kinetic energy in MeV
@@ -233,7 +233,7 @@ TEST(AtPropagatorTest, PropagateToPlane_StoppingNoField)
    double mass = mass_p;     // Mass in MeV/c^2
    auto elossModel = std::make_unique<AtTools::AtELossTable>(0);
    elossModel->LoadSrimTable(getEnergyPath()); // Use the function to get the path
-   AtPropagator propagator(charge, mass, std::move(elossModel));
+   AtPropagator propagator(charge, mass, elossModel.get());
    AtRK4Stepper stepper;
 
    double KE = 1; // Kinetic energy in MeV
@@ -267,7 +267,7 @@ TEST(AtPropagatorTest, PropagateToPointAdaptive_NoField)
    double mass = mass_p;     // Mass in MeV/c^2
    auto elossModel = std::make_unique<AtTools::AtELossTable>(0);
    elossModel->LoadSrimTable(getEnergyPath()); // Use the function to get the path
-   AtPropagator propagator(charge, mass, std::move(elossModel));
+   AtPropagator propagator(charge, mass, elossModel.get());
    AtRK4AdaptiveStepper stepper;
    AtMeasurementPoint measurementPoint({10, 0, 0});
 
@@ -319,7 +319,7 @@ TEST(AtPropagatorTest, PropagateToPoint_Field)
    auto elossModel = std::make_unique<AtTools::AtELossTable>(0);
    elossModel->LoadSrimTable(getEnergyPath()); // Use the function to get the path
    elossModel->SetDensity(3.3084e-05);         // Set density in g/cm^3 for 300 torr H2
-   AtPropagator propagator(charge, mass, std::move(elossModel));
+   AtPropagator propagator(charge, mass, elossModel.get());
    propagator.SetEField({0, 0, 0});    // No electric field
    propagator.SetBField({0, 0, 2.85}); // Magnetic field
    AtRK4Stepper stepper;
@@ -374,7 +374,7 @@ TEST(AtPropagatorTest, PropagateToPointAdaptive_Field)
    auto elossModel = std::make_unique<AtTools::AtELossTable>(0);
    elossModel->LoadSrimTable(getEnergyPath());
    elossModel->SetDensity(3.3084e-05);
-   AtPropagator propagator(charge, mass, std::move(elossModel));
+   AtPropagator propagator(charge, mass, elossModel.get());
    propagator.SetEField({0, 0, 0});
    propagator.SetBField({0, 0, 2.85});
    AtRK4AdaptiveStepper stepper;

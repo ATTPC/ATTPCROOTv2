@@ -11,10 +11,6 @@
 #include <memory>
 #include <string>
 
-namespace AtTools {
-class AtELossModelFactory;
-} // namespace AtTools
-
 class AtTpc;
 class TBuffer;
 class TClass;
@@ -34,12 +30,6 @@ public:
 
    void SetSensitiveDetector(AtTpc *detector) { fDetector = detector; }
    void SetDetector(AtTpc *detector) { SetSensitiveDetector(detector); }
-
-   /// Set a model factory for automatic energy loss model creation. See AtSimpleSimulation::SetModelFactory.
-   void SetModelFactory(std::shared_ptr<AtTools::AtELossModelFactory> factory)
-   {
-      fSimulation->SetModelFactory(std::move(factory));
-   }
 
    InitStatus Init() override;
    void Exec(Option_t *option) override;
@@ -66,10 +56,11 @@ protected:
    void FillMCTracks();
    void TransportCurrentEvent(bool beamEvent);
    void TransportParticle(const AtCollectedParticle &particle, bool beamEvent);
-   bool SubmitInitialSensitivePoint(int trackID, int pdg, bool beamTrack, const ROOT::Math::XYZPoint &pos,
-                                    const ROOT::Math::PxPyPzEVector &mom);
-   bool ProcessDetectorStep(const AtSimpleSimulation::TransportStep &step, int trackID, bool beamTrack, bool preSensitive,
-                            bool postSensitive, bool entering, bool exiting);
+   /// Build an AtTpc::StepState from a TransportStep and submit it to the detector.
+   /// Returns true if transport should continue (false if detector requested stop).
+   /// When exiting, position/momentum reference the pre-step state; otherwise post-step.
+   bool SubmitDetectorStep(const AtSimpleSimulation::TransportStep &step, int trackID, bool beamTrack, bool entering,
+                           bool exiting);
    ROOT::Math::XYZPoint FindSensitiveEntry(const ROOT::Math::XYZPoint &pos,
                                            const ROOT::Math::PxPyPzEVector &mom) const;
    static bool IsSensitiveVolume(const std::string &volumeName);
