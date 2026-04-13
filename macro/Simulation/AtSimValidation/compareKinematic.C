@@ -496,7 +496,7 @@ void compareKinematic(TString geantFile = "./data/geant4_kinematic.root",
    auto *braggG4 = MakeResidualRangeGraph(geantEvent.proton, "gKineBraggG4", kBlue + 1, 1);
    auto *braggSim = MakeResidualRangeGraph(simpleEvent.proton, "gKineBraggSim", kRed + 1, 2);
 
-   auto *canvas = new TCanvas("cKinematicCompare", "AtSimpleSimulation kinematic proton comparison", 1900, 1000);
+   auto *canvas = new TCanvas("cKinematicCompare", "AtSimTransport kinematic proton comparison", 1900, 1000);
    canvas->Divide(4, 2);
 
    canvas->cd(1);

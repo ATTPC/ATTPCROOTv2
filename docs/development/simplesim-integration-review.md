@@ -1,5 +1,12 @@
 # SimpleSim FairRoot Integration Review
 
+> **Historical note (post-review rename):** the class names below were renamed after this review.
+> `AtSimpleSimulation` (transport engine) → `AtSimTransport`;
+> `AtStandaloneSimulation` (hit-recording wrapper) → `AtSimpleSimulation`;
+> `AtSimpleSimulationTask` / `AtSimpleSimulationGeneratorTask` / `AtSimpleSimulationReplayTask` → `AtSimTransportTask` / `AtSimTransportGeneratorTask` / `AtSimTransportReplayTask`.
+> `AtELossModelFactory` / `AtELossFactoryBetheBloch` / `AtELossFactoryCATIMA` → `AtELossManager` / `AtELossManagerBetheBloch` / `AtELossManagerCATIMA`.
+> The review text below is preserved with the original names for historical context.
+
 Review of the `SimpleSimAddition` branch, which integrates `AtSimpleSimulation` into the FairRoot simulation pipeline as a drop-in replacement for Geant4 transport.
 
 Scope: integration layer design only. The physics of `AtSimpleSimulation` itself is assumed correct.

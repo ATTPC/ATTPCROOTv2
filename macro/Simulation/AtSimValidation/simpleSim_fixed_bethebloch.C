@@ -1,10 +1,10 @@
 // SimpleSim drop-in replacement for geant4_fixed.C using Bethe-Bloch factory energy loss.
 // Compare the diff between this file and simpleSim_fixed_factory.C — only the factory type differs.
 
-#include <AtSimpleSimulation.h>
-#include <AtSimpleSimulationTask.h>
+#include <AtSimTransport.h>
+#include <AtSimTransportTask.h>
 
-#include <AtELossFactoryBetheBloch.h>
+#include <AtELossManagerBetheBloch.h>
 
 namespace {
 FairPrimaryGenerator *BuildElasticGenerator(Double_t thetaMinCmsDeg, Double_t thetaMaxCmsDeg)
@@ -87,10 +87,10 @@ void simpleSim_fixed_bethebloch(Double_t thetaCms = 45.0, Int_t nEvents = 100, U
    // --- SimpleSim drop-in: replace Geant4 transport with Bethe-Bloch factory ---
    run->SetGenerator(new FairPrimaryGenerator());
 
-   auto sim = std::make_unique<AtSimpleSimulation>();
-   sim->SetModelFactory(std::make_shared<AtTools::AtELossFactoryBetheBloch>());
+   auto manager = std::make_shared<AtTools::AtELossManagerBetheBloch>();
+   auto sim = std::make_unique<AtSimTransport>(manager);
 
-   auto *simTask = new AtSimpleSimulationGeneratorTask(std::move(sim));
+   auto *simTask = new AtSimTransportGeneratorTask(std::move(sim));
    simTask->SetPrimaryGenerator(BuildElasticGenerator(thetaCms, thetaCms));
    simTask->SetDetector(tpc);
    run->AddTask(simTask);

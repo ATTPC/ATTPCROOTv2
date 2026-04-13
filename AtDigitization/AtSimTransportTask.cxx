@@ -1,9 +1,8 @@
-#include "AtSimpleSimulationTask.h"
+#include "AtSimTransportTask.h"
 
 #include "AtDetectorList.h"
 #include "AtMCTrack.h"
-#include "AtSimpleSimulation.h"
-#include "AtTpc/AtTpc.h"
+#include "AtSimTransport.h"
 
 #include <FairField.h>
 #include <FairLogger.h>
@@ -20,14 +19,17 @@
 #include <TDatabasePDG.h>
 #include <TGeoBBox.h>
 #include <TGeoManager.h>
-#include <TObjArray.h>
 #include <TGeoVolume.h>
+#include <TObjArray.h>
+#include <TParticle.h>
 #include <TParticlePDG.h>
 
 #include <cmath>
 #include <stdexcept>
 #include <string>
 #include <utility>
+
+#include "AtTpc/AtTpc.h"
 
 using namespace ROOT::Math;
 
@@ -57,9 +59,9 @@ std::pair<int, int> GetZAFromPDG(int pdg)
 }
 } // namespace
 
-AtSimpleSimulationTask::AtSimpleSimulationTask(std::unique_ptr<AtSimpleSimulation> sim) : fSimulation(std::move(sim)) {}
+AtSimTransportTask::AtSimTransportTask(std::unique_ptr<AtSimTransport> sim) : fSimulation(std::move(sim)) {}
 
-InitStatus AtSimpleSimulationTask::Init()
+InitStatus AtSimTransportTask::Init()
 {
    // Auto-discover detector from FairRunSim if not set manually
    if (fDetector == nullptr) {
@@ -71,7 +73,7 @@ InitStatus AtSimpleSimulationTask::Init()
                auto *det = dynamic_cast<AtTpc *>(modules->At(i));
                if (det != nullptr) {
                   fDetector = det;
-                  LOG(info) << "AtSimpleSimulationTask: auto-discovered AtTpc detector '" << det->GetName()
+                  LOG(info) << "AtSimTransportTask: auto-discovered AtTpc detector '" << det->GetName()
                             << "' from FairRunSim";
                   break;
                }
@@ -80,12 +82,11 @@ InitStatus AtSimpleSimulationTask::Init()
       }
    }
    if (fDetector == nullptr) {
-      LOG(fatal) << "AtSimpleSimulationTask requires a sensitive detector. "
+      LOG(fatal) << "AtSimTransportTask requires a sensitive detector. "
                  << "Call SetDetector(tpc) before Init(), or register an AtTpc with FairRunSim.";
       return kFATAL;
    }
-   LOG(info) << "AtSimpleSimulationTask: using detector-coupled transport adapter";
-   fDetector->SetStopOnReactionVolumeExit(true);
+   LOG(info) << "AtSimTransportTask: using detector-coupled transport adapter";
 
    if (fAutoConfigureField)
       ConfigureFieldFromFairRun();
@@ -98,7 +99,7 @@ InitStatus AtSimpleSimulationTask::Init()
    return kSUCCESS;
 }
 
-void AtSimpleSimulationTask::Exec(Option_t *)
+void AtSimTransportTask::Exec(Option_t *)
 {
    auto eventState = LoadEvent();
    if (!eventState.hasEvent)
@@ -111,13 +112,19 @@ void AtSimpleSimulationTask::Exec(Option_t *)
    TransportCurrentEvent(eventState.beamEvent);
 }
 
-void AtSimpleSimulationTask::Finish() { FinishEventSource(); }
+void AtSimTransportTask::Finish()
+{
+   FinishEventSource();
+}
 
-InitStatus AtSimpleSimulationTask::InitEventSource() { return kSUCCESS; }
+InitStatus AtSimTransportTask::InitEventSource()
+{
+   return kSUCCESS;
+}
 
-void AtSimpleSimulationTask::FinishEventSource() {}
+void AtSimTransportTask::FinishEventSource() {}
 
-void AtSimpleSimulationTask::ConfigureFieldFromFairRun()
+void AtSimTransportTask::ConfigureFieldFromFairRun()
 {
    using XYZVector = ROOT::Math::XYZVector;
    constexpr double kKGtoTesla = 0.1;
@@ -129,13 +136,13 @@ void AtSimpleSimulationTask::ConfigureFieldFromFairRun()
 
    auto *run = FairRun::Instance();
    if (run == nullptr) {
-      LOG(info) << "AtSimpleSimulationTask: no FairRun instance; skipping field auto-config";
+      LOG(info) << "AtSimTransportTask: no FairRun instance; skipping field auto-config";
       return;
    }
 
    auto *field = run->GetField();
    if (field == nullptr) {
-      LOG(info) << "AtSimpleSimulationTask: no field set on FairRun; SimpleSim fields remain at zero";
+      LOG(info) << "AtSimTransportTask: no field set on FairRun; SimpleSim fields remain at zero";
       return;
    }
 
@@ -165,14 +172,14 @@ void AtSimpleSimulationTask::ConfigureFieldFromFairRun()
    double bz_T = bz_kG * kKGtoTesla;
 
    fSimulation->SetMagneticField(XYZVector(bx_T, by_T, bz_T));
-   LOG(info) << "AtSimpleSimulationTask: auto-configured B field from FairRun: (" << bx_T << ", " << by_T << ", " << bz_T
-             << ") T (sampled at drift volume center)";
+   LOG(info) << "AtSimTransportTask: auto-configured B field from FairRun: (" << bx_T << ", " << by_T << ", "
+             << bz_T << ") T (sampled at drift volume center)";
 
    // FairField::GetType() == 0 means constant field. For non-constant fields (maps, etc.),
    // set up a per-step field query so the propagator sees the correct field at each position.
    // The lambda captures the FairField pointer (owned by FairRun, outlives the simulation).
    if (field->GetType() != 0) {
-      LOG(info) << "AtSimpleSimulationTask: non-constant field (type " << field->GetType()
+      LOG(info) << "AtSimTransportTask: non-constant field (type " << field->GetType()
                 << "); enabling per-step field queries";
       fSimulation->SetFieldFunction(
          [field](const ROOT::Math::XYZPoint &pos_mm) -> std::pair<ROOT::Math::XYZVector, ROOT::Math::XYZVector> {
@@ -181,8 +188,7 @@ void AtSimpleSimulationTask::ConfigureFieldFromFairRun()
             double x_cm = pos_mm.X() * kMmToCm;
             double y_cm = pos_mm.Y() * kMmToCm;
             double z_cm = pos_mm.Z() * kMmToCm;
-            ROOT::Math::XYZVector B(field->GetBx(x_cm, y_cm, z_cm) * kKGtoT,
-                                    field->GetBy(x_cm, y_cm, z_cm) * kKGtoT,
+            ROOT::Math::XYZVector B(field->GetBx(x_cm, y_cm, z_cm) * kKGtoT, field->GetBy(x_cm, y_cm, z_cm) * kKGtoT,
                                     field->GetBz(x_cm, y_cm, z_cm) * kKGtoT);
             return {ROOT::Math::XYZVector(0, 0, 0), B};
          });
@@ -198,19 +204,16 @@ void AtSimpleSimulationTask::ConfigureFieldFromFairRun()
          double dz = shape->GetDZ();
 
          // Check corners of drift volume bounding box
-         double corners[8][3] = {{origin[0] - dx, origin[1] - dy, origin[2] - dz},
-                                 {origin[0] + dx, origin[1] - dy, origin[2] - dz},
-                                 {origin[0] - dx, origin[1] + dy, origin[2] - dz},
-                                 {origin[0] + dx, origin[1] + dy, origin[2] - dz},
-                                 {origin[0] - dx, origin[1] - dy, origin[2] + dz},
-                                 {origin[0] + dx, origin[1] - dy, origin[2] + dz},
-                                 {origin[0] - dx, origin[1] + dy, origin[2] + dz},
-                                 {origin[0] + dx, origin[1] + dy, origin[2] + dz}};
+         double corners[8][3] = {
+            {origin[0] - dx, origin[1] - dy, origin[2] - dz}, {origin[0] + dx, origin[1] - dy, origin[2] - dz},
+            {origin[0] - dx, origin[1] + dy, origin[2] - dz}, {origin[0] + dx, origin[1] + dy, origin[2] - dz},
+            {origin[0] - dx, origin[1] - dy, origin[2] + dz}, {origin[0] + dx, origin[1] - dy, origin[2] + dz},
+            {origin[0] - dx, origin[1] + dy, origin[2] + dz}, {origin[0] + dx, origin[1] + dy, origin[2] + dz}};
 
          for (const auto &corner : corners) {
             double bz_corner = field->GetBz(corner[0], corner[1], corner[2]);
             if (std::abs(bz_corner - bz_kG) > 1e-6) {
-               LOG(warning) << "AtSimpleSimulationTask: drift volume extends beyond the constant field region. "
+               LOG(warning) << "AtSimTransportTask: drift volume extends beyond the constant field region. "
                             << "Field at corner (" << corner[0] << ", " << corner[1] << ", " << corner[2]
                             << ") cm differs from center value.";
                break;
@@ -220,11 +223,11 @@ void AtSimpleSimulationTask::ConfigureFieldFromFairRun()
    }
 }
 
-void AtSimpleSimulationTask::RegisterMCTrackBranch()
+void AtSimTransportTask::RegisterMCTrackBranch()
 {
    auto *ioMan = FairRootManager::Instance();
    if (ioMan == nullptr) {
-      LOG(fatal) << "The IO manager was not instantiated before AtSimpleSimulationTask::Init().";
+      LOG(fatal) << "The IO manager was not instantiated before AtSimTransportTask::Init().";
       return;
    }
 
@@ -240,33 +243,38 @@ void AtSimpleSimulationTask::RegisterMCTrackBranch()
    ioMan->Register("MCTrack", "Stack", fMCTrackArray, kTRUE);
 }
 
-void AtSimpleSimulationTask::FillMCTracks()
+void AtSimTransportTask::FillMCTracks()
 {
    if (fMCTrackArray == nullptr)
       return;
 
    fMCTrackArray->Clear("C");
-   for (const auto &particle : fCollector.GetParticles()) {
-      new ((*fMCTrackArray)[particle.trackID]) AtMCTrack(particle.pdgCode, -1, particle.px, particle.py, particle.pz,
-                                                         particle.vx, particle.vy, particle.vz, 0.0, 0);
+   int idx = 0;
+   for (auto *particle : fCollector.GetParticles()) {
+      new ((*fMCTrackArray)[idx]) AtMCTrack(particle);
+      ++idx;
    }
 }
 
-void AtSimpleSimulationTask::TransportCurrentEvent(bool beamEvent)
+void AtSimTransportTask::TransportCurrentEvent(bool beamEvent)
 {
-   for (const auto &particle : fCollector.GetParticles())
-      TransportParticle(particle, beamEvent);
+   int trackID = 0;
+   for (auto *particle : fCollector.GetParticles()) {
+      TransportParticle(*particle, trackID, beamEvent);
+      ++trackID;
+   }
 }
 
-void AtSimpleSimulationTask::TransportParticle(const AtCollectedParticle &particle, bool beamEvent)
+void AtSimTransportTask::TransportParticle(const TParticle &particle, int trackID, bool beamEvent)
 {
-   auto [Z, A] = GetZAFromPDG(particle.pdgCode);
+   const int pdgCode = particle.GetPdgCode();
+   auto [Z, A] = GetZAFromPDG(pdgCode);
    if (Z == 0 && A == 0)
       return;
 
-   XYZPoint pos(particle.vx * kCmToMm, particle.vy * kCmToMm, particle.vz * kCmToMm);
-   PxPyPzEVector mom(particle.px * kGeVToMeV, particle.py * kGeVToMeV, particle.pz * kGeVToMeV,
-                     particle.e * kGeVToMeV);
+   XYZPoint pos(particle.Vx() * kCmToMm, particle.Vy() * kCmToMm, particle.Vz() * kCmToMm);
+   PxPyPzEVector mom(particle.Px() * kGeVToMeV, particle.Py() * kGeVToMeV, particle.Pz() * kGeVToMeV,
+                     particle.Energy() * kGeVToMeV);
 
    try {
       if (!IsSensitiveVolume(fSimulation->GetVolumeNameAt(pos)))
@@ -277,14 +285,14 @@ void AtSimpleSimulationTask::TransportParticle(const AtCollectedParticle &partic
 
       // In the generator pipeline, trackID 0 is always the beam particle. Only mark it as a
       // beam track during beam events so the detector can accumulate energy toward a reaction threshold.
-      const bool beamTrack = beamEvent && particle.trackID == 0;
+      const bool beamTrack = beamEvent && trackID == 0;
 
       // Submit an initial entering step if starting inside a sensitive volume.
       // Build a synthetic TransportStep with zero energy loss at the start position.
       auto startVolName = fSimulation->GetVolumeNameAt(pos);
       if (IsSensitiveVolume(startVolName)) {
-         AtSimpleSimulation::TransportStep initialStep;
-         initialStep.pdg = particle.pdgCode;
+         AtSimTransport::TransportStep initialStep;
+         initialStep.pdg = pdgCode;
          initialStep.preVolumeName = startVolName;
          initialStep.postVolumeName = startVolName;
          initialStep.trackMass = mom.M(); // MeV/c^2
@@ -292,12 +300,12 @@ void AtSimpleSimulationTask::TransportParticle(const AtCollectedParticle &partic
          initialStep.postPosition = pos;
          initialStep.preMomentum = mom;
          initialStep.postMomentum = mom;
-         if (!SubmitDetectorStep(initialStep, particle.trackID, beamTrack, true, false))
+         if (!SubmitDetectorStep(initialStep, trackID, beamTrack, true, false))
             return;
       }
 
       fSimulation->TransportParticle(
-         Z, A, pos, mom, [this, trackID = particle.trackID, beamEvent](const AtSimpleSimulation::TransportStep &step) {
+         Z, A, pos, mom, [this, trackID, beamEvent](const AtSimTransport::TransportStep &step) {
             const bool preSensitive = IsSensitiveVolume(step.preVolumeName);
             const bool postSensitive = IsSensitiveVolume(step.postVolumeName);
 
@@ -326,11 +334,11 @@ void AtSimpleSimulationTask::TransportParticle(const AtCollectedParticle &partic
             return keepTransporting;
          });
    } catch (const std::invalid_argument &ex) {
-      LOG(fatal) << "AtSimpleSimulationTask: skipping particle Z=" << Z << " A=" << A << ": " << ex.what();
+      LOG(fatal) << "AtSimTransportTask: skipping particle Z=" << Z << " A=" << A << ": " << ex.what();
    }
 }
 
-bool AtSimpleSimulationTask::SubmitDetectorStep(const AtSimpleSimulation::TransportStep &step, int trackID,
+bool AtSimTransportTask::SubmitDetectorStep(const AtSimTransport::TransportStep &step, int trackID,
                                                 bool beamTrack, bool entering, bool exiting)
 {
    // When exiting, reference the pre-step state (where the particle was in the volume).
@@ -345,7 +353,6 @@ bool AtSimpleSimulationTask::SubmitDetectorStep(const AtSimpleSimulation::Transp
    detectorStep.volumeName = refVol.c_str();
    detectorStep.volumeID = kAtTpc;
    detectorStep.detCopyID = 0;
-   detectorStep.beamTrack = beamTrack;
    detectorStep.entering = entering;
    detectorStep.exiting = exiting;
    detectorStep.stopping = !exiting && (step.postMomentum.E() - step.trackMass <= 1e-3);
@@ -367,7 +374,7 @@ bool AtSimpleSimulationTask::SubmitDetectorStep(const AtSimpleSimulation::Transp
    return !stopTransport;
 }
 
-XYZPoint AtSimpleSimulationTask::FindSensitiveEntry(const XYZPoint &pos, const PxPyPzEVector &mom) const
+XYZPoint AtSimTransportTask::FindSensitiveEntry(const XYZPoint &pos, const PxPyPzEVector &mom) const
 {
    const auto dir = mom.Vect().Unit();
    if (dir.R() == 0.0)
@@ -398,9 +405,9 @@ XYZPoint AtSimpleSimulationTask::FindSensitiveEntry(const XYZPoint &pos, const P
    throw std::invalid_argument("Particle does not intersect a sensitive detector volume");
 }
 
-bool AtSimpleSimulationTask::IsSensitiveVolume(const std::string &volumeName)
+bool AtSimTransportTask::IsSensitiveVolume(const std::string &volumeName) const
 {
-   return AtTpc::IsSensitiveVolume(volumeName);
+   return fDetector != nullptr && fDetector->CheckIfSensitive(volumeName);
 }
 
-ClassImp(AtSimpleSimulationTask);
+ClassImp(AtSimTransportTask);

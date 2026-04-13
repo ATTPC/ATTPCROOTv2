@@ -41,8 +41,8 @@ set(SRCS
 
   AtELossBetheBloch.cxx
   AtPropagator.cxx
-  AtELossModelFactory.cxx
-  AtELossFactoryBetheBloch.cxx
+  AtELossManager.cxx
+  AtELossManagerBetheBloch.cxx
   )
 
 Set(DEPENDENCIES
@@ -68,7 +68,7 @@ endif()
 if(CATIMA_FOUND)
   set(SRCS ${SRCS}
     AtELossCATIMA.cxx
-    AtELossFactoryCATIMA.cxx
+    AtELossManagerCATIMA.cxx
     )
   set(DEPENDENCIES ${DEPENDENCIES}
     CATIMA::catima
@@ -86,7 +86,7 @@ set(TEST_SRCS
   AtELossTableTest.cxx
   AtELossBetheBlochTest.cxx
   AtPropagatorTest.cxx
-  AtELossModelFactoryTest.cxx
+  AtELossManagerTest.cxx
 )
 if(CATIMA_FOUND)
   set(TEST_SRCS ${TEST_SRCS}

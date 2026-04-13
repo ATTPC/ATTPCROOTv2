@@ -43,22 +43,24 @@ FairPrimaryGenerator *BuildElasticGenerator(Double_t thetaMinCmsDeg, Double_t th
    return primGen;
 }
 
-std::unique_ptr<AtSimpleSimulation> BuildSimpleSimulation(const TString &geoFile)
+std::unique_ptr<AtSimTransport> BuildSimpleSimulation(const TString &geoFile)
 {
-   auto sim = std::make_unique<AtSimpleSimulation>(geoFile.Data());
+   auto manager = std::make_shared<AtTools::AtELossManager>();
 
    constexpr double heDensity = 1.664e-4;
    std::vector<std::tuple<int, int, int>> material{{4, 2, 1}};
 
    auto carbonModel = std::make_shared<AtTools::AtELossCATIMA>(heDensity, material);
    carbonModel->SetProjectile(16, 6, 16.014701);
-   sim->AddModel(6, 16, carbonModel, 16.014701);
+   manager->AddModel(6, 16, carbonModel);
 
    auto protonModel = std::make_shared<AtTools::AtELossCATIMA>(heDensity, material);
    protonModel->SetProjectile(1, 1, 1.0078250322);
-   sim->AddModel(1, 1, protonModel, 1.0078250322);
+   manager->AddModel(1, 1, protonModel);
+
+   auto sim = std::make_unique<AtSimTransport>(geoFile.Data(), manager);
    sim->SetMagneticField(ROOT::Math::XYZVector(0., 0., 2.0));
-   sim->SetMaxPropagationStep(1e-3);
+   sim->SetMaxStep(1e-3);
 
    return sim;
 }
@@ -99,7 +101,7 @@ void simpleSim_kinematic(Int_t nEvents = 1000, UInt_t seed = 42,
    run->SetGenerator(new FairPrimaryGenerator());
 
    auto *simTask =
-      new AtSimpleSimulationReplayTask(BuildSimpleSimulation(dir + "/geometry/ATTPC_He1bar_geomanager.root"));
+      new AtSimTransportReplayTask(BuildSimpleSimulation(dir + "/geometry/ATTPC_He1bar_geomanager.root"));
    simTask->SetPrimaryTrackSource(geantTruthFile.Data());
    simTask->SetDetector(tpc);
    run->AddTask(simTask);

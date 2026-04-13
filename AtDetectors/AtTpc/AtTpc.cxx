@@ -62,22 +62,17 @@ void AtTpc::Initialize()
 
 void AtTpc::trackEnteringVolume(const StepState &step)
 {
-   auto AZ = DecodePdG(step.pdg);
-   fELoss = 0.;
+   // Reset the accumulator before capturing this step's energy loss, so the
+   // entering step contributes fELoss (not fELoss + whatever was left over).
    fELossAcc = 0.;
-   fTime = step.timeNs;
-   fLength = step.trackLength;
-   fPosIn = step.pos;
-   fMomIn = step.mom;
-   fTrackID = step.trackID;
+   getTrackParametersFromStep(step);
 
-   // Position of the first hit of the beam in the TPC volume ( For tracking purposes in the TPC)
-   if (fIsBeamTrack && IsReactionVolume(fVolName))
+   if (fTrackID == 0 && IsActiveGasVolume(fVolName))
       InPos = fPosIn;
 
-   Int_t VolumeID = 0;
+   auto AZ = DecodePdG(step.pdg);
 
-   if (fIsBeamTrack)
+   if (fTrackID == 0)
       LOG(debug) << cGREEN << " AtTPC: Beam Event ";
    else
       LOG(debug) << cBLUE << " AtTPC: Reaction/Decay Event ";
@@ -118,8 +113,11 @@ void AtTpc::getTrackParametersWhileExiting(const StepState &step)
    fPosOut = step.posOut;
    fMomOut = step.momOut;
 
-   if (step.exiting && IsReactionVolume(fVolName) && fIsBeamTrack)
-      resetVertex();
+   if (step.exiting) {
+      correctPosOut();
+      if (IsActiveGasVolume(fVolName) && fTrackID == 0)
+         resetVertex();
+   }
 }
 
 void AtTpc::resetVertex()
@@ -130,6 +128,9 @@ void AtTpc::resetVertex()
 
 void AtTpc::correctPosOut()
 {
+   if (gGeoManager == nullptr)
+      return; // No geometry (e.g. unit tests); caller's fPosOut is already final.
+
    const Double_t *oldpos = nullptr;
    const Double_t *olddirection = nullptr;
    Double_t newpos[3];
@@ -160,8 +161,8 @@ void AtTpc::correctPosOut()
 bool AtTpc::reactionOccursHere()
 {
    bool atEnergyLoss = fELossAcc * 1000 > AtVertexPropagator::Instance()->GetRndELoss();
-   bool isPrimaryBeam = fIsBeamTrack;
-   bool isInRightVolume = IsReactionVolume(fVolName);
+   bool isPrimaryBeam = fTrackID == 0;
+   bool isInRightVolume = IsActiveGasVolume(fVolName);
    return atEnergyLoss && isPrimaryBeam && isInRightVolume;
 }
 
@@ -176,7 +177,6 @@ Bool_t AtTpc::ProcessHits(FairVolume *vol)
    step.volumeName = gMC->CurrentVolName();
    step.volumeID = vol->getMCid();
    step.detCopyID = vol->getCopyNo();
-   step.beamTrack = step.trackID == 0;
    step.entering = gMC->IsTrackEntering();
    step.exiting = gMC->IsTrackExiting();
    step.stopping = gMC->IsTrackStop();
@@ -192,11 +192,6 @@ Bool_t AtTpc::ProcessHits(FairVolume *vol)
    if (step.exiting || step.stopping || step.disappeared) {
       gMC->TrackPosition(step.posOut);
       gMC->TrackMomentum(step.momOut);
-      if (step.exiting) {
-         fPosOut = step.posOut;
-         correctPosOut();
-         step.posOut = fPosOut;
-      }
    }
 
    bool stopTrack = ProcessStep(step);
@@ -213,12 +208,11 @@ bool AtTpc::ProcessStep(const StepState &step)
    fVolName = step.volumeName;
    fVolumeID = step.volumeID;
    fDetCopyID = step.detCopyID;
-   fIsBeamTrack = step.beamTrack;
 
    if (step.entering)
       trackEnteringVolume(step);
-
-   getTrackParametersFromStep(step);
+   else
+      getTrackParametersFromStep(step);
 
    if (step.exiting || step.stopping || step.disappeared)
       getTrackParametersWhileExiting(step);
@@ -229,11 +223,6 @@ bool AtTpc::ProcessStep(const StepState &step)
       startReactionEvent(step);
       return true;
    }
-
-   // For SimpleSim transport, leaving the active gas means transport should stop.
-   // Guarded by flag to preserve Geant4 behavior where products may continue into boundary volumes.
-   if (fStopOnReactionVolumeExit && step.exiting && IsReactionVolume(fVolName))
-      return true;
 
    return false;
 }
@@ -279,7 +268,7 @@ void AtTpc::addHit(const StepState &step)
           TVector3(fMomIn.Px(), fMomIn.Py(), fMomIn.Pz()), fTime, fLength, fELoss, EIni, AIni, AZ.first, AZ.second);
 }
 
-bool AtTpc::IsReactionVolume(const TString &volumeName) const
+bool AtTpc::IsActiveGasVolume(const TString &volumeName) const
 {
    return volumeName.Contains("drift_volume") || volumeName.Contains("cell");
 }
@@ -329,27 +318,13 @@ void AtTpc::ConstructGeometry()
    }
 }
 
-bool AtTpc::IsSensitiveVolume(const std::string &name)
-{
-   return name.find("drift_volume") != std::string::npos || name.find("window") != std::string::npos ||
-          name.find("cell") != std::string::npos;
-}
-
 Bool_t AtTpc::CheckIfSensitive(std::string name)
 {
-   if (IsSensitiveVolume(name)) {
-      LOG(info) << " AtTPC geometry: Sensitive volume found: " << name;
-      return kTRUE;
-   }
-   return kFALSE;
-}
-
-AtMCPoint *
-AtTpc::AddHit(Int_t trackID, Int_t detID, TVector3 pos, TVector3 mom, Double_t time, Double_t length, Double_t eLoss)
-{
-   TClonesArray &clref = *fAtTpcPointCollection;
-   Int_t size = clref.GetEntriesFast();
-   return new (clref[size]) AtMCPoint(trackID, detID, pos, mom, time, length, eLoss);
+   const bool sensitive = name.find("drift_volume") != std::string::npos || name.find("window") != std::string::npos ||
+                          name.find("cell") != std::string::npos;
+   if (sensitive)
+      LOG(debug) << " AtTPC geometry: Sensitive volume found: " << name;
+   return sensitive ? kTRUE : kFALSE;
 }
 
 // -----   Private method AddHit   --------------------------------------------

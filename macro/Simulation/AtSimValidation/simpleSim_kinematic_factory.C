@@ -1,9 +1,9 @@
 // SimpleSim drop-in replacement for geant4_kinematic.C using factory-based energy loss.
 // Compare the diff between this file and geant4_kinematic.C to see what changes.
 
-#include <AtELossFactoryCATIMA.h>
-#include <AtSimpleSimulation.h>
-#include <AtSimpleSimulationTask.h>
+#include <AtELossManagerCATIMA.h>
+#include <AtSimTransport.h>
+#include <AtSimTransportTask.h>
 
 namespace {
 FairPrimaryGenerator *BuildElasticGenerator(Double_t thetaMinCmsDeg, Double_t thetaMaxCmsDeg)
@@ -87,10 +87,10 @@ void simpleSim_kinematic_factory(Int_t nEvents = 1000, UInt_t seed = 42)
    // --- SimpleSim drop-in: replace Geant4 transport with factory-based SimpleSim ---
    run->SetGenerator(new FairPrimaryGenerator());
 
-   auto sim = std::make_unique<AtSimpleSimulation>();
-   sim->SetModelFactory(std::make_shared<AtTools::AtELossFactoryCATIMA>());
+   auto manager = std::make_shared<AtTools::AtELossManagerCATIMA>();
+   auto sim = std::make_unique<AtSimTransport>(manager);
 
-   auto *simTask = new AtSimpleSimulationGeneratorTask(std::move(sim));
+   auto *simTask = new AtSimTransportGeneratorTask(std::move(sim));
    auto *primGen = BuildElasticGenerator(0.0, 180.0);
    simTask->SetPrimaryGenerator(primGen);
    simTask->SetDetector(tpc);

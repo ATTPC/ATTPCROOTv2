@@ -52,8 +52,8 @@ protected:
    using Plane3D = ROOT::Math::Plane3D;
 
    // Variables used for the force
-   XYZVector fEField{0, 0, 0};                // Electric field vector
-   XYZVector fBField{0, 0, 0};                // Magnetic field vector
+   XYZVector fEField{0, 0, 0};      // Electric field vector
+   XYZVector fBField{0, 0, 0};      // Magnetic field vector
    const AtELossModel *fELossModel; // Energy loss model (non-owning; caller ensures lifetime)
 
    // Internal state variables for the propagator
@@ -75,8 +75,7 @@ public:
     * @param mass Mass of the particle in MeV/c^2.
     * @param elossModel Energy loss model to use for the particle.
     */
-   AtPropagator(double charge, double mass, const AtELossModel *elossModel)
-      : fELossModel(elossModel)
+   AtPropagator(double charge, double mass, const AtELossModel *elossModel) : fELossModel(elossModel)
    {
       fState.fMass = mass;
       fState.fQ = charge;
@@ -107,6 +106,9 @@ public:
    }
    const StepState &GetState() const { return fState; }
    const AtELossModel *GetELossModel() const { return fELossModel; }
+   /// Swap in a new energy-loss model (non-owning; caller ensures lifetime). Used by
+   /// transport drivers that re-query a manager on volume/material changes.
+   void SetELossModel(const AtELossModel *elossModel) { fELossModel = elossModel; }
 
    XYZPoint GetPosition() const { return fState.fPos; }
    XYZVector GetMomentum() const { return fState.fMom; }

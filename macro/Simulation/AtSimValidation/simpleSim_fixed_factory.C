@@ -1,10 +1,10 @@
 // SimpleSim drop-in replacement for geant4_fixed.C using factory-based energy loss.
 // Compare the diff between this file and geant4_fixed.C to see what changes.
 
-#include <AtSimpleSimulation.h>
-#include <AtSimpleSimulationTask.h>
+#include <AtSimTransport.h>
+#include <AtSimTransportTask.h>
 
-#include <AtELossFactoryCATIMA.h>
+#include <AtELossManagerCATIMA.h>
 
 namespace {
 FairPrimaryGenerator *BuildElasticGenerator(Double_t thetaMinCmsDeg, Double_t thetaMaxCmsDeg)
@@ -87,10 +87,10 @@ void simpleSim_fixed_factory(Double_t thetaCms = 45.0, Int_t nEvents = 100, UInt
    // --- SimpleSim drop-in: replace Geant4 transport with factory-based SimpleSim ---
    run->SetGenerator(new FairPrimaryGenerator());
 
-   auto sim = std::make_unique<AtSimpleSimulation>();
-   sim->SetModelFactory(std::make_shared<AtTools::AtELossFactoryCATIMA>());
+   auto manager = std::make_shared<AtTools::AtELossManagerCATIMA>();
+   auto sim = std::make_unique<AtSimTransport>(manager);
 
-   auto *simTask = new AtSimpleSimulationGeneratorTask(std::move(sim));
+   auto *simTask = new AtSimTransportGeneratorTask(std::move(sim));
    simTask->SetPrimaryGenerator(BuildElasticGenerator(thetaCms, thetaCms));
    simTask->SetDetector(tpc);
    run->AddTask(simTask);

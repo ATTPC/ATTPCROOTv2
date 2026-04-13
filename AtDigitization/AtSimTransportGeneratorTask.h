@@ -1,7 +1,7 @@
-#ifndef AtSimpleSimulationGeneratorTask_h
-#define AtSimpleSimulationGeneratorTask_h
+#ifndef AtSimTransportGeneratorTask_h
+#define AtSimTransportGeneratorTask_h
 
-#include "AtSimpleSimulationTask.h"
+#include "AtSimTransportTask.h"
 
 #include <FairMCEventHeader.h>
 #include <Rtypes.h>
@@ -13,10 +13,10 @@ class TBuffer;
 class TClass;
 class TMemberInspector;
 
-class AtSimpleSimulationGeneratorTask : public AtSimpleSimulationTask {
+class AtSimTransportGeneratorTask : public AtSimTransportTask {
 public:
-   explicit AtSimpleSimulationGeneratorTask(std::unique_ptr<AtSimpleSimulation> sim);
-   ~AtSimpleSimulationGeneratorTask() override = default;
+   explicit AtSimTransportGeneratorTask(std::unique_ptr<AtSimTransport> sim);
+   ~AtSimTransportGeneratorTask() override = default;
 
    void SetPrimaryGenerator(FairPrimaryGenerator *primGen) { fPrimGen = primGen; }
    void SetEventGenerator(FairPrimaryGenerator *primGen) { SetPrimaryGenerator(primGen); }
@@ -28,7 +28,7 @@ protected:
    InitStatus InitEventSource() override;
    EventState LoadEvent() override;
 
-   ClassDefOverride(AtSimpleSimulationGeneratorTask, 1);
+   ClassDefOverride(AtSimTransportGeneratorTask, 1);
 };
 
 #endif

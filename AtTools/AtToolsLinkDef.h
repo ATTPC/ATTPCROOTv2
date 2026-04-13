@@ -13,7 +13,6 @@
 #pragma link C++ namespace AtTools::Kinematics;
 #pragma link C++ namespace AtTools::DataCleaning;
 
-#pragma link C++ class AtTools::AtELossManager + ;
 #pragma link C++ class AtTools::AtParsers + ;
 #pragma link C++ class AtEulerTransformation + ;
 #pragma link C++ class AtTools::AtTrackTransformer - !;
@@ -21,9 +20,9 @@
 #pragma link C++ class AtTools::AtELossTable - !;
 #pragma link C++ class AtTools::AtELossCATIMA - !;
 #pragma link C++ class AtTools::AtELossBetheBloch - !;
-#pragma link C++ class AtTools::AtELossModelFactory - !;
-#pragma link C++ class AtTools::AtELossFactoryBetheBloch - !;
-#pragma link C++ class AtTools::AtELossFactoryCATIMA - !;
+#pragma link C++ class AtTools::AtELossManager - !;
+#pragma link C++ class AtTools::AtELossManagerBetheBloch - !;
+#pragma link C++ class AtTools::AtELossManagerCATIMA - !;
 
 #pragma link C++ class AtSpaceChargeModel - !;
 #pragma link C++ class AtLineChargeModel - !;

@@ -477,7 +477,7 @@ void compareFixed(TString geantFile = "./data/geant4_fixed.root", TString simple
    auto *braggG4 = MakeResidualRangeGraph(geantEvent.proton, "gFixedBraggG4", kBlue + 1, 1);
    auto *braggSim = MakeResidualRangeGraph(simpleEvent.proton, "gFixedBraggSim", kRed + 1, 2);
 
-   auto *canvas = new TCanvas("cFixedCompare", "AtSimpleSimulation fixed-angle proton comparison", 1900, 1000);
+   auto *canvas = new TCanvas("cFixedCompare", "AtSimTransport fixed-angle proton comparison", 1900, 1000);
    canvas->Divide(4, 2);
 
    canvas->cd(1);

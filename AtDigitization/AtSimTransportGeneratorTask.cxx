@@ -1,16 +1,16 @@
-#include "AtSimpleSimulationGeneratorTask.h"
+#include "AtSimTransportGeneratorTask.h"
 
 #include "AtVertexPropagator.h"
 
 #include <FairPrimaryGenerator.h>
 #include <FairTask.h>
 
-AtSimpleSimulationGeneratorTask::AtSimpleSimulationGeneratorTask(std::unique_ptr<AtSimpleSimulation> sim)
-   : AtSimpleSimulationTask(std::move(sim))
+AtSimTransportGeneratorTask::AtSimTransportGeneratorTask(std::unique_ptr<AtSimTransport> sim)
+   : AtSimTransportTask(std::move(sim))
 {
 }
 
-InitStatus AtSimpleSimulationGeneratorTask::InitEventSource()
+InitStatus AtSimTransportGeneratorTask::InitEventSource()
 {
    if (fPrimGen == nullptr)
       return kSUCCESS;
@@ -21,7 +21,7 @@ InitStatus AtSimpleSimulationGeneratorTask::InitEventSource()
    return kSUCCESS;
 }
 
-AtSimpleSimulationTask::EventState AtSimpleSimulationGeneratorTask::LoadEvent()
+AtSimTransportTask::EventState AtSimTransportGeneratorTask::LoadEvent()
 {
    fCollector.Clear();
    if (fPrimGen == nullptr)
@@ -38,4 +38,4 @@ AtSimpleSimulationTask::EventState AtSimpleSimulationGeneratorTask::LoadEvent()
    return state;
 }
 
-ClassImp(AtSimpleSimulationGeneratorTask);
+ClassImp(AtSimTransportGeneratorTask);

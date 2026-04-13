@@ -8,7 +8,8 @@
 #include <gtest/gtest.h>
 
 namespace {
-AtTpc::StepState MakeStep(int trackID, int pdg, const char *volumeName, double eLossGeV, double totalEnergyGeV, double zCm)
+AtTpc::StepState
+MakeStep(int trackID, int pdg, const char *volumeName, double eLossGeV, double totalEnergyGeV, double zCm)
 {
    AtTpc::StepState step;
    step.trackID = trackID;
@@ -16,7 +17,6 @@ AtTpc::StepState MakeStep(int trackID, int pdg, const char *volumeName, double e
    step.volumeName = volumeName;
    step.volumeID = 1;
    step.detCopyID = 0;
-   step.beamTrack = false;
    step.energyLoss = eLossGeV;
    step.trackLength = zCm;
    step.totalEnergy = totalEnergyGeV;
@@ -49,7 +49,6 @@ TEST_F(AtTpcTest, ReactionTriggerPopulatesVertexPropagator)
    AtVertexPropagator::Instance()->SetRndELoss(0.5);
 
    auto step = MakeStep(0, 2212, "drift_volume", 0.0006, 0.98, 12.0);
-   step.beamTrack = true;
    step.entering = true;
 
    const bool stopTransport = detector.ProcessStep(step);
@@ -70,7 +69,6 @@ TEST_F(AtTpcTest, BeamExitResetsVertexState)
    AtVertexPropagator::Instance()->SetVertex(1.0, 2.0, 3.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 100.0);
 
    auto step = MakeStep(0, 2212, "drift_volume", 0.0, 0.95, 20.0);
-   step.beamTrack = true;
    step.exiting = true;
    step.posOut.SetXYZT(0.0, 0.0, 25.0, 0.0);
 
@@ -81,12 +79,13 @@ TEST_F(AtTpcTest, BeamExitResetsVertexState)
    EXPECT_DOUBLE_EQ(AtVertexPropagator::Instance()->GetPz(), 0.0);
 }
 
-TEST_F(AtTpcTest, ReactionEventTrackZeroDoesNotTriggerBeamHandoff)
+TEST_F(AtTpcTest, ReactionEventTrackZeroDoesNotTriggerBeamHandoffWhenNotInBeamEvent)
 {
    AtVertexPropagator::Instance()->SetIsBeamEvent(false);
    AtVertexPropagator::Instance()->SetRndELoss(0.5);
 
-   auto step = MakeStep(0, 1000060160, "drift_volume", 0.0006, 15.9, 12.0);
+   // A secondary track (trackID != 0) crossing the active gas should not trigger the beam handoff.
+   auto step = MakeStep(1, 1000060160, "drift_volume", 0.0006, 15.9, 12.0);
    step.entering = true;
 
    const bool stopTransport = detector.ProcessStep(step);
@@ -96,12 +95,12 @@ TEST_F(AtTpcTest, ReactionEventTrackZeroDoesNotTriggerBeamHandoff)
    EXPECT_DOUBLE_EQ(AtVertexPropagator::Instance()->GetEnergy(), 0.0);
 }
 
-TEST_F(AtTpcTest, ReactionEventTrackZeroExitDoesNotResetVertexState)
+TEST_F(AtTpcTest, SecondaryExitDoesNotResetVertexState)
 {
-   AtVertexPropagator::Instance()->SetIsBeamEvent(false);
    AtVertexPropagator::Instance()->SetVertex(1.0, 2.0, 3.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 100.0);
 
-   auto step = MakeStep(0, 1000060160, "drift_volume", 0.0, 15.9, 20.0);
+   // Non-beam track (trackID != 0) exiting the active gas must not disturb the vertex state.
+   auto step = MakeStep(1, 1000060160, "drift_volume", 0.0, 15.9, 20.0);
    step.exiting = true;
    step.posOut.SetXYZT(0.0, 0.0, 25.0, 0.0);
 
@@ -110,29 +109,6 @@ TEST_F(AtTpcTest, ReactionEventTrackZeroExitDoesNotResetVertexState)
    EXPECT_DOUBLE_EQ(AtVertexPropagator::Instance()->GetVz(), 3.0);
    EXPECT_DOUBLE_EQ(AtVertexPropagator::Instance()->GetEnergy(), 100.0);
    EXPECT_DOUBLE_EQ(AtVertexPropagator::Instance()->GetPz(), 1.0);
-}
-
-TEST_F(AtTpcTest, ExitingReactionVolumeStopsTransportWhenFlagSet)
-{
-   detector.SetStopOnReactionVolumeExit(true);
-   auto step = MakeStep(1, 2212, "drift_volume", 0.0, 0.95, 20.0);
-   step.exiting = true;
-   step.posOut.SetXYZT(0.0, 0.0, 25.0, 0.0);
-
-   const bool stopTransport = detector.ProcessStep(step);
-
-   EXPECT_TRUE(stopTransport);
-}
-
-TEST_F(AtTpcTest, ExitingReactionVolumeDoesNotStopByDefault)
-{
-   auto step = MakeStep(1, 2212, "drift_volume", 0.0, 0.95, 20.0);
-   step.exiting = true;
-   step.posOut.SetXYZT(0.0, 0.0, 25.0, 0.0);
-
-   const bool stopTransport = detector.ProcessStep(step);
-
-   EXPECT_FALSE(stopTransport);
 }
 
 TEST_F(AtTpcTest, NonBeamTracksUseStoredMetadata)

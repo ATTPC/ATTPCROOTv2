@@ -33,12 +33,14 @@ void simpleSim()
    // mapping->ParseInhibitMap("./data/inhibit.txt", AtMap::InhibitType::kTotal);
 
    // Create underlying simulation class
-   auto sim = std::make_unique<AtSimpleSimulation>(geoFile.Data());
+   auto manager = std::make_shared<AtTools::AtELossManager>();
 
    // Create and load energy loss models
    auto eloss = std::make_shared<AtTools::AtELossTable>();
    eloss->LoadSrimTable("./../PbinHeFull.txt");
-   sim->AddModel(82, 208, eloss);
+   manager->AddModel(82, 208, eloss);
+
+   auto sim = std::make_unique<AtSimpleSimulation>(geoFile.Data(), manager);
 
    auto *simTask = new AtSimpleSimulationGeneratorTask(std::move(sim));
 

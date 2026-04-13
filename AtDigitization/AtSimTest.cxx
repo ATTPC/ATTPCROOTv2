@@ -1,5 +1,5 @@
 /**
- * Unit tests for AtSimpleSimulation.
+ * Unit tests for AtSimTransport.
  *
  * Two physics tests:
  *  1. ZeroFieldStraightLine  — zero E/B fields produce a collinear track along the
@@ -13,14 +13,13 @@
  * No external files are used; geometry and energy-loss model are built in memory.
  */
 
-#include "AtMCPoint.h"
-#include "AtSimpleSimulation.h"
-#include "AtSimpleSimulationGeneratorTask.h"
-#include "AtStandaloneSimulation.h"
-
+#include "AtELossManager.h"
 #include "AtELossModel.h"
+#include "AtMCPoint.h"
 #include "AtMCTrack.h"
-#include "AtTpc/AtTpc.h"
+#include "AtSimTransport.h"
+#include "AtSimTransportGeneratorTask.h"
+#include "AtSimpleSimulation.h"
 #include "AtVertexPropagator.h"
 
 #include <Math/Point3D.h>
@@ -31,11 +30,12 @@
 #include <TGeoMedium.h>
 #include <TGeoVolume.h>
 
-#include <gtest/gtest.h>
-
 #include <cmath>
+#include <gtest/gtest.h>
 #include <memory>
 #include <stdexcept>
+
+#include "AtTpc/AtTpc.h"
 
 // ---------------------------------------------------------------------------
 // Minimal energy-loss model with constant dEdx = fRate [MeV/mm].
@@ -46,10 +46,7 @@ public:
    explicit ConstELoss(double rate = 1.0) : AtTools::AtELossModel(0), fRate(rate) {}
 
    double GetdEdx(double /*KE*/) const override { return fRate; }
-   double GetRange(double ei, double ef = 0) const override
-   {
-      return (fRate > 0) ? (ei - ef) / fRate : 1e9;
-   }
+   double GetRange(double ei, double ef = 0) const override { return (fRate > 0) ? (ei - ef) / fRate : 1e9; }
    double GetEnergyLoss(double /*KE*/, double dist) const override { return fRate * dist; }
    double GetEnergy(double ei, double dist) const override { return std::max(0.0, ei - fRate * dist); }
    double GetElossStraggling(double, double) const override { return 0; }
@@ -59,7 +56,7 @@ public:
 
 // ---------------------------------------------------------------------------
 // Fixture: builds an in-memory TGeoManager with a 100×100×100 cm "cave"
-// containing a 50×50×50 cm "drift_volume" box.  AtSimpleSimulation calls
+// containing a 50×50×50 cm "drift_volume" box.  AtSimTransport calls
 // gGeoManager->FindNode() to determine whether a position is inside the
 // active volume, so we need this geometry even in unit tests.
 // ---------------------------------------------------------------------------
@@ -84,14 +81,14 @@ protected:
 // ---------------------------------------------------------------------------
 // Test helper: exposes protected members for testing without #define hacks.
 // ---------------------------------------------------------------------------
-class TestableSimTask : public AtSimpleSimulationGeneratorTask {
+class TestableSimTask : public AtSimTransportGeneratorTask {
 public:
-   using AtSimpleSimulationGeneratorTask::AtSimpleSimulationGeneratorTask;
-   using AtSimpleSimulationTask::fCollector;
-   using AtSimpleSimulationTask::fDetector;
-   using AtSimpleSimulationTask::fMCTrackArray;
-   using AtSimpleSimulationTask::FillMCTracks;
-   using AtSimpleSimulationTask::SubmitDetectorStep;
+   using AtSimTransportGeneratorTask::AtSimTransportGeneratorTask;
+   using AtSimTransportTask::fCollector;
+   using AtSimTransportTask::fDetector;
+   using AtSimTransportTask::FillMCTracks;
+   using AtSimTransportTask::fMCTrackArray;
+   using AtSimTransportTask::SubmitDetectorStep;
    EventState LoadEvent() override { return {}; }
 };
 
@@ -103,18 +100,19 @@ public:
 // ---------------------------------------------------------------------------
 TEST_F(AtSimTest, ZeroFieldStraightLine)
 {
-   auto engine = std::make_unique<AtSimpleSimulation>();
-   engine->AddModel(1, 1, std::make_shared<ConstELoss>(1.0 /*MeV/mm*/), 1.007276); // proton mass in amu
-   AtStandaloneSimulation sim(std::move(engine));
+   auto manager = std::make_shared<AtTools::AtELossManager>();
+   manager->AddModel(1, 1, std::make_shared<ConstELoss>(1.0 /*MeV/mm*/));
+   auto engine = std::make_unique<AtSimTransport>(manager);
+   AtSimpleSimulation sim(std::move(engine));
 
    // Proton: KE = 50 MeV → p_z ≈ 310.5 MeV/c, E ≈ 988.3 MeV
    const double mass_p = 1.007276 * 931.494; // MeV/c² (matching model mass)
-   const double KE0 = 50.0;      // MeV
+   const double KE0 = 50.0;                  // MeV
    const double E0 = mass_p + KE0;
    const double p0 = std::sqrt(E0 * E0 - mass_p * mass_p);
 
-   ROOT::Math::XYZPoint pos(0, 0, 0);                  // mm
-   ROOT::Math::PxPyPzEVector mom(0.0, 0.0, p0, E0);   // MeV
+   ROOT::Math::XYZPoint pos(0, 0, 0);               // mm
+   ROOT::Math::PxPyPzEVector mom(0.0, 0.0, p0, E0); // MeV
 
    sim.NewEvent();
    sim.SimulateParticle(1, 1, pos, mom);
@@ -164,16 +162,14 @@ TEST_F(AtSimTest, ZeroFieldStraightLine)
 // ---------------------------------------------------------------------------
 TEST_F(AtSimTest, MagneticFieldLarmorRadius)
 {
-   auto engine = std::make_unique<AtSimpleSimulation>();
-   // Tiny energy-loss rate keeps KE almost constant (avoids infinite loop in
-   // straight-line path, irrelevant here since B≠0 uses AtPropagator).
-   engine->AddModel(1, 1, std::make_shared<ConstELoss>(0.0 /*MeV/mm — no drag*/));
-   // Use explicit XYZVector construction to ensure the B field is recognised as non-zero.
+   auto manager = std::make_shared<AtTools::AtELossManager>();
+   manager->AddModel(1, 1, std::make_shared<ConstELoss>(0.0 /*MeV/mm — no drag*/));
+   auto engine = std::make_unique<AtSimTransport>(manager);
    engine->SetMagneticField(ROOT::Math::XYZVector(0., 0., 2.0)); // 2 T along Z
-   AtStandaloneSimulation sim(std::move(engine));
+   AtSimpleSimulation sim(std::move(engine));
 
-   const double mass_p = 938.272;       // MeV/c²
-   const double px0 = 100.0;           // MeV/c (purely transverse)
+   const double mass_p = 938.272; // MeV/c²
+   const double px0 = 100.0;      // MeV/c (purely transverse)
    const double E0 = std::sqrt(px0 * px0 + mass_p * mass_p);
 
    ROOT::Math::XYZPoint pos(0, 0, 0);
@@ -229,15 +225,16 @@ TEST_F(AtSimTest, MagneticFieldLarmorRadius)
       sumErr += std::abs(r - larmor_mm);
    }
    double meanErr = sumErr / nPts;
-   EXPECT_LT(meanErr, larmor_mm * 0.05)
-      << "Mean Larmor radius error " << meanErr << " mm exceeds 5% of " << larmor_mm << " mm";
+   EXPECT_LT(meanErr, larmor_mm * 0.05) << "Mean Larmor radius error " << meanErr << " mm exceeds 5% of " << larmor_mm
+                                        << " mm";
 }
 
 TEST_F(AtSimTest, LegacySimulateParticleStillRejectsStartsOutsideDriftVolume)
 {
-   auto engine = std::make_unique<AtSimpleSimulation>();
-   engine->AddModel(1, 1, std::make_shared<ConstELoss>(0.1));
-   AtStandaloneSimulation sim(std::move(engine));
+   auto manager = std::make_shared<AtTools::AtELossManager>();
+   manager->AddModel(1, 1, std::make_shared<ConstELoss>(0.1));
+   auto engine = std::make_unique<AtSimTransport>(manager);
+   AtSimpleSimulation sim(std::move(engine));
 
    const double mass_p = 938.272;
    const double E0 = mass_p + 10.0;
@@ -252,9 +249,10 @@ TEST_F(AtSimTest, LegacySimulateParticleStillRejectsStartsOutsideDriftVolume)
 
 TEST_F(AtSimTest, TransportParticleInvokesCallbackAcrossVolumeBoundary)
 {
-   AtSimpleSimulation sim;
-   sim.AddModel(1, 1, std::make_shared<ConstELoss>(0.0));
-   sim.SetDistanceStep(10.0);
+   auto manager = std::make_shared<AtTools::AtELossManager>();
+   manager->AddModel(1, 1, std::make_shared<ConstELoss>(0.0));
+   AtSimTransport sim(manager);
+   sim.SetMaxStep(10.0);
 
    const double mass_p = 938.272;
    const double E0 = mass_p + 10.0;
@@ -266,7 +264,7 @@ TEST_F(AtSimTest, TransportParticleInvokesCallbackAcrossVolumeBoundary)
    bool sawCaveToDrift = false;
    int callbackCount = 0;
 
-   sim.TransportParticle(1, 1, pos, mom, [&](const AtSimpleSimulation::TransportStep &step) {
+   sim.TransportParticle(1, 1, pos, mom, [&](const AtSimTransport::TransportStep &step) {
       ++callbackCount;
       if (step.preVolumeName == "cave" && step.postVolumeName == "drift_volume")
          sawCaveToDrift = true;
@@ -279,15 +277,16 @@ TEST_F(AtSimTest, TransportParticleInvokesCallbackAcrossVolumeBoundary)
 
 TEST_F(AtSimTest, ReactionMCTracksKeepGeneratedTrackIDs)
 {
-   auto sim = std::make_unique<AtSimpleSimulation>();
+   auto manager = std::make_shared<AtTools::AtELossManager>();
+   auto sim = std::make_unique<AtSimTransport>(manager);
    TestableSimTask task(std::move(sim));
    task.fMCTrackArray = new TClonesArray("AtMCTrack");
 
    Int_t ntr = -1;
-   task.fCollector.PushTrack(1, -1, 2212, 0.1, 0.0, 0.2, 0.95, 0.0, 0.0, 14.0, 0.0, 0.0, 0.0, 0.0, kPPrimary, ntr,
+   task.fCollector.PushTrack(1, -1, 2212, 0.1, 0.0, 0.2, 0.95, 0.0, 0.0, 14.0, 0.0, 0.0, 0.0, 0.0, kPPrimary, ntr, 1.0,
+                             0, -1);
+   task.fCollector.PushTrack(1, -1, 1000020040, 0.0, 0.0, 0.3, 3.8, 0.0, 0.0, 14.0, 0.0, 0.0, 0.0, 0.0, kPPrimary, ntr,
                              1.0, 0, -1);
-   task.fCollector.PushTrack(1, -1, 1000020040, 0.0, 0.0, 0.3, 3.8, 0.0, 0.0, 14.0, 0.0, 0.0, 0.0, 0.0, kPPrimary,
-                             ntr, 1.0, 0, -1);
 
    task.FillMCTracks();
 
@@ -307,7 +306,8 @@ TEST_F(AtSimTest, ReactionMCTracksKeepGeneratedTrackIDs)
 
 TEST_F(AtSimTest, BeamMCTracksKeepBeamAtTrackZero)
 {
-   auto sim = std::make_unique<AtSimpleSimulation>();
+   auto manager = std::make_shared<AtTools::AtELossManager>();
+   auto sim = std::make_unique<AtSimTransport>(manager);
    TestableSimTask task(std::move(sim));
    task.fMCTrackArray = new TClonesArray("AtMCTrack");
 
@@ -326,7 +326,8 @@ TEST_F(AtSimTest, BeamMCTracksKeepBeamAtTrackZero)
 
 TEST_F(AtSimTest, InitialSensitivePointUsesTrackStartState)
 {
-   auto sim = std::make_unique<AtSimpleSimulation>();
+   auto manager = std::make_shared<AtTools::AtELossManager>();
+   auto sim = std::make_unique<AtSimTransport>(manager);
    TestableSimTask task(std::move(sim));
    AtTpc detector;
    task.fDetector = &detector;
@@ -340,7 +341,7 @@ TEST_F(AtSimTest, InitialSensitivePointUsesTrackStartState)
    ROOT::Math::PxPyPzEVector mom(0.0, 0.0, 2297.0, std::sqrt(2297.0 * 2297.0 + mass * mass));
 
    // Build a synthetic initial step (zero energy loss, entering)
-   AtSimpleSimulation::TransportStep initialStep;
+   AtSimTransport::TransportStep initialStep;
    initialStep.pdg = 1000060160;
    initialStep.trackMass = mom.M();
    initialStep.prePosition = pos;

@@ -1,4 +1,4 @@
-#include "AtSimpleSimulationReplayTask.h"
+#include "AtSimTransportReplayTask.h"
 
 #include "AtMCTrack.h"
 
@@ -8,35 +8,35 @@
 #include <TFile.h>
 #include <TTree.h>
 
-AtSimpleSimulationReplayTask::AtSimpleSimulationReplayTask(std::unique_ptr<AtSimpleSimulation> sim)
-   : AtSimpleSimulationTask(std::move(sim))
+AtSimTransportReplayTask::AtSimTransportReplayTask(std::unique_ptr<AtSimTransport> sim)
+   : AtSimTransportTask(std::move(sim))
 {
 }
 
-InitStatus AtSimpleSimulationReplayTask::InitEventSource()
+InitStatus AtSimTransportReplayTask::InitEventSource()
 {
    if (fPrimaryTrackSourceFile.empty())
       return kSUCCESS;
 
    fPrimaryTrackFile = TFile::Open(fPrimaryTrackSourceFile.c_str(), "READ");
    if (fPrimaryTrackFile == nullptr || fPrimaryTrackFile->IsZombie()) {
-      LOG(fatal) << "AtSimpleSimulationReplayTask: cannot open primary track source " << fPrimaryTrackSourceFile;
+      LOG(fatal) << "AtSimTransportReplayTask: cannot open primary track source " << fPrimaryTrackSourceFile;
       return kFATAL;
    }
 
    fPrimaryTrackTree = dynamic_cast<TTree *>(fPrimaryTrackFile->Get("cbmsim"));
    if (fPrimaryTrackTree == nullptr) {
-      LOG(fatal) << "AtSimpleSimulationReplayTask: missing cbmsim tree in primary track source "
+      LOG(fatal) << "AtSimTransportReplayTask: missing cbmsim tree in primary track source "
                  << fPrimaryTrackSourceFile;
       return kFATAL;
    }
 
    fPrimaryTrackTree->SetBranchAddress("MCTrack", &fPrimaryTrackInput);
-   LOG(info) << "AtSimpleSimulationReplayTask: replaying primary MC tracks from " << fPrimaryTrackSourceFile;
+   LOG(info) << "AtSimTransportReplayTask: replaying primary MC tracks from " << fPrimaryTrackSourceFile;
    return kSUCCESS;
 }
 
-AtSimpleSimulationTask::EventState AtSimpleSimulationReplayTask::LoadEvent()
+AtSimTransportTask::EventState AtSimTransportReplayTask::LoadEvent()
 {
    if (fPrimaryTrackTree == nullptr)
       return {};
@@ -54,7 +54,7 @@ AtSimpleSimulationTask::EventState AtSimpleSimulationReplayTask::LoadEvent()
    return state;
 }
 
-void AtSimpleSimulationReplayTask::FinishEventSource()
+void AtSimTransportReplayTask::FinishEventSource()
 {
    if (fPrimaryTrackFile == nullptr)
       return;
@@ -66,7 +66,7 @@ void AtSimpleSimulationReplayTask::FinishEventSource()
    fPrimaryTrackInput = nullptr;
 }
 
-bool AtSimpleSimulationReplayTask::LoadPrimaryTracksFromSource()
+bool AtSimTransportReplayTask::LoadPrimaryTracksFromSource()
 {
    if (fPrimaryTrackTree == nullptr || fSourceEventIndex >= fPrimaryTrackTree->GetEntries())
       return false;
@@ -90,4 +90,4 @@ bool AtSimpleSimulationReplayTask::LoadPrimaryTracksFromSource()
    return true;
 }
 
-ClassImp(AtSimpleSimulationReplayTask);
+ClassImp(AtSimTransportReplayTask);

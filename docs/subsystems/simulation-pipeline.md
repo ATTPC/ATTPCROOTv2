@@ -17,7 +17,7 @@ FairPrimaryGenerator + AtReactionGenerator
           ┌──────┴──────────────┐
           ▼                     ▼
   Geant4/VMC transport    SimpleSim FairTask
-  (AtTpc::ProcessHits)    (AtSimpleSimulationTask)
+  (AtTpc::ProcessHits)    (AtSimTransportTask)
           │                     │
           └──────────┬──────────┘
                      ▼
@@ -36,12 +36,14 @@ The standard path. `FairPrimaryGenerator` pushes particles onto `AtStack`; Geant
 
 ### SimpleSim Path
 
-SimpleSim runs as a `FairTask` inside the same `FairRunSim` event loop. It uses `AtSimpleSimulation` to propagate particles through the geometry with user-configured `AtELossModel` instances, supporting both straight-line (no field) and curved-track (magnetic field via RK4) propagation. Steps are fed through `AtTpc::ProcessStep()` -- the same detector logic used by Geant4 -- so reaction triggers, vertex propagation, and hit recording work identically.
+SimpleSim runs as a `FairTask` inside the same `FairRunSim` event loop. It uses the `AtSimTransport` engine (owned by `AtSimTransportTask`) to propagate particles through the geometry with energy-loss models served by an `AtELossManager`, supporting both straight-line (no field) and curved-track (magnetic field via RK4) propagation. Steps are fed through `AtTpc::ProcessStep()` -- the same detector logic used by Geant4 -- so reaction triggers, vertex propagation, and hit recording work identically.
 
-Two task classes are provided:
+The standalone hit-recording class `AtSimpleSimulation` wraps `AtSimTransport` with a thread-local `TClonesArray` of `AtMCPoint` and is used by `AtMCFitter`, `AtMCFission`, and analysis macros that manage their own event loop.
 
-- **`AtSimpleSimulationGeneratorTask`** -- generates events live via a `FairPrimaryGenerator`, using the same generator chain as the Geant4 path. This is the primary task for production use.
-- **`AtSimpleSimulationReplayTask`** -- reads primary MCTracks from a prior Geant4 run and re-transports them through SimpleSim. Useful for A/B validation with identical kinematics.
+Two task classes are provided for the FairRoot path:
+
+- **`AtSimTransportGeneratorTask`** -- generates events live via a `FairPrimaryGenerator`, using the same generator chain as the Geant4 path. This is the primary task for production use.
+- **`AtSimTransportReplayTask`** -- reads primary MCTracks from a prior Geant4 run and re-transports them through SimpleSim. Useful for A/B validation with identical kinematics.
 
 Both write `AtMCPoint` and `MCTrack` branches in the same format as Geant4, so downstream tasks work unchanged.
 
@@ -89,10 +91,10 @@ For the **Geant4/VMC** path, a simulation run needs:
 
 For the **SimpleSim** path, the run additionally needs:
 
-- an `AtSimpleSimulation` instance (uses the FairRunSim geometry automatically)
-- energy loss models for each particle species, either registered manually via `AddModel()` or auto-created via `SetModelFactory()`
+- an `AtSimTransport` instance (uses the FairRunSim geometry automatically)
+- an `AtELossManager` (or a subclass such as `AtELossManagerCATIMA` / `AtELossManagerBetheBloch`) carrying the energy-loss models for each particle species
 - the detector set via `SetDetector(tpc)` on the SimpleSim task
 
-Energy loss models must be available for every (Z, A) pair that will be transported. Models can be registered manually via `AddModel()`, or a factory can be set via `SetModelFactory()` to auto-create models from geometry materials on demand. If a particle has no model and no factory is set, the simulation will terminate with a fatal error.
+Energy loss models must be available for every (Z, A) pair that will be transported in every material they traverse. Models can be registered manually via `manager->AddModel(...)`, or an auto-generating `AtELossManager` subclass can create them from the geometry on demand. If no matching model is registered or generated, the transport stops for that track.
 
 See [generators.md](generators.md) for generator behavior, [energy-loss.md](energy-loss.md) for the model layer, and [simplesim-migration.md](simplesim-migration.md) for the migration guide.

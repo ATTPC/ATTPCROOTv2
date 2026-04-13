@@ -1,7 +1,7 @@
-#ifndef AtSimpleSimulationReplayTask_h
-#define AtSimpleSimulationReplayTask_h
+#ifndef AtSimTransportReplayTask_h
+#define AtSimTransportReplayTask_h
 
-#include "AtSimpleSimulationTask.h"
+#include "AtSimTransportTask.h"
 
 #include <Rtypes.h>
 
@@ -13,10 +13,10 @@ class TFile;
 class TMemberInspector;
 class TTree;
 
-class AtSimpleSimulationReplayTask : public AtSimpleSimulationTask {
+class AtSimTransportReplayTask : public AtSimTransportTask {
 public:
-   explicit AtSimpleSimulationReplayTask(std::unique_ptr<AtSimpleSimulation> sim);
-   ~AtSimpleSimulationReplayTask() override = default;
+   explicit AtSimTransportReplayTask(std::unique_ptr<AtSimTransport> sim);
+   ~AtSimTransportReplayTask() override = default;
 
    void SetPrimaryTrackSource(const std::string &fileName) { fPrimaryTrackSourceFile = fileName; }
 
@@ -34,7 +34,7 @@ protected:
 private:
    bool LoadPrimaryTracksFromSource();
 
-   ClassDefOverride(AtSimpleSimulationReplayTask, 1);
+   ClassDefOverride(AtSimTransportReplayTask, 1);
 };
 
 #endif

@@ -21,9 +21,9 @@
 #pragma link C++ class AtTrigger + ;
 #pragma link C++ class AtTriggerTask + ;
 #pragma link C++ class AtVectorResponse -;
-#pragma link C++ class AtSimpleSimulationTask +;
-#pragma link C++ class AtSimpleSimulationGeneratorTask +;
-#pragma link C++ class AtSimpleSimulationReplayTask +;
+#pragma link C++ class AtSimTransportTask +;
+#pragma link C++ class AtSimTransportGeneratorTask +;
+#pragma link C++ class AtSimTransportReplayTask +;
+#pragma link C++ class AtSimTransport -!;
 #pragma link C++ class AtSimpleSimulation -!;
-#pragma link C++ class AtStandaloneSimulation -!;
 #endif

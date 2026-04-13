@@ -335,22 +335,14 @@ Bool_t AtTPC2Body::GenerateReaction(FairPrimaryGenerator *primGen)
           "<<BeamPos.Phi()*180.0/TMath::Pi()<<std::endl;*/
 
          TVector3 BeamPos(fPxBeam * 1000, fPyBeam * 1000, fPzBeam * 1000); // To MeV for Euler Transformation
-         double beamTheta = BeamPos.Theta();
-         double beamPhi = BeamPos.Phi();
-         // When the beam is effectively on-axis, the azimuth is physically undefined.
-         // Geant transport can leave tiny numerical px/py components that would otherwise
-         // rotate the whole reaction around z and break same-seed comparisons.
-         if (BeamPos.Mag() > 0.0 && BeamPos.Perp() / BeamPos.Mag() < 1e-3) {
-            beamTheta = 0.0;
-            beamPhi = 0.0;
-         }
-         LOG(debug) << " Beam Theta (Mom) : " << beamTheta * 180.0 / TMath::Pi();
-         LOG(debug) << " Beam Phi (Mom) : " << beamPhi * 180.0 / TMath::Pi();
+         // TVector3 BeamPos(1.0,1.0,0.0);
+         LOG(debug) << " Beam Theta (Mom) : " << BeamPos.Theta() * 180.0 / TMath::Pi();
+         LOG(debug) << " Beam Phi (Mom) : " << BeamPos.Phi() * 180.0 / TMath::Pi();
 
          Double_t thetaLab1, phiLab1, thetaLab2, phiLab2;
          auto EulerTransformer = std::make_unique<AtEulerTransformation>();
-         EulerTransformer->SetBeamDirectionAtVertexTheta(beamTheta);
-         EulerTransformer->SetBeamDirectionAtVertexPhi(beamPhi);
+         EulerTransformer->SetBeamDirectionAtVertexTheta(BeamPos.Theta());
+         EulerTransformer->SetBeamDirectionAtVertexPhi(BeamPos.Phi());
 
          EulerTransformer->SetThetaInBeamSystem(Ang.at(0));
          EulerTransformer->SetPhiInBeamSystem(phiBeam1);

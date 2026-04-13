@@ -14,7 +14,7 @@
 #include "AtPatternY.h" // for AtPatternY, AtPatternY::XYZVector
 #include "AtPulse.h"
 #include "AtRadialChargeModel.h"
-#include "AtStandaloneSimulation.h"
+#include "AtSimpleSimulation.h"
 #include "AtStudentDistribution.h"
 #include "AtUniformDistribution.h"
 #include "AtVectorUtil.h"

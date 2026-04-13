@@ -36,11 +36,11 @@ AtTrigger.cxx
 AtTriggerTask.cxx
 AtVectorResponse.cxx
 
+AtSimTransport.cxx
 AtSimpleSimulation.cxx
-AtStandaloneSimulation.cxx
-AtSimpleSimulationTask.cxx
-AtSimpleSimulationGeneratorTask.cxx
-AtSimpleSimulationReplayTask.cxx
+AtSimTransportTask.cxx
+AtSimTransportGeneratorTask.cxx
+AtSimTransportReplayTask.cxx
 AtSimParticleCollector.cxx
 )
 
