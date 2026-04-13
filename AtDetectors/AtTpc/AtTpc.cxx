@@ -60,22 +60,17 @@ void AtTpc::Initialize()
    rtdb->getContainer("AtTpcGeoPar");
 }
 
-void AtTpc::trackEnteringVolume()
+void AtTpc::trackEnteringVolume(const StepState &step)
 {
-   auto AZ = DecodePdG(gMC->TrackPid());
-   fELoss = 0.;
+   // Reset the accumulator before capturing this step's energy loss, so the
+   // entering step contributes fELoss (not fELoss + whatever was left over).
    fELossAcc = 0.;
-   fTime = gMC->TrackTime() * 1.0e09;
-   fLength = gMC->TrackLength();
-   gMC->TrackPosition(fPosIn);
-   gMC->TrackMomentum(fMomIn);
-   fTrackID = gMC->GetStack()->GetCurrentTrackNumber();
+   getTrackParametersFromStep(step);
 
-   // Position of the first hit of the beam in the TPC volume ( For tracking purposes in the TPC)
-   if (fTrackID == 0 && (fVolName == "drift_volume" || fVolName == "cell"))
+   if (fTrackID == 0 && IsActiveGasVolume(fVolName))
       InPos = fPosIn;
 
-   Int_t VolumeID = 0;
+   auto AZ = DecodePdG(step.pdg);
 
    if (fTrackID == 0)
       LOG(debug) << cGREEN << " AtTPC: Beam Event ";
@@ -83,46 +78,44 @@ void AtTpc::trackEnteringVolume()
       LOG(debug) << cBLUE << " AtTPC: Reaction/Decay Event ";
 
    LOG(debug) << " AtTPC: First hit in Volume " << fVolName;
-   LOG(debug) << " Particle : " << gMC->ParticleName(gMC->TrackPid());
-   LOG(debug) << " PID PdG : " << gMC->TrackPid();
+   LOG(debug) << " PID PdG : " << step.pdg;
    LOG(debug) << " Atomic Mass : " << AZ.first;
    LOG(debug) << " Atomic Number : " << AZ.second;
-   LOG(debug) << " Volume ID " << gMC->CurrentVolID(VolumeID);
+   LOG(debug) << " Volume ID " << step.volumeID;
    LOG(debug) << " Track ID : " << fTrackID;
    LOG(debug) << " Position : " << fPosIn.X() << " " << fPosIn.Y() << "  " << fPosIn.Z();
    LOG(debug) << " Momentum : " << fMomIn.X() << " " << fMomIn.Y() << "  " << fMomIn.Z();
-   LOG(debug) << " Total relativistic energy " << gMC->Etot();
+   LOG(debug) << " Total relativistic energy " << step.totalEnergy;
    LOG(debug) << " Mass of the Beam particle (gAVTP) : " << AtVertexPropagator::Instance()->GetBeamMass();
-   LOG(debug) << " Mass of the Tracked particle (gMC) : " << gMC->TrackMass(); // NB: with electrons
+   LOG(debug) << " Mass of the Tracked particle (transport) : " << step.trackMass; // NB: with electrons
    LOG(debug) << " Initial energy of the beam particle in this volume : "
-              << ((gMC->Etot() - AtVertexPropagator::Instance()->GetBeamMass() * 0.93149401) *
+              << ((step.totalEnergy - AtVertexPropagator::Instance()->GetBeamMass() * 0.93149401) *
                   1000.); // Relativistic Mass
    LOG(debug) << " Total energy of the current track (gMC) : "
-              << ((gMC->Etot() - gMC->TrackMass()) * 1000.); // Relativistic Mass
+              << ((step.totalEnergy - step.trackMass) * 1000.); // Relativistic Mass
    LOG(debug) << " ==================================================== " << cNORMAL;
 }
 
-void AtTpc::getTrackParametersFromMC()
+void AtTpc::getTrackParametersFromStep(const StepState &step)
 {
-   fELoss = gMC->Edep();
+   fELoss = step.energyLoss;
    fELossAcc += fELoss;
-   fTime = gMC->TrackTime() * 1.0e09;
-   fLength = gMC->TrackLength();
-   gMC->TrackPosition(fPosIn);
-   gMC->TrackMomentum(fMomIn);
-   fTrackID = gMC->GetStack()->GetCurrentTrackNumber();
+   fTime = step.timeNs;
+   fLength = step.trackLength;
+   fPosIn = step.pos;
+   fMomIn = step.mom;
+   fTrackID = step.trackID;
 }
 
-void AtTpc::getTrackParametersWhileExiting()
+void AtTpc::getTrackParametersWhileExiting(const StepState &step)
 {
-   fTrackID = gMC->GetStack()->GetCurrentTrackNumber();
-   gMC->TrackPosition(fPosOut);
-   gMC->TrackMomentum(fMomOut);
+   fTrackID = step.trackID;
+   fPosOut = step.posOut;
+   fMomOut = step.momOut;
 
-   // Correct fPosOut
-   if (gMC->IsTrackExiting()) {
+   if (step.exiting) {
       correctPosOut();
-      if ((fVolName.Contains("drift_volume") || fVolName.Contains("cell")) && fTrackID == 0)
+      if (IsActiveGasVolume(fVolName) && fTrackID == 0)
          resetVertex();
    }
 }
@@ -135,6 +128,9 @@ void AtTpc::resetVertex()
 
 void AtTpc::correctPosOut()
 {
+   if (gGeoManager == nullptr)
+      return; // No geometry (e.g. unit tests); caller's fPosOut is already final.
+
    const Double_t *oldpos = nullptr;
    const Double_t *olddirection = nullptr;
    Double_t newpos[3];
@@ -166,51 +162,84 @@ bool AtTpc::reactionOccursHere()
 {
    bool atEnergyLoss = fELossAcc * 1000 > AtVertexPropagator::Instance()->GetRndELoss();
    bool isPrimaryBeam = fTrackID == 0;
-   bool isInRightVolume = fVolName.Contains("drift_volume") || fVolName.Contains("cell");
+   bool isInRightVolume = IsActiveGasVolume(fVolName);
    return atEnergyLoss && isPrimaryBeam && isInRightVolume;
 }
+
 Bool_t AtTpc::ProcessHits(FairVolume *vol)
 {
    /** This method is called from the MC stepping */
 
    auto *stack = dynamic_cast<AtStack *>(gMC->GetStack());
-   fVolName = gMC->CurrentVolName();
-   fVolumeID = vol->getMCid();
-   fDetCopyID = vol->getCopyNo();
+   StepState step;
+   step.trackID = gMC->GetStack()->GetCurrentTrackNumber();
+   step.pdg = gMC->TrackPid();
+   step.volumeName = gMC->CurrentVolName();
+   step.volumeID = vol->getMCid();
+   step.detCopyID = vol->getCopyNo();
+   step.entering = gMC->IsTrackEntering();
+   step.exiting = gMC->IsTrackExiting();
+   step.stopping = gMC->IsTrackStop();
+   step.disappeared = gMC->IsTrackDisappeared();
+   step.energyLoss = gMC->Edep();
+   step.timeNs = gMC->TrackTime() * 1.0e09;
+   step.trackLength = gMC->TrackLength();
+   step.totalEnergy = gMC->Etot();
+   step.trackMass = gMC->TrackMass();
+   gMC->TrackPosition(step.pos);
+   gMC->TrackMomentum(step.mom);
 
-   if (gMC->IsTrackEntering())
-      trackEnteringVolume();
+   if (step.exiting || step.stopping || step.disappeared) {
+      gMC->TrackPosition(step.posOut);
+      gMC->TrackMomentum(step.momOut);
+   }
 
-   getTrackParametersFromMC();
-
-   if (gMC->IsTrackExiting() || gMC->IsTrackStop() || gMC->IsTrackDisappeared())
-      getTrackParametersWhileExiting();
-
-   addHit();
-
-   // Reaction Occurs here
-   if (reactionOccursHere())
-      startReactionEvent();
+   bool stopTrack = ProcessStep(step);
+   if (stopTrack)
+      gMC->StopTrack();
 
    // Increment number of AtTpc det points in TParticle
    stack->AddPoint(kAtTpc);
    return kTRUE;
 }
 
-void AtTpc::startReactionEvent()
+bool AtTpc::ProcessStep(const StepState &step)
 {
+   fVolName = step.volumeName;
+   fVolumeID = step.volumeID;
+   fDetCopyID = step.detCopyID;
 
-   gMC->StopTrack();
+   if (step.entering)
+      trackEnteringVolume(step);
+   else
+      getTrackParametersFromStep(step);
+
+   if (step.exiting || step.stopping || step.disappeared)
+      getTrackParametersWhileExiting(step);
+
+   addHit(step);
+
+   if (reactionOccursHere()) {
+      startReactionEvent(step);
+      return true;
+   }
+
+   return false;
+}
+
+void AtTpc::startReactionEvent(const StepState &step)
+{
    AtVertexPropagator::Instance()->ResetVertex();
 
-   TLorentzVector StopPos;
-   TLorentzVector StopMom;
-   gMC->TrackPosition(StopPos);
-   gMC->TrackMomentum(StopMom);
-   Double_t StopEnergy = ((gMC->Etot() - AtVertexPropagator::Instance()->GetBeamMass() * 0.93149401) * 1000.);
+   const TLorentzVector &StopPos = step.pos;
+   const TLorentzVector &StopMom = step.mom;
+   Double_t StopEnergy = ((step.totalEnergy - AtVertexPropagator::Instance()->GetBeamMass() * 0.93149401) * 1000.);
+
+   LOG(info) << "AtTpc: triggering reaction handoff at z=" << StopPos.Z() << " cm with accumulated loss "
+             << fELossAcc * 1000. << " MeV and residual energy " << StopEnergy << " MeV";
 
    LOG(debug) << cYELLOW << " Beam energy loss before reaction : " << fELossAcc * 1000;
-   LOG(debug) << " Mass of the Tracked particle : " << gMC->TrackMass();
+   LOG(debug) << " Mass of the Tracked particle : " << step.trackMass;
    LOG(debug) << " Mass of the Beam particle (gAVTP)  : " << AtVertexPropagator::Instance()->GetBeamMass();
    LOG(debug) << " Total energy of the Beam particle before reaction : " << StopEnergy << cNORMAL; // Relativistic Mass
 
@@ -218,9 +247,9 @@ void AtTpc::startReactionEvent()
                                              StopMom.Px(), StopMom.Py(), StopMom.Pz(), StopEnergy);
 }
 
-void AtTpc::addHit()
+void AtTpc::addHit(const StepState &step)
 {
-   auto AZ = DecodePdG(gMC->TrackPid());
+   auto AZ = DecodePdG(step.pdg);
 
    Double_t EIni = 0;
    Double_t AIni = 0;
@@ -237,6 +266,11 @@ void AtTpc::addHit()
 
    AddHit(fTrackID, fVolumeID, fVolName, fDetCopyID, TVector3(fPosIn.X(), fPosIn.Y(), fPosIn.Z()),
           TVector3(fMomIn.Px(), fMomIn.Py(), fMomIn.Pz()), fTime, fLength, fELoss, EIni, AIni, AZ.first, AZ.second);
+}
+
+bool AtTpc::IsActiveGasVolume(const TString &volumeName) const
+{
+   return volumeName.Contains("drift_volume") || volumeName.Contains("cell");
 }
 
 void AtTpc::EndOfEvent()
@@ -286,21 +320,11 @@ void AtTpc::ConstructGeometry()
 
 Bool_t AtTpc::CheckIfSensitive(std::string name)
 {
-
-   TString tsname = name;
-   if (tsname.Contains("drift_volume") || tsname.Contains("window") || tsname.Contains("cell")) {
-      LOG(info) << " AtTPC geometry: Sensitive volume found: " << tsname;
-      return kTRUE;
-   }
-   return kFALSE;
-}
-
-AtMCPoint *
-AtTpc::AddHit(Int_t trackID, Int_t detID, TVector3 pos, TVector3 mom, Double_t time, Double_t length, Double_t eLoss)
-{
-   TClonesArray &clref = *fAtTpcPointCollection;
-   Int_t size = clref.GetEntriesFast();
-   return new (clref[size]) AtMCPoint(trackID, detID, pos, mom, time, length, eLoss);
+   const bool sensitive = name.find("drift_volume") != std::string::npos || name.find("window") != std::string::npos ||
+                          name.find("cell") != std::string::npos;
+   if (sensitive)
+      LOG(debug) << " AtTPC geometry: Sensitive volume found: " << name;
+   return sensitive ? kTRUE : kFALSE;
 }
 
 // -----   Private method AddHit   --------------------------------------------

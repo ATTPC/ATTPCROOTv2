@@ -12,6 +12,7 @@ Set(DEPENDENCIES
   ATTPCROOT::AtSimulationData
   ATTPCROOT::AtParameter
   ATTPCROOT::AtData
+  ATTPCROOT::AtDetectors
   ATTPCROOT::AtMap
   ATTPCROOT::AtTools
 )
@@ -35,8 +36,12 @@ AtTrigger.cxx
 AtTriggerTask.cxx
 AtVectorResponse.cxx
 
+AtSimTransport.cxx
 AtSimpleSimulation.cxx
-AtTestSimulation.cxx
+AtSimTransportTask.cxx
+AtSimTransportGeneratorTask.cxx
+AtSimTransportReplayTask.cxx
+AtSimParticleCollector.cxx
 )
 
 generate_target_and_root_library(${LIBRARY_NAME}
@@ -44,3 +49,12 @@ generate_target_and_root_library(${LIBRARY_NAME}
   SRCS ${SRCS}
   DEPS_PUBLIC ${DEPENDENCIES}
   )
+
+set(TEST_SRCS
+  AtSimTest.cxx
+)
+
+attpcroot_generate_tests(${LIBRARY_NAME}Tests
+  SRCS ${TEST_SRCS}
+  DEPS ${LIBRARY_NAME}
+)

@@ -10,11 +10,14 @@ Example macro starting points referenced by these docs.
 - Files under `macro/` are ROOT / Cling scripts, not normal compiled translation units.
 - ROOT/core headers such as `TClonesArray.h` or `TTreeReader.h`, and STL headers a macro genuinely uses, are normal.
 - Do not treat a macro like standalone C++ or try to fix missing symbols by adding project headers first.
+- Do not write throwaway ROOT macros outside this tree (for example in `/tmp`). In this repo, macro behavior depends on local relative includes, dictionaries, and the repo runtime environment. If you need to test or inspect something, modify an existing macro in `macro/` or copy it to another local path inside `macro/`.
 
 ## Macro Do / Don't
 
 - Do: copy an existing pattern from `macro/examples/` or `macro/tests/`.
+- Do: for Geant4 generator macros, preserve the generator block's role and unit conventions and mutate it incrementally.
 - Don't: start by adding `#include "At*.h"` to compensate for missing dictionaries or libraries, or rewrite a macro as if it were a compiled source file.
+- Don't: assume beam-species changes are interchangeable with target/product changes. Revalidate beam-path changes with a one-event run before building on them.
 
 ## Starting Points
 

@@ -1,153 +1,42 @@
-
 #include "AtSimpleSimulation.h"
 
-#include "AtELossModel.h"
 #include "AtMCPoint.h"
-#include "AtSpaceChargeModel.h" // for AtSpaceChargeModel
+#include "AtSimTransport.h"
+#include "AtSpaceChargeModel.h"
 
 #include <FairLogger.h>
 #include <FairRootManager.h>
 
-#include <TClonesArray.h> // for TClonesArray
-#include <TGeoManager.h>
-#include <TGeoNode.h>
-#include <TGeoVolume.h>
-#include <TObject.h> // for TObject
+#include <TClonesArray.h>
 
-#include <cmath>     // for sqrt
-#include <stdexcept> // for invalid_argument
-#include <utility>   // for pair
+#include <stdexcept>
 
 thread_local TClonesArray AtSimpleSimulation::fMCPoints("AtMCPoint");
 thread_local int AtSimpleSimulation::fTrackID = 0;
 
-using SpaceChargeModel = std::shared_ptr<AtSpaceChargeModel>;
-using ModelPtr = std::shared_ptr<AtTools::AtELossModel>;
 using XYZPoint = ROOT::Math::XYZPoint;
-using XYZVector = ROOT::Math::XYZVector;
 using PxPyPzEVector = ROOT::Math::PxPyPzEVector;
 
-AtSimpleSimulation::AtSimpleSimulation(std::string geoFile)
-{
-   TGeoManager *geo = TGeoManager::Import(geoFile.c_str());
+AtSimpleSimulation::AtSimpleSimulation() : fEngine(std::make_unique<AtSimTransport>()) {}
 
-   if (gGeoManager == nullptr)
-      LOG(fatal) << "Failed to load geometry file " << geoFile << " " << geo;
-}
-AtSimpleSimulation::AtSimpleSimulation()
+AtSimpleSimulation::AtSimpleSimulation(std::unique_ptr<AtSimTransport> engine) : fEngine(std::move(engine))
 {
-   if (gGeoManager == nullptr)
-      LOG(fatal) << "No geometry file loaded!";
+   if (!fEngine)
+      fEngine = std::make_unique<AtSimTransport>();
 }
 
-bool AtSimpleSimulation::ParticleID::operator<(const ParticleID &other) const
+AtSimpleSimulation::AtSimpleSimulation(const std::string &geoFile) : fEngine(std::make_unique<AtSimTransport>(geoFile))
 {
-   if (A < other.A) {
-      return true;
-   } else if (A > other.A) {
-      return false;
-   } else {
-      return Z < other.Z;
-   }
 }
 
-/// Takes position in mm
-TGeoVolume *AtSimpleSimulation::GetVolume(const XYZPoint &point)
+AtSimpleSimulation::AtSimpleSimulation(const std::string &geoFile, std::shared_ptr<AtTools::AtELossManager> manager)
+   : fEngine(std::make_unique<AtSimTransport>(geoFile, std::move(manager)))
 {
-   auto pointCm = point / 10.;
-   {
-      std::lock_guard<std::mutex> lock(fGeoMutex);
-      TGeoNode *node = gGeoManager->FindNode(pointCm.X(), pointCm.Y(), pointCm.Z());
-      if (node == nullptr) {
-         return nullptr;
-      }
-      return node->GetVolume();
-   }
 }
 
-bool AtSimpleSimulation::IsInVolume(const std::string &volName, const XYZPoint &point)
+AtSimpleSimulation::AtSimpleSimulation(std::shared_ptr<AtTools::AtELossManager> manager)
+   : fEngine(std::make_unique<AtSimTransport>(std::move(manager)))
 {
-
-   TGeoVolume *volume = GetVolume(point);
-   if (volume == nullptr || volName != std::string(volume->GetName())) {
-      return false;
-   }
-
-   return true;
-}
-
-std::string AtSimpleSimulation::GetVolumeName(const XYZPoint &point)
-{
-   TGeoVolume *volume = GetVolume(point);
-   if (volume == nullptr) {
-      return "";
-   }
-   return volume->GetName();
-}
-
-void AtSimpleSimulation::AddModel(int Z, int A, ModelPtr model)
-{
-   ParticleID id = {
-      .A = A,
-      .Z = Z,
-   };
-
-   fModels[id] = model;
-}
-
-std::pair<XYZPoint, PxPyPzEVector>
-AtSimpleSimulation::SimulateParticle(int Z, int A, const XYZPoint &iniPos, const PxPyPzEVector &iniMom,
-                                     std::function<bool(XYZPoint, PxPyPzEVector)> func)
-{
-   auto modelIt = fModels.find({A, Z});
-   if (modelIt == fModels.end())
-      throw std::invalid_argument("Missing energy loss model for Z:" + std::to_string(Z) + " A:" + std::to_string(A));
-   if (!IsInVolume("drift_volume", iniPos))
-      throw std::invalid_argument("Position of particle is not in active volume but is in " + GetVolumeName(iniPos));
-
-   return SimulateParticle(modelIt->second, iniPos, iniMom, func);
-}
-
-std::pair<XYZPoint, PxPyPzEVector>
-AtSimpleSimulation::SimulateParticle(ModelPtr model, const XYZPoint &iniPos, const PxPyPzEVector &iniMom,
-                                     std::function<bool(XYZPoint, PxPyPzEVector)> func)
-{
-   // This is a new track
-   fTrackID++;
-
-   auto pos = iniPos;
-   auto mom = iniMom;
-   double length = 0;
-
-   // Go until we exit the volume or the KE is less than 1keV
-   while (IsInVolume("drift_volume", pos) && mom.E() - mom.M() > 1e-3 && func(pos, mom)) {
-
-      if (isnan(pos.X()) || isnan(mom.X())) {
-         LOG(error) << "Failed to simulate a point with nan!";
-         return {{0, 0, 0}, {0, 0, 0, 0}};
-      }
-      // Direction particle is traveling
-      auto dir = mom.Vect().Unit();
-
-      // Get the energy loss from the model
-      double KE = mom.E() - mom.M();
-      double eLoss = model->GetEnergyLoss(KE, fDistStep);
-
-      // Update the momentum from the energy loss model. Assume the energy loss does not change
-      // the direction of the particle.
-      // newMom (x/y/z) =
-      auto E = mom.E() - eLoss;
-      double p = sqrt(E * E - mom.M2());
-      mom.SetPxPyPzE(dir.X() * p, dir.Y() * p, dir.Z() * p, E);
-
-      LOG(debug) << mom << " " << mom.M() << " " << iniMom.M();
-
-      pos += dir * fDistStep;
-      length += fDistStep;
-      AddHit(eLoss, pos, mom, length);
-   }
-
-   return {pos, mom};
 }
 
 void AtSimpleSimulation::NewEvent()
@@ -156,9 +45,48 @@ void AtSimpleSimulation::NewEvent()
    fTrackID = 0;
 }
 
-/**
- * Units are mm, Mev, and Mev/c.
- */
+void AtSimpleSimulation::RegisterBranch(std::string branchName, bool pers)
+{
+   auto ioMan = FairRootManager::Instance();
+   if (ioMan == nullptr) {
+      LOG(fatal) << "The IO manager was not instantiated before attempting to simulate an event.";
+      return;
+   }
+
+   ioMan->Register(branchName.c_str(), "AtTPC", &fMCPoints, pers);
+}
+
+std::pair<XYZPoint, PxPyPzEVector>
+AtSimpleSimulation::SimulateParticle(int Z, int A, const XYZPoint &iniPos, const PxPyPzEVector &iniMom,
+                                     std::function<bool(XYZPoint, PxPyPzEVector)> func)
+{
+   if (fEngine->GetVolumeNameAt(iniPos) != fVolumeName)
+      throw std::invalid_argument("Position of particle is not in active volume but is in " +
+                                  fEngine->GetVolumeNameAt(iniPos));
+
+   ++fTrackID;
+   const auto &volName = fVolumeName;
+
+   // The callback records hits while inside the volume, forwards to the user's callback,
+   // and stops transport when the particle exits. All checks use postPosition so hits
+   // are recorded at the step endpoint (matching the Geant4 convention).
+   return fEngine->TransportParticle(Z, A, iniPos, iniMom,
+                                     [this, &func, &volName](const AtSimTransport::TransportStep &step) {
+                                        if (fEngine->GetVolumeNameAt(step.postPosition) == volName)
+                                           AddHit(step.energyLoss, step.postPosition, step.postMomentum, step.length);
+
+                                        // Call user's callback
+                                        if (!func(step.postPosition, step.postMomentum))
+                                           return false;
+
+                                        // Stop transport if the particle has exited the configured volume
+                                        if (fEngine->GetVolumeNameAt(step.postPosition) != volName)
+                                           return false;
+
+                                        return true;
+                                     });
+}
+
 void AtSimpleSimulation::AddHit(double ELoss, const XYZPoint &pos, const PxPyPzEVector &mom, double length)
 {
    LOG(debug) << "Adding a hit at element " << fMCPoints.GetEntriesFast() << " in TClonesArray.";
@@ -168,7 +96,7 @@ void AtSimpleSimulation::AddHit(double ELoss, const XYZPoint &pos, const PxPyPzE
    mcPoint->SetTrackID(fTrackID);
    mcPoint->SetLength(length / 10.);      // Convert to cm
    mcPoint->SetEnergyLoss(ELoss / 1000.); // Convert to GeV
-   mcPoint->SetVolName("drift_volume");
+   mcPoint->SetVolName(fVolumeName.c_str());
 
    if (fSCModel) {
       // In the simulation z = 0 is the window and z=1000 is the pad plane.
@@ -181,16 +109,4 @@ void AtSimpleSimulation::AddHit(double ELoss, const XYZPoint &pos, const PxPyPzE
    } else
       mcPoint->SetPosition(pos / 10.);       // Convert to cm
    mcPoint->SetMomentum(mom.Vect() / 1000.); // Convert to GeV/c
-   // mcPoint->Print(nullptr);
-}
-
-void AtSimpleSimulation::RegisterBranch(std::string branchName, bool perc)
-{
-   auto ioMan = FairRootManager::Instance();
-   if (ioMan == nullptr) {
-      LOG(fatal) << "The IO manager was not instatiated before attempting to simulate an event.";
-      return;
-   }
-
-   ioMan->Register(branchName.c_str(), "AtTPC", &fMCPoints, perc);
 }

@@ -2,41 +2,52 @@
 
 The simulation pipeline converts a generated reaction into MC truth, simulated detector responses, and finally `AtRawEvent` output that can be passed into reconstruction.
 
-There are currently two ways to generate the simulation-side `AtMCPoint` input:
+There are two transport engines for generating `AtMCPoint` data:
 
-- the full FairRoot/VMC transport path used by most detector simulations
-- a lighter-weight model-driven path built around `AtSimpleSimulation`
+- **Geant4/VMC** -- full Monte Carlo transport through detector geometry
+- **SimpleSim** -- model-driven propagation with user-configured energy loss models, running as a FairTask inside the same FairRunSim event loop
+
+Both produce the same `AtMCPoint` and `MCTrack` output format, so the downstream digitization chain (`AtClusterizeTask` -> `AtPulseTask`) works unchanged with either.
 
 ## Flow
 
-The overall simulation flow is shared downstream of `AtMCPoint` generation:
-
 ```
-FairPrimaryGenerator + AtReactionGenerator   AtSimpleSimulation
-                 │                                  │
-                 ▼                                  ▼
-        Geant4 / VMC transport              direct AtMCPoint generation
-                 │                                  │
-                 └───────────────┬──────────────────┘
-                                 ▼
-                             AtMCPoint
-        ▼
-AtClusterizeTask
-        │  converts MC-point deposits -> ionization electron clusters
-        ▼
-AtPulseTask
-        │  drifts electrons and produces simulated pad traces
-        └─ output branch: AtRawEvent -> TClonesArray[AtRawEvent]
+FairPrimaryGenerator + AtReactionGenerator
+                 │
+          ┌──────┴──────────────┐
+          ▼                     ▼
+  Geant4/VMC transport    SimpleSim FairTask
+  (AtTpc::ProcessHits)    (AtSimTransportTask)
+          │                     │
+          └──────────┬──────────┘
+                     ▼
+                 AtMCPoint + MCTrack
+                     ▼
+              AtClusterizeTask
+                     ▼
+               AtPulseTask
+                     ▼
+                AtRawEvent
 ```
 
-The only difference between the two paths is how `AtMCPoint` objects are generated. After that, the downstream digitization flow is the same.
+### Geant4/VMC Path
 
-### AtMCPoint Generation
+The standard path. `FairPrimaryGenerator` pushes particles onto `AtStack`; Geant4 transports them through the detector geometry; `AtTpc::ProcessHits()` records `AtMCPoint` entries.
 
-- **Primary path:** Geant4/VMC transport through the detector geometry produces `AtMCPoint` objects from the generated particles.
-- **Secondary path:** `AtDigitization/AtSimpleSimulation.h` advances particles through the active volume in fixed steps, applies an `AtTools::AtELossModel`, and writes `AtMCPoint` objects directly.
+### SimpleSim Path
 
-In this tree, `AtSimpleSimulation` uses straight-line propagation. Future versions may extend this step to non-linear tracks and more general transport models.
+SimpleSim runs as a `FairTask` inside the same `FairRunSim` event loop. It uses the `AtSimTransport` engine (owned by `AtSimTransportTask`) to propagate particles through the geometry with energy-loss models served by an `AtELossManager`, supporting both straight-line (no field) and curved-track (magnetic field via RK4) propagation. Steps are fed through `AtTpc::ProcessStep()` -- the same detector logic used by Geant4 -- so reaction triggers, vertex propagation, and hit recording work identically.
+
+The standalone hit-recording class `AtSimpleSimulation` wraps `AtSimTransport` with a thread-local `TClonesArray` of `AtMCPoint` and is used by `AtMCFitter`, `AtMCFission`, and analysis macros that manage their own event loop.
+
+Two task classes are provided for the FairRoot path:
+
+- **`AtSimTransportGeneratorTask`** -- generates events live via a `FairPrimaryGenerator`, using the same generator chain as the Geant4 path. This is the primary task for production use.
+- **`AtSimTransportReplayTask`** -- reads primary MCTracks from a prior Geant4 run and re-transports them through SimpleSim. Useful for A/B validation with identical kinematics.
+
+Both write `AtMCPoint` and `MCTrack` branches in the same format as Geant4, so downstream tasks work unchanged.
+
+See [simplesim-migration.md](simplesim-migration.md) for a step-by-step guide to converting a Geant4 macro.
 
 ### Shared Downstream Stages
 
@@ -52,7 +63,7 @@ Once `AtMCPoint` objects exist, the remaining stages are shared:
 - `AtMCTrack`
   simulated particle tracks
 - `AtMCPoint`
-  MC-point type used by digitization logic; also the concrete hit type written by `AtSimpleSimulation`
+  MC-point type used by digitization logic
 - `AtRawEvent`
   final simulated raw traces used by reconstruction
 
@@ -60,10 +71,10 @@ See [data-model.md](../reference/data-model.md) for the object-level view and [b
 
 ## Event Structure
 
-The FairRoot/VMC generator path represents each physical beam-induced event as two consecutive FairRoot events:
+Both transport paths represent each physical beam-induced event as two consecutive FairRoot events:
 
-- Even-indexed event (0, 2, 4, …): beam phase — the beam particle traverses the detector
-- Odd-indexed event (1, 3, 5, …): reaction phase — the reaction products are transported
+- Even-indexed event (0, 2, 4, ...): beam phase -- the beam particle traverses the detector
+- Odd-indexed event (1, 3, 5, ...): reaction phase -- the reaction products are transported
 
 Events 0+1 form one complete beam-induced event; events 2+3 form the next, and so on. Code that loops over events or checks event indices must account for this pairing.
 
@@ -71,17 +82,19 @@ Events 0+1 form one complete beam-induced event; events 2+3 form the next, and s
 
 ## Required Pieces
 
-For the FairRoot/VMC path, a simulation run needs:
+For the **Geant4/VMC** path, a simulation run needs:
 
 - detector geometry
 - a configured `FairPrimaryGenerator` with one or more `AtReactionGenerator` subclasses
 - the digitization stages `AtClusterizeTask` and `AtPulseTask`
 - the experiment parameter set used by digitization
 
-For the `AtSimpleSimulation` path, the run replaces VMC transport with:
+For the **SimpleSim** path, the run additionally needs:
 
-- an `AtSimpleSimulation` instance
-- one or more configured `AtTools::AtELossModel` instances
-- the same downstream digitization stages if `AtRawEvent` output is needed
+- an `AtSimTransport` instance (uses the FairRunSim geometry automatically)
+- an `AtELossManager` (or a subclass such as `AtELossManagerCATIMA` / `AtELossManagerBetheBloch`) carrying the energy-loss models for each particle species
+- the detector set via `SetDetector(tpc)` on the SimpleSim task
 
-See [generators.md](generators.md) for generator behavior and [energy-loss.md](energy-loss.md) for the model layer used by `AtSimpleSimulation`.
+Energy loss models must be available for every (Z, A) pair that will be transported in every material they traverse. Models can be registered manually via `manager->AddModel(...)`, or an auto-generating `AtELossManager` subclass can create them from the geometry on demand. If no matching model is registered or generated, the transport stops for that track.
+
+See [generators.md](generators.md) for generator behavior, [energy-loss.md](energy-loss.md) for the model layer, and [simplesim-migration.md](simplesim-migration.md) for the migration guide.

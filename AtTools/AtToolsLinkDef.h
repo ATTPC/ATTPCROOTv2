@@ -13,7 +13,6 @@
 #pragma link C++ namespace AtTools::Kinematics;
 #pragma link C++ namespace AtTools::DataCleaning;
 
-#pragma link C++ class AtTools::AtELossManager + ;
 #pragma link C++ class AtTools::AtParsers + ;
 #pragma link C++ class AtEulerTransformation + ;
 #pragma link C++ class AtTools::AtTrackTransformer - !;
@@ -21,6 +20,9 @@
 #pragma link C++ class AtTools::AtELossTable - !;
 #pragma link C++ class AtTools::AtELossCATIMA - !;
 #pragma link C++ class AtTools::AtELossBetheBloch - !;
+#pragma link C++ class AtTools::AtELossManager - !;
+#pragma link C++ class AtTools::AtELossManagerBetheBloch - !;
+#pragma link C++ class AtTools::AtELossManagerCATIMA - !;
 
 #pragma link C++ class AtSpaceChargeModel - !;
 #pragma link C++ class AtLineChargeModel - !;
@@ -57,6 +59,14 @@
 #pragma link C++ class tk::spline - !;
 
 #pragma link C++ class AtFindVertex - !;
+
+#pragma link C++ class AtTools::AtPropagator - !;
+#pragma link C++ class AtTools::AtStepper - !;
+#pragma link C++ class AtTools::AtRK4Stepper - !;
+#pragma link C++ class AtTools::AtRK4AdaptiveStepper - !;
+#pragma link C++ class AtTools::AtMeasurementSurface - !;
+#pragma link C++ class AtTools::AtMeasurementPoint - !;
+#pragma link C++ class AtTools::AtMeasurementPlane - !;
 
 #pragma link C++ function AtTools::GetHitFunctionTB;
 #pragma link C++ function AtTools::GetHitFunction;

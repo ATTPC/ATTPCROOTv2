@@ -34,3 +34,9 @@ The second generator in the chain reads the vertex and momentum from `AtVertexPr
 ## Beam/Reaction Alternation
 
 By default, `ReadEvent()` alternates between inserting a beam event (no reaction) and a full reaction event. This models the AT-TPC's operation where beam tracks are recorded alongside reaction tracks for calibration. The alternation is controlled via `AtVertexPropagator::EndEvent()`.
+
+## Macro Construction Notes
+
+- Preserve the generator contract from the source macro when adapting a reaction setup.
+- Do not assume beam-species changes are interchangeable with target or product changes. In this branch, changing the beam path can exercise different generator behavior than changing reaction products inside `AtTPC2Body`.
+- Validate generator edits incrementally with a one-event Geant4 run before making further changes.

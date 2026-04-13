@@ -61,6 +61,15 @@ Set(DEPENDENCIES
   ATTPCROOT::AtSimulationData
   )
 
+set(TEST_SRCS
+  AtTpc/AtTpcTest.cxx
+  )
+
+attpcroot_generate_tests(${LIBRARY_NAME}Tests
+  SRCS ${TEST_SRCS}
+  DEPS ${LIBRARY_NAME}
+  )
+
 generate_target_and_root_library(${LIBRARY_NAME}
   LINKDEF ${LINKDEF}
   SRCS ${SRCS}

@@ -40,11 +40,15 @@ set(SRCS
   DataCleaning/AtkNN.cxx
 
   AtELossBetheBloch.cxx
+  AtPropagator.cxx
+  AtELossManager.cxx
+  AtELossManagerBetheBloch.cxx
   )
 
 Set(DEPENDENCIES
   ROOT::XMLParser
   ROOT::Core
+  ROOT::Geom
 
   FairRoot::Base
   FairRoot::FairTools
@@ -64,6 +68,7 @@ endif()
 if(CATIMA_FOUND)
   set(SRCS ${SRCS}
     AtELossCATIMA.cxx
+    AtELossManagerCATIMA.cxx
     )
   set(DEPENDENCIES ${DEPENDENCIES}
     CATIMA::catima
@@ -80,6 +85,8 @@ set(TEST_SRCS
   DataCleaning/AtkNNTest.cxx
   AtELossTableTest.cxx
   AtELossBetheBlochTest.cxx
+  AtPropagatorTest.cxx
+  AtELossManagerTest.cxx
 )
 if(CATIMA_FOUND)
   set(TEST_SRCS ${TEST_SRCS}
