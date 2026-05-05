@@ -16,6 +16,7 @@ set(SRCS
 AtMap.cxx
 AtTpcMap.cxx
 AtSiMap.cxx
+AtGAGGMap.cxx
 AtTpcProtoMap.cxx
 AtGadgetIIMap.cxx
 AtSpecMATMap.cxx

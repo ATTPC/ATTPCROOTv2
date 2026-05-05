@@ -13,13 +13,20 @@ AtSiEvent::AtSiEvent() : AtBaseEvent("AtSiEvent") {}
 
 AtSiEvent::AtSiEvent(const AtSiEvent &copy)
    : AtBaseEvent(copy), fMultiplicityFront1(copy.fMultiplicityFront1), fMultiplicityBack1(copy.fMultiplicityBack1),
-     fMultiplicityFront2(copy.fMultiplicityFront2), fMultiplicityBack2(copy.fMultiplicityBack2)
+     fMultiplicityFront2(copy.fMultiplicityFront2), fMultiplicityBack2(copy.fMultiplicityBack2),
+     fTimeFront1(copy.fTimeFront1), fTimeFront2(copy.fTimeFront2), fTimeBack1(copy.fTimeBack1),
+     fTimeBack2(copy.fTimeBack2)
 {
    for (int i = 0; i < 4; i++) {
       fEFront1[i] = copy.fEFront1[i];
       fEBack1[i] = copy.fEBack1[i];
       fEFront2[i] = copy.fEFront2[i];
       fEBack2[i] = copy.fEBack2[i];
+
+      fTSFront1[i] = copy.fTSFront1[i];
+      fTSBack1[i] = copy.fTSBack1[i];
+      fTSFront2[i] = copy.fTSFront2[i];
+      fTSBack2[i] = copy.fTSBack2[i];
 
       fADCMaxFront1[i] = copy.fADCMaxFront1[i];
       fADCMaxBack1[i] = copy.fADCMaxBack1[i];
@@ -48,6 +55,11 @@ void AtSiEvent::Clear(Option_t *opt)
       fEFront2[i] = -1;
       fEBack2[i] = -1;
 
+      fTSFront1[i] = -1;
+      fTSBack1[i] = -1;
+      fTSFront2[i] = -1;
+      fTSBack2[i] = -1;
+
       fADCMaxFront1[i] = -1;
       fADCMaxBack1[i] = -1;
       fADCMaxFront2[i] = -1;
@@ -74,14 +86,17 @@ void AtSiEvent::BuildHits()
       // everything is easy
       fXStrip1 = fStripFront1[0] % 128;
       fEnergyFront1 = fEFront1[0];
+      fTimeFront1 = fTSFront1[0];
    } else if (fMultiplicityFront1 == 2) {
       if (abs(fStripFront1[0] - fStripFront1[1]) == 1) { // neighbours
          fEnergyFront1 = fEFront1[0] + fEFront1[1];
          // take strip from whichever has larger energy
          if (fEFront1[0] > fEFront1[1]) {
             fXStrip1 = fStripFront1[0] % 128;
+            fTimeFront1 = fTSFront1[0];
          } else {
             fXStrip1 = fStripFront1[1] % 128;
+            fTimeFront1 = fTSFront1[1];
          }
       } else {
          valid1 = false;
@@ -94,14 +109,18 @@ void AtSiEvent::BuildHits()
       // everything is easy
       fYStrip1 = 128 - fStripBack1[0] % 128;
       fEnergyBack1 = fEBack1[0];
+      fTimeBack1 = fTSBack1[0];
    } else if (fMultiplicityBack1 == 2) {
       if (abs(fStripBack1[0] - fStripBack1[1]) == 1) { // neighbours
          fEnergyBack1 = fEBack1[0] + fEBack1[1];
+         fTimeBack1 = fTSBack1[0];
          // take strip from whichever has larger energy
          if (fEBack1[0] > fEBack1[1]) {
             fYStrip1 = 128 - fStripBack1[0] % 128;
+            fTimeBack1 = fTSBack1[0];
          } else {
             fYStrip1 = 128 - fStripBack1[1] % 128;
+            fTimeBack1 = fTSBack1[1];
          }
       } else {
          valid1 = false;
@@ -115,14 +134,18 @@ void AtSiEvent::BuildHits()
       // everything is easy
       fXStrip2 = fStripFront2[0] % 128;
       fEnergyFront2 = fEFront2[0];
+      fTimeFront2 = fTSFront2[0];
    } else if (fMultiplicityFront2 == 2) {
       if (abs(fStripFront2[0] - fStripFront2[1]) == 1) { // neighbours
          fEnergyFront2 = fEFront2[0] + fEFront2[1];
+         fTimeFront2 = fTSFront2[0];
          // take strip from whichever has larger energy
          if (fEFront2[0] > fEFront2[1]) {
             fXStrip2 = fStripFront2[0] % 128;
+            fTimeFront2 = fTSFront2[0];
          } else {
             fXStrip2 = fStripFront2[1] % 128;
+            fTimeFront2 = fTSFront2[1];
          }
       } else {
          valid2 = false;
@@ -135,14 +158,18 @@ void AtSiEvent::BuildHits()
       // everything is easy
       fYStrip2 = 128 - fStripBack2[0] % 128;
       fEnergyBack2 = fEBack2[0];
+      fTimeBack2 = fTSBack2[0];
    } else if (fMultiplicityBack2 == 2) {
       if (abs(fStripBack2[0] - fStripBack2[1]) == 1) { // neighbours
          fEnergyBack2 = fEBack2[0] + fEBack2[1];
+         fTimeBack2 = fTSBack2[0];
          // take strip from whichever has larger energy
          if (fEBack2[0] > fEBack2[1]) {
             fYStrip2 = 128 - fStripBack2[0] % 128;
+            fTimeBack2 = fTSBack2[0];
          } else {
             fYStrip2 = 128 - fStripBack2[1] % 128;
+            fTimeBack2 = fTSBack2[1];
          }
       } else {
          valid2 = false;
@@ -156,11 +183,15 @@ void AtSiEvent::BuildHits()
       fXStrip1 = -1;
       fEnergyFront1 = -1;
       fEnergyBack1 = -1;
+      fTimeFront1 = -1;
+      fTimeBack1 = -1;
    }
    if (valid2 == false) {
       fYStrip2 = -1;
       fXStrip2 = -1;
       fEnergyFront2 = -1;
       fEnergyBack2 = -1;
+      fTimeFront2 = -1;
+      fTimeBack2 = -1;
    }
 }

@@ -25,14 +25,28 @@ class AtPSASi : public AtPSA {
 private:
    Bool_t fIsTimeCorr{false};
    Bool_t fPositivePolarity{true};
+   int fLowBLRegion[2];
+   int fHighBLRegion[2];
+   int fEnergyIntegral[2];
+   int fMinIndx{5};
+   Bool_t fFitClipped{false};
+   Bool_t fOverflowReconstruction{true};
+   Bool_t fDumpTraces{false};
 
 public:
+   AtPSASi();
    virtual HitVector AnalyzePad(AtPad *pad) override;
    std::unique_ptr<AtPSA> Clone() override { return std::make_unique<AtPSASi>(*this); }
    virtual HitVector AnalyzeGenTrace(AtGenericTrace *genTrace);
 
    void SetTimeCorrection(Bool_t value) { fIsTimeCorr = value; }
    void SetPositivePolarity(Bool_t value) { fPositivePolarity = value; }
+   void SetLowBLRegion(int low, int hi);
+   void SetHighBLRegion(int low, int hi);
+   void SetEnergyIntegral(int low, int hi);
+   void SetFitClipped(bool fit);
+   void SetOverflowReconstruction(bool overflow);
+   void SetDumpTraces(bool dump);
 
 private:
    bool shouldSaveHit(double charge, double threshold, int tb);

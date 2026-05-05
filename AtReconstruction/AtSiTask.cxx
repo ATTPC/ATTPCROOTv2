@@ -100,7 +100,6 @@ void AtSiTask::Exec(Option_t *opt)
    int idx3{};
    int idx4{};
 
-   std::cout << "======== Si event ======" << std::endl;
    for (auto &auxPadMapEntry : auxPadsMap) {
       auto auxPadName = auxPadMapEntry.first;
       auto auxPad = auxPadMapEntry.second;
@@ -126,9 +125,11 @@ void AtSiTask::Exec(Option_t *opt)
       auto pseudoHits = fPSA->AnalyzePad(&auxPad);
       double traceCharge{};
       double maxADC{};
+      int timestamp{};
       if (pseudoHits.size()) {
          traceCharge = pseudoHits[0]->GetTraceIntegral();
          maxADC = pseudoHits[0]->GetCharge();
+         timestamp = pseudoHits[0]->GetTimeStamp();
       } else {
          continue;
       }
@@ -138,11 +139,13 @@ void AtSiTask::Exec(Option_t *opt)
             siEvent->SetEFront1(idx1, traceCharge);
             siEvent->SetADCMaxFront1(idx1, maxADC);
             siEvent->SetStripFront1(idx1, StripNum);
+            siEvent->SetTSFront1(idx1, timestamp);
             idx1++;
          } else if (SiFace == 1) {
             siEvent->SetEBack1(idx2, traceCharge);
             siEvent->SetADCMaxBack1(idx2, maxADC);
             siEvent->SetStripBack1(idx2, StripNum);
+            siEvent->SetTSBack1(idx2, timestamp);
             idx2++;
          }
       } else if (DetNum == 2) {
@@ -150,11 +153,13 @@ void AtSiTask::Exec(Option_t *opt)
             siEvent->SetEFront2(idx3, traceCharge);
             siEvent->SetADCMaxFront2(idx3, maxADC);
             siEvent->SetStripFront2(idx3, StripNum);
+            siEvent->SetTSFront2(idx3, timestamp);
             idx3++;
          } else if (SiFace == 1) {
             siEvent->SetEBack2(idx4, traceCharge);
             siEvent->SetADCMaxBack2(idx4, maxADC);
             siEvent->SetStripBack2(idx4, StripNum);
+            siEvent->SetTSBack2(idx4, timestamp);
             idx4++;
          }
       }

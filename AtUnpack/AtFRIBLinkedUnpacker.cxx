@@ -135,7 +135,7 @@ std::size_t AtFRIBLinkedHDFUnpacker::n_aux(std::string i_raw_event)
    return n_entries(dataset_name)[1]; // These are trace x channel so index is 1
 };
 
-void AtFRIBLinkedHDFUnpacker::processAux(std::size_t padIndex, std::size_t nTB)
+void AtFRIBLinkedHDFUnpacker::processAux(std::size_t padIndex, std::size_t nTB, std::string name)
 {
    u_int16_t data[nTB];
    hsize_t counts[2] = {nTB, 1};
@@ -144,7 +144,7 @@ void AtFRIBLinkedHDFUnpacker::processAux(std::size_t padIndex, std::size_t nTB)
    read_slab<u_int16_t>(_dataset, counts, offsets, dims_out, data);
    std::vector<u_int16_t> rawadc(data, data + nTB);
 
-   auto trace = fRawEvent->AddGenericTrace(padIndex, nTB);
+   auto trace = fRawEvent->AddGenericTrace(padIndex, nTB, name);
    for (Int_t iTb = 0; iTb < nTB; iTb++) {
       trace->SetRawADC(iTb, rawadc.at(iTb));
       trace->SetADC(iTb, rawadc.at(iTb));
@@ -173,7 +173,7 @@ void AtFRIBLinkedHDFUnpacker::processSIS(std::string i_raw_event, std::string na
              << " time bins.";
 
    for (auto i = 0; i < nChannels; ++i)
-      processAux(i, nTB);
+      processAux(i, nTB, name);
 }
 
 void AtFRIBLinkedHDFUnpacker::processData()

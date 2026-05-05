@@ -1,6 +1,7 @@
 #ifndef AtGAGGTASK_H
 #define AtGAGGTASK_H
 
+#include "AtGAGGMap.h"
 #include "AtPSASi.h"
 
 #include <FairTask.h>
@@ -23,11 +24,13 @@ private:
    TClonesArray fGaggEventArray;
 
    std::unique_ptr<AtPSASi> fPSA;
+   std::unique_ptr<AtGAGGMap> fGaggMap;
 
    Bool_t fIsPersistence{false};
 
 public:
    AtGaggTask(std::unique_ptr<AtPSASi> psaMethod);
+   AtGaggTask(std::unique_ptr<AtPSASi> psaMethod, std::unique_ptr<AtGAGGMap>);
    ~AtGaggTask() = default;
 
    void SetPersistence(Bool_t value);

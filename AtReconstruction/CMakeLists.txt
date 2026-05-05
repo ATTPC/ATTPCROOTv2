@@ -34,7 +34,8 @@ Set(DEPENDENCIES
   ATTPCROOT::AtTools
   ATTPCROOT::AtDigitization
   ATTPCROOT::AtAnalysis
-  
+
+  ROOT::MathMore
   ROOT::Spectrum
   ROOT::Core
 

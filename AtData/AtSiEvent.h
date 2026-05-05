@@ -20,6 +20,11 @@ private:
    Double_t fEFront2[4] = {-1, -1, -1, -1};
    Double_t fEBack2[4] = {-1, -1, -1, -1};
 
+   Int_t fTSFront1[4] = {-1, -1, -1, -1};
+   Int_t fTSBack1[4] = {-1, -1, -1, -1};
+   Int_t fTSFront2[4] = {-1, -1, -1, -1};
+   Int_t fTSBack2[4] = {-1, -1, -1, -1};
+
    Double_t fADCMaxFront1[4] = {-1, -1, -1, -1};
    Double_t fADCMaxBack1[4] = {-1, -1, -1, -1};
    Double_t fADCMaxFront2[4] = {-1, -1, -1, -1};
@@ -43,6 +48,10 @@ private:
    Double_t fEnergyFront2 = -1;
    Double_t fEnergyBack1 = -1;
    Double_t fEnergyBack2 = -1;
+   Int_t fTimeFront1 = -1; // timestamps for coincidences
+   Int_t fTimeFront2 = -1;
+   Int_t fTimeBack1 = -1;
+   Int_t fTimeBack2 = -1;
 
 public:
    AtSiEvent();
@@ -61,6 +70,11 @@ public:
       swap(first.fEFront2, second.fEFront2);
       swap(first.fEBack2, second.fEBack2);
 
+      swap(first.fTSFront1, second.fTSFront1);
+      swap(first.fTSBack1, second.fTSBack1);
+      swap(first.fTSFront2, second.fTSFront2);
+      swap(first.fTSBack2, second.fTSBack2);
+
       swap(first.fADCMaxFront1, second.fADCMaxFront1);
       swap(first.fADCMaxBack1, second.fADCMaxBack1);
       swap(first.fADCMaxFront2, second.fADCMaxFront2);
@@ -75,6 +89,11 @@ public:
       swap(first.fMultiplicityBack1, second.fMultiplicityBack1);
       swap(first.fMultiplicityFront2, second.fMultiplicityFront2);
       swap(first.fMultiplicityBack2, second.fMultiplicityBack2);
+
+      swap(first.fTimeFront1, second.fTimeFront1);
+      swap(first.fTimeBack1, second.fTimeBack1);
+      swap(first.fTimeFront2, second.fTimeFront2);
+      swap(first.fTimeBack2, second.fTimeBack2);
    }
 
    void Clear(Option_t *opt = nullptr) override;
@@ -83,6 +102,11 @@ public:
    void SetEBack1(Int_t idx, Double_t value) { fEBack1[idx] = value; }
    void SetEFront2(Int_t idx, Double_t value) { fEFront2[idx] = value; }
    void SetEBack2(Int_t idx, Double_t value) { fEBack2[idx] = value; }
+
+   void SetTSFront1(Int_t idx, Int_t value) { fTSFront1[idx] = value; }
+   void SetTSBack1(Int_t idx, Int_t value) { fTSBack1[idx] = value; }
+   void SetTSFront2(Int_t idx, Int_t value) { fTSFront2[idx] = value; }
+   void SetTSBack2(Int_t idx, Int_t value) { fTSBack2[idx] = value; }
 
    void SetADCMaxFront1(Int_t idx, Double_t value) { fADCMaxFront1[idx] = value; }
    void SetADCMaxBack1(Int_t idx, Double_t value) { fADCMaxBack1[idx] = value; }
@@ -104,6 +128,11 @@ public:
    Double_t GetEFront2(Int_t idx) { return fEFront2[idx]; }
    Double_t GetEBack2(Int_t idx) { return fEBack2[idx]; }
 
+   Int_t GetTSFront1(Int_t idx) { return fTSFront1[idx]; }
+   Int_t GetTSBack1(Int_t idx) { return fTSBack1[idx]; }
+   Int_t GetTSFront2(Int_t idx) { return fTSFront2[idx]; }
+   Int_t GetTSBack2(Int_t idx) { return fTSBack2[idx]; }
+
    Double_t GetADCMaxFront1(Int_t idx) { return fADCMaxFront1[idx]; }
    Double_t GetADCMaxBack1(Int_t idx) { return fADCMaxBack1[idx]; }
    Double_t GetADCMaxFront2(Int_t idx) { return fADCMaxFront2[idx]; }
@@ -123,6 +152,11 @@ public:
    Int_t GetXStrip2() { return fXStrip2; }
    Int_t GetYStrip1() { return fYStrip1; }
    Int_t GetYStrip2() { return fYStrip2; }
+
+   Int_t GetTimeFront1() { return fTimeFront1; }
+   Int_t GetTimeFront2() { return fTimeFront2; }
+   Int_t GetTimeBack1() { return fTimeBack1; }
+   Int_t GetTimeBack2() { return fTimeBack2; }
 
    Double_t GetEnergyFront1() { return fEnergyFront1; }
    Double_t GetEnergyFront2() { return fEnergyFront2; }

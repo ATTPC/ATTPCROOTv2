@@ -28,17 +28,20 @@ protected:
    std::size_t fSize{};
    rawTrace fRawAdc{};
    trace fAdc{};
+   std::string fName;
 
 public:
    virtual std::unique_ptr<AtPadBase> Clone() const override;
 
-   AtGenericTrace(Int_t traceID = -1, std::size_t size = 2048);
+   AtGenericTrace(Int_t traceID = -1, std::size_t size = 2048, std::string na = "");
 
    void SetRawADC(Int_t idx, Int_t val) { fRawAdc[idx] = val; }
    void SetADC(Int_t idx, Double_t val) { fAdc[idx] = val; }
 
    rawTrace &GetRawADC() { return fRawAdc; }
    trace &GetADC() { return fAdc; }
+   int GetTraceID() { return fTraceID; }
+   std::string GetName() { return fName; }
 
    const rawTrace &GetRawADC() const { return fRawAdc; }
    const trace &GetADC() const { return fAdc; }

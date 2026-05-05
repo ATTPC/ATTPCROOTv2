@@ -45,7 +45,7 @@ protected:
     * @param auxIndex Index of the auxiliary channel to process.
     * @param nTB Number of time bins in the auxiliary channel.
     */
-   void processAux(std::size_t auxIndex, std::size_t nTB);
+   void processAux(std::size_t auxIndex, std::size_t nTB, std::string name = "");
 
    /**
     * @brief Process an SIS digitizer in the frib_physics group.
