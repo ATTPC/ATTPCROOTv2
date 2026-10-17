@@ -3,7 +3,8 @@
 
 #include <FairLogger.h>
 
-#include <TH1.h> // for TH1, TH1D (ptr only)
+#include <TDirectory.h> // for TDirectory::TContext
+#include <TH1.h>        // for TH1, TH1D (ptr only)
 
 #include <algorithm> // IWYU pragma: keep
 #include <iterator>  // for make_move_iterator
@@ -44,12 +45,12 @@ std::unique_ptr<Hist> CreateHistFromData(const std::string &name, const T &data,
    if (xMin == 0 && xMax == 0)
       xMax = data.size();
 
-   TH1::AddDirectory(false); // Make sure pointer has ownership
+   // Make sure the pointer has ownership. TH1::AddDirectory is a process-wide flag, so don't toggle it from threads.
+   // Build with no current directory instead (gDirectory is thread-local), so the histogram is never appended to one.
+   TDirectory::TContext noDirectory(nullptr);
    auto ret = std::make_unique<Hist>(name.data(), name.data(), data.size(), 0, data.size());
    for (int i = 0; i < ret->GetNbinsX(); ++i)
       ret->SetBinContent(i + 1, data.at(i));
-   // ret->SetDirectory(nullptr);
-   TH1::AddDirectory(true);
    return ret;
 }
 

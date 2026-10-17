@@ -69,7 +69,7 @@ protected:
    /** Things below here need to be written to by threads and will be locked using a shared mutex ***/
    /// Store the iteration number sorted by lowest objective funtion
    std::mutex fResultMutex;
-   std::set<AtMCResult, std::function<bool(AtMCResult, AtMCResult)>> fResults;
+   std::set<AtMCResult, std::function<bool(const AtMCResult &, const AtMCResult &)>> fResults;
 
 public:
    AtMCFitter(SimPtr sim, ClusterPtr cluster, PulsePtr pulse);

@@ -45,6 +45,7 @@ set(SRCS
 
 Set(DEPENDENCIES
   ROOT::XMLParser
+  ROOT::Minuit2
   ROOT::Core
 
   FairRoot::Base

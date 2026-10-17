@@ -216,8 +216,14 @@ AtPSADeconv::HitVector AtPSADeconv::AnalyzeFFTpad(AtPad &pad)
 AtPSADeconv::HitVector AtPSADeconv::AnalyzePad(AtPad *pad)
 {
    // If this pad has simulated charge, use that instead
-   if (fUseSimulatedCharge && pad->GetAugment<AtPadArray>("Q") != nullptr)
+   if (fUseSimulatedCharge) {
+      if (pad->GetAugment<AtPadArray>("Q") == nullptr) {
+         LOG(fatal) << "SetUseSimCharge(true) but pad " << pad->GetPadNum()
+                    << " has no \"Q\" augment. The pulse needs SetSaveCharge(true).";
+         return {}; // LOG(fatal) only aborts once FairLogger's fatal handler is installed
+      }
       return chargeToHits(*pad, "Q");
+   }
 
    // If this pad already contains FFT information, then just use it as is.
    if (dynamic_cast<AtPadFFT *>(pad->GetAugment("fft")) != nullptr)
