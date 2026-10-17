@@ -30,7 +30,7 @@ private:
    TClonesArray *fRawEventArray;
 
    std::unique_ptr<TFile> fENCourseFile{nullptr};
-   std::unique_ptr<TTree> fENCourseTree{nullptr};
+   TTree *fENCourseTree{nullptr}; // Owned by fENCourseFile; deleted when the file is closed.
    Int_t eve;
    Float_t ppac_pos_cal[4][2];
    Int_t rf[4];

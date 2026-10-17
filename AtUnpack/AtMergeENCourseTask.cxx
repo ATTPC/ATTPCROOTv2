@@ -38,7 +38,7 @@ InitStatus AtMergeENCourseTask::Init()
    }
    LOG(info) << "ROOT file " << fInputFileName << " opened successfully.";
 
-   fENCourseTree = std::unique_ptr<TTree>((TTree *)fENCourseFile->Get("tree"));
+   fENCourseTree = fENCourseFile->Get<TTree>("tree");
    fENCourseTree->SetBranchAddress("eve", &eve);
    fENCourseTree->SetBranchAddress("ppac_pos_cal", ppac_pos_cal);
    fENCourseTree->SetBranchAddress("rf", rf);
@@ -98,4 +98,5 @@ void AtMergeENCourseTask::CloseENRootFile()
 {
    if (fENCourseFile)
       fENCourseFile->Close();
+   fENCourseTree = nullptr; // Deleted by the file on close.
 }
