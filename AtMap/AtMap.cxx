@@ -1,5 +1,7 @@
 #include "AtMap.h"
 
+#include "AtCSVReader.h"
+
 #include <FairLogger.h>
 
 #include <Math/Point2D.h>
@@ -17,6 +19,7 @@
 
 #include <cstdlib>
 #include <cstring>
+#include <fstream>
 #include <iostream>
 #include <iterator>
 #include <memory>
@@ -253,7 +256,6 @@ Bool_t AtMap::ParseCalibrationParameters(TString calibrationFilePath, int calibr
       << fCalibrationParameterNumber << " parameters!";
 
    std::ifstream calibrationFile(calibrationFilePath.Data());
-   std::string line;
 
    if (!calibrationFile.is_open()) {
       LOG(error) << "Failed to open file: " << calibrationFilePath.Data();
@@ -261,34 +263,32 @@ Bool_t AtMap::ParseCalibrationParameters(TString calibrationFilePath, int calibr
    }
 
    // Skip header line.
-   std::getline(calibrationFile, line);
+   std::string header;
+   std::getline(calibrationFile, header);
 
    int lineNumber{1};
-   while (std::getline(calibrationFile, line)) {
+   for (const auto &row : CSVRange<double>(calibrationFile)) {
       lineNumber++;
 
-      std::stringstream ss(line);
-      std::string entry;
+      // Skip blank lines.
+      if (row.size() == 0)
+         continue;
 
-      // Variables where to read the lines.
-      int padID{};
+      // First column should be the padID, the rest are the parameters.
+      int padID = static_cast<int>(row[0]);
       std::vector<double> parameters;
 
-      // First column should be the padID.
-      std::getline(ss, entry, ',');
-      padID = std::stoi(entry);
-
-      while (std::getline(ss, entry, ',')) {
-         if (parameters.size() == fCalibrationParameterNumber) {
+      for (std::size_t i = 1; i < row.size(); ++i) {
+         if (parameters.size() == static_cast<std::size_t>(fCalibrationParameterNumber)) {
             LOG(warning) << "Promised " << fCalibrationParameterNumber << " parameters but reached parameter "
                          << parameters.size() + 1 << " on line " << lineNumber
                          << "! Ignoring rest of parameters on the line!";
             break;
          }
-         parameters.push_back(std::stod(entry));
+         parameters.push_back(row[i]);
       }
 
-      if (parameters.size() < fCalibrationParameterNumber) {
+      if (parameters.size() < static_cast<std::size_t>(fCalibrationParameterNumber)) {
          LOG(fatal) << "Promised " << fCalibrationParameterNumber << " parameters but got only " << parameters.size()
                     << " on line " << lineNumber << "! Parameter vector of pad " << padID << " will not be set!";
          std::vector<double> emptyVector;
@@ -324,7 +324,8 @@ double AtMap::GetCalibratedELoss(int padID, double ADC) const
 
 bool AtMap::IsCalibrationSet() const
 {
-   return !fCalibrationParametersMap.empty();
+   // Require a function and map to both be set
+   return !(fCalibrationParametersMap.empty() || fCalibrationFunction == nullptr);
 }
 
 Bool_t AtMap::DumpAtTPCMap()

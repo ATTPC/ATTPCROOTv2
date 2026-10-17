@@ -28,6 +28,7 @@ Set(DEPENDENCIES
   Boost::headers
 
   ATTPCROOT::AtData
+  ATTPCROOT::AtTools
   )
 
 set(TEST_SRCS

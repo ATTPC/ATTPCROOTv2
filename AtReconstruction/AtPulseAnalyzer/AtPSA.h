@@ -2,7 +2,6 @@
 #define AtPSA_H
 
 #include "AtHit.h" // IWYU pragma: keep
-#include "AtMap.h"
 
 #include <Rtypes.h>
 
@@ -15,6 +14,7 @@
 class TClonesArray;
 class AtRawEvent;
 class AtEvent;
+class AtMap;
 class AtPad;
 class TBuffer;
 class TClass;

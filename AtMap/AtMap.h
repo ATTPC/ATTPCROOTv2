@@ -55,10 +55,11 @@ protected:
    void drawPadPlane();
 
    // Calibration related members
-   std::function<double(double *, double *)> fCalibrationFunction; // Function to be used as ADC->ELoss calibration.
+   std::function<double(double *, double *)> fCalibrationFunction{
+      nullptr}; //! Function to be used as ADC->ELoss calibration.
    std::map<int, std::vector<double>>
-      fCalibrationParametersMap;    // Map to vector of parameters that the function may need.
-   int fCalibrationParameterNumber; // Amount of parameters the function needs.
+      fCalibrationParametersMap;       //! Map to vector of parameters that the function may need.
+   int fCalibrationParameterNumber{0}; //! Amount of parameters the function needs.
 
 public:
    AtMap();

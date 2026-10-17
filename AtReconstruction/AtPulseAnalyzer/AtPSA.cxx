@@ -4,6 +4,7 @@
 #include "AtEvent.h"
 #include "AtHit.h"
 #include "AtMCPoint.h"
+#include "AtMap.h"
 #include "AtPad.h"
 #include "AtRawEvent.h"
 
