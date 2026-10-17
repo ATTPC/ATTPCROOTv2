@@ -25,5 +25,6 @@
 #pragma link C++ class AtROOTUnpacker + ;
 #pragma link C++ class AtGRAWUnpacker + ;
 #pragma link C++ class AtUnpackTask + ;
+#pragma link C++ class AtMergeENCourseTask + ;
 
 #endif
