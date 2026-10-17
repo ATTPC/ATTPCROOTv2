@@ -20,9 +20,11 @@
 #include <functional>
 #include <iosfwd>
 #include <map>
+#include <memory>
 #include <string>
 #include <unordered_map>
 
+class AtPadLookup;
 class TH2Poly;
 class TXMLNode;
 class TBuffer;
@@ -46,6 +48,8 @@ protected:
    TCanvas *fPadPlaneCanvas{}; // Raw pointer because owned by gROOT
    TH2Poly *fPadPlane;         // Raw pointer because owned by gDirectory
    UInt_t fNumberPads{};
+   std::shared_ptr<AtPadLookup> fPadLookup; //! Faster stand-in for fPadPlane->FindBin
+   bool fUsePadLookup{true};                //! False: GetPadNum uses fPadPlane->FindBin alone
 
    std::unordered_map<AtPadReference, int> fPadMap;
    std::map<int, AtPadReference> fPadMapInverse;
@@ -53,6 +57,8 @@ protected:
    std::map<int, int> fPadSizeMap;
 
    void drawPadPlane();
+   /// Pad at a point, straight from the TH2Poly.
+   Int_t padFromPlane(const ROOT::Math::XYPoint &point);
 
    // Calibration related members
    std::function<double(double *, double *)> fCalibrationFunction{
@@ -81,6 +87,11 @@ public:
 
    Int_t GetPadNum(const AtPadReference &PadRef) const;
    Int_t GetPadNum(ROOT::Math::XYPoint point);
+   /**
+    * Use the lookup table in front of TH2Poly::FindBin (default on). Turn it off to check a pad lookup against
+    * FindBin alone.
+    */
+   void SetUsePadLookup(bool use) { fUsePadLookup = use; }
 
    multiarray GetPadCoordArr() { return AtPadCoord; }
    multiarray *GetPadCoord() { return fAtPadCoordPtr = &AtPadCoord; }

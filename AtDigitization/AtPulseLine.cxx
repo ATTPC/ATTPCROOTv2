@@ -17,6 +17,7 @@
 #include <TRandom.h>
 
 #include <algorithm> // for copy
+#include <map>
 #include <memory>
 #include <numeric>
 #include <set> // for set
@@ -76,18 +77,28 @@ bool AtPulseLine::AssignElectronsToPad(AtSimulatedPoint *point)
    std::vector<double> zIntegration; // zero is binMin
    auto binMin = integrateTimebuckets(zIntegration, line);
 
+   // The time of each bin of the z integral is the same for every pad
+   const TAxis *axis = fPadCharge[0]->GetXaxis();
+   std::vector<double> zLocs(zIntegration.size());
+   for (int i = 0; i < zIntegration.size(); ++i)
+      zLocs[i] = axis->GetBinCenter(i + binMin);
+
    // Now loop through all pads in the integration map, and add electrons
    for (const auto &[padNum, percentEle] : fXYintegrationMap) {
-      if (fMap->IsInhibited(padNum) == AtMap::InhibitType::kTotal)
+      // Look up the pad's inhibition once instead of for each time bucket
+      auto inhibit = fMap->IsInhibited(padNum);
+      if (inhibit == AtMap::InhibitType::kTotal)
          continue;
 
+      if (zIntegration.empty())
+         continue;
+      TH1F &hist = *fPadCharge[padNum];
       for (int i = 0; i < zIntegration.size(); ++i) {
-         auto zLoc = fPadCharge[0]->GetXaxis()->GetBinCenter(i + binMin);
          auto charge = line->GetCharge() * zIntegration[i] * percentEle;
-         double gain = GetGain(padNum, charge);
-         fPadCharge[padNum]->Fill(zLoc, gain * charge);
-         fPadsWithCharge.insert(padNum);
+         double gain = GetGain(inhibit, charge);
+         hist.Fill(zLocs[i], gain * charge);
       }
+      fPadsWithCharge.insert(padNum);
    }
 
    return true;
