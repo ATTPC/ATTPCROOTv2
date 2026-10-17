@@ -60,4 +60,5 @@ macros/data
 compiled/E20009Analysis/.NabinWorkDir/
 
 .claude/plans/*
+.cache
 
