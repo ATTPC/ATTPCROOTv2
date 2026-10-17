@@ -244,4 +244,49 @@ XYPoint AtTpcMap::CalcPadCenter(Int_t PadRef)
    Float_t y = (AtPadCoord[PadRef][0][1] + AtPadCoord[PadRef][1][1] + AtPadCoord[PadRef][2][1]) / 3.;
    return {x, y};
 }
+
+Int_t AtTpcMap::InhibitBeamPads(TString beamPadsFilePath)
+{
+   std::ifstream beamPadsFile(beamPadsFilePath.Data());
+   std::string line;
+
+   if (!beamPadsFile.is_open()) {
+      std::cerr << "Failed to open file: " << beamPadsFilePath.Data() << std::endl;
+      return -1;
+   }
+
+   // Skip header line.
+   std::getline(beamPadsFile, line);
+
+   // Variables where to read the lines.
+   int cobo{}, asad{}, aget{}, channel{};
+
+   int beamPadCount{};
+   while (std::getline(beamPadsFile, line)) {
+      std::stringstream ss(line);
+      std::string entry;
+
+      std::getline(ss, entry, ',');
+      cobo = std::stoi(entry);
+
+      std::getline(ss, entry, ',');
+      asad = std::stoi(entry);
+
+      std::getline(ss, entry, ',');
+      aget = std::stoi(entry);
+
+      std::getline(ss, entry, ',');
+      channel = std::stoi(entry);
+
+      AtPadReference ref = {cobo, asad, aget, channel};
+      InhibitPad(ref, AtMap::InhibitType::kXTalk);
+
+      beamPadCount++;
+   }
+
+   LOG(info) << cYELLOW << beamPadCount << " beam pads have been inhibited." << cNORMAL;
+
+   return beamPadCount;
+}
+
 ClassImp(AtTpcMap)
