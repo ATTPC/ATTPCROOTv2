@@ -21,7 +21,7 @@ class AtClusterize;       // lines 15-15
 class AtMap;              // lines 18-18
 class AtPatternEvent;     // lines 12-12
 class AtPulse;            // lines 16-16
-class AtSimpleSimulation; // lines 14-14
+class AtSimpleSimulation;
 class AtDigiPar;
 class AtPSA;
 

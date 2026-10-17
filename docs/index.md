@@ -22,6 +22,7 @@ Agent-facing docs for the current branch state of ATTPCROOT.
 - module map: [reference/modules.md](reference/modules.md)
 - data model: [reference/data-model.md](reference/data-model.md)
 - simulation flow: [subsystems/simulation-pipeline.md](subsystems/simulation-pipeline.md)
+- SimpleSim migration: [subsystems/simplesim-migration.md](subsystems/simplesim-migration.md)
 - reconstruction flow: [subsystems/reconstruction-pipeline.md](subsystems/reconstruction-pipeline.md)
 - generators: [subsystems/generators.md](subsystems/generators.md)
 - PSA: [subsystems/psa.md](subsystems/psa.md)

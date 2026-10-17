@@ -27,6 +27,39 @@ class TList;
 class TMemberInspector;
 
 class AtTpc : public FairDetector {
+public:
+   /**
+    * Transport-neutral snapshot of a single step through an AtTpc volume.
+    *
+    * Populated by ProcessHits() from gMC (Geant4 path) or by AtSimTransportTask
+    * from its callback-based transport engine (SimpleSim path). Consumed by
+    * ProcessStep() — the shared entering/exiting/accumulate/react pipeline.
+    *
+    * Units follow FairRoot conventions: cm for position/length, GeV for energy,
+    * ns for time. Beam identification is by trackID == 0 (unchanged from the
+    * original Geant4 convention).
+    */
+   struct StepState {
+      int trackID = -1;
+      int pdg = 0;
+      TString volumeName;
+      int volumeID = -1;
+      int detCopyID = -1;
+      bool entering = false;
+      bool exiting = false;
+      bool stopping = false;
+      bool disappeared = false;
+      double energyLoss = 0.0;  // GeV
+      double timeNs = 0.0;      // ns
+      double trackLength = 0.0; // cm
+      double totalEnergy = 0.0; // GeV
+      double trackMass = 0.0;   // GeV/c^2
+      TLorentzVector pos;
+      TLorentzVector mom;
+      TLorentzVector posOut;
+      TLorentzVector momOut;
+   };
+
 private:
    /** Track information to be stored until the track leaves the
    active volume.
@@ -81,23 +114,37 @@ public:
    virtual void ConstructGeometry() override;
    virtual Bool_t CheckIfSensitive(std::string name) override;
 
-   AtMCPoint *
-   AddHit(Int_t trackID, Int_t detID, TVector3 pos, TVector3 mom, Double_t time, Double_t length, Double_t eLoss);
-
    AtMCPoint *AddHit(Int_t trackID, Int_t detID, TString VolName, Int_t detCopyID, TVector3 pos, TVector3 mom,
                      Double_t time, Double_t length, Double_t eLoss, Double_t EIni, Double_t AIni, Int_t A, Int_t Z);
+
+   /**
+    * Process a detector step from a transport-neutral snapshot.
+    *
+    * Expected call sequence per volume traversal:
+    *  1. One step with entering=true — resets fELossAcc to 0 and captures entry position/momentum.
+    *  2. Zero or more steps with entering=false, exiting=false — accumulate energy loss in fELossAcc.
+    *  3. One step with exiting=true (or stopping/disappeared) — captures exit position/momentum
+    *     and may trigger resetVertex() for beam tracks leaving an active gas volume.
+    *
+    * Two entering=true steps without an intervening exiting=true step will silently reset
+    * the accumulated energy loss, discarding data from the first volume traversal.
+    *
+    * Returns true when the transport should stop at this step (reaction fired).
+    */
+   bool ProcessStep(const StepState &step);
 
 private:
    std::pair<Int_t, Int_t> DecodePdG(Int_t PdG_Code);
 
-   void trackEnteringVolume();
-   void getTrackParametersFromMC();
-   void getTrackParametersWhileExiting();
+   void trackEnteringVolume(const StepState &step);
+   void getTrackParametersFromStep(const StepState &step);
+   void getTrackParametersWhileExiting(const StepState &step);
    void correctPosOut();
    void resetVertex();
-   void addHit();
+   void addHit(const StepState &step);
    bool reactionOccursHere();
-   void startReactionEvent();
+   void startReactionEvent(const StepState &step);
+   bool IsActiveGasVolume(const TString &volumeName) const;
 
    AtTpc(const AtTpc &);
    AtTpc &operator=(const AtTpc &);

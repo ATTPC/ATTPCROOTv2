@@ -21,7 +21,7 @@
 class TBuffer;
 class TClass;
 class TMemberInspector;
-class AtSimpleSimulation;
+class AtSimTransport;
 
 class AtMCPoint : public FairMCPoint {
 
@@ -83,7 +83,7 @@ public:
    /** Output to screen **/
    virtual void Print(const Option_t *opt) const override;
 
-   friend AtSimpleSimulation;
+   friend AtSimTransport;
    ClassDefOverride(AtMCPoint, 2)
 };
 

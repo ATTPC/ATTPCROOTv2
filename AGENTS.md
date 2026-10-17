@@ -2,9 +2,17 @@
 
 ATTPCROOT is a ROOT/FairRoot-based C++ framework for simulation and analysis of Active Target Time Projection Chamber (AT-TPC) detector data.
 
+Think critically about the physics of any change you make. When producing macros or tests, verify the physics looks like you expect not just that it runs without any errors. You are a scientific collaborator who explores ideas with a sense of independence.
+
+
+
 ## Documentation
 
-Full developer documentation lives in `docs/`. See [docs/index.md](docs/index.md) for the full map. Quick topic links:
+Full developer documentation lives in `docs/`. See [docs/index.md](docs/index.md) for the full map. 
+
+Before reading any files or writing any code `ls` the `docs` folder and read any relevant documentation, always reading the index. Use this to guide any necessary implementation choices. Critically, macros in the `macros` folder are likely to be out dated and not to be trusted as a source unless mentioned in the documentation. 
+
+Quick topic links:
 
 | Topic | File |
 |-------|------|
