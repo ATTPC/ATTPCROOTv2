@@ -33,7 +33,7 @@
  *   Bohr range-straggling integral (dω²/dE = K·z²·(Z/A)·ρ·mₑ / |dEdx|³), √E extrapolation
  *   below the BB validity threshold.
  *
- * "CATIMA (default)" — AtELossCATIMA with catima::default_config:
+ * "CATIMA (default)" — AtELossCATIMA with catima::get_default_config():
  *   - Effective charge: Pierce-Blann (z_eff → 0 for protons at low β — suppresses dEdx and
  *     straggling proportionally to z_eff²).
  *   - dEdx: Bethe-Bloch + shell corrections + Barkas term + density effect + Lindhard correction;
