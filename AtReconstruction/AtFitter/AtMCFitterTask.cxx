@@ -47,6 +47,6 @@ void AtMCFitterTask::Exec(Option_t *)
    if (!patEvent->IsGood())
       return;
 
-   fFitter->Exec(*patEvent);
+   fFitter->Exec(*patEvent, FairRootManager::Instance()->GetEntryNr());
    fFitter->FillResultArrays(fResultArray, fSimEventArray, fSimRawEventArray);
 }

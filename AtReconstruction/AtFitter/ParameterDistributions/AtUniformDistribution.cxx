@@ -1,19 +1,15 @@
 #include "AtUniformDistribution.h"
 
-#include <memory> // for unique_ptr<>::element_type, unique_ptr
-#include <random> // for uniform_real_distribution
+#include "AtRandom.h"
+
+#include <TRandom.h>
 
 namespace MCFitter {
-AtUniformDistribution::AtUniformDistribution(double mean, double spread, double seed)
-   : AtParameterDistribution(mean, spread, seed)
-{
-}
+AtUniformDistribution::AtUniformDistribution(double mean, double spread) : AtParameterDistribution(mean, spread) {}
 
 double AtUniformDistribution::SampleSpread()
 {
-   // N.B. We recreate the distribution (which is cheap) each call to avoid data races when multithreaded
-   std::uniform_real_distribution<> distro{-1, 1};
-   return distro(*fRand);
+   return AtTools::Random::Get().Uniform(-1, 1);
 }
 
 void AtUniformDistribution::TruncateSpace()

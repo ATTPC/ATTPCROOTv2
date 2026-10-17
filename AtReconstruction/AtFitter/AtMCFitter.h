@@ -7,6 +7,7 @@
 
 #include <TClonesArray.h> // for TClonesArray
 
+#include <cstdint>    // for uint32_t
 #include <functional> // for function
 #include <map>        // for map
 #include <memory>     // for shared_ptr
@@ -52,6 +53,7 @@ protected:
    int fNumEventsToSave{10};
    bool fTimeEvent{false};
    int fNumThreads{1};
+   std::uint32_t fSeed{0}; //< 0 until Init, which then draws one from std::random_device
 
    // Things used by threads excecuting that are either expensive to create and delete
    // or unaccessable due to FairRoot design choices
@@ -75,7 +77,13 @@ public:
 
    void Init();
    void SetPSA(PsaPtr psa) { fPSA = psa; }
-   void Exec(const AtPatternEvent &event);
+   /**
+    * Fit one event. Each worker thread of each round draws from its own generator, seeded from the
+    * fitter seed, eventNumber, the round and the thread index, so a rerun with the same seed and
+    * number of threads reproduces the fit. Pass a different eventNumber for each event (AtMCFitterTask passes the
+    * entry number); with the default, every event gets the same random streams.
+    */
+   void Exec(const AtPatternEvent &event, long eventNumber = 0);
 
    ParamPtr GetParameter(const std::string &name) const;
    void FillResultArrays(TClonesArray &resultArray, TClonesArray &simEvent, TClonesArray &simRawEvent);
@@ -86,9 +94,12 @@ public:
    void SetTimeEvent(bool val) { fTimeEvent = val; }
    void SetNumEventsToSave(int num) { fNumEventsToSave = num; }
    void SetNumThreads(int num);
+   /// Seed of the fit. If unset (or 0), Init draws one from std::random_device and logs it.
+   void SetSeed(std::uint32_t seed) { fSeed = seed; }
+   std::uint32_t GetSeed() const { return fSeed; }
 
 protected:
-   void RunRound();
+   void RunRound(int round, std::uint32_t eventSeed);
    void RunIterRange(int startIter, int numIter, AtPulse *pulse);
 
    /**

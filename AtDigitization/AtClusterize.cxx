@@ -2,6 +2,7 @@
 
 #include "AtDigiPar.h"
 #include "AtMCPoint.h"
+#include "AtRandom.h"
 #include "AtSimulatedPoint.h"
 
 #include <FairLogger.h>
@@ -116,7 +117,7 @@ uint64_t AtClusterize::getNumberOfElectronsGenerated(const AtMCPoint &mcPoint)
    auto energyLoss = mcPoint.GetEnergyLoss() * 1000.;
    auto meanElec = energyLoss / fEIonize;
    auto sigElec = TMath::Sqrt(fFano * meanElec);
-   return gRandom->Gaus(meanElec, sigElec);
+   return AtTools::Random::Get().Gaus(meanElec, sigElec);
 }
 
 AtClusterize::XYZPoint AtClusterize::getCurrentPointLocation(const AtMCPoint &mcPoint)
@@ -130,9 +131,9 @@ AtClusterize::XYZPoint AtClusterize::getCurrentPointLocation(const AtMCPoint &mc
 AtClusterize::XYZPoint
 AtClusterize::applyDiffusion(const AtClusterize::XYZPoint &loc, double_t sigTrans, double sigLong)
 {
-   auto r = gRandom->Gaus(0, sigTrans);
-   auto phi = gRandom->Uniform(0, TMath::TwoPi());
-   auto dz = gRandom->Gaus(0, sigLong);
+   auto r = AtTools::Random::Get().Gaus(0, sigTrans);
+   auto phi = AtTools::Random::Get().Uniform(0, TMath::TwoPi());
+   auto dz = AtTools::Random::Get().Gaus(0, sigLong);
 
    return loc + XYZVector(r * TMath::Cos(phi), r * TMath::Sin(phi), dz);
 }

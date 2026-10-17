@@ -9,6 +9,7 @@
 #include "AtParameterDistribution.h"
 #include "AtPatternEvent.h"     // for AtPatternEvent
 #include "AtPulse.h"            // for AtPulse
+#include "AtRandom.h"           // for ScopedGenerator, MixSeed
 #include "AtRawEvent.h"         // for AtRawEvent
 #include "AtSimpleSimulation.h" // for AtSimpleSimulation
 #include "AtSimulatedPoint.h"   // IWYU pragma: keep
@@ -24,6 +25,7 @@
 #include <algorithm> // for max
 #include <chrono>
 #include <mutex>
+#include <random>
 #include <thread>
 using std::move;
 namespace MCFitter {
@@ -51,6 +53,10 @@ void AtMCFitter::SetNumThreads(int num)
 
 void AtMCFitter::Init()
 {
+   if (fSeed == 0)
+      fSeed = std::random_device{}();
+   LOG(info) << "Seeding MC fitter with " << fSeed;
+
    CreateParamDistros();
 
    FairRunAna *ana = FairRunAna::Instance();
@@ -94,8 +100,9 @@ void AtMCFitter::RunIterRange(int startIter, int numIter, AtPulse *pulse)
    LOG(debug) << "Done with run iter range";
 }
 
-void AtMCFitter::Exec(const AtPatternEvent &event)
+void AtMCFitter::Exec(const AtPatternEvent &event, long eventNumber)
 {
+   auto eventSeed = AtTools::Random::MixSeed({fSeed, static_cast<std::uint64_t>(eventNumber)});
    fRawEventArray.clear();
    fEventArray.clear();
    fResults.clear();
@@ -110,11 +117,11 @@ void AtMCFitter::Exec(const AtPatternEvent &event)
    fEventArray.resize(fNumIter);
 
    for (int i = 0; i < fNumRounds; ++i) {
-      RunRound();
+      RunRound(i, eventSeed);
       RecenterParamDistributions();
    }
 }
-void AtMCFitter::RunRound()
+void AtMCFitter::RunRound(int round, std::uint32_t eventSeed)
 {
    // Begining of round
    auto start = std::chrono::high_resolution_clock::now();
@@ -138,9 +145,14 @@ void AtMCFitter::RunRound()
       LOG(debug) << "Creating thread " << i << " with " << threadParam[i].first << " " << threadParam[i].second
                  << " and " << fPulse.get();
 
-      // Spawn a thread to call RunIterRange.
+      // Spawn a thread to call RunIterRange with its own generator, so the fit is reproducible.
+      auto seed =
+         AtTools::Random::MixSeed({eventSeed, static_cast<std::uint64_t>(round), static_cast<std::uint64_t>(i)});
       threads.emplace_back(
-         [this](std::pair<int, int> param, AtPulse *pulse) { this->RunIterRange(param.first, param.second, pulse); },
+         [this, seed](std::pair<int, int> param, AtPulse *pulse) {
+            AtTools::Random::ScopedGenerator rand(seed);
+            this->RunIterRange(param.first, param.second, pulse);
+         },
          threadParam[i], fThPulse[i].get());
    }
 

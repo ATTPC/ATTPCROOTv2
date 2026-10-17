@@ -12,7 +12,7 @@ protected:
    std::student_t_distribution<> fDistro{1};
 
 public:
-   AtStudentDistribution(double mean, double spread, double seed = 0);
+   AtStudentDistribution(double mean, double spread);
    virtual ~AtStudentDistribution() = default;
 
    double GetDoF() const { return fDistro.n(); }

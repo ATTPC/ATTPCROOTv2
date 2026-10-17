@@ -1,6 +1,7 @@
 #include "AtPulseLine.h"
 
 #include "AtMap.h"
+#include "AtRandom.h"
 #include "AtSimulatedLine.h"
 #include "AtSimulatedPoint.h"
 
@@ -33,8 +34,8 @@ AtPulseLine::AtPulseLine(AtMapPtr map, ResponseFunc response) : AtPulse(map, res
 
 int AtPulseLine::throwRandomAndGetPadAfterDiffusion(const ROOT::Math::XYZVector &loc, double diffusionSigma)
 {
-   auto r = gRandom->Gaus(0, diffusionSigma);
-   auto phi = gRandom->Uniform(0, TMath::TwoPi());
+   auto r = AtTools::Random::Get().Gaus(0, diffusionSigma);
+   auto phi = AtTools::Random::Get().Uniform(0, TMath::TwoPi());
    double propX = loc.x() + r * TMath::Cos(phi);
    double propY = loc.y() + r * TMath::Sin(phi);
    XYPoint pos(propX, propY);

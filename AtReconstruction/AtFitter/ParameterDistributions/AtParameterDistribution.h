@@ -1,20 +1,20 @@
 #ifndef ATPARAMETERDISTRIBUTION_H
 #define ATPARAMETERDISTRIBUTION_H
 
-#include <memory>
-#include <random>
 namespace MCFitter {
 
+/**
+ * Base class of the fitter's parameter distributions. Samples are drawn from
+ * AtTools::Random::Get(), the calling thread's generator (gRandom if none is installed).
+ */
 class AtParameterDistribution {
 
 protected:
    double fMean{0};
    double fSpread{0};
-   long fSeed;
-   static thread_local std::unique_ptr<std::mt19937> fRand;
 
 public:
-   AtParameterDistribution(double mean, double spread, long seed = 0);
+   AtParameterDistribution(double mean, double spread);
    virtual ~AtParameterDistribution() = default;
 
    double GetMean() const { return fMean; }

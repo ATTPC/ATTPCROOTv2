@@ -6,6 +6,7 @@ set(SRCS
   AtELossManager.cxx
   AtTrackTransformer.cxx
   AtDataManip.cxx
+  AtRandom.cxx
   AtStringManip.cxx
   AtELossModel.cxx
   AtELossTable.cxx
@@ -80,6 +81,7 @@ set(TEST_SRCS
   DataCleaning/AtkNNTest.cxx
   AtELossTableTest.cxx
   AtELossBetheBlochTest.cxx
+  AtRandomTest.cxx
 )
 if(CATIMA_FOUND)
   set(TEST_SRCS ${TEST_SRCS}
