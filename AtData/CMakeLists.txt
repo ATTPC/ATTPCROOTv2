@@ -37,6 +37,7 @@ set(SRCS
   AtTrackingEvent.cxx
   AtPatternEvent.cxx
   AtGenericTrace.cxx
+  AtICEvent.cxx
 
   AtProtoQuadrant.cxx
   AtTrack.cxx

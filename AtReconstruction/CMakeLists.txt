@@ -78,6 +78,7 @@ set(SRCS
   AtHDF5WriteTask.cxx
   AtMacroTask.cxx
   AtCopyAuxTreeTask.cxx
+  AtICTask.cxx
 
   AtPatternRecognition/AtPRA.cxx
   AtPatternRecognition/AtSampleConsensus.cxx
