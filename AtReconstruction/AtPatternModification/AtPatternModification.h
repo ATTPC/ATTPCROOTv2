@@ -23,7 +23,8 @@ protected:
    /**
     * Actually implements ths track modification.
     */
-   virtual AtTrack GetModifiedTrack(const AtTrack &track, AtRawEvent *rawEvent = nullptr, AtEvent *event = nullptr) = 0;
+   virtual AtTrack GetModifiedTrack(const AtTrack &track, AtPatternEvent *patternEvent, AtRawEvent *rawEvent = nullptr,
+                                    AtEvent *event = nullptr) = 0;
 };
 
 #endif
