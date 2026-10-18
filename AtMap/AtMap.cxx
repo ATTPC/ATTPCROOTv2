@@ -1,5 +1,7 @@
 #include "AtMap.h"
 
+#include "AtCSVReader.h"
+
 #include <FairLogger.h>
 
 #include <Math/Point2D.h>
@@ -17,6 +19,7 @@
 
 #include <cstdlib>
 #include <cstring>
+#include <fstream>
 #include <iostream>
 #include <iterator>
 #include <memory>
@@ -40,7 +43,14 @@ std::ostream &operator<<(std::ostream &os, const AtMap::InhibitType &t)
    return os;
 }
 
-AtMap::AtMap() : AtPadCoord(boost::extents[10240][3][2]), fPadPlane(nullptr) {}
+AtMap::AtMap() : AtPadCoord(boost::extents[10240][3][2]), fPadPlane(nullptr)
+{
+   fCalibrationFunction = [](double *x, double *params) -> double {
+      LOG(error)
+         << "The calibration function was not set! Returning -999 by default. Please set the calibration function!";
+      return -999;
+   }; // Setting a default calibration function.
+}
 
 AtPadReference AtMap::GetNearestFPN(int padNum) const
 {
@@ -235,6 +245,87 @@ Bool_t AtMap::ParseXMLMap(Char_t const *xmlfile)
              << " pads.";
 
    return true;
+}
+
+Bool_t AtMap::ParseCalibrationParameters(TString calibrationFilePath, int calibrationParameterNumber)
+{
+   fCalibrationParameterNumber = calibrationParameterNumber;
+   LOG(warning)
+      << "Trying to pass " << fCalibrationParameterNumber
+      << " to the calibration parameter arrays. Please make sure the function you are setting as calibration requires "
+      << fCalibrationParameterNumber << " parameters!";
+
+   std::ifstream calibrationFile(calibrationFilePath.Data());
+
+   if (!calibrationFile.is_open()) {
+      LOG(error) << "Failed to open file: " << calibrationFilePath.Data();
+      return false;
+   }
+
+   // Skip header line.
+   std::string header;
+   std::getline(calibrationFile, header);
+
+   int lineNumber{1};
+   for (const auto &row : CSVRange<double>(calibrationFile)) {
+      lineNumber++;
+
+      // Skip blank lines.
+      if (row.size() == 0)
+         continue;
+
+      // First column should be the padID, the rest are the parameters.
+      int padID = static_cast<int>(row[0]);
+      std::vector<double> parameters;
+
+      for (std::size_t i = 1; i < row.size(); ++i) {
+         if (parameters.size() == static_cast<std::size_t>(fCalibrationParameterNumber)) {
+            LOG(warning) << "Promised " << fCalibrationParameterNumber << " parameters but reached parameter "
+                         << parameters.size() + 1 << " on line " << lineNumber
+                         << "! Ignoring rest of parameters on the line!";
+            break;
+         }
+         parameters.push_back(row[i]);
+      }
+
+      if (parameters.size() < static_cast<std::size_t>(fCalibrationParameterNumber)) {
+         LOG(fatal) << "Promised " << fCalibrationParameterNumber << " parameters but got only " << parameters.size()
+                    << " on line " << lineNumber << "! Parameter vector of pad " << padID << " will not be set!";
+         std::vector<double> emptyVector;
+         fCalibrationParametersMap.insert(std::pair<int, std::vector<double>>(padID, emptyVector));
+         continue;
+      }
+
+      fCalibrationParametersMap.insert(std::pair<int, std::vector<double>>(padID, parameters));
+   }
+
+   return true;
+}
+
+double AtMap::GetCalibratedELoss(int padID, double ADC) const
+{
+   auto entry = fCalibrationParametersMap.find(padID);
+   if (entry == fCalibrationParametersMap.end()) {
+      LOG(warning) << "Pad " << padID
+                   << " did not have an entry in the calibration parameters file... Returning ELoss = -999 by default.";
+      return -999;
+   }
+
+   std::vector<double> parameters = entry->second;
+   if (parameters.empty()) {
+      LOG(warning) << "Pad " << padID
+                   << " had an issue when reading the calibration parameters file... Returning ELoss = -999 by "
+                      "default. Please check the file!";
+      return -999;
+   }
+
+   return fCalibrationFunction(&ADC, &parameters[0]);
+}
+
+bool AtMap::IsCalibrationSet() const
+{
+   // Require a function and map to both be set
+   return !(fCalibrationParametersMap.empty() || fCalibrationFunction == nullptr);
 }
 
 Bool_t AtMap::DumpAtTPCMap()

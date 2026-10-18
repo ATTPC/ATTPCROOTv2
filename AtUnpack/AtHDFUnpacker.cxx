@@ -108,7 +108,8 @@ void AtHDFUnpacker::processPad(std::size_t ipad)
    AtPadReference PadRef = {rawadc[0], rawadc[1], rawadc[2], rawadc[3]};
 
    // If this pad was inhibited, skip it.
-   if (fMap->IsInhibited(PadRef) == AtMap::InhibitType::kXTalk || fMap->IsInhibited(PadRef) == AtMap::InhibitType::kTotal)
+   if (fMap->IsInhibited(PadRef) == AtMap::InhibitType::kXTalk ||
+       fMap->IsInhibited(PadRef) == AtMap::InhibitType::kTotal)
       return;
 
    auto pad = createPadAndSetIsAux(PadRef);
