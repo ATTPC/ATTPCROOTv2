@@ -1,6 +1,7 @@
 #include "AtMap.h"
 
 #include "AtCSVReader.h"
+#include "AtPadLookup.h"
 
 #include <FairLogger.h>
 
@@ -43,7 +44,8 @@ std::ostream &operator<<(std::ostream &os, const AtMap::InhibitType &t)
    return os;
 }
 
-AtMap::AtMap() : AtPadCoord(boost::extents[10240][3][2]), fPadPlane(nullptr)
+AtMap::AtMap()
+   : AtPadCoord(boost::extents[10240][3][2]), fPadPlane(nullptr), fPadLookup(std::make_shared<AtPadLookup>())
 {
    fCalibrationFunction = [](double *x, double *params) -> double {
       LOG(error)
@@ -85,15 +87,26 @@ TH2Poly *AtMap::GetPadPlane()
    return dynamic_cast<TH2Poly *>(fPadPlane->Clone());
 }
 
-Int_t AtMap::GetPadNum(ROOT::Math::XYPoint point)
+Int_t AtMap::padFromPlane(const ROOT::Math::XYPoint &point)
 {
-   if (fPadPlane == nullptr)
-      GeneratePadPlane();
    auto binNum = fPadPlane->FindBin(point.X(), point.Y());
    if (binNum < 0)
       return -1;
    else
       return BinToPad(binNum);
+}
+
+Int_t AtMap::GetPadNum(ROOT::Math::XYPoint point)
+{
+   if (fPadPlane == nullptr)
+      GeneratePadPlane();
+
+   // The lookup table only answers where it agrees with FindBin at every point it tested, and asks FindBin elsewhere.
+   // It is built from the pad plane on first use.
+   auto findBin = [this](const ROOT::Math::XYPoint &p) { return padFromPlane(p); };
+   if (fUsePadLookup && fPadLookup->HasTable(fPadPlane, findBin))
+      return fPadLookup->Find(point, findBin);
+   return padFromPlane(point);
 }
 
 Int_t AtMap::GetPadNum(const AtPadReference &PadRef) const

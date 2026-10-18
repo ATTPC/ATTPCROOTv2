@@ -1,18 +1,17 @@
 #include "AtStudentDistribution.h"
 
-#include <memory> // for unique_ptr<>::element_type, unique_ptr
+#include "AtRandom.h"
+
 namespace MCFitter {
 
-AtStudentDistribution::AtStudentDistribution(double mean, double spread, double seed)
-   : AtParameterDistribution(mean, spread, seed)
-{
-}
+AtStudentDistribution::AtStudentDistribution(double mean, double spread) : AtParameterDistribution(mean, spread) {}
 
 double AtStudentDistribution::SampleSpread()
 {
    // N.B. We recreate the distribution (which is cheap) each call to avoid data races when multithreaded
-   std::student_t_distribution<> distro{1};
-   return distro(*fRand);
+   std::student_t_distribution<> distro{fDistro.param()};
+   AtTools::Random::UniformBitGenerator bitGen(AtTools::Random::Get());
+   return distro(bitGen);
 }
 
 } // namespace MCFitter

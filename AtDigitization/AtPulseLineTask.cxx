@@ -2,6 +2,7 @@
 
 #include "AtMCPoint.h"
 #include "AtMap.h"
+#include "AtRandom.h"
 #include "AtSimulatedLine.h"
 #include "AtSimulatedPoint.h"
 
@@ -15,7 +16,6 @@
 #include <TH2Poly.h>
 #include <TMath.h>
 #include <TObject.h>
-#include <TRandom.h>
 
 #include <algorithm>
 #include <memory>
@@ -36,8 +36,8 @@ AtPulseLineTask::~AtPulseLineTask() = default;
 
 Int_t AtPulseLineTask::throwRandomAndGetBinAfterDiffusion(const ROOT::Math::XYZVector &loc, Double_t diffusionSigma)
 {
-   auto r = gRandom->Gaus(0, diffusionSigma);
-   auto phi = gRandom->Uniform(0, TMath::TwoPi());
+   auto r = AtTools::Random::Get().Gaus(0, diffusionSigma);
+   auto phi = AtTools::Random::Get().Uniform(0, TMath::TwoPi());
    Double_t propX = loc.x() + r * TMath::Cos(phi);
    Double_t propY = loc.y() + r * TMath::Sin(phi);
    return fPadPlane->FindBin(propX, propY);

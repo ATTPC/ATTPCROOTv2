@@ -38,14 +38,15 @@ InitStatus AtMCFitterTask::Init()
 void AtMCFitterTask::Exec(Option_t *)
 {
    LOG(debug) << "Exec";
-   auto patEvent = dynamic_cast<AtPatternEvent *>(fPatternArray->At(0));
-   if (!patEvent->IsGood())
-      return;
-
-   fFitter->Exec(*patEvent);
+   // Clear first, so a skipped event is saved with no results rather than the previous event's
    fResultArray.Delete();
    fSimEventArray.Delete();
    fSimRawEventArray.Delete();
 
+   auto patEvent = dynamic_cast<AtPatternEvent *>(fPatternArray->At(0));
+   if (!patEvent->IsGood())
+      return;
+
+   fFitter->Exec(*patEvent, FairRootManager::Instance()->GetEntryNr());
    fFitter->FillResultArrays(fResultArray, fSimEventArray, fSimRawEventArray);
 }

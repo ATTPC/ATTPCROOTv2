@@ -10,7 +10,7 @@ protected:
    double fTruncAmount{0.8}; //<Default truncation of parameter space from ATTPC commisisoning paper
 
 public:
-   AtUniformDistribution(double mean, double spread, double seed = 0);
+   AtUniformDistribution(double mean, double spread);
    virtual ~AtUniformDistribution() = default;
 
    void TruncateSpace() override;

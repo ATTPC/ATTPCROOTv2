@@ -12,6 +12,7 @@
 #pragma link C++ namespace tk;
 #pragma link C++ namespace AtTools::Kinematics;
 #pragma link C++ namespace AtTools::DataCleaning;
+#pragma link C++ namespace AtTools::Random;
 
 #pragma link C++ class AtTools::AtELossManager + ;
 #pragma link C++ class AtTools::AtParsers + ;
@@ -63,6 +64,9 @@
 #pragma link C++ function AtTools::GetTB;
 #pragma link C++ function AtTools::GetDriftTB;
 #pragma link C++ function AtTools::SplitString;
+#pragma link C++ function AtTools::Random::Get;
+#pragma link C++ function AtTools::Random::MixSeed;
+#pragma link C++ class AtTools::Random::ScopedGenerator - !;
 
 #pragma link C++ function AtTools::Kinematics::GetGamma;
 #pragma link C++ function AtTools::Kinematics::GetVelocity;

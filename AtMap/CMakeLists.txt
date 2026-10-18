@@ -14,6 +14,7 @@ Set(LINKDEF ${LIBRARY_NAME}LinkDef.h)
 set(SRCS
 #Put here your sourcefiles
 AtMap.cxx
+AtPadLookup.cxx
 AtTpcMap.cxx
 AtTpcProtoMap.cxx
 AtGadgetIIMap.cxx
@@ -33,6 +34,7 @@ Set(DEPENDENCIES
 
 set(TEST_SRCS
   AtTpcMapTest.cxx
+  AtPadLookupTest.cxx
 )
 
 attpcroot_generate_tests(${LIBRARY_NAME}Tests

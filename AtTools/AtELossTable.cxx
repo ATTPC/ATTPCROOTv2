@@ -68,6 +68,11 @@ double AtELossTable::GetRange(double energyIni, double energyFin) const
                  << fdXdE.get_x_min();
       energyFin = fdXdE.get_x_min();
    }
+   if (energyIni > fdXdE.get_x_max()) {
+      LOG(debug) << "Attempting to integrate energy from " << energyIni << " when max energy in table is "
+                 << fdXdE.get_x_max();
+      energyIni = fdXdE.get_x_max();
+   }
    return fdXdE.integrate(energyFin, energyIni);
 }
 
@@ -85,7 +90,7 @@ double AtELossTable::GetEnergy(double energyIni, double distance) const
 
       double range = GetRange(energyIni, guessEnergy);
       if (fabs(range - distance) < fDistErr) {
-         LOG(info) << "Energy converged in " << i + 1 << " iterations.";
+         LOG(debug) << "Energy converged in " << i + 1 << " iterations.";
          return guessEnergy;
       }
       LOG(debug) << "guessE: " << guessEnergy << " d: " << distance << " R: " << range
@@ -160,7 +165,7 @@ double AtELossTable::GetEnergyOld(double energyIni, double distance) const
       range = GetRange(energyIni, guessEnergy);
    }
 
-   LOG(info) << "Energy converged in " << numIt << " iterations.";
+   LOG(debug) << "Energy converged in " << numIt << " iterations.";
    return guessEnergy;
 }
 
