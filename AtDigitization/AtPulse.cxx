@@ -38,8 +38,9 @@ AtPulse::AtPulse(const AtPulse &other)
    : fMap(other.fMap), fEventID(other.fEventID), fGain(other.fGain), fLowGainFactor(other.fLowGainFactor),
      fGETGain(other.fGETGain), fPeakingTime(other.fPeakingTime), fTBTime(other.fTBTime), fNumTbs(other.fNumTbs),
      fTBEntrance(other.fTBEntrance), fTBPadPlane(other.fTBPadPlane), fResponse(other.fResponse),
-     fUseFastGain(other.fUseFastGain), fNoiseSigma(other.fNoiseSigma), fSaveCharge(other.fSaveCharge),
-     fDoConvolution(other.fDoConvolution), fAvgGainDeviation(other.fAvgGainDeviation), fPolyaB(other.fPolyaB)
+     fUseFastGain(other.fUseFastGain), fGainFluctuations(other.fGainFluctuations), fNoiseSigma(other.fNoiseSigma),
+     fSaveCharge(other.fSaveCharge), fDoConvolution(other.fDoConvolution), fAvgGainDeviation(other.fAvgGainDeviation),
+     fPolyaB(other.fPolyaB)
 {
 
    // For reasons unknown, copying the historgam from other (calling copy constructor) causes a huge performance hit.
@@ -214,6 +215,9 @@ double AtPulse::GetGain(AtMap::InhibitType inhibit, int numElectrons)
    if (inhibit == AtMap::InhibitType::kLowGain)
       lowGain = fLowGainFactor;
 
+   if (!fGainFluctuations)
+      return fGain * lowGain;
+
    if (fUseFastGain && numElectrons > 10)
       return AtTools::Random::Get().Gaus(fGain, fAvgGainDeviation / TMath::Sqrt(numElectrons)) * lowGain;
 
@@ -221,22 +225,16 @@ double AtPulse::GetGain(AtMap::InhibitType inhibit, int numElectrons)
 }
 
 /**
- * Draw the mean gain of numElectrons electrons, each with an independent gain from the Polya distribution
+ * Mean gain of numElectrons electrons, each with an independent Polya gain
  *
  *    P(g) = (b+1)^(b+1) / (G Gamma(b+1)) * (g/G)^b * exp(-(b+1) g/G),
  *
- * where G is the mean gain (meanGain) and b the shape. This is a Gamma distribution with shape b+1 and scale G/(b+1).
+ * with mean G (meanGain) and shape b. This is a Gamma(b+1, G/(b+1)) distribution, and a sum of n Gamma(k, s)
+ * variables is Gamma(n k, s). So we draw once from Gamma(n (b+1), G/(b+1)) and divide by n, instead of drawing
+ * n gains.
  *
- * The sum of n independent Gamma(k, s) deviates is a Gamma(n k, s) deviate. So the mean gain of n electrons is one
- * Gamma(n (b+1), G/(b+1)) deviate divided by n. This is one Gamma deviate instead of n table look-ups.
- *
- * When the shape n (b+1) is an integer m <= 16, the Gamma distribution is an Erlang distribution: the sum of m
- * exponentials of mean s. An exponential deviate is -s log(u) with u uniform in (0, 1], so the sum of m of them is
- * -s log(u_1 u_2 ... u_m), the logarithm of the product of m uniforms. That is cheaper than the general Gamma
- * generator, up to about 16 uniforms (measured), above which std::gamma_distribution is as fast.
- *
- * This shortcut is specific to a Gamma-shaped gain. A different single-electron gain distribution must go back to
- * drawing each electron's gain and averaging.
+ * If m = n (b+1) is an integer <= 16, we use the faster form -s log(u_1 ... u_m), with u_i uniform in (0, 1]
+ * (a sum of m exponentials). Otherwise we use std::gamma_distribution.
  */
 double AtPulse::MeanPolyaGain(double meanGain, double b, int numElectrons, TRandom &rand)
 {

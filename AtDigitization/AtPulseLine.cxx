@@ -43,6 +43,19 @@ int AtPulseLine::throwRandomAndGetPadAfterDiffusion(const ROOT::Math::XYZVector 
    return fMap->GetPadNum(pos);
 }
 
+std::pair<std::vector<double>, std::vector<double>> AtPulseLine::MakeUnitPattern(int n)
+{
+   const double goldenAngle = TMath::Pi() * (3 - TMath::Sqrt(5));
+   std::vector<double> x(n), y(n);
+   for (int i = 0; i < n; ++i) {
+      // Same radial distribution as throwRandomAndGetPadAfterDiffusion: |r| of r ~ Gaus(0, 1), uniform angle
+      auto r = TMath::Sqrt2() * TMath::ErfInverse((i + 0.5) / n);
+      x[i] = r * TMath::Cos(i * goldenAngle);
+      y[i] = r * TMath::Sin(i * goldenAngle);
+   }
+   return {x, y};
+}
+
 void AtPulseLine::generateIntegrationMap(AtSimulatedLine &line)
 {
    // MC the integration over the pad plane
@@ -51,8 +64,18 @@ void AtPulseLine::generateIntegrationMap(AtSimulatedLine &line)
    int validPoints = 0;
 
    LOG(debug2) << "Sampling with transverse diffusion of: " << line.GetTransverseDiffusion();
+   const double sigma = line.GetTransverseDiffusion();
+   const double phi0 = fUseFixedSample ? AtTools::Random::Get().Uniform(0, TMath::TwoPi()) : 0;
+   const double cosPhi = TMath::Cos(phi0);
+   const double sinPhi = TMath::Sin(phi0);
    for (int i = 0; i < fNumIntegrationPoints; ++i) {
-      auto padNumber = throwRandomAndGetPadAfterDiffusion(loc, line.GetTransverseDiffusion());
+      int padNumber;
+      if (fUseFixedSample) {
+         XYPoint pos(loc.x() + sigma * (fPatternX[i] * cosPhi - fPatternY[i] * sinPhi),
+                     loc.y() + sigma * (fPatternX[i] * sinPhi + fPatternY[i] * cosPhi));
+         padNumber = fMap->GetPadNum(pos);
+      } else
+         padNumber = throwRandomAndGetPadAfterDiffusion(loc, sigma);
 
       if (padNumber < 0)
          continue;
