@@ -35,6 +35,7 @@
 #include <limits>    // for numeric_limits
 #include <map>       // for map, map<>::mapped_type
 #include <memory>    // for make_shared, __shared_ptr_access
+#include <stdexcept> // for invalid_argument
 #include <string>    // for string
 #include <vector>    // for vector, allocator
 
@@ -74,6 +75,8 @@ void AtMCFission::SetParamDistributions(const AtPatternEvent &event)
    const auto &fissionEvent = dynamic_cast<const AtFissionEvent &>(event);
 
    auto pat = fissionEvent.GetYPattern();
+   if (pat == nullptr)
+      throw std::invalid_argument("The event has no Y pattern to take the fragment directions and vertex from.");
    std::vector<XYZVector> start, dirs;
 
    //*** Fragment 1 ****/
