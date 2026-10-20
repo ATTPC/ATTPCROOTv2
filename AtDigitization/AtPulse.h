@@ -30,30 +30,31 @@ protected:
    using XYZPoint = ROOT::Math::XYZPoint;
    using SimPointPtr = std::unique_ptr<AtSimulatedPoint>;
 
-   AtMapPtr fMap; //!< AtTPC map
+   AtMapPtr fMap; ///< AtTPC map
 
-   int fEventID = 0;          //! EventID
-   double fGain = 0;          //! Micromegas gain.
-   double fLowGainFactor = 0; //! If pad is AtMap::kLowGain multiply gain by this factor
-   double fGETGain = 0;       //! GET Gain (ADC ch/electron).
-   double fPeakingTime = 0;   //! Electronic peaking time in us
-   double fTBTime = 0;        //! Time bucket size in us
-   int fNumTbs{512};          //! Number of time buckers
-   int fTBEntrance = 0;       //! Window location in timebuckets (from config)
-   int fTBPadPlane = 0;       //! Pad plane location in TBs (calculated from DriftVelocity, TBEntrance, ZPadPlane
+   int fEventID = 0;          ///< EventID
+   double fGain = 0;          ///< Micromegas gain.
+   double fLowGainFactor = 0; ///< If pad is AtMap::kLowGain multiply gain by this factor
+   double fGETGain = 0;       ///< GET Gain (ADC ch/electron).
+   double fPeakingTime = 0;   ///< Electronic peaking time in us
+   double fTBTime = 0;        ///< Time bucket size in us
+   int fNumTbs{512};          ///< Number of time buckets
+   int fTBEntrance = 0;       ///< Window location in timebuckets (from config)
+   int fTBPadPlane = 0;       ///< Pad plane location in TBs (calculated from DriftVelocity, TBEntrance, ZPadPlane
 
-   ResponseFunc fResponse; //! Response function of the electronics
+   ResponseFunc fResponse; ///< Response function of the electronics
    bool fUseFastGain = true;
-   double fNoiseSigma = 0; //! Sigma of random gaussian noise to apply to trace
+   bool fGainFluctuations = true; ///< Randomly sample the fluctuations around the mean gain on a pad.
+   double fNoiseSigma = 0;        ///< Sigma of random gaussian noise to apply to trace
    bool fSaveCharge = true;
-   bool fDoConvolution{true}; //< Whether we should set the ADC by doing a convolution of the charge with the response
+   bool fDoConvolution{true}; ///< Whether we should set the ADC by doing a convolution of the charge with the response
 
-   std::vector<std::unique_ptr<TH1F>> fPadCharge; //!<
-   std::set<int> fPadsWithCharge;                 //!<
+   std::vector<std::unique_ptr<TH1F>> fPadCharge;
+   std::set<int> fPadsWithCharge;
 
    double fAvgGainDeviation{};
    /// Shape b of the Polya single-electron gain: the gain is Gamma-distributed with shape b+1 and mean fGain.
-   double fPolyaB{1}; //!
+   double fPolyaB{1};
 
 public:
    AtPulse(AtMapPtr map, ResponseFunc response = nullptr);
@@ -65,10 +66,9 @@ public:
    void SetNoiseSigma(double val) { fNoiseSigma = val; }
    void SetSaveCharge(bool val) { fSaveCharge = val; }
    void SetDoConvolution(bool val) { fDoConvolution = val; }
+   /// Turn off the random gain fluctuations: GetGain returns the mean gain.
+   void SetGainFluctuations(bool val) { fGainFluctuations = val; }
    void SetLowGain(double val) { fLowGainFactor = val; }
-
-   /// Draw the mean gain of numElectrons electrons, each with an independent Polya gain of mean meanGain and shape b.
-   static double MeanPolyaGain(double meanGain, double b, int numElectrons, TRandom &rand);
 
    AtRawEvent GenerateEvent(std::vector<SimPointPtr> &vec);
    virtual AtRawEvent GenerateEvent(std::vector<AtSimulatedPoint *> &vec);
@@ -81,6 +81,8 @@ protected:
    double GetGain(int padNum, int numElectrons);
    /// Gain for a pad whose inhibition is already known, for callers that look it up once for many deposits.
    double GetGain(AtMap::InhibitType inhibit, int numElectrons);
+   /// Draw the mean gain of numElectrons electrons, each with an independent Polya gain of mean meanGain and shape b.
+   static double MeanPolyaGain(double meanGain, double b, int numElectrons, TRandom &rand);
    void GenerateTraceFromElectrons();
    void FillPad(AtPad &pad, TH1F &hist);
    void ApplyNoise(AtPad &pad);

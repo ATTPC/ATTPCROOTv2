@@ -1,5 +1,9 @@
 #include "AtPulse.h"
 
+#include "AtMap.h"
+#include "AtPulseLine.h"
+
+#include <Math/Point2D.h>
 #include <Math/SpecFuncMathCore.h> // for tgamma
 #include <TF1.h>
 #include <TRandom3.h>
@@ -8,6 +12,7 @@
 #include <cmath>
 #include <gtest/gtest.h>
 #include <iostream>
+#include <memory>
 #include <vector>
 
 namespace {
@@ -59,6 +64,30 @@ TF1 MakeOldGainFunc()
    func.SetParameter(1, polyaB);
    return func;
 }
+
+/// An AtMap with no pad plane, enough to construct an AtPulse.
+class DummyMap : public AtMap {
+public:
+   void Dump() override {}
+   void GeneratePadPlane() override {}
+   ROOT::Math::XYPoint CalcPadCenter(Int_t) override { return {}; }
+   Int_t BinToPad(Int_t binval) override { return binval; }
+};
+
+/// Exposes the gain of AtPulse.
+class GainPulse : public AtPulse {
+public:
+   GainPulse(double gain) : AtPulse(std::make_shared<DummyMap>()) { fGain = gain; }
+   using AtPulse::GetGain;
+   using AtPulse::MeanPolyaGain;
+};
+
+/// Exposes the unit pattern of AtPulseLine.
+class PatternPulseLine : public AtPulseLine {
+public:
+   PatternPulseLine() : AtPulseLine(std::make_shared<DummyMap>()) {}
+   using AtPulseLine::MakeUnitPattern;
+};
 } // namespace
 
 TEST(AtPulseTest, MeanPolyaGainMatchesPerElectronLoop)
@@ -76,7 +105,7 @@ TEST(AtPulseTest, MeanPolyaGainMatchesPerElectronLoop)
          val = g / n;
       }
       for (auto &val : newVals)
-         val = AtPulse::MeanPolyaGain(meanGain, polyaB, n, newRand);
+         val = GainPulse::MeanPolyaGain(meanGain, polyaB, n, newRand);
 
       auto oldStats = ComputeStats(oldVals);
       auto newStats = ComputeStats(newVals);
@@ -100,7 +129,7 @@ TEST(AtPulseTest, MeanPolyaGainHasExactMoments)
    for (int n : {1, 2, 5, 8, 9, 10, 50}) { // Erlang path up to 8 electrons, std::gamma_distribution above
       std::vector<double> vals(nSamples);
       for (auto &val : vals)
-         val = AtPulse::MeanPolyaGain(meanGain, polyaB, n, rand);
+         val = GainPulse::MeanPolyaGain(meanGain, polyaB, n, rand);
       auto stats = ComputeStats(vals);
       double expectedVar = meanGain * meanGain / (n * (polyaB + 1));
       double meanError = meanGain / std::sqrt(n * (polyaB + 1.) * nSamples); // Standard error of the mean
@@ -114,5 +143,51 @@ TEST(AtPulseTest, MeanPolyaGainDrawsFromGivenGenerator)
    TRandom3 a(5);
    TRandom3 b(5);
    for (int i = 0; i < 10; ++i)
-      EXPECT_EQ(AtPulse::MeanPolyaGain(meanGain, polyaB, 3, a), AtPulse::MeanPolyaGain(meanGain, polyaB, 3, b));
+      EXPECT_EQ(GainPulse::MeanPolyaGain(meanGain, polyaB, 3, a), GainPulse::MeanPolyaGain(meanGain, polyaB, 3, b));
+}
+
+TEST(AtPulseTest, NoGainFluctuationsReturnsMeanGain)
+{
+   GainPulse pulse(meanGain);
+   pulse.SetLowGain(0.25);
+   pulse.SetGainFluctuations(false);
+   for (int n : {1, 5, 10, 11, 1000}) { // Both the exact and the fast gain paths
+      EXPECT_EQ(pulse.GetGain(AtMap::InhibitType::kNone, n), meanGain);
+      EXPECT_EQ(pulse.GetGain(AtMap::InhibitType::kLowGain, n), 0.25 * meanGain);
+   }
+   EXPECT_EQ(pulse.GetGain(AtMap::InhibitType::kTotal, 5), 0);
+   EXPECT_EQ(pulse.GetGain(AtMap::InhibitType::kNone, 0), 0);
+
+   pulse.SetGainFluctuations(true);
+   EXPECT_NE(pulse.GetGain(AtMap::InhibitType::kNone, 1), pulse.GetGain(AtMap::InhibitType::kNone, 1));
+}
+
+TEST(AtPulseLineTest, UnitPatternMatchesRandomPoints)
+{
+   constexpr int n = 1000;
+   auto [x, y] = PatternPulseLine::MakeUnitPattern(n);
+   ASSERT_EQ(x.size(), n);
+   ASSERT_EQ(y.size(), n);
+
+   double meanX = 0, meanY = 0, varX = 0, varY = 0, meanR = 0;
+   for (int i = 0; i < n; ++i) {
+      meanX += x[i] / n;
+      meanY += y[i] / n;
+      varX += x[i] * x[i] / n;
+      varY += y[i] * y[i] / n;
+      meanR += std::hypot(x[i], y[i]) / n;
+   }
+   // The random points have radius |Gaus(0, 1)| and a uniform angle: <r^2> = 1, so each axis has variance 1/2, and
+   // <r> = sqrt(2/pi). The pattern's moments are far closer to these than the 1/sqrt(n) = 0.03 of random points.
+   EXPECT_NEAR(meanX, 0, 0.01);
+   EXPECT_NEAR(meanY, 0, 0.01);
+   EXPECT_NEAR(varX, 0.5, 0.01);
+   EXPECT_NEAR(varY, 0.5, 0.01);
+   EXPECT_NEAR(varX + varY, 1, 0.01);
+   EXPECT_NEAR(meanR, std::sqrt(2 / M_PI), 0.005);
+   // Median radius of |Gaus(0, 1)|
+   EXPECT_NEAR(std::hypot(x[n / 2], y[n / 2]), 0.6745, 0.005);
+
+   for (int i = 1; i < n; ++i)
+      EXPECT_GT(std::hypot(x[i], y[i]), std::hypot(x[i - 1], y[i - 1])) << "i = " << i;
 }
