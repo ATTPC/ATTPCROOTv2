@@ -9,6 +9,7 @@
 #include <TClonesArray.h> // for TClonesArray
 #include <TObject.h>
 
+#include <exception>
 #include <utility>
 
 AtMCFitterTask::AtMCFitterTask(std::shared_ptr<MCFitter::AtMCFitter> fitter)
@@ -47,6 +48,12 @@ void AtMCFitterTask::Exec(Option_t *)
    if (!patEvent->IsGood())
       return;
 
-   fFitter->Exec(*patEvent, FairRootManager::Instance()->GetEntryNr());
+   // An event the fitter can't describe (e.g. no fission pattern) is saved with no results, like a bad event
+   try {
+      fFitter->Exec(*patEvent, FairRootManager::Instance()->GetEntryNr());
+   } catch (const std::exception &e) {
+      LOG(error) << "Skipping event " << FairRootManager::Instance()->GetEntryNr() << ": " << e.what();
+      return;
+   }
    fFitter->FillResultArrays(fResultArray, fSimEventArray, fSimRawEventArray);
 }

@@ -184,3 +184,16 @@ generate_target_and_root_library(${LIBRARY_NAME}
   LIBRARY_DIR ${LINK_DIRECTORIES}
   DEPS_PUBLIC ${DEPENDENCIES}
   )
+
+# Without Eigen the library has undefined references (postprocess.cxx calls orthogonallsq.cxx),
+# so nothing can link against it.
+if(TARGET Eigen3::Eigen)
+  set(TEST_SRCS
+    AtFitter/AtMCFissionTest.cxx
+  )
+
+  attpcroot_generate_tests(${LIBRARY_NAME}Tests
+    SRCS ${TEST_SRCS}
+    DEPS ${LIBRARY_NAME}
+  )
+endif()

@@ -1,9 +1,8 @@
 #include "AtPulse.h"
 
-#include "AtMap.h"
+#include "AtDummyMap.h"
 #include "AtPulseLine.h"
 
-#include <Math/Point2D.h>
 #include <Math/SpecFuncMathCore.h> // for tgamma
 #include <TF1.h>
 #include <TRandom3.h>
@@ -65,19 +64,10 @@ TF1 MakeOldGainFunc()
    return func;
 }
 
-/// An AtMap with no pad plane, enough to construct an AtPulse.
-class DummyMap : public AtMap {
-public:
-   void Dump() override {}
-   void GeneratePadPlane() override {}
-   ROOT::Math::XYPoint CalcPadCenter(Int_t) override { return {}; }
-   Int_t BinToPad(Int_t binval) override { return binval; }
-};
-
 /// Exposes the gain of AtPulse.
 class GainPulse : public AtPulse {
 public:
-   GainPulse(double gain) : AtPulse(std::make_shared<DummyMap>()) { fGain = gain; }
+   GainPulse(double gain) : AtPulse(std::make_shared<AtDummyMap>()) { fGain = gain; }
    using AtPulse::GetGain;
    using AtPulse::MeanPolyaGain;
 };
@@ -85,7 +75,7 @@ public:
 /// Exposes the unit pattern of AtPulseLine.
 class PatternPulseLine : public AtPulseLine {
 public:
-   PatternPulseLine() : AtPulseLine(std::make_shared<DummyMap>()) {}
+   PatternPulseLine() : AtPulseLine(std::make_shared<AtDummyMap>()) {}
    using AtPulseLine::MakeUnitPattern;
 };
 } // namespace
