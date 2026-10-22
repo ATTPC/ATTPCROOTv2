@@ -1,4 +1,4 @@
-void Be13_p_sim(Int_t nEvents = 10000, Int_t subnum = 0, Double_t angle_cm = 180)
+void Be13_p_sim(Int_t nEvents = 10000, Int_t subnum = 0, Double_t angle_cm = 50)
 {
    // Int_t subnum = 0,
    srand((unsigned)time(NULL));

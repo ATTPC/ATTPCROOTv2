@@ -51,6 +51,7 @@ protected:
    Int_t fEntTB{};            //< Timebucket of the entrance window
    Double_t fDriftVelocity{}; //< drift velocity of electron in cm/us
    Double_t fZk{};            //< Relative position of micromegas-cathode
+   Int_t fIsTPCInverted{};    //< Whether or not the TPC is inverted with respect the usual convention [0/1]
 
    // AtMap that may be set in order to apply calibration.
    mapPtr fMap{nullptr};
