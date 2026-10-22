@@ -1,45 +1,49 @@
 #include "AtFittedTrack.h"
 
-#include <Rtypes.h>
-
-#include <iterator>
-#include <numeric>
-
 ClassImp(AtFittedTrack);
 
-using XYZVector = ROOT::Math::XYZVector;
-
-const std::tuple<Float_t, Float_t, Float_t, Float_t, Float_t, Float_t, Float_t> AtFittedTrack::GetEnergyAngles()
+void AtFittedTrack::SetKinematics(int particleIdx, Double_t energy, Double_t theta, Double_t phi)
 {
-   return std::forward_as_tuple(fEnergy, fEnergyXtr, fTheta, fPhi, fEnergyPRA, fThetaPRA, fPhiPRA);
+   while (particleIdx >= fKinematics.size()) {
+      Kinematics newKinematics;
+      fKinematics.push_back(newKinematics);
+   }
+
+   fKinematics[particleIdx].kineticEnergy = energy;
+   fKinematics[particleIdx].theta = theta;
+   fKinematics[particleIdx].phi = phi;
 }
 
-const std::tuple<XYZVector, XYZVector, XYZVector> AtFittedTrack::GetVertices()
+void AtFittedTrack::SetKinematicsXtr(int particleIdx, Double_t energyxtr, Double_t thetaxtr, Double_t phixtr)
 {
-   return std::forward_as_tuple(fInitialPos, fInitialPosPRA, fInitialPosXtr);
+   while (particleIdx >= fKinematicsXtr.size()) {
+      Kinematics newKinematics;
+      fKinematicsXtr.push_back(newKinematics);
+   }
+
+   fKinematicsXtr[particleIdx].kineticEnergy = energyxtr;
+   fKinematicsXtr[particleIdx].theta = thetaxtr;
+   fKinematicsXtr[particleIdx].phi = phixtr;
 }
 
-const std::tuple<Float_t, Float_t, Float_t, Float_t, Float_t, Bool_t> AtFittedTrack::GetStats()
+void AtFittedTrack::SetParticleInfo(int particleIdx, std::string pdg, Int_t charge, Double_t mass)
 {
-   return std::forward_as_tuple(fPValue, fChi2, fBChi2, fNdf, fBNdf, fFitConverged);
+   while (particleIdx >= fParticleInfo.size()) {
+      ParticleInfo newParticleInfo;
+      fParticleInfo.push_back(newParticleInfo);
+   }
+
+   fParticleInfo[particleIdx].idPDG = TString(pdg);
+   fParticleInfo[particleIdx].charge = charge;
+   fParticleInfo[particleIdx].mass = mass;
 }
 
-const std::tuple<Int_t, Float_t, Float_t, Float_t, std::string, Int_t> AtFittedTrack::GetTrackProperties()
+void AtFittedTrack::SetVertex(int particleIdx, XYZVector point)
 {
-   return std::forward_as_tuple(fCharge, fBrho, fELossADC, fDEdxADC, fPDG, fTrackPoints);
-}
+   while (particleIdx >= fVertex.size()) {
+      XYZVector newVertex;
+      fVertex.push_back(newVertex);
+   }
 
-const std::tuple<Float_t, Float_t> AtFittedTrack::GetIonChamber()
-{
-   return std::forward_as_tuple(fIonChamberEnergy, fIonChamberTime);
-}
-
-const std::tuple<Float_t, Float_t> AtFittedTrack::GetExcitationEnergy()
-{
-   return std::forward_as_tuple(fExcitationEnergy, fExcitationEnergyXtr);
-}
-
-const std::tuple<Float_t, Float_t, Float_t> AtFittedTrack::GetDistances()
-{
-   return std::forward_as_tuple(fDistanceXtr, fTrackLength, fPOCAXtr);
+   fVertex[particleIdx] = point;
 }

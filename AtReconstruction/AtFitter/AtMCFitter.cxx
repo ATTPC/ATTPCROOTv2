@@ -32,7 +32,7 @@ namespace MCFitter {
 
 AtMCFitter::AtMCFitter(SimPtr sim, ClusterPtr cluster, PulsePtr pulse)
    : fMap(pulse->GetMap()), fSim(move(sim)), fClusterize(move(cluster)), fPulse(move(pulse)),
-     fResults([](const AtMCResult &a, const AtMCResult &b) { return a.fObjective < b.fObjective; })
+     fResults([](const AtMCResult &a, const AtMCResult &b) { return a.GetChi2() < b.GetChi2(); })
 {
 }
 
@@ -90,7 +90,7 @@ void AtMCFitter::RunIterRange(int startIter, int numIter, AtPulse *pulse)
       double obj = ObjectiveFunction(*fCurrentEvent, idx, result);
 
       result.fIterNum = idx;
-      result.fObjective = obj;
+      result.SetChi2(obj);
       // result.Print();
       {
          std::lock_guard<std::mutex> lk(fResultMutex);

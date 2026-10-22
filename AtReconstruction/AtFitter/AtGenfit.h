@@ -1,7 +1,7 @@
 #ifndef ATGENFIT_H
 #define ATGENFIT_H
 
-#include "AtFitter.h"
+#include "AtFitterOld.h"
 #include "AtFormat.h"
 #include "AtKinematics.h"
 #include "AtParsers.h"
@@ -55,7 +55,9 @@ class MeasurementFactory;
 
 namespace AtFITTER {
 
-class AtGenfit : public AtFitter {
+class [[deprecated(
+   "This still derives from the old AtFitter. Please consider updating it to the new AtFitter at some point")]] AtGenfit
+   : public AtFitterOld {
 private:
    std::shared_ptr<genfit::AbsKalmanFitter> fKalmanFitter;
    TClonesArray *fGenfitTrackArray;

@@ -1,6 +1,8 @@
 #ifndef ATMCRESULT_H
 #define ATMCRESULT_H
 
+#include "AtFitTrackMetadata.h"
+
 #include <Rtypes.h> // for Double_t, THashConsistencyHolder, ClassDefOverride
 #include <TObject.h>
 
@@ -15,19 +17,19 @@ namespace MCFitter {
 /**
  * Class for storing the result of an iteration in the AtMCFitter method.
  */
-class AtMCResult : public TObject {
+class AtMCResult : public AtFitTrackMetadata {
 public:
    using ParamMap = std::map<std::string, Double_t>;
 
-   Double_t fObjective;  //< Value f the objective function for this iteration
    ParamMap fParameters; //< Parameters used in simulation
    Int_t fIterNum;       //< Iteration number. Used to map with the simulated event ID in the TTree.
 
    AtMCResult() = default;
+   ~AtMCResult() = default;
 
-   void Print() const;
+   void Print() const override;
 
-   ClassDefOverride(AtMCResult, 1);
+   ClassDefOverride(AtMCResult, 2);
 };
 
 } // namespace MCFitter
